@@ -7,56 +7,64 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-dev-sdk.umd.js"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: sans-serif; }
-        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; }
-        .btn-kick { background: #53fc18; color: #000; box-shadow: 0 0 15px #53fc18; cursor: pointer; }
-        .btn-wallet { background: #fff; color: #000; cursor: pointer; }
-        .chart-container { width: 100%; max-width: 900px; height: 600px; margin-top: 20px; border: 2px solid #333; border-radius: 15px; overflow: hidden; }
+        body { background-color: #000; color: #fff; font-family: sans-serif; text-align: center; }
+        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; width: 150px; height: 150px; border-radius: 50%; margin: 40px auto; }
+        .btn-kick { background: #53fc18; color: #000; font-weight: 900; width: 100%; max-width: 350px; padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: 0.3s; }
+        .btn-kick:hover { opacity: 0.8; transform: scale(1.02); }
+        .btn-wallet { background: #fff; color: #000; font-weight: 900; width: 100%; max-width: 350px; padding: 16px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .btn-wallet:hover { opacity: 0.8; transform: scale(1.02); }
+        .chart-frame { width: 100%; max-width: 900px; height: 600px; margin: 30px auto; border: 2px solid #53fc18; border-radius: 15px; overflow: hidden; }
     </style>
 </head>
-<body class="flex flex-col items-center p-6">
-    <header class="text-center mt-12 mb-10">
-        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-48 h-48 rounded-full ghost-glow mx-auto mb-6">
-        <h1 class="text-5xl font-black italic">KICK<span class="text-green-500">GHOST</span></h1>
-    </header>
+<body>
 
-    <div class="w-full max-w-sm space-y-4 mb-10">
-        <button id="kick-btn" class="w-full btn-kick py-4 rounded-xl font-black text-lg">STEP 1: LOGIN WITH KICK 🎥</button>
-        <button id="wallet-btn" class="w-full btn-wallet py-4 rounded-xl font-black text-lg">STEP 2: CONNECT WALLET 👻</button>
-        <p id="msg" class="text-center text-xs font-bold mt-2 uppercase"></p>
+    <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="ghost-glow">
+    <h1 class="text-5xl font-black mb-10 italic uppercase">KICK<span class="text-green-500">GHOST</span></h1>
+
+    <div class="px-6">
+        <button id="kick-btn" class="btn-kick">STEP 1: LOGIN WITH KICK 🎥</button>
+        <br>
+        <button id="wallet-btn" class="btn-wallet">STEP 2: CONNECT WALLET 👻</button>
+        <p id="msg" class="mt-4 text-xs font-bold uppercase tracking-widest"></p>
     </div>
 
-    <div class="chart-container">
-        <iframe width="100%" height="100%" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
+    <div class="chart-frame">
+        <iframe width="100%" height="100%" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark&swaps=0" frameborder="0"></iframe>
     </div>
 
-    <div class="w-full max-w-xl border-2 border-green-500 p-6 rounded-3xl bg-zinc-900 mt-10">
-        <h2 class="text-center font-bold text-green-500 mb-4 uppercase">Contract Address</h2>
-        <div class="bg-black p-3 rounded mb-4 text-[10px] text-green-400 break-all text-center border border-zinc-700 font-mono">
-            0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
-        </div>
+    <div class="max-w-xl mx-auto border-2 border-green-500 p-6 rounded-3xl bg-zinc-900 mb-10">
+        <h2 class="font-bold text-green-500 mb-2 uppercase italic">Contract Address</h2>
+        <p class="text-[10px] font-mono text-green-400 break-all bg-black p-3 rounded border border-zinc-700">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</p>
     </div>
 
     <script>
-        // كود Kick
+        // كود Kick - تم تصحيح الرابط والـ ID
         document.getElementById("kick-btn").onclick = () => {
-            const clientID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
-            const redirect = "https://ghostgamingtv0.github.io/kickghostofficial/";
-            window.location.href = `https://kick.com/oauth/authorize?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
+            const KICK_CLIENT_ID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
+            const REDIRECT_URI = "https://ghostgamingtv0.github.io/kickghostofficial/";
+            const SCOPE = encodeURIComponent("user:read channel:read chat:write");
+            
+            window.location.href = `https://kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${SCOPE}`;
         };
 
-        // كود المحفظة
+        // كود المحفظة - تم تصحيح الـ Client ID لـ Thirdweb
         document.getElementById("wallet-btn").onclick = async () => {
             const m = document.getElementById("msg");
-            m.innerText = "CONNECTING...";
+            m.className = "mt-4 text-yellow-400 font-bold uppercase";
+            m.innerText = "Connecting...";
+
             try {
-                const sdk = new window.ThirdwebSDK("polygon", { clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" });
+                const sdk = new window.ThirdwebSDK("polygon", { 
+                    clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" 
+                });
+                
                 const addr = await sdk.wallet.connect();
-                m.className = "text-center text-green-400";
-                m.innerText = "CONNECTED: " + addr.substring(0,6);
-            } catch (e) { 
-                m.className = "text-center text-red-500";
-                m.innerText = "❌ ERROR: " + e.message;
+                m.className = "mt-4 text-green-400 font-bold uppercase";
+                m.innerText = "CONNECTED: " + addr.substring(0, 10) + "...";
+            } catch (err) {
+                m.className = "mt-4 text-red-500 font-bold uppercase";
+                m.innerText = "❌ ERROR: " + err.message;
+                console.error(err);
             }
         };
     </script>

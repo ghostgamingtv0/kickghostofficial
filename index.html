@@ -1,95 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST - Official Site</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://dist.thirdwebcache.com/browser/v4/thirdweb.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;900&display=swap');
-        body { background-color: #000; color: #fff; font-family: 'Cairo', sans-serif; text-align: center; }
-        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; width: 140px; height: 140px; border-radius: 50%; margin: 30px auto; }
-        .btn-kick { background: #53fc18; color: #000; font-weight: 900; width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .btn-wallet { background: #fff; color: #000; font-weight: 900; width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .chart-frame { width: 95%; max-width: 1000px; height: 550px; margin: 30px auto; border: 3px solid #53fc18; border-radius: 20px; overflow: hidden; }
-        .instruction-card { border: 2px solid #53fc18; background: #111; max-width: 850px; margin: 0 auto; border-radius: 25px; }
-    </style>
-</head>
-<body class="p-4">
+<!-- الجزء الأساسي كما قبل، غير الجزء JS غادي نحدثوه -->
 
-    <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="ghost-glow">
-    <h1 class="text-5xl font-black italic uppercase mb-10 tracking-tighter">KICK<span class="text-green-500">GHOST</span></h1>
+<script>
+// ===== Language Toggle =====
+let lang = 'en';
+function toggleLang(){
+  lang = lang==='en'?'ar':'en';
+  document.getElementById('kick-btn').innerText = lang==='en' ? 'Step 1: Login with Kick 🎥' : 'المرحلة 1: تسجيل الدخول عبر كيك';
+  document.getElementById('kick-text').innerText = lang==='en' ? 'Step 1: Login via Kick' : 'المرحلة 1: تسجيل الدخول';
+  document.getElementById('instr-title').innerText = lang==='en' ? 'How to add $KICKGHOST' : 'كيفية إضافة عملة $KICKGHOST';
+  document.getElementById('instr-en').style.display = lang==='en'?'block':'none';
+  document.getElementById('instr-ar').style.display = lang==='en'?'none':'block';
+}
 
-    <div class="space-y-6 mb-12 px-6">
-        <div class="flex flex-col items-center">
-            <button id="kick-btn" class="btn-kick text-xl uppercase">Step 1: Login with Kick 🎥</button>
-            <p class="text-green-500 font-bold mt-2">المرحلة 1: تسجيل الدخول عبر كيك</p>
-        </div>
-        
-        <div class="flex flex-col items-center">
-            <button id="wallet-btn" class="btn-wallet text-xl uppercase">Step 2: Connect Wallet 👻</button>
-            <p class="text-white font-bold mt-2">المرحلة 2: ربط المحفظة الخاصة بك</p>
-        </div>
-        <p id="msg" class="mt-4 text-sm font-bold uppercase tracking-widest"></p>
-    </div>
+// ===== Kick Login =====
+document.getElementById("kick-btn").onclick = () => {
+  const kID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
+  const redirect = location.origin + location.pathname;
+  window.location.href = `https://kick.com/oauth/authorize?client_id=${kID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
+};
 
-    <div class="instruction-card p-8 mb-10 mx-4">
-        <h2 class="text-3xl font-black text-green-500 mb-8 uppercase italic border-b border-green-900 pb-4">
-            How to add $KICKGHOST / كيفية إضافة العملة
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left md:text-center">
-            <div class="space-y-4 border-b md:border-b-0 md:border-r border-zinc-800 pb-6 md:pb-0 md:pr-4">
-                <p class="text-green-400 font-bold underline italic uppercase">English Guide:</p>
-                <p class="text-gray-300 text-sm">1. Switch to <b>Polygon Network</b>.</p>
-                <p class="text-gray-300 text-sm">2. Click <b>"Import Token"</b> and paste:</p>
-                <div class="bg-black p-3 rounded border border-zinc-700 text-[10px] text-green-500 font-mono text-center">
-                    0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
-                </div>
-            </div>
+// ===== Multi Wallet Connect =====
+let connectedAddress = "";
+async function connectWallet(type){
+  const m = document.getElementById("wallet-msg");
+  try{
+    m.innerText = lang==='en' ? "CONNECTING..." : "جاري الاتصال...";
+    let wallet;
+    if(type==='MetaMask') wallet = new window.Thirdweb.MetaMaskWallet();
+    else if(type==='WalletConnect') wallet = new window.Thirdweb.WalletConnectWallet();
+    else if(type==='CoinbaseWallet') wallet = new window.Thirdweb.CoinbaseWallet();
+    else throw new Error("Wallet type not supported");
 
-            <div class="space-y-4 text-right">
-                <p class="text-green-400 font-bold underline italic uppercase text-center">:دليل اللغة العربية</p>
-                <p class="text-gray-300 text-sm">1. قم بتحويل شبكة المحفظة إلى <b>Polygon</b>.</p>
-                <p class="text-gray-300 text-sm">2. اختر <b>"إضافة عملة"</b> ثم الصق العنوان أعلاه.</p>
-                <p class="text-gray-300 text-sm italic">3. ستظهر العملة تلقائياً، اضغط تأكيد.</p>
-            </div>
-        </div>
-    </div>
+    await wallet.connect();
+    connectedAddress = await wallet.getAddress();
+    m.innerText = lang==='en' ? "SUCCESS ✅ Connected: "+connectedAddress.substring(0,10) : "✅ تم الاتصال: "+connectedAddress.substring(0,10);
+    m.className = "mt-4 text-green-400 font-bold";
 
-    <div class="chart-frame">
-        <iframe width="100%" height="100%" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
-    </div>
+    saveUser(connectedAddress);
+  }catch(e){
+    m.innerText = "❌ ERROR: "+e.message;
+    m.className = "mt-4 text-red-500 font-bold text-xs";
+  }
+}
 
-    <script>
-        // رابط Kick المصحح 100%
-        document.getElementById("kick-btn").onclick = () => {
-            const kID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
-            const red = "https://ghostgamingtv0.github.io/kickghostofficial/";
-            window.location.href = `https://kick.com/oauth/authorize?client_id=${kID}&redirect_uri=${encodeURIComponent(red)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
-        };
+// ===== LocalStorage Users =====
+function saveUser(addr){
+  let users = JSON.parse(localStorage.getItem("kg_users")||"[]");
+  if(!users.includes(addr)) users.push(addr);
+  localStorage.setItem("kg_users", JSON.stringify(users));
+  renderUsers();
+}
+function renderUsers(){
+  const users = JSON.parse(localStorage.getItem("kg_users")||"[]");
+  document.getElementById("users").innerHTML = users.map(u=>`<div class="box">${u}</div>`).join("");
+}
+renderUsers();
 
-        // تصحيح المحفظة: الطريقة المضمونة للنسخة v4
-        document.getElementById("wallet-btn").onclick = async () => {
-            const m = document.getElementById("msg");
-            m.innerText = "CONNECTING... جاري الاتصال";
-            m.className = "mt-4 text-yellow-400 font-bold";
+// ===== Network Switch + Airdrop =====
+const AIRDROP_TOKEN = "0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce";
+const AIRDROP_AMOUNT = "1000000000000000000000"; // 1000 Tokens, 18 decimals
+const POLYGON_CHAIN_ID = "0x89"; // Polygon Mainnet
 
-            try {
-                // هادا هو السطر اللي كيقتل الخطأ ديال Constructor نهائياً
-                const sdk = new window.Thirdweb.ThirdwebSDK("polygon", { 
-                    clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" 
-                });
-                
-                const addr = await sdk.wallet.connect();
-                m.className = "mt-4 text-green-400 font-bold uppercase";
-                m.innerText = "SUCCESS ✅ تم الاتصال: " + addr.substring(0, 10);
-            } catch (e) {
-                m.className = "mt-4 text-red-500 font-bold text-xs uppercase";
-                m.innerText = "❌ ERROR: " + e.message;
-            }
-        };
-    </script>
-</body>
-</html>
+async function claimAirdrop(){
+  const msg = document.getElementById("airdrop-msg");
+  if(!connectedAddress){ msg.innerText = lang==='en'?"Connect wallet first!":"ربط المحفظة أولاً!"; return; }
+
+  try{
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const network = await provider.getNetwork();
+    if(network.chainId !== 137){ // 137 = Polygon Mainnet
+      // Switch Network
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: POLYGON_CHAIN_ID }]
+      });
+    }
+
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(AIRDROP_TOKEN,
+      ["function transfer(address to,uint256 amount) public returns (bool)"],
+      signer
+    );
+
+    await contract.transfer(connectedAddress, AIRDROP_AMOUNT);
+    msg.innerText = lang==='en'?"✅ Airdrop claimed!":"✅ تم استلام Airdrop!";
+    msg.style.color = "#53fc18";
+  }catch(e){
+    msg.innerText = "❌ "+e.message;
+    msg.style.color = "#f00";
+  }
+}
+</script>

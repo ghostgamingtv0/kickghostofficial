@@ -3,104 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST Official - العربية & English</title>
+    <title>KICKGHOST - Official Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://dist.thirdwebcache.com/browser/v4/thirdweb.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@3.10.10/dist/thirdweb-dev-sdk.umd.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;900&display=swap');
         body { background-color: #000; color: #fff; font-family: 'Cairo', sans-serif; text-align: center; }
-        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; width: 150px; height: 150px; border-radius: 50%; margin: 30px auto; }
-        .btn-kick { background: #53fc18; color: #000; font-weight: 900; width: 100%; max-width: 350px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .btn-wallet { background: #fff; color: #000; font-weight: 900; width: 100%; max-width: 350px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .btn-kick:hover, .btn-wallet:hover { transform: scale(1.03); opacity: 0.9; }
-        .chart-container { width: 95%; max-width: 1000px; height: 600px; margin: 30px auto; border: 3px solid #53fc18; border-radius: 20px; overflow: hidden; background: #111; }
-        .lang-card { background: rgba(83, 252, 24, 0.1); border: 1px solid #53fc18; }
+        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; width: 140px; height: 140px; border-radius: 50%; margin: 30px auto; }
+        .btn-kick { background: #53fc18; color: #000; font-weight: 900; width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-wallet { background: #fff; color: #000; font-weight: 900; width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-kick:hover, .btn-wallet:hover { transform: scale(1.02); opacity: 0.9; }
+        .chart-frame { width: 95%; max-width: 1000px; height: 550px; margin: 30px auto; border: 3px solid #53fc18; border-radius: 20px; overflow: hidden; }
+        .instruction-card { border: 2px solid #53fc18; background: #111; max-width: 800px; margin: 0 auto; }
     </style>
 </head>
 <body class="p-4">
 
     <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="ghost-glow">
-    <h1 class="text-5xl font-black italic uppercase tracking-tighter mb-2">KICK<span class="text-green-500">GHOST</span></h1>
-    <p class="text-gray-400 mb-8 font-bold">THE ULTIMATE INTERACTIVE TOKEN</p>
+    <h1 class="text-5xl font-black italic uppercase mb-10 tracking-tighter">KICK<span class="text-green-500">GHOST</span></h1>
 
-    <div class="space-y-4 mb-12">
-        <div>
+    <div class="space-y-6 px-6 mb-12">
+        <div class="flex flex-col items-center">
             <button id="kick-btn" class="btn-kick text-xl uppercase">Step 1: Login with Kick 🎥</button>
-            <p class="text-green-500 mt-1 text-sm font-bold">المرحلة 1: تسجيل الدخول عبر كيك</p>
+            <p class="text-green-500 font-bold mt-2">المرحلة 1: تسجيل الدخول عبر منصة كيك</p>
         </div>
         
-        <div>
+        <div class="flex flex-col items-center">
             <button id="wallet-btn" class="btn-wallet text-xl uppercase">Step 2: Connect Wallet 👻</button>
-            <p class="text-white mt-1 text-sm font-bold">المرحلة 2: ربط المحفظة</p>
+            <p class="text-white font-bold mt-2">المرحلة 2: ربط المحفظة الخاصة بك</p>
         </div>
         <p id="msg" class="mt-4 text-sm font-bold uppercase tracking-widest"></p>
     </div>
 
-    <div class="chart-container">
-        <iframe width="100%" height="100%" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
-    </div>
-
-    <div class="max-w-2xl mx-auto rounded-3xl p-1 lang-card mb-10 mt-10">
-        <div class="bg-zinc-900 rounded-[22px] p-6 md:p-10">
-            <h2 class="text-3xl font-black text-green-500 mb-8 uppercase italic border-b border-green-500 pb-4">
-                How to add $KICKGHOST<br>
-                <span class="text-xl">كيفية إضافة العملة</span>
-            </h2>
-
-            <div class="space-y-8 text-right md:text-left">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-zinc-800 pb-4">
-                    <div class="text-left w-full">
-                        <p class="text-green-500 font-bold">1. Switch to Polygon Network</p>
-                        <p class="text-gray-400 text-sm italic">قم بتحويل الشبكة إلى Polygon فالمحفظة ديالك</p>
-                    </div>
+    <div class="instruction-card p-8 md:p-12 rounded-3xl mb-10">
+        <h2 class="text-3xl font-black text-green-500 mb-8 uppercase italic border-b border-green-900 pb-4">
+            How to add $KICKGHOST / كيفية إضافة العملة
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div class="space-y-4 border-r border-zinc-800 pr-4">
+                <h3 class="text-white font-black underline">ENGLISH</h3>
+                <p class="text-green-400 font-bold">1. Switch to Polygon Network</p>
+                <p class="text-gray-400 text-sm">Change your wallet network to Polygon (MATIC).</p>
+                <p class="text-green-400 font-bold">2. Paste Contract Address</p>
+                <p class="text-gray-400 text-sm">Click "Import Token" and paste this address:</p>
+                <div class="bg-black p-2 rounded border border-zinc-700 text-[10px] text-green-500 font-mono text-center">
+                    0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
                 </div>
+            </div>
 
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-zinc-800 pb-4">
-                    <div class="text-left w-full">
-                        <p class="text-green-500 font-bold">2. Paste Contract Address</p>
-                        <p class="text-gray-400 text-sm italic">كليكي على Import Token ولصق هاد العنوان:</p>
-                        <div class="bg-black p-3 mt-2 rounded-lg border border-zinc-700 text-center">
-                            <code class="text-green-400 text-xs md:text-sm break-all">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-left w-full">
-                        <p class="text-green-500 font-bold">3. Confirm & Add Token</p>
-                        <p class="text-gray-400 text-sm italic">أكد العملية وغتولي العملة باينة عندك فالمحفظة</p>
-                    </div>
-                </div>
+            <div class="space-y-4 text-right">
+                <h3 class="text-white font-black underline">العربية</h3>
+                <p class="text-green-400 font-bold">1. قم بتغيير الشبكة إلى Polygon</p>
+                <p class="text-gray-400 text-sm">تأكد من اختيار شبكة بوليغون في محفظتك.</p>
+                <p class="text-green-400 font-bold">2. الصق عنوان العملة</p>
+                <p class="text-gray-400 text-sm">اضغط على إضافة عملة جديدة والصق العنوان أعلاه.</p>
+                <p class="text-green-400 font-bold">3. تأكيد الإضافة</p>
+                <p class="text-gray-400 text-sm italic italic">ستظهر معلومات العملة تلقائياً، اضغط تأكيد.</p>
             </div>
         </div>
     </div>
 
+    <div class="chart-frame">
+        <iframe width="100%" height="100%" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
+    </div>
+
     <script>
-        // Kick Login Logic
+        // كود تسجيل الدخول كيك (Kick)
         document.getElementById("kick-btn").onclick = () => {
             const kID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
             const red = "https://ghostgamingtv0.github.io/kickghostofficial/";
             window.location.href = `https://kick.com/oauth/authorize?client_id=${kID}&redirect_uri=${encodeURIComponent(red)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
         };
 
-        // Wallet Connection Logic (Fixed for v4)
+        // كود المحفظة المصحح (Thirdweb Fix)
         document.getElementById("wallet-btn").onclick = async () => {
             const m = document.getElementById("msg");
             m.innerText = "CONNECTING... جاري الاتصال";
             m.className = "mt-4 text-yellow-400 font-bold";
 
             try {
-                // استخدام الـ Constructor الصحيح للنسخة الرابعة
-                const sdk = new window.Thirdweb.ThirdwebSDK("polygon", { 
+                // استخدام النسخة المباشرة لتفادي خطأ Constructor
+                const sdk = new window.ThirdwebSDK("polygon", { 
                     clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" 
                 });
                 const addr = await sdk.wallet.connect();
                 m.className = "mt-4 text-green-400 font-bold uppercase";
-                m.innerText = "CONNECTED ✅ تم الاتصال: " + addr.substring(0, 10);
+                m.innerText = "SUCCESS ✅ تم الاتصال: " + addr.substring(0, 10);
             } catch (e) {
-                m.className = "mt-4 text-red-500 font-bold uppercase";
+                m.className = "mt-4 text-red-500 font-bold uppercase text-xs";
                 m.innerText = "❌ ERROR: " + e.message;
-                console.error(e);
             }
         };
     </script>

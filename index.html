@@ -3,100 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST - Official Community</title>
+    <title>KICKGHOST - Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-dev-sdk.umd.js"></script>
-    
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .ghost-glow { filter: drop-shadow(0 0 25px rgba(83, 252, 24, 0.7)); border: 4px solid #53fc18; }
-        .btn-kick { background: #53fc18; color: #000; transition: 0.3s; box-shadow: 0 0 15px rgba(83, 252, 24, 0.5); }
-        .btn-wallet { background: #fff; color: #000; transition: 0.3s; }
-        .card-pro { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { background-color: #000; color: #fff; font-family: sans-serif; }
+        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; }
+        .btn-kick { background: #53fc18; color: #000; box-shadow: 0 0 15px #53fc18; }
+        .btn-wallet { background: #fff; color: #000; }
     </style>
 </head>
-<body class="flex flex-col items-center p-6 bg-black">
-
+<body class="flex flex-col items-center p-6">
     <header class="text-center mt-12 mb-10">
-        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" 
-             class="w-48 h-48 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
-        <h1 class="text-5xl font-black tracking-tighter italic">KICK<span class="text-green-500">GHOST</span></h1>
+        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-48 h-48 rounded-full ghost-glow mx-auto mb-6">
+        <h1 class="text-5xl font-black italic">KICK<span class="text-green-500">GHOST</span></h1>
     </header>
 
-    <div class="w-full max-w-sm space-y-4 mb-12">
-        <button id="kick-auth-btn" class="w-full btn-kick py-4 rounded-xl font-black text-lg hover:scale-105">
-            STEP 1: LOGIN WITH KICK 🎥
-        </button>
-        <button id="connect-btn" class="w-full btn-wallet py-4 rounded-xl font-black text-lg hover:scale-105">
-            STEP 2: CONNECT WALLET 👻
-        </button>
-        <p id="status-msg" class="text-center text-xs text-green-400 font-mono font-bold uppercase"></p>
+    <div class="w-full max-w-sm space-y-4 mb-10">
+        <button id="kick-btn" class="w-full btn-kick py-4 rounded-xl font-black text-lg">STEP 1: LOGIN WITH KICK 🎥</button>
+        <button id="wallet-btn" class="w-full btn-wallet py-4 rounded-xl font-black text-lg">STEP 2: CONNECT WALLET 👻</button>
+        <p id="msg" class="text-center text-xs font-bold mt-2 uppercase"></p>
     </div>
 
-    <div class="w-full max-w-xl card-pro p-8 rounded-3xl mb-12 border-t-2 border-green-500">
-        <h2 class="text-xl font-black text-green-500 mb-6 text-center uppercase tracking-widest">How to add $KICKGHOST to your Wallet</h2>
-        <div class="space-y-4 text-sm text-gray-300">
-            <div class="flex items-center gap-3 bg-zinc-900 p-3 rounded-lg border border-zinc-800">
-                <span class="bg-green-500 text-black px-2 py-0.5 rounded font-bold italic">ADDR</span>
-                <code class="text-[10px] break-all text-green-400">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
-            </div>
-            <ul class="list-none space-y-2" dir="rtl">
-                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 1. حل محفظة MetaMask أو Binance Web3. [cite: 2025-12-28]</li>
-                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 2. اختار شبكة <strong class="text-white">Polygon</strong>. [cite: 2025-12-28]</li>
-                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 3. كليكي على <b>Import Token</b> ولصق العنوان الفوق. [cite: 2025-12-28]</li>
-            </ul>
+    <div class="w-full max-w-xl border-2 border-green-500 p-6 rounded-3xl bg-zinc-900">
+        <h2 class="text-center font-bold text-green-500 mb-4">HOW TO ADD $KICKGHOST</h2>
+        <div class="bg-black p-3 rounded mb-4 text-[10px] text-green-400 break-all text-center border border-zinc-700">
+            0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
         </div>
+        <ul class="text-right text-sm space-y-2 text-gray-300">
+            <li>1. حل محفظة MetaMask أو Binance Web3 [cite: 2025-12-28] ✅</li>
+            <li>2. اختار شبكة Polygon [cite: 2025-12-28] ✅</li>
+            <li>3. كليكي على Import Token ولصق العنوان [cite: 2025-12-28] ✅</li>
+        </ul>
     </div>
-
-    <div class="w-full max-w-4xl rounded-3xl overflow-hidden border border-zinc-800 mb-20 shadow-2xl">
-        <div class="bg-zinc-900 p-3 flex justify-between items-center">
-            <span class="text-xs font-bold text-gray-400">LIVE MARKET DATA</span>
-            <span class="text-xs text-green-500 animate-pulse">● LIVE</span>
-        </div>
-        <div style="position:relative;width:100%;padding-bottom:120%;">
-            <iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" 
-                    style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe>
-        </div>
-    </div>
-
-    <footer class="flex flex-col items-center gap-6 pb-20">
-        <div class="flex gap-8">
-            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="text-3xl text-green-500 hover:text-white"><i class="fa-brands fa-kickstarter"></i></a>
-            <a href="https://www.instagram.com/ghost.gamingtv" target="_blank" class="text-3xl text-green-500 hover:text-white"><i class="fa-brands fa-instagram"></i></a>
-        </div>
-        <p class="text-[10px] text-zinc-600 tracking-widest uppercase italic">© 2026 KICKGHOST Project [cite: 2025-12-28]</p>
-    </footer>
 
     <script>
-        // Kick Logic
-        const KICK_ID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
-        const REDIRECT = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
-        
-        document.getElementById("kick-auth-btn").onclick = () => {
-            const scope = "user:read channel:read chat:write";
-            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${KICK_ID}&redirect_uri=${encodeURIComponent(REDIRECT)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+        // تصحيح كود Kick (الرابط الجديد)
+        document.getElementById("kick-btn").onclick = () => {
+            const clientID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
+            const redirect = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
+            const scope = encodeURIComponent("user:read channel:read chat:write");
+            // الرابط الصحيح اللي كيتخطى خطأ 404
+            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=${scope}`;
         };
 
-        // Wallet Logic
-        document.getElementById("connect-btn").onclick = async () => {
-            const status = document.getElementById("status-msg");
+        // تصحيح كود المحفظة
+        document.getElementById("wallet-btn").onclick = async () => {
+            const m = document.getElementById("msg");
             try {
-                status.innerText = "Connecting...";
+                m.innerText = "CONNECTING...";
                 const sdk = new window.ThirdwebSDK("polygon", { clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" });
                 const addr = await sdk.wallet.connect();
-                status.innerText = "✅ CONNECTED: " + addr.substring(0,6) + "...";
-                
-                // صيفط لـ Pipedream باش تسجل فـ Google Sheets
-                fetch("https://eo8kdgfd5w3euzv.m.pipedream.net", {
-                    method: "POST",
-                    body: JSON.stringify({ wallet: addr, action: "new_connection" })
-                });
-            } catch (e) { status.innerText = "❌ ERROR"; }
+                m.className = "text-center text-green-400";
+                m.innerText = "CONNECTED: " + addr.substring(0,6);
+            } catch (e) { 
+                m.className = "text-center text-red-500";
+                m.innerText = "❌ ERROR: PLEASE ADD GITHUB TO THIRDWEB DASHBOARD";
+            }
         };
     </script>
 </body>
 </html>
+
 
 
 

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +19,6 @@
         .card-pro { background: #111; border: 1px solid #333; transition: 0.3s; }
         .card-pro:hover { border-color: #53fc18; }
         
-        /* ستايل بوطونة الربط */
         .btn-connect { 
             background: #53fc18; color: black; font-weight: 900; 
             padding: 15px 35px; border-radius: 20px; transition: 0.3s;
@@ -30,7 +31,7 @@
 <body class="flex flex-col items-center p-6">
 
     <header class="text-center mt-10 mb-12">
-        <img src="https://i.postimg.cc/mD83p9F9/KICKGHOST-LOGO-200.png" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
+        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
         
         <h1 class="text-6xl font-black text-white tracking-tighter">KICK<span class="text-green-400">GHOST</span></h1>
         
@@ -81,7 +82,6 @@
     </footer>
 
     <script>
-        // الكود اللي صاوبتي فـ Dashboard
         const CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e"; 
 
         const connectBtn = document.getElementById("connect-btn");
@@ -90,28 +90,20 @@
         connectBtn.addEventListener("click", async () => {
             try {
                 connectBtn.innerText = "Connecting...";
-                
-                // إنشاء SDK لشبكة Polygon
-                const sdk = new window.ThirdwebSDK("polygon", {
-                    clientId: CLIENT_ID
-                });
-
-                // تفعيل نافذة ربط المحفظة
+                const sdk = new window.ThirdwebSDK("polygon", { clientId: CLIENT_ID });
                 const address = await sdk.wallet.connect();
                 
-                // تحديث واجهة المستخدم بعد النجاح
                 connectBtn.innerText = "CONNECTED ✅";
                 connectBtn.style.background = "#fff";
-                walletAddrDisplay.innerText = "WALET: " + address.substring(0, 6) + "..." + address.substring(address.length - 4);
+                walletAddrDisplay.innerText = "WALLET: " + address.substring(0, 6) + "..." + address.substring(address.length - 4);
                 
-                console.log("KICKGHOST Project Connected to:", address);
+                console.log("KICKGHOST Connected:", address);
             } catch (error) {
-                console.error("Connection failed:", error);
+                console.error("Error:", error);
                 connectBtn.innerText = "CONNECT WALLET 👻";
-                alert("Connection failed. Make sure you have a wallet installed.");
+                alert("Connection failed!");
             }
         });
     </script>
-
 </body>
 </html>

@@ -41,11 +41,11 @@
     <script>
         // تصحيح كود Kick (الرابط الجديد)
         document.getElementById("kick-btn").onclick = () => {
-            const clientID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
+            const clientID = "1674c0a32bd6f7ffdcea4222adf74d6e"; //
             const redirect = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
             const scope = encodeURIComponent("user:read channel:read chat:write");
             // الرابط الصحيح اللي كيتخطى خطأ 404
-            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=${scope}`;
+            window.location.href = `https://kick.com/oauth/authorize?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=${scope}`;
         };
 
         // تصحيح كود المحفظة
@@ -65,6 +65,7 @@
     </script>
 </body>
 </html>
+
 
 
 

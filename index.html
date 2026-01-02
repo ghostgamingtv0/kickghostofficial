@@ -1,86 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>KICKGHOST</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>KICKGHOST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Ethers -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
 </head>
 
-<body class="bg-black text-white text-center p-6">
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen gap-6">
 
-<!-- LOGO -->
-<img
-  src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
-  class="w-28 mx-auto rounded-full border-4 border-green-500"
-/>
+  <!-- LOGO -->
+  <img
+    src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
+    class="w-32 h-32 rounded-full border-4 border-green-500"
+  />
 
-<h1 class="text-4xl font-black mt-4">
-  KICK<span class="text-green-500">GHOST</span>
-</h1>
+  <!-- TITLE -->
+  <h1 class="text-4xl font-extrabold">
+    KICK<span class="text-green-500">GHOST</span>
+  </h1>
 
-<!-- SOCIAL ICONS -->
-<div class="flex justify-center gap-6 mt-4">
-  <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
-         class="w-8 h-8 hover:scale-110 transition" />
-  </a>
+  <!-- SOCIALS -->
+  <div class="flex gap-6 mt-2">
+    <a href="https://kick.com/ghost_gamingtv" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Kick_logo.svg"
+           class="w-8 h-8 invert hover:scale-110 transition" />
+    </a>
 
-  <a href="https://kick.com/ghost_gamingtv" target="_blank">
-    <img src="https://static.kick.com/images/kick-logo.png"
-         class="w-8 h-8 hover:scale-110 transition" />
-  </a>
+    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+           class="w-8 h-8 hover:scale-110 transition" />
+    </a>
 
-  <a href="https://x.com/tv_ghostgaming" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
-         class="w-8 h-8 hover:scale-110 transition" />
-  </a>
-</div>
+    <a href="https://x.com/tv_ghostgaming" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
+           class="w-8 h-8 invert hover:scale-110 transition" />
+    </a>
+  </div>
 
-<!-- CONNECT WALLET -->
-<button
-  onclick="connectWallet()"
-  class="mt-8 bg-green-500 text-black px-6 py-3 rounded-xl font-bold"
->
-  CONNECT WALLET
-</button>
+  <!-- BUTTONS -->
+  <div class="flex gap-4 mt-6">
+    <button
+      onclick="loginKick()"
+      class="bg-green-500 text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition">
+      LOGIN WITH KICK
+    </button>
 
-<p id="wallet" class="mt-3 break-all text-sm"></p>
+    <button
+      onclick="connectWallet()"
+      class="bg-green-500 text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition">
+      CONNECT WALLET
+    </button>
+  </div>
 
-<!-- CLAIM -->
-<button
-  onclick="claim()"
-  class="mt-6 bg-white text-black px-6 py-3 rounded-xl font-bold"
->
-  CLAIM 1000 (WEEKLY)
-</button>
+  <!-- WALLET -->
+  <p id="wallet" class="text-sm break-all"></p>
 
-<p id="msg" class="mt-4 font-bold"></p>
+  <!-- CLAIM -->
+  <button
+    onclick="claim()"
+    class="bg-white text-black px-10 py-3 rounded-xl font-bold hover:scale-105 transition">
+    CLAIM 1000 (WEEKLY)
+  </button>
 
-<!-- HOW TO ADD TOKEN -->
-<div class="mt-10 p-4 border border-green-500 rounded-xl max-w-xl mx-auto text-left">
-  <h2 class="text-green-500 font-bold mb-2">
-    How to add token / كيفية إضافة العملة
-  </h2>
-  <p class="text-sm">
-    EN: MetaMask → Import Token → Paste contract address.<br>
-    AR: ميتاماسك ← إضافة عملة ← ضع عنوان العقد.
-  </p>
-  <p class="text-xs mt-2 break-all">
-    Contract: 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
-  </p>
-</div>
+  <p id="msg" class="font-bold mt-2"></p>
 
-<!-- CHART -->
-<div class="mt-10">
+  <!-- TOKEN INFO -->
+  <div class="border border-green-500 rounded-xl p-4 max-w-xl w-full text-left mt-6">
+    <h2 class="text-green-500 font-bold mb-2">How to add token</h2>
+    <p class="text-sm">
+      MetaMask → Import Token → Paste contract address
+    </p>
+    <p class="text-xs break-all mt-2">
+      Contract: 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
+    </p>
+  </div>
+
+  <!-- CHART -->
   <iframe
-    width="100%"
-    height="400"
+    class="w-full max-w-4xl h-96 mt-6"
     src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark">
   </iframe>
-</div>
 
-<!-- FOOTER -->
-<
+  <!-- SCRIPT -->
+  <script>
+    let userAddress = null;
+
+    function loginKick() {
+      // OAuth redirect
+      window.location.href =
+        "https://kick.com/oauth/authorize" +
+        "?client_id=YOUR_CLIENT_ID" +
+        "&redirect_uri=https://kickghostofficial.vercel.app/api/kick/callback" +
+        "&response_type=code";
+    }
+
+    async function connectWallet() {
+      if (!window.ethereum) {
+        alert("Install MetaMask");
+        return;
+      }
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      userAddress = await signer.getAddress();
+      document.getElementById("wallet").innerText = userAddress;
+    }
+
+    async function claim() {
+      if (!userAddress) {
+        alert("Connect wallet first");
+        return;
+      }
+      const res = await fetch("/api/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: userAddress })
+      });
+      const data = await res.json();
+      document.getElementById("msg").innerText = data.message;
+    }
+  </script>
+
+</body>
+</html>

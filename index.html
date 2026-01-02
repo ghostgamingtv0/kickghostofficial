@@ -1,123 +1,73 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST - Auto Airdrop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://dist.thirdwebcache.com/browser/v4/thirdweb.js"></script>
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;900&display=swap');
-        body { background-color: #000; color: #fff; font-family: 'Cairo', sans-serif; text-align: center; }
-        .ghost-glow { filter: drop-shadow(0 0 20px #53fc18); border: 4px solid #53fc18; width: 120px; border-radius: 50%; margin: 20px auto; }
-        .btn-main { background: #53fc18; color: #000; font-weight: 900; width: 100%; max-width: 350px; padding: 15px; border-radius: 12px; cursor: pointer; margin: 5px; }
-        .instruction-card { border: 2px solid #53fc18; background: #111; max-width: 800px; margin: 20px auto; border-radius: 20px; padding: 20px; }
-        .wallet-btn { background: #fff; color: #000; font-weight: 900; width: 120px; padding: 10px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; }
-    </style>
+<meta charset="UTF-8" />
+<title>KICKGHOST Airdrop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://dist.thirdwebcache.com/browser/v4/thirdweb.js"></script>
 </head>
-<body class="p-4">
+<body class="bg-black text-white text-center">
 
-    <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="ghost-glow">
-    <h1 class="text-4xl font-black italic uppercase mb-6">KICK<span class="text-green-500">GHOST</span></h1>
+<img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
+class="w-32 mx-auto mt-6 rounded-full border-4 border-green-500"/>
 
-    <!-- Step 1: Kick Login -->
-    <div class="mb-8">
-        <button id="kick-btn" class="btn-main uppercase text-lg">Step 1: Login with Kick 🎥</button>
-        <p class="text-green-500 text-sm font-bold">المرحلة 1: تسجيل الدخول عبر كيك</p>
-    </div>
+<h1 class="text-4xl font-black mt-4">KICK<span class="text-green-500">GHOST</span></h1>
 
-    <!-- Step 2: Wallet Connect -->
-    <div class="mb-8">
-        <h3 class="font-bold mb-4 uppercase">Step 2: Connect Wallet / ربط المحفظة</h3>
-        <div class="flex flex-wrap justify-center gap-2">
-            <button onclick="connectWallet('MetaMask')" class="wallet-btn">MetaMask</button>
-            <button onclick="connectWallet('WalletConnect')" class="wallet-btn">TrustWallet</button>
-            <button onclick="connectWallet('CoinbaseWallet')" class="wallet-btn">Coinbase</button>
-        </div>
-        <p id="wallet-msg" class="mt-4 text-xs font-bold uppercase"></p>
-    </div>
+<button onclick="connectWallet()" class="bg-green-500 text-black px-6 py-3 rounded-xl font-bold mt-8">
+Connect Wallet
+</button>
+<p id="wallet" class="mt-3"></p>
 
-    <!-- Step 3: Claim 1000 Tokens -->
-    <div class="mb-10 p-6 border-2 border-dashed border-green-500 rounded-3xl max-w-sm mx-auto">
-        <button id="claim-btn" class="bg-green-500 text-black w-full py-4 rounded-xl font-black text-xl hover:bg-white transition">CLAIM 1000 $KICKGHOST 🚀</button>
-        <p class="mt-2 text-xs text-gray-400">Get your tokens automatically / استلم 1000 عملة أوتوماتيكياً</p>
-        <p id="airdrop-msg" class="mt-2 font-bold text-sm"></p>
-    </div>
+<button onclick="claim()" class="bg-white text-black px-6 py-3 rounded-xl font-bold mt-6">
+Claim 1000 Tokens (Weekly)
+</button>
+<p id="msg" class="mt-3"></p>
 
-    <!-- Instruction Card -->
-    <div class="instruction-card">
-        <h2 class="text-green-500 font-bold mb-4 uppercase">How to add Token / كيفية إضافة العملة</h2>
-        <p class="text-xs text-gray-400 mb-2">Polygon Network - 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</p>
-        <iframe width="100%" height="400" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
-    </div>
+<div class="max-w-xl mx-auto mt-12 text-left p-4 border border-green-500 rounded-xl">
+<h2 class="text-green-500 font-bold mb-2">How to add token / كيفية إضافة العملة</h2>
+<p class="text-sm">
+EN: MetaMask → Import Token → Paste contract address.<br/>
+AR: ميتاماسك ← إضافة عملة ← ضع عنوان العقد.
+</p>
+<p class="text-xs mt-2 break-all">
+Contract: 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
+</p>
+</div>
 
-    <script>
-        const CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e";
-        const TOKEN_CONTRACT = "0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce";
-        let connectedAddress = "";
-        let sdk;
+<div class="mt-10">
+<iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark"
+width="100%" height="400"></iframe>
+</div>
 
-        // Step 1: Kick Login
-        document.getElementById("kick-btn").onclick = () => {
-            const kID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
-            const red = "https://ghostgamingtv0.github.io/kickghostofficial/";
-            window.location.href = `https://kick.com/oauth/authorize?client_id=${kID}&redirect_uri=${encodeURIComponent(red)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
-        };
+<footer class="mt-10 p-4 text-sm">
+<a href="https://www.instagram.com/ghost.gamingtv/" target="_blank">Instagram</a> |
+<a href="https://kick.com/ghost_gamingtv" target="_blank">Kick</a> |
+<a href="https://x.com/tv_ghostgaming" target="_blank">Twitter</a>
+</footer>
 
-        // Step 2: Connect Wallet
-        async function connectWallet(type){
-            const m = document.getElementById("wallet-msg");
-            m.innerText="CONNECTING... / جاري الاتصال";
-            try {
-                sdk = new window.Thirdweb.ThirdwebSDK("polygon", { clientId: CLIENT_ID });
-                let wallet;
-                if(type==='MetaMask') wallet = new window.Thirdweb.MetaMaskWallet();
-                else if(type==='WalletConnect') wallet = new window.Thirdweb.WalletConnectWallet();
-                else wallet = new window.Thirdweb.CoinbaseWallet();
+<script>
+let walletAddress = null;
 
-                await wallet.connect();
-                connectedAddress = await wallet.getAddress();
-                m.innerText="CONNECTED: " + connectedAddress.substring(0,10);
-                m.className="mt-4 text-green-400 font-bold uppercase";
-            } catch(e){
-                m.innerText="❌ ERROR: " + e.message;
-                m.className="mt-4 text-red-500 font-bold text-[10px]";
-            }
-        }
+async function connectWallet(){
+ const wallet = await window.thirdweb.createWallet("io.metamask");
+ await wallet.connect({ clientId: "PUT_CLIENT_ID_HERE" });
+ walletAddress = await wallet.getAddress();
+ document.getElementById("wallet").innerText = walletAddress;
+}
 
-        // Step 3: Claim 1000 Tokens via Backend
-        document.getElementById("claim-btn").onclick = async () => {
-            const msg = document.getElementById("airdrop-msg");
-            if(!connectedAddress){
-                msg.innerText="Connect wallet first! / اربط المحفظة أولاً";
-                msg.style.color="red";
-                return;
-            }
+async function claim(){
+ if(!walletAddress){ alert("Connect wallet first"); return; }
+ const res = await fetch("https://YOUR_VERCEL_BACKEND/claim",{
+  method:"POST",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({ address: walletAddress })
+ });
+ const data = await res.json();
+ document.getElementById("msg").innerText = data.message;
+}
+</script>
 
-            msg.innerText="Processing Claim 1000 Tokens... / جاري إرسال 1000 عملة...";
-            msg.style.color="yellow";
-
-            try {
-                const res = await fetch("https://YOUR_BACKEND_URL/api/claim", {
-                    method:"POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ walletAddress: connectedAddress, amount: 1000 })
-                });
-                const data = await res.json();
-                if(data.success){
-                    msg.innerText="✅ Success! 1000 Tokens sent. TxHash: "+data.txHash+" / تم إرسال 1000 عملة";
-                    msg.style.color="#53fc18";
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch(e){
-                msg.innerText="❌ Failed: "+e.message+" / فشل العملية";
-                msg.style.color="red";
-                console.error(e);
-            }
-        };
-    </script>
 </body>
 </html>
-

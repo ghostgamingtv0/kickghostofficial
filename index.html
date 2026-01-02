@@ -17,30 +17,34 @@
         .card-pro { background: #111; border: 1px solid #333; transition: 0.3s; }
         .card-pro:hover { border-color: #53fc18; }
         
-        .btn-connect { 
-            background: #53fc18; color: black; font-weight: 900; 
-            padding: 15px 35px; border-radius: 20px; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(83, 252, 24, 0.4);
-            text-transform: uppercase;
+        .btn-main { 
+            width: 100%; font-weight: 900; padding: 18px; border-radius: 20px; 
+            transition: 0.3s; text-transform: uppercase; font-size: 1.25rem;
         }
-        .btn-connect:hover { background: white; transform: scale(1.05); box-shadow: 0 0 25px #53fc18; }
     </style>
 </head>
 <body class="flex flex-col items-center p-6">
 
     <header class="text-center mt-10 mb-12">
-        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
+        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6">
         
         <h1 class="text-6xl font-black text-white tracking-tighter">KICK<span class="text-green-400">GHOST</span></h1>
         
-        <div class="mt-8">
-            <button id="connect-btn" class="btn-connect">CONNECT WALLET 👻</button>
-            <p id="wallet-address" class="text-xs mt-3 text-green-400 font-mono font-bold tracking-widest uppercase"></p>
+        <div class="mt-10 w-full max-w-md space-y-4 mx-auto">
+            <button id="kick-auth-btn" class="btn-main bg-[#53fc18] text-black hover:bg-white shadow-[0_0_20px_rgba(83,252,24,0.5)]">
+                STEP 1: LOGIN WITH KICK 🎥
+            </button>
+            
+            <button id="connect-btn" class="btn-main bg-white text-black hover:bg-green-500">
+                STEP 2: CONNECT WALLET 👻
+            </button>
+            
+            <p id="status-msg" class="text-sm font-bold text-green-400 mt-4 h-6 uppercase tracking-widest"></p>
         </div>
 
-        <div class="flex items-center justify-center gap-4 mt-8">
+        <div class="flex items-center justify-center gap-4 mt-12">
             <span class="text-gray-400">Powered by</span>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Kick_logo.svg" class="kick-logo" alt="Kick Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Kick_logo.svg" class="kick-logo">
         </div>
     </header>
 
@@ -51,53 +55,53 @@
     </div>
 
     <div class="w-full max-w-2xl card-pro p-8 rounded-3xl mb-12 text-center">
-        <h2 class="text-2xl font-bold text-green-400 mb-4">كيفاش تطلع العملة فالمحفظة ديالك؟ 👻</h2>
-        <p class="text-gray-300 mb-6 text-sm">How to see $KICKGHOST in your wallet</p>
+        <h2 class="text-2xl font-bold text-green-400 mb-4 font-mono">KICKGHOST CONTRACT</h2>
         <div class="bg-black p-4 rounded-xl border border-dashed border-green-500 mb-4">
             <code class="text-xs text-green-400 break-all" id="contractAddr">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
         </div>
-        <ul class="text-right space-y-2 text-sm text-gray-400" dir="rtl">
-            <li>1. حل محفظة Binance Web3 أو MetaMask.</li>
-            <li>2. سير لـ <b>Import Tokens</b> أو <b>Manage Tokens</b>.</li>
-            <li>3. اختار شبكة <b>Polygon</b>.</li>
-            <li>4. لصق "عنوان العقد" الفوق، وغادي تطلع ليك KICKGHOST أوتوماتيكياً.</li>
-        </ul>
+        <p class="text-gray-400 text-sm">Official Polygon Token for Ghost Gaming TV Fans [cite: 2025-12-28]</p>
     </div>
 
-    <div class="w-full max-w-4xl mb-12">
-        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">🔴 Live Price & Liquidity (370+ POL)</h2>
+    <div class="w-full max-w-4xl mb-20">
         <div style="position:relative;width:100%;padding-bottom:125%;">
             <iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe>
         </div>
     </div>
 
-    <div class="w-full max-w-md space-y-4 mb-20">
-        <a href="https://kick.com/ghost_gamingtv" class="block bg-green-500 text-black py-5 rounded-2xl font-black text-center text-xl hover:bg-white transition">WATCH LIVE & EARN NOW</a>
-    </div>
-
     <footer class="text-zinc-600 text-xs text-center pb-10">
-        © 2025 KICKGHOST Project | Built for Ghost Gaming TV Fans
+        © 2026 KICKGHOST Project | Built for the Community [cite: 2025-12-28]
     </footer>
 
     <script>
-        const CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e"; 
+        // --- إعدادات Kick ---
+        const KICK_CLIENT_ID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
+        const REDIRECT_URI = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
 
-        const connectBtn = document.getElementById("connect-btn");
-        const walletAddrDisplay = document.getElementById("wallet-address");
+        document.getElementById("kick-auth-btn").addEventListener("click", () => {
+            const scope = "user:read channel:read chat:write";
+            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+        });
 
-        connectBtn.addEventListener("click", async () => {
+        // --- إعدادات Thirdweb ---
+        const THIRDWEB_CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e"; // [cite: 2025-12-28]
+        const statusMsg = document.getElementById("status-msg");
+
+        document.getElementById("connect-btn").addEventListener("click", async () => {
             try {
-                connectBtn.innerText = "Connecting...";
-                const sdk = new window.ThirdwebSDK("polygon", { clientId: CLIENT_ID });
+                statusMsg.innerText = "CONNECTING...";
+                const sdk = new window.ThirdwebSDK("polygon", { clientId: THIRDWEB_CLIENT_ID });
                 const address = await sdk.wallet.connect();
+                statusMsg.innerText = "CONNECTED: " + address.substring(0, 6) + "...";
                 
-                connectBtn.innerText = "CONNECTED ✅";
-                connectBtn.style.background = "#fff";
-                walletAddrDisplay.innerText = "WALLET: " + address.substring(0, 6) + "..." + address.substring(address.length - 4);
-            } catch (error) {
-                console.error("Error:", error);
-                connectBtn.innerText = "CONNECT WALLET 👻";
-                alert("Connection failed!");
+                // إرسال البيانات لـ Pipedream
+                fetch("https://eo8kdgfd5w3euzv.m.pipedream.net", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ wallet: address, action: "wallet_connected" })
+                });
+            } catch (err) {
+                statusMsg.innerText = "ERROR CONNECTING";
+                console.error(err);
             }
         });
     </script>

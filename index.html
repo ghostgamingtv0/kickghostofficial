@@ -1,131 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>KICKGHOST</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Tailwind -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Ethers -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
 </head>
 
-<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen gap-6">
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen p-6">
 
   <!-- LOGO -->
   <img
     src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
-    class="w-32 h-32 rounded-full border-4 border-green-500"
+    class="w-32 h-32 rounded-full border-4 border-green-500 mb-4"
   />
 
   <!-- TITLE -->
-  <h1 class="text-4xl font-extrabold">
+  <h1 class="text-4xl font-extrabold mb-4">
     KICK<span class="text-green-500">GHOST</span>
   </h1>
 
-  <!-- SOCIALS -->
-  <div class="flex gap-6 mt-2">
-    <a href="https://kick.com/ghost_gamingtv" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Kick_logo.svg"
-           class="w-8 h-8 invert hover:scale-110 transition" />
+  <!-- SOCIAL ICONS -->
+  <div class="flex gap-6 mb-6">
+
+    <!-- KICK -->
+    <a href="https://kick.com/ghost_gamingtv" target="_blank" title="Kick">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+           class="w-8 h-8 fill-green-500 hover:fill-white transition">
+        <path d="M48 32h80v80H48zm80 80h80v80h-80zM48 128h80v80H48z"/>
+      </svg>
     </a>
 
-    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
-           class="w-8 h-8 hover:scale-110 transition" />
+    <!-- INSTAGRAM -->
+    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" title="Instagram">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+           class="w-8 h-8">
     </a>
 
-    <a href="https://x.com/tv_ghostgaming" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
-           class="w-8 h-8 invert hover:scale-110 transition" />
+    <!-- TWITTER -->
+    <a href="https://x.com/tv_ghostgaming" target="_blank" title="Twitter">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
+           class="w-8 h-8">
     </a>
+
   </div>
 
-  <!-- BUTTONS -->
-  <div class="flex gap-4 mt-6">
-    <button
-      onclick="loginKick()"
-      class="bg-green-500 text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition">
-      LOGIN WITH KICK
-    </button>
+  <!-- ADD TOKEN SECTION -->
+  <div class="border border-green-500 rounded-xl p-4 max-w-xl w-full text-left">
 
-    <button
-      onclick="connectWallet()"
-      class="bg-green-500 text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition">
-      CONNECT WALLET
-    </button>
-  </div>
+    <h2 class="text-green-500 font-bold mb-2">
+      How to add token / كيفية إضافة العملة
+    </h2>
 
-  <!-- WALLET -->
-  <p id="wallet" class="text-sm break-all"></p>
-
-  <!-- CLAIM -->
-  <button
-    onclick="claim()"
-    class="bg-white text-black px-10 py-3 rounded-xl font-bold hover:scale-105 transition">
-    CLAIM 1000 (WEEKLY)
-  </button>
-
-  <p id="msg" class="font-bold mt-2"></p>
-
-  <!-- TOKEN INFO -->
-  <div class="border border-green-500 rounded-xl p-4 max-w-xl w-full text-left mt-6">
-    <h2 class="text-green-500 font-bold mb-2">How to add token</h2>
-    <p class="text-sm">
-      MetaMask → Import Token → Paste contract address
+    <p class="text-sm mb-2">
+      <strong>EN:</strong> MetaMask → Import Token → Paste contract address
     </p>
-    <p class="text-xs break-all mt-2">
-      Contract: 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
+
+    <p class="text-sm mb-3">
+      <strong>AR:</strong> ميتاماسك ← إضافة عملة ← ضع عنوان العقد
     </p>
+
+    <p class="text-xs break-all">
+      Contract: <span class="text-green-400">
+        0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
+      </span>
+    </p>
+
   </div>
-
-  <!-- CHART -->
-  <iframe
-    class="w-full max-w-4xl h-96 mt-6"
-    src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark">
-  </iframe>
-
-  <!-- SCRIPT -->
-  <script>
-    let userAddress = null;
-
-    function loginKick() {
-      // OAuth redirect
-      window.location.href =
-        "https://kick.com/oauth/authorize" +
-        "?client_id=YOUR_CLIENT_ID" +
-        "&redirect_uri=https://kickghostofficial.vercel.app/api/kick/callback" +
-        "&response_type=code";
-    }
-
-    async function connectWallet() {
-      if (!window.ethereum) {
-        alert("Install MetaMask");
-        return;
-      }
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
-      userAddress = await signer.getAddress();
-      document.getElementById("wallet").innerText = userAddress;
-    }
-
-    async function claim() {
-      if (!userAddress) {
-        alert("Connect wallet first");
-        return;
-      }
-      const res = await fetch("/api/claim", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: userAddress })
-      });
-      const data = await res.json();
-      document.getElementById("msg").innerText = data.message;
-    }
-  </script>
 
 </body>
 </html>

@@ -6,6 +6,8 @@
     <title>KICKGHOST - Official Community</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-dev-sdk.umd.js"></script>
+    
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         .ghost-glow { filter: drop-shadow(0 0 25px rgba(83, 252, 24, 0.7)); border: 5px solid #53fc18; }
@@ -14,14 +16,30 @@
         .social-icon:hover { transform: scale(1.2); color: #fff; }
         .card-pro { background: #111; border: 1px solid #333; transition: 0.3s; }
         .card-pro:hover { border-color: #53fc18; }
+        
+        /* ستايل بوطونة الربط */
+        .btn-connect { 
+            background: #53fc18; color: black; font-weight: 900; 
+            padding: 15px 35px; border-radius: 20px; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(83, 252, 24, 0.4);
+            text-transform: uppercase;
+        }
+        .btn-connect:hover { background: white; transform: scale(1.05); box-shadow: 0 0 25px #53fc18; }
     </style>
 </head>
 <body class="flex flex-col items-center p-6">
 
     <header class="text-center mt-10 mb-12">
-        <img src="https://i.postimg.cc/mD83p9F9/KICKGHOST-LOGO-200.png" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6">
+        <img src="https://i.postimg.cc/mD83p9F9/KICKGHOST-LOGO-200.png" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
+        
         <h1 class="text-6xl font-black text-white tracking-tighter">KICK<span class="text-green-400">GHOST</span></h1>
-        <div class="flex items-center justify-center gap-4 mt-4">
+        
+        <div class="mt-8">
+            <button id="connect-btn" class="btn-connect">CONNECT WALLET 👻</button>
+            <p id="wallet-address" class="text-xs mt-3 text-green-400 font-mono font-bold tracking-widest uppercase"></p>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mt-8">
             <span class="text-gray-400">Powered by</span>
             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Kick_logo.svg" class="kick-logo" alt="Kick Logo">
         </div>
@@ -40,7 +58,7 @@
             <code class="text-xs text-green-400 break-all" id="contractAddr">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
         </div>
         <ul class="text-right space-y-2 text-sm text-gray-400" dir="rtl">
-            <li>1. حل محفظة Binance Web3 أو MetaMask.</li>
+            <li>1. حل محفظة Binance Web3 أو MetaMask. [cite: 2025-12-28]</li>
             <li>2. سير لـ <b>Import Tokens</b> أو <b>Manage Tokens</b>.</li>
             <li>3. اختار شبكة <b>Polygon</b>.</li>
             <li>4. لصق "عنوان العقد" الفوق، وغادي تطلع ليك KICKGHOST أوتوماتيكياً.</li>
@@ -49,7 +67,9 @@
 
     <div class="w-full max-w-4xl mb-12">
         <h2 class="text-xl font-bold mb-4 flex items-center gap-2">🔴 Live Price & Liquidity (370+ POL)</h2>
-        <div style="position:relative;width:100%;padding-bottom:125%;"><iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe></div>
+        <div style="position:relative;width:100%;padding-bottom:125%;">
+            <iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe>
+        </div>
     </div>
 
     <div class="w-full max-w-md space-y-4 mb-20">
@@ -59,6 +79,39 @@
     <footer class="text-zinc-600 text-xs text-center pb-10">
         © 2025 KICKGHOST Project | Built for Ghost Gaming TV Fans [cite: 2025-12-28]
     </footer>
+
+    <script>
+        // الكود اللي صاوبتي فـ Dashboard
+        const CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e"; 
+
+        const connectBtn = document.getElementById("connect-btn");
+        const walletAddrDisplay = document.getElementById("wallet-address");
+
+        connectBtn.addEventListener("click", async () => {
+            try {
+                connectBtn.innerText = "Connecting...";
+                
+                // إنشاء SDK لشبكة Polygon
+                const sdk = new window.ThirdwebSDK("polygon", {
+                    clientId: CLIENT_ID
+                });
+
+                // تفعيل نافذة ربط المحفظة
+                const address = await sdk.wallet.connect();
+                
+                // تحديث واجهة المستخدم بعد النجاح
+                connectBtn.innerText = "CONNECTED ✅";
+                connectBtn.style.background = "#fff";
+                walletAddrDisplay.innerText = "WALET: " + address.substring(0, 6) + "..." + address.substring(address.length - 4);
+                
+                console.log("KICKGHOST Project Connected to:", address);
+            } catch (error) {
+                console.error("Connection failed:", error);
+                connectBtn.innerText = "CONNECT WALLET 👻";
+                alert("Connection failed. Make sure you have a wallet installed.");
+            }
+        });
+    </script>
 
 </body>
 </html>

@@ -41,4 +41,83 @@
     <!-- Step 3: Claim 1000 Tokens -->
     <div class="mb-10 p-6 border-2 border-dashed border-green-500 rounded-3xl max-w-sm mx-auto">
         <button id="claim-btn" class="bg-green-500 text-black w-full py-4 rounded-xl font-black text-xl hover:bg-white transition">CLAIM 1000 $KICKGHOST 🚀</button>
-        <p class="mt-2 text-xs text-gray-400">Get your tokens automatically / استلم 1000 عملة أوتو
+        <p class="mt-2 text-xs text-gray-400">Get your tokens automatically / استلم 1000 عملة أوتوماتيكياً</p>
+        <p id="airdrop-msg" class="mt-2 font-bold text-sm"></p>
+    </div>
+
+    <!-- Instruction Card -->
+    <div class="instruction-card">
+        <h2 class="text-green-500 font-bold mb-4 uppercase">How to add Token / كيفية إضافة العملة</h2>
+        <p class="text-xs text-gray-400 mb-2">Polygon Network - 0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</p>
+        <iframe width="100%" height="400" src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        const CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e";
+        const TOKEN_CONTRACT = "0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce";
+        let connectedAddress = "";
+        let sdk;
+
+        // Step 1: Kick Login
+        document.getElementById("kick-btn").onclick = () => {
+            const kID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55";
+            const red = "https://ghostgamingtv0.github.io/kickghostofficial/";
+            window.location.href = `https://kick.com/oauth/authorize?client_id=${kID}&redirect_uri=${encodeURIComponent(red)}&response_type=code&scope=user:read%20channel:read%20chat:write`;
+        };
+
+        // Step 2: Connect Wallet
+        async function connectWallet(type){
+            const m = document.getElementById("wallet-msg");
+            m.innerText="CONNECTING... / جاري الاتصال";
+            try {
+                sdk = new window.Thirdweb.ThirdwebSDK("polygon", { clientId: CLIENT_ID });
+                let wallet;
+                if(type==='MetaMask') wallet = new window.Thirdweb.MetaMaskWallet();
+                else if(type==='WalletConnect') wallet = new window.Thirdweb.WalletConnectWallet();
+                else wallet = new window.Thirdweb.CoinbaseWallet();
+
+                await wallet.connect();
+                connectedAddress = await wallet.getAddress();
+                m.innerText="CONNECTED: " + connectedAddress.substring(0,10);
+                m.className="mt-4 text-green-400 font-bold uppercase";
+            } catch(e){
+                m.innerText="❌ ERROR: " + e.message;
+                m.className="mt-4 text-red-500 font-bold text-[10px]";
+            }
+        }
+
+        // Step 3: Claim 1000 Tokens via Backend
+        document.getElementById("claim-btn").onclick = async () => {
+            const msg = document.getElementById("airdrop-msg");
+            if(!connectedAddress){
+                msg.innerText="Connect wallet first! / اربط المحفظة أولاً";
+                msg.style.color="red";
+                return;
+            }
+
+            msg.innerText="Processing Claim 1000 Tokens... / جاري إرسال 1000 عملة...";
+            msg.style.color="yellow";
+
+            try {
+                const res = await fetch("https://YOUR_BACKEND_URL/api/claim", {
+                    method:"POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ walletAddress: connectedAddress, amount: 1000 })
+                });
+                const data = await res.json();
+                if(data.success){
+                    msg.innerText="✅ Success! 1000 Tokens sent. TxHash: "+data.txHash+" / تم إرسال 1000 عملة";
+                    msg.style.color="#53fc18";
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch(e){
+                msg.innerText="❌ Failed: "+e.message+" / فشل العملية";
+                msg.style.color="red";
+                console.error(e);
+            }
+        };
+    </script>
+</body>
+</html>
+

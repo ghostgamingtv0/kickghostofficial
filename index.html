@@ -10,102 +10,93 @@
     
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .ghost-glow { filter: drop-shadow(0 0 25px rgba(83, 252, 24, 0.7)); border: 5px solid #53fc18; }
-        .kick-logo { width: 120px; filter: drop-shadow(0 0 10px #53fc18); }
-        .social-icon { font-size: 2rem; transition: 0.3s; color: #53fc18; }
-        .social-icon:hover { transform: scale(1.2); color: #fff; }
-        .card-pro { background: #111; border: 1px solid #333; transition: 0.3s; }
-        .card-pro:hover { border-color: #53fc18; }
-        
-        .btn-main { 
-            width: 100%; font-weight: 900; padding: 18px; border-radius: 20px; 
-            transition: 0.3s; text-transform: uppercase; font-size: 1.25rem;
-        }
+        .ghost-glow { filter: drop-shadow(0 0 25px rgba(83, 252, 24, 0.7)); border: 4px solid #53fc18; }
+        .btn-kick { background: #53fc18; color: #000; transition: 0.3s; box-shadow: 0 0 15px rgba(83, 252, 24, 0.5); }
+        .btn-wallet { background: #fff; color: #000; transition: 0.3s; }
+        .card-pro { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     </style>
 </head>
-<body class="flex flex-col items-center p-6">
+<body class="flex flex-col items-center p-6 bg-black">
 
-    <header class="text-center mt-10 mb-12">
-        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" class="w-56 h-56 rounded-full ghost-glow mx-auto mb-6">
-        
-        <h1 class="text-6xl font-black text-white tracking-tighter">KICK<span class="text-green-400">GHOST</span></h1>
-        
-        <div class="mt-10 w-full max-w-md space-y-4 mx-auto">
-            <button id="kick-auth-btn" class="btn-main bg-[#53fc18] text-black hover:bg-white shadow-[0_0_20px_rgba(83,252,24,0.5)]">
-                STEP 1: LOGIN WITH KICK 🎥
-            </button>
-            
-            <button id="connect-btn" class="btn-main bg-white text-black hover:bg-green-500">
-                STEP 2: CONNECT WALLET 👻
-            </button>
-            
-            <p id="status-msg" class="text-sm font-bold text-green-400 mt-4 h-6 uppercase tracking-widest"></p>
-        </div>
-
-        <div class="flex items-center justify-center gap-4 mt-12">
-            <span class="text-gray-400">Powered by</span>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Kick_logo.svg" class="kick-logo">
-        </div>
+    <header class="text-center mt-12 mb-10">
+        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" 
+             class="w-48 h-48 rounded-full ghost-glow mx-auto mb-6" alt="KICKGHOST Logo">
+        <h1 class="text-5xl font-black tracking-tighter italic">KICK<span class="text-green-500">GHOST</span></h1>
     </header>
 
-    <div class="flex gap-8 mb-12">
-        <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-icon"><i class="fa-brands fa-kickstarter"></i></a>
-        <a href="https://www.instagram.com/ghost.gamingtv" target="_blank" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://x.com/tv_ghostgaming" target="_blank" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+    <div class="w-full max-w-sm space-y-4 mb-12">
+        <button id="kick-auth-btn" class="w-full btn-kick py-4 rounded-xl font-black text-lg hover:scale-105">
+            STEP 1: LOGIN WITH KICK 🎥
+        </button>
+        <button id="connect-btn" class="w-full btn-wallet py-4 rounded-xl font-black text-lg hover:scale-105">
+            STEP 2: CONNECT WALLET 👻
+        </button>
+        <p id="status-msg" class="text-center text-xs text-green-400 font-mono font-bold uppercase"></p>
     </div>
 
-    <div class="w-full max-w-2xl card-pro p-8 rounded-3xl mb-12 text-center">
-        <h2 class="text-2xl font-bold text-green-400 mb-4 font-mono">KICKGHOST CONTRACT</h2>
-        <div class="bg-black p-4 rounded-xl border border-dashed border-green-500 mb-4">
-            <code class="text-xs text-green-400 break-all" id="contractAddr">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
+    <div class="w-full max-w-xl card-pro p-8 rounded-3xl mb-12 border-t-2 border-green-500">
+        <h2 class="text-xl font-black text-green-500 mb-6 text-center uppercase tracking-widest">How to add $KICKGHOST to your Wallet</h2>
+        <div class="space-y-4 text-sm text-gray-300">
+            <div class="flex items-center gap-3 bg-zinc-900 p-3 rounded-lg border border-zinc-800">
+                <span class="bg-green-500 text-black px-2 py-0.5 rounded font-bold italic">ADDR</span>
+                <code class="text-[10px] break-all text-green-400">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</code>
+            </div>
+            <ul class="list-none space-y-2" dir="rtl">
+                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 1. حل محفظة MetaMask أو Binance Web3. [cite: 2025-12-28]</li>
+                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 2. اختار شبكة <strong class="text-white">Polygon</strong>. [cite: 2025-12-28]</li>
+                <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> 3. كليكي على <b>Import Token</b> ولصق العنوان الفوق. [cite: 2025-12-28]</li>
+            </ul>
         </div>
-        <p class="text-gray-400 text-sm">Official Polygon Token for Ghost Gaming TV Fans [cite: 2025-12-28]</p>
     </div>
 
-    <div class="w-full max-w-4xl mb-20">
-        <div style="position:relative;width:100%;padding-bottom:125%;">
-            <iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe>
+    <div class="w-full max-w-4xl rounded-3xl overflow-hidden border border-zinc-800 mb-20 shadow-2xl">
+        <div class="bg-zinc-900 p-3 flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-400">LIVE MARKET DATA</span>
+            <span class="text-xs text-green-500 animate-pulse">● LIVE</span>
+        </div>
+        <div style="position:relative;width:100%;padding-bottom:120%;">
+            <iframe src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark" 
+                    style="position:absolute;width:100%;height:100%;top:0;left:0;border:0;"></iframe>
         </div>
     </div>
 
-    <footer class="text-zinc-600 text-xs text-center pb-10">
-        © 2026 KICKGHOST Project | Built for the Community [cite: 2025-12-28]
+    <footer class="flex flex-col items-center gap-6 pb-20">
+        <div class="flex gap-8">
+            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="text-3xl text-green-500 hover:text-white"><i class="fa-brands fa-kickstarter"></i></a>
+            <a href="https://www.instagram.com/ghost.gamingtv" target="_blank" class="text-3xl text-green-500 hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+        <p class="text-[10px] text-zinc-600 tracking-widest uppercase italic">© 2026 KICKGHOST Project [cite: 2025-12-28]</p>
     </footer>
 
     <script>
-        // --- إعدادات Kick ---
-        const KICK_CLIENT_ID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
-        const REDIRECT_URI = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
-
-        document.getElementById("kick-auth-btn").addEventListener("click", () => {
+        // Kick Logic
+        const KICK_ID = "01KDYM8ZRHB8W24HFJ8YEQ1Q55"; //
+        const REDIRECT = "https://ghostgamingtv0.github.io/kickghostofficial/"; //
+        
+        document.getElementById("kick-auth-btn").onclick = () => {
             const scope = "user:read channel:read chat:write";
-            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`;
-        });
+            window.location.href = `https://id.kick.com/oauth/authorize?client_id=${KICK_ID}&redirect_uri=${encodeURIComponent(REDIRECT)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+        };
 
-        // --- إعدادات Thirdweb ---
-        const THIRDWEB_CLIENT_ID = "1674c0a32bd6f7ffdcea4222adf74d6e"; // [cite: 2025-12-28]
-        const statusMsg = document.getElementById("status-msg");
-
-        document.getElementById("connect-btn").addEventListener("click", async () => {
+        // Wallet Logic
+        document.getElementById("connect-btn").onclick = async () => {
+            const status = document.getElementById("status-msg");
             try {
-                statusMsg.innerText = "CONNECTING...";
-                const sdk = new window.ThirdwebSDK("polygon", { clientId: THIRDWEB_CLIENT_ID });
-                const address = await sdk.wallet.connect();
-                statusMsg.innerText = "CONNECTED: " + address.substring(0, 6) + "...";
+                status.innerText = "Connecting...";
+                const sdk = new window.ThirdwebSDK("polygon", { clientId: "1674c0a32bd6f7ffdcea4222adf74d6e" });
+                const addr = await sdk.wallet.connect();
+                status.innerText = "✅ CONNECTED: " + addr.substring(0,6) + "...";
                 
-                // إرسال البيانات لـ Pipedream
+                // صيفط لـ Pipedream باش تسجل فـ Google Sheets
                 fetch("https://eo8kdgfd5w3euzv.m.pipedream.net", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ wallet: address, action: "wallet_connected" })
+                    body: JSON.stringify({ wallet: addr, action: "new_connection" })
                 });
-            } catch (err) {
-                statusMsg.innerText = "ERROR CONNECTING";
-                console.error(err);
-            }
-        });
+            } catch (e) { status.innerText = "❌ ERROR"; }
+        };
     </script>
 </body>
 </html>
+
 
 

@@ -1,72 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KICKGHOST</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>KICKGHOST</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen p-6">
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen">
 
-  <!-- LOGO -->
-  <img
-    src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
-    class="w-32 h-32 rounded-full border-4 border-green-500 mb-4"
-  />
+<!-- LOGO -->
+<img
+  src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg"
+  class="w-28 h-28 rounded-full border-4 border-green-500"
+/>
 
-  <!-- TITLE -->
-  <h1 class="text-4xl font-extrabold mb-4">
-    KICK<span class="text-green-500">GHOST</span>
-  </h1>
+<!-- TITLE -->
+<h1 class="mt-4 text-4xl font-black">
+  KICK<span class="text-green-500">GHOST</span>
+</h1>
 
-  <!-- SOCIAL ICONS -->
-  <div class="flex gap-6 mb-6">
+<!-- SOCIAL ICONS -->
+<div class="flex gap-6 mt-3 text-2xl">
+  <a href="https://kick.com/ghost_gamingtv" target="_blank" title="Kick">🟢</a>
+  <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" title="Instagram">📸</a>
+  <a href="https://x.com/tv_ghostgaming" target="_blank" title="Twitter">🐦</a>
+</div>
 
-    <!-- KICK -->
-    <a href="https://kick.com/ghost_gamingtv" target="_blank" title="Kick">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
-           class="w-8 h-8 fill-green-500 hover:fill-white transition">
-        <path d="M48 32h80v80H48zm80 80h80v80h-80zM48 128h80v80H48z"/>
-      </svg>
-    </a>
+<!-- HOW TO ADD TOKEN -->
+<div class="mt-10 p-4 border border-green-500 rounded-xl max-w-md text-sm">
+  <h2 class="text-green-500 font-bold mb-2">
+    How to add token / كيفية إضافة العملة
+  </h2>
 
-    <!-- INSTAGRAM -->
-    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" title="Instagram">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
-           class="w-8 h-8">
-    </a>
+  <p>
+    <strong>EN:</strong><br>
+    MetaMask → Import Token → Paste contract address
+  </p>
 
-    <!-- TWITTER -->
-    <a href="https://x.com/tv_ghostgaming" target="_blank" title="Twitter">
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
-           class="w-8 h-8">
-    </a>
+  <p class="mt-2">
+    <strong>AR:</strong><br>
+    ميتاماسك ← إضافة عملة ← ضع عنوان العقد
+  </p>
 
-  </div>
+  <p class="mt-3 text-xs break-all text-green-400">
+    Contract:<br>
+    0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
+  </p>
+</div>
 
-  <!-- ADD TOKEN SECTION -->
-  <div class="border border-green-500 rounded-xl p-4 max-w-xl w-full text-left">
-
-    <h2 class="text-green-500 font-bold mb-2">
-      How to add token / كيفية إضافة العملة
-    </h2>
-
-    <p class="text-sm mb-2">
-      <strong>EN:</strong> MetaMask → Import Token → Paste contract address
-    </p>
-
-    <p class="text-sm mb-3">
-      <strong>AR:</strong> ميتاماسك ← إضافة عملة ← ضع عنوان العقد
-    </p>
-
-    <p class="text-xs break-all">
-      Contract: <span class="text-green-400">
-        0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce
-      </span>
-    </p>
-
-  </div>
+<!-- CHART -->
+<div class="mt-10 w-full max-w-3xl">
+  <iframe
+    src="https://dexscreener.com/polygon/0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce?embed=1&theme=dark"
+    class="w-full h-[420px] rounded-xl"
+    frameborder="0">
+  </iframe>
+</div>
 
 </body>
 </html>

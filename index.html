@@ -99,7 +99,7 @@
 
     // تسجيل الدخول Kick
     document.getElementById("kickLogin").onclick = () => {
-        const url = `https://id.kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.href.split('?')[0])}&response_type=code&scope=user:read`;
+        const url = `https://kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.href.split('?')[0])}&response_type=code&scope=user:read`;
         window.location.href = url;
     };
 
@@ -156,3 +156,4 @@
 </script>
 </body>
 </html>
+

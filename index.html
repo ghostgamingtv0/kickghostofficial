@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKG (AKSG) - Live Dashboard</title>
+    <title>KICKG ($AKSG) - Web3 Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@3/dist/thirdweb-sdk.browser.js"></script>
+
     <style>
         :root {
             --primary-color: #a336ff; /* بنفسجي اللوجو */
@@ -15,112 +18,36 @@
             --glow: rgba(163, 54, 255, 0.3);
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--bg-dark);
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        header { text-align: center; padding: 40px 0; background: radial-gradient(circle at center, var(--glow) 0%, transparent 70%); }
+        .logo-container img { width: 150px; border-radius: 50%; border: 4px solid var(--primary-color); box-shadow: 0 0 30px var(--primary-color); }
+        .logo-text { font-size: 2.8rem; font-weight: 900; color: white; margin-top: 15px; }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            padding: 50px 0;
-            background: radial-gradient(circle at center, var(--glow) 0%, transparent 70%);
-        }
-
-        .logo-container img {
-            width: 150px;
-            border-radius: 50%;
-            border: 4px solid var(--primary-color);
-            box-shadow: 0 0 30px var(--primary-color);
-        }
-
-        .logo-text {
-            font-size: 2.8rem;
-            font-weight: 900;
-            color: white;
-            margin-top: 15px;
-            letter-spacing: 2px;
-        }
-
-        /* Live Data Tiles */
-        .live-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: linear-gradient(145deg, #151515, #0a0a0a);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid #222;
-            text-align: center;
-        }
-
-        .stat-card h3 { color: #888; font-size: 0.9rem; margin: 0; }
+        .live-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #0d0d0d; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
         .stat-card p { color: var(--accent-color); font-size: 1.4rem; font-weight: bold; margin: 10px 0 0 0; }
 
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
 
-        .section {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid #222;
+        .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; }
+        h2 { color: var(--primary-color); font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        
+        .btn-web3 { 
+            background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
+            color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
+            font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(163, 54, 255, 0.4);
         }
+        .btn-web3:hover { transform: scale(1.02); opacity: 0.9; }
 
-        h2 { color: var(--primary-color); font-size: 1.5rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .contract-box { background: #000; padding: 12px; border-radius: 10px; border: 1px dashed #444; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .addr-text { color: var(--accent-color); font-family: monospace; font-size: 0.8rem; overflow: hidden; }
 
-        .chart-container { position: relative; height: 250px; width: 100%; }
-
-        .contract-box {
-            background: #000;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .addr-text { color: var(--accent-color); font-family: monospace; font-size: 0.8rem; word-break: break-all; }
-
-        .copy-btn { background: var(--primary-color); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-
-        .step { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 4px solid var(--primary-color); }
-
-        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .social-btn {
-            background: #151515;
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 1px solid #333;
-        }
-        .social-btn:hover { border-color: var(--primary-color); background: var(--glow); }
-
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .social-btn { background: #151515; color: white; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -128,68 +55,64 @@
 <div class="container">
     <header>
         <div class="logo-container">
-            <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST">
+            <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
         <div class="logo-text">KICKG ($AKSG)</div>
-        <p style="color: var(--primary-color); font-weight: bold;">Polygon Network | Community Driven</p>
+        <p style="color: var(--primary-color);">Official KICKG Ecosystem</p>
     </header>
 
     <div class="live-stats">
-        <div class="stat-card">
-            <h3>MARKET CAP</h3>
-            <p>$1,240.55</p>
-        </div>
-        <div class="stat-card">
-            <h3>LIQUIDITY (Pooled MATIC)</h3>
-            <p>$354.21</p>
-        </div>
-        <div class="stat-card">
-            <h3>HOLDERS</h3>
-            <p>150+</p>
-        </div>
+        <div class="stat-card"><h3>MARKET CAP</h3><p>$1,240.55</p></div>
+        <div class="stat-card"><h3>LIQUIDITY</h3><p>$354.21</p></div>
+        <div class="stat-card"><h3>NETWORK</h3><p>Polygon</p></div>
     </div>
 
     <div class="main-grid">
         <div class="section">
-            <h2><i class="fas fa-chart-line"></i> Tokenomics Chart</h2>
-            <div class="chart-container">
-                <canvas id="tokenChart"></canvas>
-            </div>
+            <h2><i class="fas fa-chart-pie"></i> Tokenomics</h2>
+            <div style="height: 250px;"><canvas id="tokenChart"></canvas></div>
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-wallet"></i> How to Add AKSG</h2>
-            <div class="step">1. Open Wallet (MetaMask/Trust)</div>
-            <div class="step">2. Switch to <b>Polygon Network</b></div>
-            <div class="step">3. Import Custom Token</div>
+            <h2><i class="fas fa-wallet"></i> Web3 Access</h2>
+            <button class="btn-web3" id="connectWallet">Connect Wallet 👻</button>
             <div class="contract-box">
                 <span class="addr-text" id="contractAddr">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</span>
-                <button class="copy-btn" onclick="copyAddr()">Copy</button>
+                <i class="fas fa-copy" style="cursor:pointer" onclick="copyAddr()"></i>
             </div>
-            <div style="margin-top: 15px; text-align: center;">
-                <a href="https://dexscreener.com/polygon/0xa8a79e754308d00690a75d264a7c3ba07bbf2a76" target="_blank" style="color: var(--accent-color); text-decoration: none; font-size: 0.9rem;">
-                    <i class="fas fa-external-link-alt"></i> View on DexScreener
-                </a>
-            </div>
+            <p style="font-size: 0.8rem; color: #666; text-align: center;">اضغط للربط والحصول على المكافآت</p>
         </div>
     </div>
 
     <div class="section" style="margin-top: 20px;">
-        <h2><i class="fas fa-bullhorn"></i> Official Links</h2>
+        <h2><i class="fas fa-link"></i> Social Links</h2>
         <div class="social-grid">
-            <a href="https://kick.com/ghost_gamingtv" class="social-btn" target="_blank"><i class="fas fa-play"></i> Kick</a>
-            <a href="https://t.me/ghost_gamingtv" class="social-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-            <a href="https://x.com/tv_ghostgaming" class="social-btn" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-            <a href="https://ghostgamingtv0.github.io/kickghostofficial/" class="social-btn" target="_blank"><i class="fas fa-globe"></i> Website</a>
+            <a href="https://kick.com/ghost_gamingtv" class="social-btn" target="_blank">Kick</a>
+            <a href="https://t.me/ghost_gamingtv" class="social-btn" target="_blank">Telegram</a>
+            <a href="https://x.com/tv_ghostgaming" class="social-btn" target="_blank">Twitter</a>
+            <a href="https://dexscreener.com/polygon/0xa8a79e754308d00690a75d264a7c3ba07bbf2a76" class="social-btn" target="_blank">Chart</a>
         </div>
     </div>
-
-    <footer style="text-align: center; padding: 40px; color: #444; font-size: 0.8rem;">
-        &copy; 2026 KICKGHOST PROJECT. Powered by Polygon.
-    </footer>
 </div>
 
 <script>
+    // إعدادات Thirdweb الخاصة بك
+    const CLIENT_ID = "5ed0be08816a9f32809c6e550046bf03"; 
+
+    // تفعيل زر ربط المحفظة
+    document.getElementById("connectWallet").onclick = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                document.getElementById("connectWallet").innerText = "Connected: " + accounts[0].substring(0,6) + "...";
+                alert("تم ربط محفظتك بمشروع KICKG!");
+            } catch (err) { alert("فشل الاتصال بالقمحفظة"); }
+        } else {
+            alert("المرجو فتح الموقع من داخل MetaMask أو Trust Wallet");
+        }
+    };
+
+    // الشارت
     const ctx = document.getElementById('tokenChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -197,26 +120,17 @@
             labels: ['Burned', 'Liquidity', 'Airdrops', 'Team'],
             datasets: [{
                 data: [40, 30, 20, 10],
-                backgroundColor: ['#a336ff', '#00ffa3', '#555555', '#222222'],
-                borderWidth: 2,
-                borderColor: '#000'
+                backgroundColor: ['#a336ff', '#00ffa3', '#444', '#222'],
+                borderWidth: 0
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { color: '#ccc' } }
-            }
-        }
+        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#ccc' } } } }
     });
 
     function copyAddr() {
-        const addr = document.getElementById('contractAddr').innerText;
-        navigator.clipboard.writeText(addr);
+        navigator.clipboard.writeText("0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D");
         alert("Contract Copied!");
     }
 </script>
-
 </body>
 </html>

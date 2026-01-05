@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKG ($AKSG) - Final Dashboard</title>
+    <title>KICKG ($AKSG) - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,18 +19,21 @@
             --kick-green: #00e701;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
-        header { text-align: center; padding: 30px 0; }
-        .logo-container img { width: 130px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 20px var(--primary-color); }
+        header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 20px var(--primary-color); }
 
-        .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; text-align: center; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
+
+        .section { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #222; text-align: center; }
         
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
             color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
-            font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px;
+            font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px;
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         
@@ -49,7 +52,8 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 204, 0); }
         }
 
-        .status-badge { font-size: 0.85rem; padding: 8px 15px; border-radius: 8px; background: #1a1a1a; margin: 5px; display: inline-block; border: 1px solid #333; }
+        .status-badge { font-size: 0.8rem; padding: 8px; border-radius: 8px; background: #1a1a1a; margin: 5px; border: 1px solid #333; }
+        .chart-container { height: 200px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -59,96 +63,111 @@
         <div class="logo-container">
             <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
-        <h1 style="margin-top:15px;">KICKG ($AKSG) Dashboard</h1>
+        <h1 style="margin-top:10px;">KICKG ($AKSG) Dashboard</h1>
+        <p dir="ltr">Official Ecosystem for KICKGHOST Supporters</p>
     </header>
 
-    <div class="section">
-        <h2 style="color: var(--accent-color); margin-bottom: 20px;">Verification Steps</h2>
-        <div id="steps">
-            <div class="status-badge" id="step1">Step 1: Kick Login ❌</div>
-            <div class="status-badge" id="step2">Step 2: Wallet Connect ❌</div>
+    <div class="main-grid">
+        <div class="section">
+            <h3><i class="fas fa-chart-pie"></i> Tokenomics / توزيع العملة</h3>
+            <div class="chart-container">
+                <canvas id="tokenChart"></canvas>
+            </div>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Max Supply: 1,000,000 $AKSG</p>
         </div>
 
-        <button class="btn-web3 btn-kick" id="kickLogin"><i class="fab fa-kickstarter"></i> Login with Kick</button>
-        <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> Connect Wallet 👻</button>
-        
-        <button class="btn-web3" id="claimBtn"><i class="fas fa-coins"></i> CLAIM $AKSG REWARD</button>
-        
-        <p id="statusMsg" style="margin-top: 15px; color: #666;">أكمل الخطوات أعلاه لتفعيل زر المطالبة</p>
+        <div class="section">
+            <h3><i class="fas fa-check-circle"></i> Verification / التحقق</h3>
+            <div id="steps">
+                <div class="status-badge" id="step1">1. Kick Login ❌</div>
+                <div class="status-badge" id="step2">2. Wallet Connect ❌</div>
+            </div>
+
+            <button class="btn-web3 btn-kick" id="kickLogin"><i class="fab fa-kickstarter"></i> Login with Kick</button>
+            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> Connect Wallet / ربط المحفظة</button>
+            
+            <button class="btn-web3" id="claimBtn"><i class="fas fa-coins"></i> CLAIM $AKSG / استلام الجائزة</button>
+            
+            <p id="statusMsg" style="margin-top: 15px; font-size: 0.9rem; color: #666;">أكمل الخطوات لتفعيل زر المطالبة</p>
+        </div>
     </div>
 </div>
 
 <script>
-    // الإعدادات الخاصة بمشروعك
+    // --- الإعدادات (المفاتيح) ---
     const KICK_CLIENT_ID = "01KE7GJK96RS6CGAF5G2HSQR9F";
-    const THIRDWEB_CLIENT_ID = "5ed0be08816a9f32809c6e550046bf03"; // استخدم مفتاحك الرئيسي
+    const THIRDWEB_CLIENT_ID = "5ed0be08816a9f32809c6e550046bf03"; 
     const CONTRACT_ADDRESS = "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
 
     let kickDone = false;
     let walletDone = false;
-    let userAddress = "";
 
-    // التحقق من الأهلية
+    // --- الشارت (Chart.js) ---
+    const ctx = document.getElementById('tokenChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Burned', 'Liquidity', 'Airdrops', 'Team'],
+            datasets: [{
+                data: [40, 30, 20, 10],
+                backgroundColor: ['#a336ff', '#00ffa3', '#444', '#222'],
+                borderWidth: 0
+            }]
+        },
+        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: { size: 10 } } } } }
+    });
+
+    // --- منطق الموقع ---
     function checkStatus() {
         if (kickDone && walletDone) {
             document.getElementById("claimBtn").style.display = "flex";
-            document.getElementById("statusMsg").innerText = "Congratulations! You are eligible for $AKSG 🚀";
+            document.getElementById("statusMsg").innerText = "Eligible! Click to Claim / مؤهل للاستلام 🚀";
             document.getElementById("statusMsg").style.color = "#00ffa3";
         }
     }
 
-    // تسجيل الدخول Kick
     document.getElementById("kickLogin").onclick = () => {
         const url = `https://kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.href.split('?')[0])}&response_type=code&scope=user:read`;
         window.location.href = url;
     };
 
-    // ربط المحفظة
     document.getElementById("connectWallet").onclick = async () => {
         if (window.ethereum) {
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
                 walletDone = true;
                 document.getElementById("connectWallet").innerText = "Wallet Connected ✅";
-                document.getElementById("step2").innerText = "Step 2: Wallet Connect ✅";
+                document.getElementById("step2").innerText = "2. Wallet Connect ✅";
                 document.getElementById("step2").style.color = "#00ffa3";
                 checkStatus();
-            } catch (e) { alert("Wallet connection failed!"); }
-        } else {
-            alert("Please open this site inside MetaMask/Trust Wallet browser!");
-        }
+            } catch (e) { alert("Error connecting wallet!"); }
+        } else { alert("Open in MetaMask/Trust Wallet!"); }
     };
 
-    // وظيفة المطالبة (Claim) الحقيقية
     document.getElementById("claimBtn").onclick = async () => {
         try {
-            document.getElementById("claimBtn").innerText = "Processing... ⏳";
+            document.getElementById("claimBtn").innerText = "Processing... / جاري المعالجة";
             document.getElementById("claimBtn").disabled = true;
 
-            // استخدام Thirdweb SDK لإرسال العملة
             const sdk = new window.ThirdwebSDK("polygon", { clientId: THIRDWEB_CLIENT_ID });
             const contract = await sdk.getContract(CONTRACT_ADDRESS);
-
-            // تنفيذ عملية المطالبة
-            const tx = await contract.erc20.claim(1); // يطالب بـ 1 عملة (يمكنك تغييرها)
+            await contract.erc20.claim(1); 
             
-            alert("Success! $AKSG has been sent to your wallet! ✅👻");
-            document.getElementById("claimBtn").innerText = "CLAIMED SUCCESSFULLY";
+            alert("Success! Check your wallet. / نجاح! تفقد محفظتك ✅");
+            document.getElementById("claimBtn").innerText = "SUCCESS ✅";
         } catch (err) {
             console.error(err);
-            alert("Error: Make sure you have enough MATIC for gas and Claim Conditions are set to Public in Thirdweb.");
-            document.getElementById("claimBtn").innerText = "CLAIM $AKSG REWARD";
+            alert("Error: Check gas or Claim Conditions on Thirdweb.");
             document.getElementById("claimBtn").disabled = false;
+            document.getElementById("claimBtn").innerText = "CLAIM $AKSG";
         }
     };
 
-    // فحص العودة من Kick
     window.onload = () => {
         if (new URLSearchParams(window.location.search).get('code')) {
             kickDone = true;
             document.getElementById("kickLogin").innerText = "Kick Verified ✅";
-            document.getElementById("step1").innerText = "Step 1: Kick Login ✅";
+            document.getElementById("step1").innerText = "1. Kick Login ✅";
             document.getElementById("step1").style.color = "#00ffa3";
             checkStatus();
         }
@@ -156,4 +175,3 @@
 </script>
 </body>
 </html>
-

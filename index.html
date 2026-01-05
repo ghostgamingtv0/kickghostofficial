@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKG ($AKSG) - Dashboard</title>
+    <title>KICKG ($AKSG) - Live Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,17 +19,23 @@
             --kick-green: #00e701;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
         
-        header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 20px var(--primary-color); }
+        header { text-align: center; padding: 20px 0; border-bottom: 1px solid #222; }
+        .logo-container img { width: 100px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 15px var(--primary-color); }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
+        /* تقسيم الصفحة */
+        .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 20px; }
+        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
 
         .section { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #222; text-align: center; }
         
+        /* شارت لايف */
+        #dexscreener-embed { position: relative; width: 100%; padding-bottom: 125%; height: 0; }
+        @media (min-width: 1400px) { #dexscreener-embed { padding-bottom: 65%; } }
+        #dexscreener-embed iframe { position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: 0; border-radius: 15px; }
+
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
             color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
@@ -52,8 +58,7 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 204, 0); }
         }
 
-        .status-badge { font-size: 0.8rem; padding: 8px; border-radius: 8px; background: #1a1a1a; margin: 5px; border: 1px solid #333; }
-        .chart-container { height: 200px; margin-top: 15px; }
+        .status-badge { font-size: 0.75rem; padding: 8px; border-radius: 8px; background: #1a1a1a; border: 1px solid #333; margin: 5px; display: inline-block; }
     </style>
 </head>
 <body>
@@ -63,38 +68,43 @@
         <div class="logo-container">
             <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
-        <h1 style="margin-top:10px;">KICKG ($AKSG) Dashboard</h1>
-        <p dir="ltr">Official Ecosystem for KICKGHOST Supporters</p>
+        <h1>KICKG ($AKSG) Live Dashboard</h1>
     </header>
 
-    <div class="main-grid">
-        <div class="section">
-            <h3><i class="fas fa-chart-pie"></i> Tokenomics / توزيع العملة</h3>
-            <div class="chart-container">
-                <canvas id="tokenChart"></canvas>
+    <div class="grid-layout">
+        <div class="left-col">
+            <div class="section" style="padding: 10px;">
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-chart-line"></i> Live Market Chart</h3>
+                <div id="dexscreener-embed">
+                    <iframe src="https://dexscreener.com/polygon/0xa8a79e754308d00690a75d264a7c3ba07bbf2a76?embed=1&theme=dark&trades=0&info=0"></iframe>
+                </div>
             </div>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Max Supply: 1,000,000 $AKSG</p>
         </div>
 
-        <div class="section">
-            <h3><i class="fas fa-check-circle"></i> Verification / التحقق</h3>
-            <div id="steps">
-                <div class="status-badge" id="step1">1. Kick Login ❌</div>
-                <div class="status-badge" id="step2">2. Wallet Connect ❌</div>
+        <div class="right-col">
+            <div class="section" style="margin-bottom: 20px;">
+                <h3><i class="fas fa-pie-chart"></i> Tokenomics</h3>
+                <div style="height: 180px;"><canvas id="tokenChart"></canvas></div>
             </div>
 
-            <button class="btn-web3 btn-kick" id="kickLogin"><i class="fab fa-kickstarter"></i> Login with Kick</button>
-            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> Connect Wallet / ربط المحفظة</button>
-            
-            <button class="btn-web3" id="claimBtn"><i class="fas fa-coins"></i> CLAIM $AKSG / استلام الجائزة</button>
-            
-            <p id="statusMsg" style="margin-top: 15px; font-size: 0.9rem; color: #666;">أكمل الخطوات لتفعيل زر المطالبة</p>
+            <div class="section">
+                <h3><i class="fas fa-verify"></i> Verification</h3>
+                <div class="status-badge" id="step1">Kick Login ❌</div>
+                <div class="status-badge" id="step2">Wallet ❌</div>
+
+                <button class="btn-web3 btn-kick" id="kickLogin"><i class="fab fa-kickstarter"></i> Login with Kick</button>
+                <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> Connect Wallet</button>
+                
+                <button class="btn-web3" id="claimBtn"><i class="fas fa-coins"></i> CLAIM $AKSG REWARD</button>
+                
+                <p id="statusMsg" style="font-size: 0.8rem; color: #555; margin-top: 10px;">Verify identity to unlock claim</p>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- الإعدادات (المفاتيح) ---
+    // الإعدادات والمفاتيح
     const KICK_CLIENT_ID = "01KE7GJK96RS6CGAF5G2HSQR9F";
     const THIRDWEB_CLIENT_ID = "5ed0be08816a9f32809c6e550046bf03"; 
     const CONTRACT_ADDRESS = "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
@@ -102,63 +112,56 @@
     let kickDone = false;
     let walletDone = false;
 
-    // --- الشارت (Chart.js) ---
-    const ctx = document.getElementById('tokenChart').getContext('2d');
-    new Chart(ctx, {
+    // شارت التوكنوميكس الدائري
+    const tCtx = document.getElementById('tokenChart').getContext('2d');
+    new Chart(tCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Burned', 'Liquidity', 'Airdrops', 'Team'],
+            labels: ['Burn', 'Liquidity', 'Airdrops', 'Team'],
             datasets: [{
                 data: [40, 30, 20, 10],
                 backgroundColor: ['#a336ff', '#00ffa3', '#444', '#222'],
                 borderWidth: 0
             }]
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: { size: 10 } } } } }
+        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: {size: 10} } } } }
     });
 
-    // --- منطق الموقع ---
+    // منطق الأزرار
     function checkStatus() {
         if (kickDone && walletDone) {
             document.getElementById("claimBtn").style.display = "flex";
-            document.getElementById("statusMsg").innerText = "Eligible! Click to Claim / مؤهل للاستلام 🚀";
+            document.getElementById("statusMsg").innerText = "Eligible for Reward! 🚀";
             document.getElementById("statusMsg").style.color = "#00ffa3";
         }
     }
 
     document.getElementById("kickLogin").onclick = () => {
-        const url = `https://kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.href.split('?')[0])}&response_type=code&scope=user:read`;
-        window.location.href = url;
+        window.location.href = `https://kick.com/oauth/authorize?client_id=${KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.href.split('?')[0])}&response_type=code&scope=user:read`;
     };
 
     document.getElementById("connectWallet").onclick = async () => {
         if (window.ethereum) {
             try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
                 walletDone = true;
-                document.getElementById("connectWallet").innerText = "Wallet Connected ✅";
-                document.getElementById("step2").innerText = "2. Wallet Connect ✅";
+                document.getElementById("step2").innerText = "Wallet ✅";
                 document.getElementById("step2").style.color = "#00ffa3";
                 checkStatus();
-            } catch (e) { alert("Error connecting wallet!"); }
-        } else { alert("Open in MetaMask/Trust Wallet!"); }
+            } catch (e) { alert("Connect failed"); }
+        } else { alert("Use Web3 Browser"); }
     };
 
     document.getElementById("claimBtn").onclick = async () => {
         try {
-            document.getElementById("claimBtn").innerText = "Processing... / جاري المعالجة";
-            document.getElementById("claimBtn").disabled = true;
-
+            document.getElementById("claimBtn").innerText = "Sending... ⏳";
             const sdk = new window.ThirdwebSDK("polygon", { clientId: THIRDWEB_CLIENT_ID });
             const contract = await sdk.getContract(CONTRACT_ADDRESS);
             await contract.erc20.claim(1); 
-            
-            alert("Success! Check your wallet. / نجاح! تفقد محفظتك ✅");
-            document.getElementById("claimBtn").innerText = "SUCCESS ✅";
+            alert("Success! Check your wallet. ✅");
+            document.getElementById("claimBtn").innerText = "CLAIMED ✅";
         } catch (err) {
-            console.error(err);
-            alert("Error: Check gas or Claim Conditions on Thirdweb.");
-            document.getElementById("claimBtn").disabled = false;
+            alert("Claim failed: Check gas/settings.");
             document.getElementById("claimBtn").innerText = "CLAIM $AKSG";
         }
     };
@@ -167,7 +170,7 @@
         if (new URLSearchParams(window.location.search).get('code')) {
             kickDone = true;
             document.getElementById("kickLogin").innerText = "Kick Verified ✅";
-            document.getElementById("step1").innerText = "1. Kick Login ✅";
+            document.getElementById("step1").innerText = "Kick ✅";
             document.getElementById("step1").style.color = "#00ffa3";
             checkStatus();
         }

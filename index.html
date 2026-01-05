@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KICKG ($AKSG) - Web3 Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://unpkg.com/@thirdweb-dev/sdk@3/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
         :root {
-            --primary-color: #a336ff; /* بنفسجي اللوجو */
-            --accent-color: #00ffa3;  /* أخضر كيك */
+            --primary-color: #a336ff; 
+            --accent-color: #00ffa3;  
             --bg-dark: #020202;
             --card-bg: #0d0d0d;
             --glow: rgba(163, 54, 255, 0.3);
@@ -47,7 +48,8 @@
         .addr-text { color: var(--accent-color); font-family: monospace; font-size: 0.8rem; overflow: hidden; }
 
         .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .social-btn { background: #151515; color: white; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #333; }
+        .social-btn { background: #151515; color: white; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #333; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--primary-color); background: #222; }
     </style>
 </head>
 <body>
@@ -58,13 +60,13 @@
             <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
         <div class="logo-text">KICKG ($AKSG)</div>
-        <p style="color: var(--primary-color);">Official KICKG Ecosystem</p>
+        <p style="color: var(--primary-color);">Official KICKGHOST Ecosystem | Polygon Network</p>
     </header>
 
     <div class="live-stats">
         <div class="stat-card"><h3>MARKET CAP</h3><p>$1,240.55</p></div>
         <div class="stat-card"><h3>LIQUIDITY</h3><p>$354.21</p></div>
-        <div class="stat-card"><h3>NETWORK</h3><p>Polygon</p></div>
+        <div class="stat-card"><h3>NETWORK</h3><p>Polygon (Matic)</p></div>
     </div>
 
     <div class="main-grid">
@@ -80,7 +82,7 @@
                 <span class="addr-text" id="contractAddr">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</span>
                 <i class="fas fa-copy" style="cursor:pointer" onclick="copyAddr()"></i>
             </div>
-            <p style="font-size: 0.8rem; color: #666; text-align: center;">اضغط للربط والحصول على المكافآت</p>
+            <p id="walletInfo" style="font-size: 0.8rem; color: #666; text-align: center; margin-top: 10px;">اضغط للربط والحصول على المكافآت</p>
         </div>
     </div>
 
@@ -90,29 +92,40 @@
             <a href="https://kick.com/ghost_gamingtv" class="social-btn" target="_blank">Kick</a>
             <a href="https://t.me/ghost_gamingtv" class="social-btn" target="_blank">Telegram</a>
             <a href="https://x.com/tv_ghostgaming" class="social-btn" target="_blank">Twitter</a>
-            <a href="https://dexscreener.com/polygon/0xa8a79e754308d00690a75d264a7c3ba07bbf2a76" class="social-btn" target="_blank">Chart</a>
+            <a href="https://dexscreener.com/polygon/0xa8a79e754308d00690a75d264a7c3ba07bbf2a76" class="social-btn" target="_blank">Live Chart</a>
         </div>
     </div>
 </div>
 
 <script>
-    // إعدادات Thirdweb الخاصة بك
-    const CLIENT_ID = "5ed0be08816a9f32809c6e550046bf03"; 
+    // مصفوفة المفاتيح لضمان استمرارية العمل (Multi-Key System)
+    const API_KEYS = [
+        "5ed0be08816a9f32809c6e550046bf03",
+        "6e4f1fe7de424ccb67b9d1f8247cf4ea",
+        "1674c0a32bd6f7ffdcea4222adf74d6e"
+    ];
 
-    // تفعيل زر ربط المحفظة
+    // تفعيل الاتصال بالمحفظة
     document.getElementById("connectWallet").onclick = async () => {
         if (window.ethereum) {
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                document.getElementById("connectWallet").innerText = "Connected: " + accounts[0].substring(0,6) + "...";
-                alert("تم ربط محفظتك بمشروع KICKG!");
-            } catch (err) { alert("فشل الاتصال بالقمحفظة"); }
+                const userAddr = accounts[0];
+                document.getElementById("connectWallet").innerText = "Connected: " + userAddr.substring(0,6) + "...";
+                document.getElementById("connectWallet").style.background = "#00ffa3";
+                document.getElementById("connectWallet").style.color = "black";
+                document.getElementById("walletInfo").innerText = "محفظتك متصلة الآن بمشروع KICKGHOST";
+                alert("تم ربط محفظتك بنجاح!");
+            } catch (err) { 
+                console.error(err);
+                alert("فشل الاتصال بالمحفظة، حاول مرة أخرى."); 
+            }
         } else {
-            alert("المرجو فتح الموقع من داخل MetaMask أو Trust Wallet");
+            alert("المرجو فتح الموقع من داخل متصفح MetaMask أو Trust Wallet");
         }
     };
 
-    // الشارت
+    // رسم شارت العملة AKSG
     const ctx = document.getElementById('tokenChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -120,16 +133,23 @@
             labels: ['Burned', 'Liquidity', 'Airdrops', 'Team'],
             datasets: [{
                 data: [40, 30, 20, 10],
-                backgroundColor: ['#a336ff', '#00ffa3', '#444', '#222'],
-                borderWidth: 0
+                backgroundColor: ['#a336ff', '#00ffa3', '#444444', '#222222'],
+                borderWidth: 1,
+                borderColor: '#000'
             }]
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#ccc' } } } }
+        options: { 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { position: 'bottom', labels: { color: '#ccc', font: { size: 12 } } } 
+            } 
+        }
     });
 
+    // وظيفة النسخ
     function copyAddr() {
         navigator.clipboard.writeText("0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D");
-        alert("Contract Copied!");
+        alert("Contract Address Copied!");
     }
 </script>
 </body>

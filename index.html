@@ -3,198 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKG (AKSG) - Official Whitepaper</title>
+    <title>KICKG (AKSG) - Professional Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-color: #00ffa3; /* لون أخضر كيك الشهير */
-            --bg-dark: #0a0a0a;
-            --card-bg: #161616;
-            --text-gray: #b3b3b3;
+            --primary-color: #00ffa3;
+            --bg-dark: #050505;
+            --card-bg: #111111;
+            --accent-glow: rgba(0, 255, 163, 0.2);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-dark);
             color: white;
-            line-height: 1.6;
             margin: 0;
             padding: 0;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
+        /* Header Style */
         header {
             text-align: center;
-            padding-bottom: 50px;
-            border-bottom: 1px solid #333;
+            padding: 40px 0;
+            background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 70%);
+        }
+
+        .logo-container img {
+            width: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
         }
 
         .logo-text {
-            font-size: 3rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 900;
             color: var(--primary-color);
-            text-shadow: 0 0 20px rgba(0, 255, 163, 0.3);
-            margin-bottom: 10px;
+            margin-top: 15px;
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-gray);
+        /* Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
+
+        @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
 
         .section {
-            margin: 40px 0;
-            padding: 25px;
             background: var(--card-bg);
-            border-radius: 15px;
+            padding: 25px;
+            border-radius: 20px;
             border: 1px solid #222;
-        }
-
-        h2 {
-            color: var(--primary-color);
-            border-right: 4px solid var(--primary-color);
-            padding-right: 15px;
-            margin-bottom: 20px;
-        }
-
-        .contract-box {
-            background: #000;
-            padding: 15px;
-            border-radius: 8px;
-            word-break: break-all;
-            font-family: monospace;
-            color: #00ffa3;
-            border: 1px dashed #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .social-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-card {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            text-decoration: none;
-            color: white;
             transition: 0.3s;
         }
 
-        .social-card:hover {
-            background: var(--primary-color);
-            color: black;
-            transform: translateY(-5px);
-        }
+        .section:hover { border-color: var(--primary-color); }
 
-        .social-card i {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            display: block;
-        }
+        h2 { color: var(--primary-color); font-size: 1.5rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
 
-        .guide-step {
-            margin-bottom: 20px;
+        /* Chart Style */
+        .chart-container { position: relative; height: 250px; width: 100%; }
+
+        /* Contract Box */
+        .contract-box {
+            background: #000;
             padding: 15px;
-            border-right: 2px solid #333;
-        }
-
-        .guide-step span {
-            color: var(--primary-color);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .btn-add {
-            background: var(--primary-color);
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
+            border-radius: 12px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 10px;
         }
+
+        .addr-text { color: var(--primary-color); font-family: monospace; font-size: 0.9rem; word-break: break-all; }
+
+        .copy-btn { background: var(--primary-color); border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        /* Steps */
+        .step { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 4px solid var(--primary-color); }
+
+        /* Social Links */
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .social-btn {
+            background: #222;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .social-btn:hover { background: var(--primary-color); color: black; }
+
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="logo-text">KICKG (AKSG)</div>
-        <div class="subtitle">Official Whitepaper v1.0 | Polygon Network</div>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/Lz0D6zY/ghost-logo.png" alt="KICKGHOST">
+        </div>
+        <div class="logo-text">KICKG ($AKSG)</div>
+        <p style="color: #888;">الجيل القادم من تفاعل البث المباشر</p>
     </header>
 
-    <div class="section">
-        <h2><i class="fas fa-info-circle"></i> مقدمة</h2>
-        <p>عملة <strong>KICKG (AKSG)</strong> هي عملة رقمية مبنية على شبكة <strong>Polygon</strong>، تهدف إلى دعم مجتمع <strong>Ghost Gaming TV</strong>. نحن هنا لنحول المشاهدة إلى مكافأة حقيقية من خلال توزيعات شفافة وجوائز حية أثناء البث المباشر.</p>
-    </div>
+    <div class="main-grid">
+        <div class="section">
+            <h2><i class="fas fa-chart-pie"></i> توزيع العملة (Tokenomics)</h2>
+            <div class="chart-container">
+                <canvas id="tokenChart"></canvas>
+            </div>
+        </div>
 
-    <div class="section">
-        <h2><i class="fas fa-microchip"></i> المعلومات التقنية</h2>
-        <p><strong>العقد الذكي (Contract):</strong></p>
-        <div class="contract-box">
-            <span>0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</span>
-        </div>
-        <p>الشبكة: Polygon (MATIC) | الرمز: AKSG</p>
-    </div>
-
-    <div class="section">
-        <h2><i class="fas fa-wallet"></i> شرح إضافة العملة لمحفظتك</h2>
-        <div class="guide-step">
-            <span>1.</span> افتح محفظة (MetaMask أو Trust Wallet).
-        </div>
-        <div class="guide-step">
-            <span>2.</span> تأكد من اختيار شبكة <strong>Polygon</strong>.
-        </div>
-        <div class="guide-step">
-            <span>3.</span> اضغط على "Import Token" ثم اختر "Custom Token".
-        </div>
-        <div class="guide-step">
-            <span>4.</span> الصق العقد أعلاه، وستظهر بيانات AKSG تلقائياً. اضغط "Add".
+        <div class="section">
+            <h2><i class="fas fa-wallet"></i> إضافة AKSG لمحفظتك</h2>
+            <div class="step">1. افتح MetaMask أو Trust Wallet</div>
+            <div class="step">2. اختر شبكة <b>Polygon (MATIC)</b></div>
+            <div class="step">3. اضغط <b>Import Token</b> ثم <b>Custom</b></div>
+            <div class="contract-box">
+                <span class="addr-text" id="contractAddr">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</span>
+                <button class="copy-btn" onclick="copyAddr()">نسخ</button>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h2><i class="fas fa-share-alt"></i> روابطنا الرسمية</h2>
-        <div class="social-links">
-            <a href="https://kick.com/ghost_gamingtv" class="social-card" target="_blank">
-                <i class="fas fa-play-circle"></i> Kick
-            </a>
-            <a href="https://t.me/ghost_gamingtv" class="social-card" target="_blank">
-                <i class="fab fa-telegram"></i> Telegram
-            </a>
-            <a href="https://x.com/tv_ghostgaming" class="social-card" target="_blank">
-                <i class="fab fa-twitter"></i> Twitter
-            </a>
-            <a href="https://ghostgamingtv0.github.io/kickghostofficial/" class="social-card" target="_blank">
-                <i class="fas fa-globe"></i> Website
-            </a>
+    <div class="section" style="margin-top: 20px;">
+        <h2><i class="fas fa-link"></i> الروابط الرسمية</h2>
+        <div class="social-grid">
+            <a href="https://kick.com/ghost_gamingtv" class="social-btn" target="_blank"><i class="fas fa-video"></i> Kick</a>
+            <a href="https://t.me/ghost_gamingtv" class="social-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="https://x.com/tv_ghostgaming" class="social-btn" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+            <a href="https://ghostgamingtv0.github.io/kickghostofficial/" class="social-btn" target="_blank"><i class="fas fa-globe"></i> Website</a>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 KICKG PROJECT - GHOST GAMING TV. All rights reserved.
+    <footer style="text-align: center; padding: 40px; color: #555;">
+        &copy; 2026 KICKG PROJECT - GHOST GAMING TV
     </footer>
 </div>
+
+<script>
+    // برمجة الشارت الحقيقي
+    const ctx = document.getElementById('tokenChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['جوائز البث', 'السيولة', 'تطوير المشروع', 'المجتمع'],
+            datasets: [{
+                data: [50, 20, 15, 15],
+                backgroundColor: ['#00ffa3', '#00d1ff', '#7000ff', '#ff00c1'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: 'white', font: { size: 12 } } }
+            }
+        }
+    });
+
+    // وظيفة نسخ العنوان
+    function copyAddr() {
+        const addr = document.getElementById('contractAddr').innerText;
+        navigator.clipboard.writeText(addr);
+        alert("تم نسخ عنوان العقد بنجاح!");
+    }
+</script>
 
 </body>
 </html>

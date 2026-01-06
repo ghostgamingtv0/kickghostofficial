@@ -99,7 +99,7 @@
         </div>
 
         <div id="walletStep">
-            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة</button>
+            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة واختيار النوع</button>
         </div>
 
         <div id="registrationStep">
@@ -114,17 +114,6 @@
         <div id="chart-container">
             <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=0&info=0" width="100%" height="100%" style="border:0;"></iframe>
         </div>
-    </div>
-
-    <div class="section">
-        <h3>روابط التواصل الرسمية</h3>
-        <div class="social-links">
-            <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
-            <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/ghost.gamingtv?igsh=MTdycjI4b3Z5cWxhag==" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://t.me/ghost_gamingtv" target="_blank"><i class="fab fa-telegram"></i></a>
-        </div>
-        <p style="margin-top:20px; font-size:0.7rem; color:#444;">Contract: 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</p>
     </div>
 </div>
 
@@ -158,30 +147,25 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // ربط المحفظة - النسخة المصححة
+    // --- الربط مع خيار اختيار المحفظة ---
     document.getElementById("connectWallet").onclick = async () => {
         try {
-            // التحقق من وجود محفظة لتجنب انهيار الكود
-            if (typeof window.ethereum === 'undefined' && !window.trustwallet) {
-                alert("لم يتم العثور على محفظة. يرجى فتح الموقع من متصفح MetaMask أو Trust Wallet.");
-                return;
-            }
-
             const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT_ID });
-            
-            // محاولة الاتصال
-            const address = await sdk.wallet.connect();
-            userWalletAddress = address;
-            
+
+            // استخدام دالة متطورة تتيح للمستخدم اختيار المحفظة
+            // هذه الدالة تتعامل مع MetaMask, Trust Wallet, Coinbase Wallet بشكل منفصل
+            const wallet = await sdk.wallet.connect(); 
+            userWalletAddress = await sdk.wallet.getAddress();
+
             if(userWalletAddress) {
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ تم الربط بنجاح!";
+                document.getElementById("statusBox").innerHTML = "✅ مربوط: " + userWalletAddress.substring(0,6) + "...";
                 document.getElementById("statusBox").style.color = "var(--accent-color)";
             }
         } catch (err) { 
-            console.error("Connection error:", err);
-            alert("حدث خطأ أثناء الاتصال بالمحفظة. تأكد من إغلاق المحافظ الأخرى وتجربة MetaMask فقط."); 
+            console.error(err);
+            alert("حدث خطأ أو تم إلغاء الاتصال. حاول مرة أخرى."); 
         }
     };
 
@@ -204,13 +188,12 @@
                 })
             });
 
-            alert("تم تسجيل محفظتك بنجاح!");
+            alert("تم التسجيل بنجاح!");
             document.getElementById("submitAction").innerText = "تم التسجيل ✅";
-            document.getElementById("statusBox").innerHTML = "✅ تم الاستلام! المكافآت قادمة يا بطل.";
+            document.getElementById("statusBox").innerHTML = "✅ تمت العملية بنجاح يا بطل!";
         } catch (err) {
-            alert("حدث خطأ في الشبكة، حاول لاحقاً.");
+            alert("فشل الإرسال.");
             document.getElementById("submitAction").disabled = false;
-            document.getElementById("submitAction").innerText = "تسجيل المحفظة الآن";
         }
     };
 </script>

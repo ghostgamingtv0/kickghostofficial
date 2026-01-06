@@ -129,7 +129,6 @@
 </div>
 
 <script>
-    // الإعدادات الجديدة والآمنة فقط
     const CONFIG = {
         CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
         WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec"
@@ -137,7 +136,7 @@
 
     let userWalletAddress = "";
 
-    // منطق التنقل بين الخطوات
+    // منطق التنقل
     document.getElementById("kickAction").onclick = function() {
         window.open("https://kick.com/ghost_gamingtv", "_blank");
         this.disabled = true;
@@ -159,21 +158,34 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // ربط المحفظة
+    // ربط المحفظة - النسخة المصححة
     document.getElementById("connectWallet").onclick = async () => {
         try {
+            // التحقق من وجود محفظة لتجنب انهيار الكود
+            if (typeof window.ethereum === 'undefined' && !window.trustwallet) {
+                alert("لم يتم العثور على محفظة. يرجى فتح الموقع من متصفح MetaMask أو Trust Wallet.");
+                return;
+            }
+
             const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT_ID });
-            userWalletAddress = await sdk.wallet.connect();
             
-            document.getElementById("walletStep").style.display = "none";
-            document.getElementById("registrationStep").style.display = "block";
-            document.getElementById("statusBox").innerHTML = "✅ المحفظة مربوطة، أدخل الكود الآن.";
+            // محاولة الاتصال
+            const address = await sdk.wallet.connect();
+            userWalletAddress = address;
+            
+            if(userWalletAddress) {
+                document.getElementById("walletStep").style.display = "none";
+                document.getElementById("registrationStep").style.display = "block";
+                document.getElementById("statusBox").innerHTML = "✅ تم الربط بنجاح!";
+                document.getElementById("statusBox").style.color = "var(--accent-color)";
+            }
         } catch (err) { 
-            alert("يرجى فتح محفظة MetaMask أو Trust Wallet"); 
+            console.error("Connection error:", err);
+            alert("حدث خطأ أثناء الاتصال بالمحفظة. تأكد من إغلاق المحافظ الأخرى وتجربة MetaMask فقط."); 
         }
     };
 
-    // إرسال البيانات للجدول أوتوماتيكياً
+    // إرسال البيانات
     document.getElementById("submitAction").onclick = async () => {
         const code = document.getElementById("promoCodeInput").value.toUpperCase();
         if (!code) { alert("أدخل الكود!"); return; }
@@ -187,19 +199,20 @@
                 mode: "no-cors",
                 body: JSON.stringify({
                     address: userWalletAddress,
-                    promoCode: code
+                    promoCode: code,
+                    date: new Date().toLocaleString()
                 })
             });
 
-            alert("تم تسجيل محفظتك بنجاح في الجدول!");
+            alert("تم تسجيل محفظتك بنجاح!");
             document.getElementById("submitAction").innerText = "تم التسجيل ✅";
-            document.getElementById("statusBox").innerHTML = "✅ شكراً لك! سيتم توزيع الجوائز قريباً.";
+            document.getElementById("statusBox").innerHTML = "✅ تم الاستلام! المكافآت قادمة يا بطل.";
         } catch (err) {
-            alert("حدث خطأ، حاول مرة أخرى.");
+            alert("حدث خطأ في الشبكة، حاول لاحقاً.");
             document.getElementById("submitAction").disabled = false;
+            document.getElementById("submitAction").innerText = "تسجيل المحفظة الآن";
         }
     };
 </script>
 </body>
 </html>
-

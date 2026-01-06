@@ -31,11 +31,9 @@
 
         .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 20px; }
         
-        /* DexScreener Chart */
         #chart-container { position: relative; width: 100%; padding-bottom: 70%; height: 0; overflow: hidden; border-radius: 15px; }
         #chart-container iframe { position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: 0; }
 
-        /* Buttons */
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
             color: white; border: none; padding: 15px 25px; width: 100%; border-radius: 12px;
@@ -43,9 +41,7 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-kick { background: var(--kick-green); color: black; }
-        .btn-kick:hover { background: #00c400; transform: translateY(-2px); }
         
-        /* Warning Box */
         .warning-box {
             background: rgba(255, 77, 77, 0.1);
             border: 1px solid var(--warning-red);
@@ -65,7 +61,10 @@
         .status-badge { font-size: 0.8rem; padding: 10px; border-radius: 10px; background: #1a1a1a; border: 1px solid #333; margin: 5px; display: inline-block; width: 40%; }
         
         .token-info { text-align: left; background: #111; padding: 15px; border-radius: 10px; margin-top: 10px; font-size: 0.85rem; }
-        .token-info span { color: var(--accent-color); font-family: monospace; }
+        .token-info span { color: var(--accent-color); font-family: monospace; word-break: break-all; }
+        
+        .social-links a { color: white; font-size: 1.8rem; transition: 0.3s; }
+        .social-links a:hover { transform: scale(1.2); }
     </style>
 </head>
 <body>
@@ -106,7 +105,7 @@
                 
                 <div class="warning-box">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <span><b>تحذير:</b> يجب عليك متابعة القناة على كيك. إذا لم تكن متابعاً، لن يتم إرسال العملات حتى لو نجحت عملية الـ Claim.</span>
+                    <span><b>تنبيه هام:</b> يجب متابعة القناة. إذا لم تكن متابعاً حقيقياً، سيتم حظر محفظتك من التوزيعات القادمة.</span>
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -116,7 +115,7 @@
 
                 <div id="kickStep">
                     <button class="btn-web3 btn-kick" id="kickAction">
-                        <i class="fab fa-kickstarter"></i> 1. متابعة على KICK
+                        <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
                     </button>
                 </div>
 
@@ -128,7 +127,7 @@
 
                 <div id="walletStep">
                     <button class="btn-web3" id="connectWallet">
-                        <i class="fas fa-wallet"></i> 3. ربط المحفظة (Multi-Wallet)
+                        <i class="fas fa-wallet"></i> 3. ربط وتأكيد المحفظة
                     </button>
                 </div>
 
@@ -138,15 +137,15 @@
                     </button>
                 </div>
 
-                <p id="msg" style="margin-top: 15px; font-size: 0.9rem; color: #aaa;">اتبع الخطوات بالترتيب...</p>
+                <p id="msg" style="margin-top: 15px; font-size: 0.9rem; color: #aaa;">اتبع الخطوات بالترتيب للحصول على الجائزة</p>
             </div>
 
             <div class="section">
                 <h3><i class="fas fa-external-link-alt"></i> روابطنا الرسمية</h3>
-                <div style="display: flex; justify-content: space-around; font-size: 1.5rem; padding-top: 10px;">
-                    <a href="https://kick.com/KICKGHOST" target="_blank" style="color: var(--kick-green);"><i class="fab fa-kickstarter"></i></a>
-                    <a href="#" style="color: white;"><i class="fab fa-twitter"></i></a>
-                    <a href="#" style="color: #24A1DE;"><i class="fab fa-telegram"></i></a>
+                <div class="social-links" style="display: flex; justify-content: space-around; padding-top: 10px;">
+                    <a href="https://kick.com/ghost_gamingtv" target="_blank" style="color: var(--kick-green);"><i class="fab fa-kickstarter"></i></a>
+                    <a href="https://x.com/tv_ghostgaming" target="_blank" style="color: white;"><i class="fab fa-twitter"></i></a>
+                    <a href="https://t.me/ghost_gamingtv" target="_blank" style="color: #24A1DE;"><i class="fab fa-telegram"></i></a>
                 </div>
             </div>
         </div>
@@ -154,73 +153,70 @@
 </div>
 
 <script>
-    // الإعدادات الأساسية
     const CONFIG = {
-        KICK_URL: "https://kick.com/KICKGHOST",
+        KICK_URL: "https://kick.com/ghost_gamingtv",
         THIRDWEB_ID: "5ed0be08816a9f32809c6e550046bf03",
         CONTRACT: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
         NETWORK: "polygon"
     };
 
-    let isFollowed = false;
-    let isWalletConnected = false;
+    let userWallet = "";
 
     // 1. منطق كيك
     document.getElementById("kickAction").onclick = function() {
         window.open(CONFIG.KICK_URL, "_blank");
         this.style.display = "none";
         document.getElementById("confirmStep").style.display = "block";
-        document.getElementById("msg").innerText = "انتظر 5 ثوانٍ ثم اضغط على تأكيد المتابعة";
+        document.getElementById("msg").innerText = "تأكد من الضغط على زر Follow في كيك ثم عد لهنا.";
     };
 
     // 2. منطق التأكيد
     document.getElementById("confirmAction").onclick = function() {
-        isFollowed = true;
-        this.disabled = true;
-        this.innerText = "تم التحقق من المتابعة ✅";
         document.getElementById("badge-kick").innerText = "Kick ✅";
         document.getElementById("badge-kick").style.color = "#00ffa3";
+        document.getElementById("confirmStep").style.display = "none";
         document.getElementById("walletStep").style.display = "block";
-        document.getElementById("msg").innerText = "الآن قم بربط محفظتك (MetaMask أو Trust Wallet)";
+        document.getElementById("msg").innerText = "قم بربط محفظتك الآن.";
     };
 
-    // 3. ربط المحافظ المتعددة
+    // 3. ربط المحفظة مع التأكيد
     document.getElementById("connectWallet").onclick = async () => {
         if (window.ethereum || window.trustwallet) {
             try {
                 const provider = window.ethereum || window.trustwallet;
                 const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                if (accounts.length > 0) {
-                    isWalletConnected = true;
-                    document.getElementById("connectWallet").innerText = "المحفظة متصلة ✅";
+                userWallet = accounts[0];
+                
+                // رسالة تأكيد الربط
+                if(confirm(`هل تريد ربط هذه المحفظة لاستلام الجائزة؟\n${userWallet}`)) {
+                    document.getElementById("connectWallet").innerText = "تم الربط بنجاح ✅";
                     document.getElementById("connectWallet").disabled = true;
                     document.getElementById("badge-wallet").innerText = "Wallet ✅";
                     document.getElementById("badge-wallet").style.color = "#00ffa3";
                     document.getElementById("claimStep").style.display = "block";
-                    document.getElementById("msg").innerText = "مبروك! يمكنك الآن طلب المكافأة.";
+                    document.getElementById("msg").innerText = "المحفظة جاهزة. يمكنك طلب المكافأة.";
                 }
             } catch (err) { alert("فشل ربط المحفظة"); }
         } else {
-            alert("يرجى فتح الموقع من متصفح محفظة Trust Wallet أو MetaMask");
+            alert("يرجى استخدام متصفح Trust Wallet أو MetaMask");
         }
     };
 
-    // 4. عملية الـ Claim النهائية
+    // 4. الـ Claim
     document.getElementById("claimAction").onclick = async () => {
         try {
             document.getElementById("claimAction").innerText = "جاري الإرسال... ⏳";
             const sdk = new window.ThirdwebSDK(CONFIG.NETWORK, { clientId: CONFIG.THIRDWEB_ID });
             const contract = await sdk.getContract(CONFIG.CONTRACT);
             
-            // مطالبة بـ 1 عملة (تعديل الكمية حسب رغبتك)
             await contract.erc20.claim(1); 
             
-            alert("تمت العملية بنجاح! ستصلك العملات خلال دقائق.");
+            alert("تمت العملية بنجاح! راجع محفظتك بعد قليل.");
             document.getElementById("claimAction").innerText = "تم الاستلام ✅";
             document.getElementById("claimAction").disabled = true;
         } catch (err) {
             console.error(err);
-            alert("خطأ: تأكد من وجود رصيد MATIC بسيط للغاز أو أنك لم تستلم من قبل.");
+            alert("خطأ: تأكد من وجود MATIC للغاز أو أنك استلمت حصتك مسبقاً.");
             document.getElementById("claimAction").innerText = "حاول مرة أخرى";
         }
     };

@@ -26,10 +26,6 @@
 
         .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 25px; }
         
-        .reward-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #000; border-radius: 12px; overflow: hidden; }
-        .reward-table th, .reward-table td { padding: 15px; border: 1px solid #222; text-align: center; }
-        .reward-table th { background: var(--primary-color); color: white; }
-
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
             color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
@@ -44,13 +40,8 @@
             box-sizing: border-box;
         }
 
-        #chart-container { width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
-        
         #confirmStep, #walletStep, #registrationStep { display: none; }
         .warning-box { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--warning-red); padding: 15px; border-radius: 10px; color: var(--warning-red); margin-bottom: 20px; }
-        .social-links { margin-top: 20px; }
-        .social-links a { color: white; font-size: 2rem; margin: 0 15px; transition: 0.3s; }
-        .social-links a:hover { color: var(--primary-color); }
     </style>
 </head>
 <body>
@@ -61,24 +52,8 @@
             <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
         <h1>KICKGHOST ($AKSG)</h1>
-        <p>المنصة الرسمية لمكافآت Ghost Gaming TV</p>
+        <p>المنصة الرسمية للمكافآت</p>
     </header>
-
-    <div class="section">
-        <h3><i class="fas fa-gift"></i> نظام المكافآت</h3>
-        <table class="reward-table">
-            <thead>
-                <tr>
-                    <th>النشاط</th>
-                    <th>الجائزة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>متابعة القناة</td><td style="color:var(--accent-color)">500 $AKSG</td></tr>
-                <tr><td>ساعة مشاهدة</td><td style="color:var(--accent-color)">100 $AKSG</td></tr>
-            </tbody>
-        </table>
-    </div>
 
     <div class="section">
         <h3><i class="fas fa-user-check"></i> سجل محفظتك هنا</h3>
@@ -88,10 +63,8 @@
         </div>
 
         <div id="kickStep">
-            <button class="btn-web3 btn-kick" id="kickAction">
-                <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
-            </button>
-            <div id="timerBox" style="display:none; margin-top:10px;">انتظر للتأكيد: <span id="seconds">5</span> ثواني</div>
+            <button class="btn-web3 btn-kick" id="kickAction">1. متابعة GHOST_GAMINGTV</button>
+            <div id="timerBox" style="display:none; margin-top:10px;">انتظر: <span id="seconds">5</span> ثواني</div>
         </div>
 
         <div id="confirmStep">
@@ -99,20 +72,13 @@
         </div>
 
         <div id="walletStep">
-            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة واختيار النوع</button>
+            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة (اختر محفظتك)</button>
         </div>
 
         <div id="registrationStep">
-            <label>أدخل كود الجائزة من البث:</label>
+            <label>أدخل كود الجائزة:</label>
             <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا">
             <button class="btn-web3" id="submitAction">تسجيل المحفظة الآن</button>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3><i class="fas fa-chart-line"></i> الشارت المباشر</h3>
-        <div id="chart-container">
-            <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=0&info=0" width="100%" height="100%" style="border:0;"></iframe>
         </div>
     </div>
 </div>
@@ -125,7 +91,7 @@
 
     let userWalletAddress = "";
 
-    // منطق التنقل
+    // منطق التنقل بين الأزرار
     document.getElementById("kickAction").onclick = function() {
         window.open("https://kick.com/ghost_gamingtv", "_blank");
         this.disabled = true;
@@ -147,29 +113,30 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // --- الربط مع خيار اختيار المحفظة ---
+    // الربط الذكي لاختيار المحفظة
     document.getElementById("connectWallet").onclick = async () => {
         try {
+            // تهيئة الـ SDK
             const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT_ID });
 
-            // استخدام دالة متطورة تتيح للمستخدم اختيار المحفظة
-            // هذه الدالة تتعامل مع MetaMask, Trust Wallet, Coinbase Wallet بشكل منفصل
-            const wallet = await sdk.wallet.connect(); 
-            userWalletAddress = await sdk.wallet.getAddress();
+            // استخدام طريقة تتيح للمتصفح التعامل مع المحافظ المتعددة
+            // ستقوم هذه الدالة بطلب الاتصال من المحفظة النشطة أو إظهار خيار
+            const walletAddress = await sdk.wallet.connect(); 
+            userWalletAddress = walletAddress;
 
-            if(userWalletAddress) {
+            if (userWalletAddress) {
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ مربوط: " + userWalletAddress.substring(0,6) + "...";
+                document.getElementById("statusBox").innerHTML = "✅ تم الربط: " + userWalletAddress.substring(0, 6) + "...";
                 document.getElementById("statusBox").style.color = "var(--accent-color)";
             }
-        } catch (err) { 
+        } catch (err) {
             console.error(err);
-            alert("حدث خطأ أو تم إلغاء الاتصال. حاول مرة أخرى."); 
+            alert("فشل الاتصال: إذا كان لديك أكثر من محفظة، يرجى تعطيل الإضافات المتعارضة أو اختيار MetaMask يدوياً.");
         }
     };
 
-    // إرسال البيانات
+    // إرسال البيانات للجدول
     document.getElementById("submitAction").onclick = async () => {
         const code = document.getElementById("promoCodeInput").value.toUpperCase();
         if (!code) { alert("أدخل الكود!"); return; }
@@ -184,15 +151,15 @@
                 body: JSON.stringify({
                     address: userWalletAddress,
                     promoCode: code,
-                    date: new Date().toLocaleString()
+                    timestamp: new Date().toISOString()
                 })
             });
 
-            alert("تم التسجيل بنجاح!");
+            alert("تم التسجيل بنجاح في نظام مكافآت KICKGHOST!");
             document.getElementById("submitAction").innerText = "تم التسجيل ✅";
-            document.getElementById("statusBox").innerHTML = "✅ تمت العملية بنجاح يا بطل!";
+            document.getElementById("statusBox").innerHTML = "✅ رائع! سيتم إرسال الجوائز قريباً.";
         } catch (err) {
-            alert("فشل الإرسال.");
+            alert("خطأ في الاتصال بالسيرفر.");
             document.getElementById("submitAction").disabled = false;
         }
     };

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKG ($AKSG) - Rewards Hub</title>
+    <title>KICKGHOST ($AKSG) - Rewards Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
@@ -19,13 +20,17 @@
         }
 
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
         header { text-align: center; padding: 30px 0; }
         .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 25px var(--primary-color); }
 
         .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 25px; }
         
+        .reward-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #000; border-radius: 12px; overflow: hidden; font-size: 0.9rem; }
+        .reward-table th, .reward-table td { padding: 12px; border: 1px solid #222; text-align: center; }
+        .reward-table th { background: var(--primary-color); color: white; }
+
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
             color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
@@ -33,15 +38,23 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-kick { background: var(--kick-green); color: black; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); margin-top: 10px; }
         
         .promo-input {
-            width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; border: 1px solid var(--primary-color);
-            background: #000; color: var(--accent-color); text-align: center; font-weight: bold; font-size: 1.2rem;
-            box-sizing: border-box;
+            width: 100%; padding: 15px; margin-top: 10px; border-radius: 8px; border: 1px solid var(--primary-color);
+            background: #000; color: var(--accent-color); text-align: center; font-weight: bold; font-size: 1.2rem; box-sizing: border-box;
         }
 
+        #chart-container { width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
+        
         #confirmStep, #walletStep, #registrationStep { display: none; }
         .warning-box { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--warning-red); padding: 15px; border-radius: 10px; color: var(--warning-red); margin-bottom: 20px; }
+        
+        .social-links { margin: 20px 0; }
+        .social-links a { color: white; font-size: 1.8rem; margin: 0 10px; transition: 0.3s; }
+        .social-links a:hover { color: var(--primary-color); }
+
+        .lang-split { display: flex; justify-content: space-between; gap: 10px; font-size: 0.8rem; color: #888; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -52,46 +65,96 @@
             <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKG">
         </div>
         <h1>KICKGHOST ($AKSG)</h1>
-        <p>المنصة الرسمية للمكافآت</p>
+        <p>المنصة الرسمية للمكافآت | Official Rewards Hub</p>
     </header>
 
     <div class="section">
-        <h3><i class="fas fa-user-check"></i> سجل محفظتك هنا</h3>
+        <div class="lang-split"><span>حول المشروع</span><span>About Project</span></div>
+        <p style="color:#ccc; line-height: 1.6;">
+            عملة <b>$AKSG</b> هي طريقتنا لمكافأة جيش Ghost Gaming. تفاعل، تابع، واستلم عملاتك.<br>
+            <b>$AKSG</b> is our way to reward the Ghost Gaming army. Interact, follow, and get your tokens.
+        </p>
+        
+        <table class="reward-table">
+            <thead>
+                <tr>
+                    <th>النشاط / Activity</th>
+                    <th>الجائزة / Reward</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>متابعة القناة / New Follow</td><td style="color:var(--accent-color)">500 $AKSG</td></tr>
+                <tr><td>ساعة مشاهدة / 1 Hour Watch</td><td style="color:var(--accent-color)">100 $AKSG</td></tr>
+                <tr><td>كود خاص / Special Code</td><td style="color:var(--accent-color)">??? $AKSG</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="lang-split"><span>خطوات الاستلام</span><span>Claim Steps</span></div>
         
         <div class="warning-box" id="statusBox">
-            <i class="fas fa-info-circle"></i> يرجى إتمام الخطوات لتسجيل طلبك.
+            <i class="fas fa-info-circle"></i> يرجى إتمام الخطوات بالترتيب | Please complete steps in order.
         </div>
 
         <div id="kickStep">
-            <button class="btn-web3 btn-kick" id="kickAction">1. متابعة GHOST_GAMINGTV</button>
-            <div id="timerBox" style="display:none; margin-top:10px;">انتظر: <span id="seconds">5</span> ثواني</div>
+            <button class="btn-web3 btn-kick" id="kickAction">
+                <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV (Follow)
+            </button>
+            <div id="timerBox" style="display:none; margin-top:10px;">انتظر للتأكيد / Wait: <span id="seconds">5</span>s</div>
         </div>
 
         <div id="confirmStep">
-            <button class="btn-web3" id="confirmAction">2. أكدت المتابعة ✅</button>
+            <button class="btn-web3" id="confirmAction">2. أكدت المتابعة ✅ I Followed</button>
         </div>
 
         <div id="walletStep">
-            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة (اختر محفظتك)</button>
+            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة | Connect Wallet</button>
         </div>
 
         <div id="registrationStep">
-            <label>أدخل كود الجائزة:</label>
-            <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا">
-            <button class="btn-web3" id="submitAction">تسجيل المحفظة الآن</button>
+            <label>أدخل كود الجائزة من البث | Enter Stream Code:</label>
+            <input type="text" id="promoCodeInput" class="promo-input" placeholder="CODE HERE">
+            <button class="btn-web3" id="submitAction">استلم الآن | CLAIM NOW</button>
+            
+            <button class="btn-web3 btn-outline" id="addTokenAction">
+                <i class="fas fa-plus-circle"></i> إضافة العملة لمحفظتك | Add $AKSG to Wallet
+            </button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="lang-split"><span>الشارت المباشر</span><span>Live Chart</span></div>
+        <div id="chart-container">
+            <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=0&info=0"></iframe>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="lang-split"><span>العقد الرسمي (Polygon)</span><span>Official Contract</span></div>
+        <p style="background:#000; padding:15px; border-radius:10px; word-break: break-all; font-family: monospace; color: var(--accent-color);">
+            0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D
+        </p>
+        <div class="social-links">
+            <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
+            <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://t.me/ghost_gamingtv" target="_blank"><i class="fab fa-telegram"></i></a>
         </div>
     </div>
 </div>
 
 <script>
     const CONFIG = {
-        CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
-        WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec"
+        CLIENT_ID: "5ed0be08816a9f32809c6e550046bf03", // تم استخدام Client ID الخاص بك
+        WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
+        TOKEN_ADDR: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
+        TOKEN_SYMBOL: "AKSG",
+        TOKEN_DECIMALS: 18
     };
 
     let userWalletAddress = "";
 
-    // منطق التنقل بين الأزرار
+    // 1. منطق المتابعة والمؤقت
     document.getElementById("kickAction").onclick = function() {
         window.open("https://kick.com/ghost_gamingtv", "_blank");
         this.disabled = true;
@@ -113,54 +176,73 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // الربط الذكي لاختيار المحفظة
+    // 2. ربط المحفظة (حل مشكلة التعارض)
     document.getElementById("connectWallet").onclick = async () => {
         try {
-            // تهيئة الـ SDK
             const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT_ID });
+            
+            // الاتصال الذكي يفتح قائمة اختيار المحافظ تلقائياً إذا وجد تعارض
+            const wallet = await sdk.wallet.connect(); 
+            userWalletAddress = await sdk.wallet.getAddress();
 
-            // استخدام طريقة تتيح للمتصفح التعامل مع المحافظ المتعددة
-            // ستقوم هذه الدالة بطلب الاتصال من المحفظة النشطة أو إظهار خيار
-            const walletAddress = await sdk.wallet.connect(); 
-            userWalletAddress = walletAddress;
-
-            if (userWalletAddress) {
+            if(userWalletAddress) {
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ تم الربط: " + userWalletAddress.substring(0, 6) + "...";
+                document.getElementById("statusBox").innerHTML = "✅ مربوط بنجاح | Connected Successfully";
                 document.getElementById("statusBox").style.color = "var(--accent-color)";
             }
-        } catch (err) {
+        } catch (err) { 
             console.error(err);
-            alert("فشل الاتصال: إذا كان لديك أكثر من محفظة، يرجى تعطيل الإضافات المتعارضة أو اختيار MetaMask يدوياً.");
+            alert("خطأ في الربط! تأكد من فتح المحفظة | Connection Error!"); 
         }
     };
 
-    // إرسال البيانات للجدول
+    // 3. إضافة العملة للمحفظة
+    document.getElementById("addTokenAction").onclick = async () => {
+        if (!window.ethereum) return;
+        try {
+            await window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC20',
+                    options: {
+                        address: CONFIG.TOKEN_ADDR,
+                        symbol: CONFIG.TOKEN_SYMBOL,
+                        decimals: CONFIG.TOKEN_DECIMALS,
+                        image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg',
+                    },
+                },
+            });
+        } catch (error) { console.log(error); }
+    };
+
+    // 4. إرسال البيانات (Webhook)
     document.getElementById("submitAction").onclick = async () => {
         const code = document.getElementById("promoCodeInput").value.toUpperCase();
-        if (!code) { alert("أدخل الكود!"); return; }
+        if (!code) { alert("أدخل الكود! | Enter Code!"); return; }
 
         try {
-            document.getElementById("submitAction").innerText = "جاري الحفظ...";
+            document.getElementById("submitAction").innerText = "جاري المعالجة... Processing...";
             document.getElementById("submitAction").disabled = true;
 
+            // إرسال البيانات لجدول جوجل
             await fetch(CONFIG.WEBHOOK_URL, {
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify({
                     address: userWalletAddress,
                     promoCode: code,
-                    timestamp: new Date().toISOString()
+                    date: new Date().toLocaleString()
                 })
             });
 
-            alert("تم التسجيل بنجاح في نظام مكافآت KICKGHOST!");
-            document.getElementById("submitAction").innerText = "تم التسجيل ✅";
-            document.getElementById("statusBox").innerHTML = "✅ رائع! سيتم إرسال الجوائز قريباً.";
+            alert("تم التسجيل! سيتم التحقق والإرسال قريباً.\nRegistered! Verification in progress.");
+            document.getElementById("submitAction").innerText = "تم بنجاح ✅ Done";
+            document.getElementById("statusBox").innerHTML = "✅ شكراً لجيش Ghost! | Thanks Ghost Army!";
         } catch (err) {
-            alert("خطأ في الاتصال بالسيرفر.");
+            alert("حدث خطأ! | Error occurred!");
             document.getElementById("submitAction").disabled = false;
+            document.getElementById("submitAction").innerText = "استلم الآن | CLAIM NOW";
         }
     };
 </script>

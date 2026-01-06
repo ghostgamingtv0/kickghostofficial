@@ -41,6 +41,7 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-kick { background: var(--kick-green); color: black; }
+        .btn-kick:disabled { background: #333; color: #777; cursor: not-allowed; }
         
         .warning-box {
             background: rgba(255, 77, 77, 0.1);
@@ -55,7 +56,6 @@
             gap: 10px;
         }
 
-        /* Hidden States */
         #confirmStep, #walletStep, #claimStep { display: none; }
 
         .status-badge { font-size: 0.8rem; padding: 10px; border-radius: 10px; background: #1a1a1a; border: 1px solid #333; margin: 5px; display: inline-block; width: 40%; }
@@ -65,6 +65,9 @@
         
         .social-links a { color: white; font-size: 1.8rem; transition: 0.3s; }
         .social-links a:hover { transform: scale(1.2); }
+
+        /* Timer UI */
+        #timerBox { font-size: 0.9rem; color: var(--accent-color); margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -117,6 +120,7 @@
                     <button class="btn-web3 btn-kick" id="kickAction">
                         <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
                     </button>
+                    <div id="timerBox">برجاء الانتظار في صفحة القناة: <span id="seconds">5</span> ثوانٍ</div>
                 </div>
 
                 <div id="confirmStep">
@@ -127,7 +131,7 @@
 
                 <div id="walletStep">
                     <button class="btn-web3" id="connectWallet">
-                        <i class="fas fa-wallet"></i> 3. ربط وتأكيد المحفظة
+                        <i class="fas fa-wallet"></i> 3. ربط وتوقيع المحفظة
                     </button>
                 </div>
 
@@ -162,12 +166,24 @@
 
     let userWallet = "";
 
-    // 1. منطق كيك
+    // 1. منطق كيك مع عداد 5 ثوانٍ
     document.getElementById("kickAction").onclick = function() {
         window.open(CONFIG.KICK_URL, "_blank");
-        this.style.display = "none";
-        document.getElementById("confirmStep").style.display = "block";
-        document.getElementById("msg").innerText = "تأكد من الضغط على زر Follow في كيك ثم عد لهنا.";
+        this.disabled = true;
+        this.innerText = "جاري التحقق من الزيارة...";
+        document.getElementById("timerBox").style.display = "block";
+        
+        let timeLeft = 5;
+        const timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("seconds").innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById("kickStep").style.display = "none";
+                document.getElementById("confirmStep").style.display = "block";
+                document.getElementById("msg").innerText = "اضغط تأكيد المتابعة الآن.";
+            }
+        }, 1000);
     };
 
     // 2. منطق التأكيد
@@ -176,27 +192,33 @@
         document.getElementById("badge-kick").style.color = "#00ffa3";
         document.getElementById("confirmStep").style.display = "none";
         document.getElementById("walletStep").style.display = "block";
-        document.getElementById("msg").innerText = "قم بربط محفظتك الآن.";
+        document.getElementById("msg").innerText = "الآن، قم بربط وتوقيع عقد المحفظة.";
     };
 
-    // 3. ربط المحفظة مع التأكيد
+    // 3. ربط المحفظة + طلب التوقيع (Contract Engagement)
     document.getElementById("connectWallet").onclick = async () => {
         if (window.ethereum || window.trustwallet) {
             try {
-                const provider = window.ethereum || window.trustwallet;
-                const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                userWallet = accounts[0];
+                const provider = new ethers.providers.Web3Provider(window.ethereum || window.trustwallet);
+                await provider.send("eth_requestAccounts", []);
+                const signer = provider.getSigner();
+                userWallet = await signer.getAddress();
                 
-                // رسالة تأكيد الربط
-                if(confirm(`هل تريد ربط هذه المحفظة لاستلام الجائزة؟\n${userWallet}`)) {
-                    document.getElementById("connectWallet").innerText = "تم الربط بنجاح ✅";
-                    document.getElementById("connectWallet").disabled = true;
-                    document.getElementById("badge-wallet").innerText = "Wallet ✅";
-                    document.getElementById("badge-wallet").style.color = "#00ffa3";
-                    document.getElementById("claimStep").style.display = "block";
-                    document.getElementById("msg").innerText = "المحفظة جاهزة. يمكنك طلب المكافأة.";
-                }
-            } catch (err) { alert("فشل ربط المحفظة"); }
+                // طلب التوقيع لضمان ملكية المحفظة
+                const message = `أقر أنا صاحب المحفظة ${userWallet} بأنني قمت بمتابعة GHOST_GAMINGTV وأرغب في استلام مكافأة AKSG.`;
+                await signer.signMessage(message);
+
+                document.getElementById("connectWallet").innerText = "تم التوقيع والربط ✅";
+                document.getElementById("connectWallet").disabled = true;
+                document.getElementById("badge-wallet").innerText = "Wallet ✅";
+                document.getElementById("badge-wallet").style.color = "#00ffa3";
+                document.getElementById("claimStep").style.display = "block";
+                document.getElementById("msg").innerText = "المحفظة موثقة. يمكنك طلب المكافأة الآن.";
+                
+            } catch (err) { 
+                alert("يجب التوقيع على الطلب للمتابعة."); 
+                console.error(err);
+            }
         } else {
             alert("يرجى استخدام متصفح Trust Wallet أو MetaMask");
         }
@@ -211,12 +233,11 @@
             
             await contract.erc20.claim(1); 
             
-            alert("تمت العملية بنجاح! راجع محفظتك بعد قليل.");
+            alert("تمت العملية بنجاح! ستصلك العملة قريباً.");
             document.getElementById("claimAction").innerText = "تم الاستلام ✅";
             document.getElementById("claimAction").disabled = true;
         } catch (err) {
-            console.error(err);
-            alert("خطأ: تأكد من وجود MATIC للغاز أو أنك استلمت حصتك مسبقاً.");
+            alert("خطأ: تأكد من وجود MATIC أو أنك استلمت مسبقاً.");
             document.getElementById("claimAction").innerText = "حاول مرة أخرى";
         }
     };

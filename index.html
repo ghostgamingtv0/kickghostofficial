@@ -29,7 +29,7 @@
             font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 15px;
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-web3:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-web3:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
         .btn-kick { background: var(--kick-green); color: black; }
         
         .promo-input {
@@ -46,6 +46,8 @@
         .social-links a { color: white; font-size: 2.2rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
         .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
         .token-info { font-family: monospace; background: #000; padding: 15px; border-radius: 10px; color: var(--accent-color); word-break: break-all; margin: 15px 0; border: 1px dashed #444; }
+        
+        .lang-text { display: block; font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -54,34 +56,64 @@
     <header>
         <div class="logo-container"><img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST"></div>
         <h1>KICKGHOST ($AKSG)</h1>
-        <p>المنصة الرسمية للمكافآت | Rewards Hub</p>
+        <p>المنصة الرسمية للمكافآت | Official Rewards Hub</p>
     </header>
 
     <div class="section">
-        <div class="warning-box" id="statusBox">يرجى إتمام الخطوات بالترتيب | Follow steps in order.</div>
+        <div class="warning-box" id="statusBox">
+            يرجى إتمام الخطوات بالترتيب لتفعيل المطالبة <br>
+            <span class="lang-text">Please complete steps in order to enable claim</span>
+        </div>
 
         <div id="kickStep">
-            <button class="btn-web3 btn-kick" id="kickAction"><i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV</button>
-            <div id="timerBox" style="display:none; margin-top:15px;">انتظر: <span id="seconds">5</span> ثانية</div>
+            <button class="btn-web3 btn-kick" id="kickAction">
+                <div>
+                    <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
+                    <span class="lang-text">Follow GHOST_GAMINGTV on Kick</span>
+                </div>
+            </button>
+            <div id="timerBox" style="display:none; margin-top:15px;">انتظر للتأكيد / Wait: <span id="seconds">5</span>s</div>
         </div>
 
         <div id="confirmStep">
-            <button class="btn-web3" id="confirmAction">2. لقد قمت بالمتابعة ✅</button>
+            <button class="btn-web3" id="confirmAction">
+                <div>
+                    2. أكدت المتابعة ✅
+                    <span class="lang-text">I have followed ✅</span>
+                </div>
+            </button>
         </div>
 
         <div id="walletStep">
-            <button class="btn-web3" id="connectWallet"><i class="fas fa-wallet"></i> 3. ربط المحفظة واختيار النوع</button>
+            <button class="btn-web3" id="connectWallet">
+                <div>
+                    <i class="fas fa-wallet"></i> 3. ربط المحفظة واختيار النوع
+                    <span class="lang-text">Connect Wallet & Select Type</span>
+                </div>
+            </button>
         </div>
 
         <div id="registrationStep">
-            <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل كود الجائزة">
-            <button class="btn-web3" id="submitAction">تسجيل المحفظة الآن (Claim)</button>
-            <button class="btn-web3" style="background:#444;" id="addTokenAction">إضافة $AKSG للمحفظة تلقائياً</button>
+            <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل كود الجائزة | Enter Promo Code">
+            
+            <button class="btn-web3" id="submitAction">
+                <div>
+                    استلم المكافأة الآن
+                    <span class="lang-text">Claim Your Reward Now</span>
+                </div>
+            </button>
+            
+            <button class="btn-web3" style="background:#222; border: 1px solid var(--accent-color); color: var(--accent-color);" id="addTokenAction">
+                <div>
+                    <i class="fas fa-plus-circle"></i> إضافة $AKSG للمحفظة تلقائياً
+                    <span class="lang-text">Add $AKSG Automatically to Wallet</span>
+                </div>
+            </button>
         </div>
     </div>
 
     <div class="section">
-        <div class="token-info">العقد: 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
+        <div class="token-info">العقد (Polygon): 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
         <div class="social-links">
             <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
             <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
@@ -91,7 +123,7 @@
     </div>
 
     <div class="section">
-        <h3>شارت العملة المباشر | Live Chart</h3>
+        <h3>شارت العملة المباشر | Live Token Chart</h3>
         <div id="chart-container">
             <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=1&info=0"></iframe>
         </div>
@@ -99,16 +131,15 @@
 </div>
 
 <script>
-    // الحفاظ على مفاتيحك
-    const DATA = {
-        CLIENT: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
+    const CONFIG = {
+        CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
         HOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
-        TOKEN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D"
+        TOKEN_ADDR: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D"
     };
 
-    let wallet = "";
+    let userWallet = "";
 
-    // 1. Kick & Timer
+    // 1. Kick Follow Logic
     document.getElementById("kickAction").onclick = function() {
         window.open("https://kick.com/ghost_gamingtv", "_blank");
         this.disabled = true;
@@ -130,73 +161,85 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // 2. المحفظة (إصلاح خطأ التحميل)
+    // 2. Wallet Connection with Thirdweb (Fixes Loading Error)
     document.getElementById("connectWallet").onclick = async () => {
         const btn = document.getElementById("connectWallet");
-        btn.innerText = "جاري الاتصال...";
         
-        // التحقق من أن المكتبة جاهزة تماماً
         if (typeof ThirdwebSDK === "undefined") {
-            alert("المكتبة لم تكتمل بعد، انتظر 3 ثواني.");
-            btn.innerText = "3. ربط المحفظة واختيار النوع";
+            alert("المكتبة لا تزال قيد التحميل.. يرجى المحاولة بعد 3 ثواني \nLibrary still loading, try in 3 seconds.");
             return;
         }
 
         try {
-            const sdk = new ThirdwebSDK("polygon", { clientId: DATA.CLIENT });
-            // فتح بوابة الاختيار (Modal) تلقائياً
-            wallet = await sdk.wallet.connect(); 
-            const addr = await sdk.wallet.getAddress();
+            btn.disabled = true;
+            btn.innerText = "Connecting...";
+            
+            const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT_ID });
+            const connection = await sdk.wallet.connect(); 
+            userWallet = await sdk.wallet.getAddress();
 
-            if (addr) {
-                wallet = addr;
+            if (userWallet) {
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ مربوط: " + addr.substring(0, 6) + "...";
+                document.getElementById("statusBox").innerHTML = `✅ Connected: ${userWallet.substring(0,6)}...${userWallet.substring(38)}`;
                 document.getElementById("statusBox").style.color = "var(--accent-color)";
             }
         } catch (err) {
             console.error(err);
-            alert("خطأ في الربط! تأكد من فتح المحفظة.");
+            alert("خطأ في الربط! تأكد من فتح المحفظة \nConnection Error! Open your wallet.");
+            btn.disabled = false;
             btn.innerText = "3. ربط المحفظة واختيار النوع";
         }
     };
 
-    // 3. إضافة العملة تلقائياً
+    // 3. Add Token Automatically
     document.getElementById("addTokenAction").onclick = async () => {
-        if (!window.ethereum) return;
+        if (!window.ethereum) {
+            alert("يرجى استخدام محفظة تدعم Web3 (MetaMask/Trust)");
+            return;
+        }
         try {
             await window.ethereum.request({
                 method: 'wallet_watchAsset',
                 params: {
                     type: 'ERC20',
-                    options: { address: DATA.TOKEN, symbol: 'AKSG', decimals: 18, image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg' },
+                    options: {
+                        address: CONFIG.TOKEN_ADDR,
+                        symbol: 'AKSG',
+                        decimals: 18,
+                        image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg',
+                    },
                 },
             });
-        } catch (e) {}
+        } catch (e) { console.error(e); }
     };
 
-    // 4. منع الضغط مرتين (Double Click Prevention)
+    // 4. Submit & Prevent Double Click
     document.getElementById("submitAction").onclick = async () => {
-        const code = document.getElementById("promoCodeInput").value.trim();
-        if (!code) { alert("أدخل الكود!"); return; }
+        const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
+        if (!code) { alert("أدخل الكود! | Enter Code!"); return; }
 
         const btn = document.getElementById("submitAction");
-        btn.disabled = true; 
-        btn.innerText = "جاري التسجيل...";
+        btn.disabled = true;
+        btn.innerText = "Processing...";
 
         try {
-            await fetch(DATA.HOOK, {
+            await fetch(CONFIG.HOOK, {
                 method: "POST",
                 mode: "no-cors",
-                body: JSON.stringify({ address: wallet, code: code, date: new Date().toISOString() })
+                body: JSON.stringify({ 
+                    address: userWallet, 
+                    promo: code, 
+                    platform: "KICKGHOST_WEB",
+                    time: new Date().toISOString() 
+                })
             });
-            alert("✅ تم تسجيل محفظتك بنجاح!");
-            btn.innerText = "تم التسجيل ✅";
+            alert("✅ تم التسجيل بنجاح! سيتم إرسال المكافأة قريباً \nRegistered successfully! Rewards sent soon.");
+            btn.innerText = "Claimed ✅";
         } catch (err) {
-            alert("فشل التسجيل.");
+            alert("خطأ في الإرسال | Send Error");
             btn.disabled = false;
-            btn.innerText = "تسجيل المحفظة الآن (Claim)";
+            btn.innerText = "Claim Now";
         }
     };
 </script>

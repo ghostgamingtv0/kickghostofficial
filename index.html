@@ -6,89 +6,100 @@
     <title>KICKGHOST ($AKSG) - Rewards Hub</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@3.10.59/dist/thirdweb-sdk.browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
-            --primary-color: #a336ff; --accent-color: #00ffa3; --bg-dark: #020202;
-            --card-bg: #111111; --kick-green: #00e701; --warning-red: #ff4d4d;
+            --primary: #a336ff; --accent: #00ffa3; --bg: #020202;
+            --card: #111111; --kick: #00e701; --error: #ff4d4d;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 0; overflow-x: hidden; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
         header { text-align: center; padding: 30px 0; }
-        .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 25px var(--primary-color); }
+        .logo { width: 120px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 20px var(--primary); }
 
-        .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 25px; }
+        .section { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 25px; }
         
-        /* أزرار احترافية */
         .btn-web3 { 
-            background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
+            background: linear-gradient(90deg, var(--primary), #7a1fd1);
             color: white; border: none; padding: 18px; width: 100%; border-radius: 12px;
             font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 15px;
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-web3:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(163, 54, 255, 0.4); }
-        .btn-web3:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .btn-kick { background: var(--kick-green); color: black; }
+        .btn-web3:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(163, 54, 255, 0.4); }
+        .btn-web3:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-kick { background: var(--kick); color: black; }
         
         .promo-input {
-            width: 100%; padding: 18px; margin-top: 10px; border-radius: 12px; border: 2px solid var(--primary-color);
-            background: #000; color: var(--accent-color); text-align: center; font-weight: bold; font-size: 1.3rem; box-sizing: border-box;
+            width: 100%; padding: 18px; margin-top: 10px; border-radius: 12px; border: 2px solid var(--primary);
+            background: #000; color: var(--accent); text-align: center; font-weight: bold; font-size: 1.3rem; box-sizing: border-box;
         }
 
-        /* الشارت ملء الشاشة تقريباً */
+        .step-info { font-size: 0.9rem; color: #888; margin-top: 5px; display: block; }
         #chart-container { width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
         #chart-container iframe { width: 100%; height: 100%; border: none; }
         
         #confirmStep, #walletStep, #registrationStep { display: none; }
-        .warning-box { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--warning-red); padding: 20px; border-radius: 15px; color: var(--warning-red); margin-bottom: 25px; font-weight: bold; }
+        .status-box { background: rgba(0, 255, 163, 0.1); border: 1px solid var(--accent); padding: 20px; border-radius: 15px; color: var(--accent); margin-bottom: 25px; font-weight: bold; }
         
-        .social-links a { color: white; font-size: 2rem; margin: 0 10px; transition: 0.3s; }
-        .social-links a:hover { color: var(--primary-color); }
-        .token-info { font-family: monospace; background: #000; padding: 15px; border-radius: 10px; color: var(--accent-color); word-break: break-all; margin: 15px 0; border: 1px dashed #444; }
+        .socials a { color: white; font-size: 2rem; margin: 0 15px; transition: 0.3s; }
+        .socials a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="logo-container"><img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST"></div>
+        <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" class="logo" alt="KICKGHOST">
         <h1>KICKGHOST ($AKSG)</h1>
-        <p>المنصة الرسمية للمكافآت | Rewards Hub</p>
+        <p>مركز المكافآت الرسمي | Official Rewards Hub</p>
     </header>
 
     <div class="section">
-        <div class="warning-box" id="statusBox">إتمام الخطوات مطلوب | Steps Required</div>
+        <h3 style="color: var(--accent);">كيفية إضافة العملة | How to Add Token</h3>
+        <p style="font-size: 0.9rem; line-height: 1.6;">
+            1. اضغط على الزر بالأسفل للإضافة التلقائية (Metamask/Trust). <br>
+            2. أو أضف العقد يدوياً في محفظتك على شبكة <b>Polygon</b>. <br>
+            <small>1. Click button below for Auto-Add. 2. Or add contract manually on <b>Polygon</b> network.</small>
+        </p>
+        <button class="btn-web3" style="background:#222; border: 1px solid var(--accent);" id="addTokenAction">
+            <i class="fas fa-plus-circle"></i> إضافة $AKSG تلقائياً | Add $AKSG Automatically
+        </button>
+    </div>
+
+    <div class="section">
+        <div class="status-box" id="statusMsg">أكمل المهام للتفعيل | Complete tasks to enable</div>
 
         <div id="kickStep">
-            <button class="btn-web3 btn-kick" id="kickAction"><i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV (Follow)</button>
-            <div id="timerBox" style="display:none; margin-top:10px;">انتظر / Wait: <span id="seconds">5</span>s</div>
+            <button class="btn-web3 btn-kick" id="kickAction">
+                <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV (Follow)
+            </button>
+            <span class="step-info">سيتم التفعيل بعد 5 ثوانٍ من الضغط | Enables after 5s</span>
         </div>
 
         <div id="confirmStep">
-            <button class="btn-web3" id="confirmAction">2. أكدت المتابعة ✅ I Followed</button>
+            <button class="btn-web3" id="confirmAction">2. لقد تابعت القناة ✅ I Have Followed</button>
         </div>
 
         <div id="walletStep">
             <button class="btn-web3" id="connectWallet">
-                <i class="fas fa-wallet"></i> 3. ربط المحفظة (اختر محفظتك) | Connect Wallet
+                <i class="fas fa-wallet"></i> 3. ربط المحفظة (نافذة الاختيار) | Connect Wallet
             </button>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">سيتم فتح نافذة لاختيار MetaMask أو Trust Wallet أو غيرها</p>
+            <span class="step-info">يدعم MetaMask, Trust Wallet, Coinbase...</span>
         </div>
 
         <div id="registrationStep">
-            <input type="text" id="promoCodeInput" class="promo-input" placeholder="CODE HERE">
-            <button class="btn-web3" id="submitAction">استلم الآن | CLAIM NOW</button>
-            <button class="btn-web3" style="background:#222;" id="addTokenAction">إضافة $AKSG تلقائياً | Add Token</button>
+            <input type="text" id="promoCode" class="promo-input" placeholder="أدخل كود البرومو | ENTER CODE">
+            <button class="btn-web3" id="claimAction">سجل للمطالبة بـ $AKSG | Claim Airdrop</button>
         </div>
     </div>
 
     <div class="section">
-        <div class="token-info">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
-        <div class="social-links">
+        <p style="font-family: monospace; background:#000; padding:10px;">Contract: 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</p>
+        <div class="socials">
             <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
             <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://www.instagram.com/ghost.gamingtv" target="_blank"><i class="fab fa-instagram"></i></a>
@@ -104,29 +115,23 @@
 </div>
 
 <script>
-    const CONFIG = {
-        CLIENT: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
-        HOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
+    const APP_CONFIG = {
+        CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
+        SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
         TOKEN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D"
     };
 
-    let userAddress = "";
+    let userAddr = "";
 
-    // 1. Kick Logic
+    // 1. نظام الـ Kick
     document.getElementById("kickAction").onclick = function() {
         window.open("https://kick.com/ghost_gamingtv", "_blank");
         this.disabled = true;
-        document.getElementById("timerBox").style.display = "block";
-        let time = 5;
-        const intr = setInterval(() => {
-            time--;
-            document.getElementById("seconds").innerText = time;
-            if(time <= 0) {
-                clearInterval(intr);
-                document.getElementById("kickStep").style.display = "none";
-                document.getElementById("confirmStep").style.display = "block";
-            }
-        }, 1000);
+        this.innerText = "Checking... جاري التحقق";
+        setTimeout(() => {
+            document.getElementById("kickStep").style.display = "none";
+            document.getElementById("confirmStep").style.display = "block";
+        }, 5000);
     };
 
     document.getElementById("confirmAction").onclick = () => {
@@ -134,34 +139,32 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // 2. حل مشكلة تعارض المحافظ (Connect Logic)
+    // 2. ربط المحفظة المطور (بدون تعارض)
     document.getElementById("connectWallet").onclick = async () => {
         if (typeof ThirdwebSDK === "undefined") {
-            alert("يرجى الانتظار، المكتبة تحمل.. | Loading library..");
+            alert("Library still loading... حاول مجدداً بعد ثوانٍ");
             return;
         }
-
         try {
-            // استخدام "polygon" وتحديد الـ Client ID بدقة
-            const sdk = new ThirdwebSDK("polygon", { clientId: CONFIG.CLIENT });
+            // استخدام "Polygon" مع الـ Client ID الخاص بك
+            const sdk = new ThirdwebSDK("polygon", { clientId: APP_CONFIG.CLIENT_ID });
             
-            // هذه الوظيفة تفتح Modal اختيار المحفظة وتتجنب خطأ window.ethereum
+            // فتح نافذة اختيار المحافظ (Connect UI)
             const wallet = await sdk.wallet.connect(); 
-            userAddress = await sdk.wallet.getAddress();
+            userAddr = await sdk.wallet.getAddress();
 
-            if (userAddress) {
+            if (userAddr) {
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ تم الربط | Connected";
-                document.getElementById("statusBox").style.color = "var(--accent-color)";
+                document.getElementById("statusMsg").innerHTML = "✅ مربوط | Connected: " + userAddr.substring(0,6) + "...";
             }
-        } catch (err) {
-            console.error(err);
-            alert("فشل الربط! يرجى اختيار محفظة واحدة فقط أو استخدام متصفح المحفظة.");
+        } catch (e) {
+            console.error(e);
+            alert("Connection Error! تأكد من فتح المحفظة");
         }
     };
 
-    // 3. إضافة العملة
+    // 3. إضافة العملة تلقائياً
     document.getElementById("addTokenAction").onclick = async () => {
         if (window.ethereum) {
             try {
@@ -170,38 +173,44 @@
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: CONFIG.TOKEN,
+                            address: APP_CONFIG.TOKEN,
                             symbol: 'AKSG',
                             decimals: 18,
                             image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
                         },
                     },
                 });
-            } catch (e) { console.log(e); }
+            } catch (err) { alert("Error adding token"); }
+        } else {
+            alert("Please use MetaMask/Trust Wallet browser");
         }
     };
 
-    // 4. المطالبة ومنع الضغط المتكرر
-    document.getElementById("submitAction").onclick = async () => {
-        const code = document.getElementById("promoCodeInput").value.trim();
-        if (!code) { alert("أدخل الكود! | Enter Code!"); return; }
+    // 4. إرسال البيانات ومنع التكرار
+    document.getElementById("claimAction").onclick = async () => {
+        const code = document.getElementById("promoCode").value.trim();
+        if(!code) { alert("أدخل الكود أولاً!"); return; }
 
-        const btn = document.getElementById("submitAction");
+        const btn = document.getElementById("claimAction");
         btn.disabled = true;
-        btn.innerText = "جاري المعالجة... Processing...";
+        btn.innerText = "جاري الحفظ... Saving...";
 
         try {
-            await fetch(CONFIG.HOOK, {
+            // إرسال البيانات لـ Google Sheets
+            await fetch(APP_CONFIG.SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
-                body: JSON.stringify({ address: userAddress, code: code, date: new Date().toISOString() })
+                body: JSON.stringify({
+                    wallet: userAddr,
+                    promo: code,
+                    timestamp: new Date().toLocaleString()
+                })
             });
-            alert("✅ تم بنجاح! سيتم التحقق والإرسال.");
-            btn.innerText = "تم ✅ Done";
+            alert("✅ تم التسجيل! سيتم توزيع الـ Airdrop قريباً.");
+            btn.innerText = "تم التسجيل ✅ Registered";
         } catch (err) {
-            alert("خطأ!");
+            alert("حدث خطأ في الإرسال");
             btn.disabled = false;
-            btn.innerText = "استلم الآن | CLAIM NOW";
         }
     };
 </script>

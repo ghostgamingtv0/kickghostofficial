@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KICKGHOST ($AKSG) - Rewards & Dashboard</title>
     
+    <!-- Google Tag Manager -->
+    <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M8CX26RC');
+    </script>
+    <!-- End Google Tag Manager -->
+    
     <!-- Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js" defer></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
         :root {
@@ -28,6 +38,7 @@
             margin: 0; 
             padding: 0; 
             overflow-x: hidden; 
+            line-height: 1.6;
         }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
@@ -160,6 +171,11 @@
 </head>
 <body>
 
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M8CX26RC"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <div class="container">
     <header>
         <div class="logo-container">
@@ -256,6 +272,7 @@
                 <div style="display:flex; gap:8px; margin-top:10px;">
                     <button class="btn-web3 btn-outline" onclick="verifyDeposit('500')">تحقق إيداع 500 AKSG</button>
                     <button class="btn-web3 btn-outline" onclick="verifyDeposit('50')">تحقق إيداع 50 AKSG</button>
+                    <button class="btn-web3 btn-outline" onclick="showAKSGBalance()">عرض رصيد $AKSG</button>
                 </div>
             </div>
             
@@ -486,7 +503,7 @@
     // --- 2. Rewards Logic ---
     const APP_DATA = {
         CHAIN: "polygon", 
-        TW_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd", 
+        TW_ID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd", 
         TOKEN_ADDRESS: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
         DEPOSIT_ADDRESS: "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9"
     };
@@ -646,7 +663,7 @@
     }
 
     // 3. Execute Connection & Verification
-    async function waitForThirdweb(ms=5000) {
+    async function waitForThirdweb(ms=20000) {
         const start = Date.now();
         while (Date.now()-start < ms) {
             const ok = window.ThirdwebSDK || (window.Thirdweb && window.Thirdweb.ThirdwebSDK);
@@ -655,6 +672,18 @@
         }
         throw new Error("Thirdweb SDK not loaded yet. Please refresh.");
     }
+    let sdkReady = false;
+    (async function ensureSDKReadyUI(){
+        const btn = document.getElementById("connectWallet");
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ تحميل المحفظة...'; }
+        try {
+            await waitForThirdweb(20000);
+            sdkReady = true;
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-wallet"></i> 3. ربط المحفظة | Connect Wallet'; }
+        } catch(e) {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-wallet"></i> 3. ربط المحفظة | Connect Wallet'; }
+        }
+    })();
     async function executeConnection(walletType) {
         closeModal(); // Close modal first
         
@@ -664,7 +693,7 @@
         btn.disabled = true;
         
         try {
-            const ThirdwebClass = await waitForThirdweb(8000);
+            const ThirdwebClass = await waitForThirdweb(20000);
             const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
             
             // Connect based on selection (In vanilla JS SDK, mostly maps to injected, 
@@ -746,6 +775,11 @@
         if (platform==='kick') activePlatforms.kick = btn.classList.contains('bonus-active');
         updateAnalyticsUI();
         postEvent("SOCIAL_INTERACT", { platform, active: btn.classList.contains('bonus-active'), address: userWalletAddress, kick: userKickUsername });
+        if (btn.classList.contains('bonus-active')) {
+            if (platform==='instagram') window.open("https://www.instagram.com/ghost.gamingtv/", "_blank");
+            if (platform==='twitter') window.open("https://x.com/tv_ghostgaming", "_blank");
+            if (platform==='kick') window.open("https://kick.com/ghost_gamingtv", "_blank");
+        }
     }
 
     function updateBoxesLeft() {
@@ -781,6 +815,32 @@
             nextSat.setHours(0,0,0,0);
             return nextSat;
         }
+    }
+    const AKSG_ABI = [
+        "function name() view returns (string)",
+        "function symbol() view returns (string)",
+        "function decimals() view returns (uint8)",
+        "function balanceOf(address) view returns (uint256)"
+    ];
+    async function showAKSGBalance() {
+        try {
+            if (!window.ethereum) { alert("يرجى استخدام متصفح يدعم Web3"); return; }
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            let addr = userWalletAddress;
+            if (!addr) {
+                const accs = await provider.listAccounts();
+                addr = accs && accs[0] ? accs[0] : "";
+            }
+            if (!addr) { alert("يرجى ربط المحفظة أولاً"); return; }
+            const contract = new ethers.Contract(APP_DATA.TOKEN_ADDRESS, AKSG_ABI, provider);
+            const [bal, dec, sym] = await Promise.all([
+                contract.balanceOf(addr),
+                contract.decimals(),
+                contract.symbol()
+            ]);
+            const value = ethers.utils.formatUnits(bal, dec);
+            alert(value + " " + sym);
+        } catch(e) { alert("تعذر عرض الرصيد"); }
     }
     function updateBoxTimers() {
         const end = getAirdropWindowEnd();

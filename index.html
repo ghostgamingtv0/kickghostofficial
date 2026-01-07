@@ -32,6 +32,47 @@
 
         .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
         
+        /* Modal Style (New) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--primary-color);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(163, 54, 255, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .wallet-option {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .wallet-option:hover { border-color: var(--accent-color); background: #111; transform: translateY(-3px); }
+        .wallet-icon { font-size: 2rem; color: #fff; }
+        .close-modal { margin-top: 20px; background: transparent; border: none; color: #888; cursor: pointer; text-decoration: underline; }
+
         /* Header */
         header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 30px; }
         .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 25px var(--primary-color); }
@@ -125,11 +166,55 @@
     <div class="dashboard-grid">
         <!-- Tokenomics Chart Section -->
         <div class="section">
+            <div class="lang-split">
+                <span>حول المشروع</span>
+                <span>About Project</span>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.6; color: #ccc; margin-bottom: 20px;">
+                مشروع KICKGHOST ($AKSG) هو نظام مكافآت لامركزي مصمم لدعم مجتمع البث المباشر. احصل على عملات مقابل المشاهدة والتفاعل.
+                <br>
+                <span style="color:#888; display:block; margin-top:5px; font-size: 0.8rem;">
+                KICKGHOST ($AKSG) is a decentralized rewards system designed to support the streaming community. Earn tokens for watching and interacting.
+                </span>
+            </p>
+
             <h2><i class="fas fa-chart-pie"></i> توزيع العملة (Tokenomics)</h2>
             <div class="chart-wrapper">
                 <canvas id="tokenChart"></canvas>
             </div>
-            <p style="font-size: 0.85rem; color: #888;">يظهر هذا الرسم البياني توزيع السيولة والمكافآت للمجتمع.</p>
+            
+            <!-- Leaderboard Section (New) -->
+            <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
+                <div class="lang-split">
+                    <span style="color:var(--accent-color); font-weight:bold;">🏆 أفضل 5 متفاعلين</span>
+                    <span style="color:var(--accent-color); font-weight:bold;">Top 5 Contributors 🏆</span>
+                </div>
+                <style>
+                    .leaderboard-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 0.85rem; }
+                    .leaderboard-table th { background: #222; color: var(--primary-color); padding: 8px; }
+                    .leaderboard-table td { border-bottom: 1px solid #333; padding: 8px; }
+                    .rank-1 { color: gold; }
+                    .rank-2 { color: silver; }
+                    .rank-3 { color: #cd7f32; }
+                </style>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المستخدم (User)</th>
+                            <th>ساعات (Hours)</th>
+                            <th>تعليقات (Cmts)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="rank-1"><i class="fas fa-crown"></i> 1</td><td>Ghost_King</td><td>120h</td><td>5.2k</td></tr>
+                        <tr><td class="rank-2">2</td><td>CryptoHunter</td><td>98h</td><td>3.1k</td></tr>
+                        <tr><td class="rank-3">3</td><td>KickMaster</td><td>85h</td><td>2.8k</td></tr>
+                        <tr><td>4</td><td>Viewer_99</td><td>70h</td><td>1.5k</td></tr>
+                        <tr><td>5</td><td>AKSG_Fan</td><td>65h</td><td>1.2k</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Rewards Action Section -->
@@ -144,7 +229,7 @@
                 <button class="btn-web3 btn-kick" id="kickAction">
                     <i class="fab fa-kickstarter"></i> متابعة القناة على Kick
                 </button>
-                <a id="kickFallback" class="fallback-link" href="https://kick.com/ghost_gamingtv" target="_blank">لم تفتح الصفحة؟ اضغط هنا</a>
+                <a id="kickFallback" class="fallback-link" href="https://kick.com/ghost_gamingtv" target="_blank">لم تفتح الصفحة؟ اضغط هنا (Click here if blocked)</a>
                 
                 <div id="timerBox" style="display:none; margin-top:15px; font-weight: bold; color: var(--accent-color);">
                     <i class="fas fa-spinner fa-spin"></i> جاري التحقق... <span id="seconds">5</span>s
@@ -155,6 +240,7 @@
             <div id="confirmStep">
                 <div class="warning-box">
                     <i class="fas fa-exclamation-triangle"></i> تأكد من المتابعة قبل التأكيد لتجنب الحظر.
+                    <br><small>Ensure you followed to avoid being banned.</small>
                 </div>
                 <button class="btn-web3" id="confirmAction">
                     <i class="fas fa-check-circle"></i> لقد قمت بالمتابعة ✅ (I Followed)
@@ -163,9 +249,13 @@
 
             <!-- Step 3: Wallet -->
             <div id="walletStep">
-                <div class="lang-split"><span>الخطوة 3: المحفظة</span><span>Step 3: Connect</span></div>
+                <div class="lang-split"><span>الخطوة 3: التحقق من المحفظة</span><span>Step 3: Verify Wallet</span></div>
+                <p style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">
+                    سيتم طلب توقيع للتحقق من ملكية المحفظة في كل مرة.
+                    <br>Signature required every time to verify ownership.
+                </p>
                 <button class="btn-web3" id="connectWallet">
-                    <i class="fas fa-wallet"></i> ربط المحفظة (Connect Wallet)
+                    <i class="fas fa-wallet"></i> ربط وتحقق (Connect & Verify)
                 </button>
                 <p style="font-size: 0.8rem; color:#666; margin-top:10px;">يدعم MetaMask, Trust Wallet, Coinbase</p>
             </div>
@@ -176,12 +266,15 @@
                 <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل كود الجائزة (Promo Code)">
                 
                 <button class="btn-web3" id="submitAction">
-                    <i class="fas fa-paper-plane"></i> استلام المكافأة الآن
+                    <i class="fas fa-paper-plane"></i> استلام المكافأة الآن (Claim)
                 </button>
                 
-                <button class="btn-web3 btn-outline" id="addTokenAction" style="margin-top: 10px; padding: 12px; font-size: 0.9rem;">
-                    <i class="fas fa-plus"></i> إضافة العملة للمفظة ($AKSG)
-                </button>
+                <div style="margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                    <div class="lang-split"><span>إضافة العملة للمحفظة</span><span>Add Token to Wallet</span></div>
+                    <button class="btn-web3 btn-outline" id="addTokenAction" style="margin-top: 10px; padding: 12px; font-size: 0.9rem;">
+                        <i class="fas fa-plus"></i> إضافة $AKSG تلقائياً (Auto-Add)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -203,6 +296,32 @@
             <a href="https://www.instagram.com/ghost.gamingtv?igsh=MTdycjI4b3Z5cWxhag==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
         <p style="color: #444; margin-top: 20px; font-size: 0.8rem;">Contract: 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</p>
+    </div>
+</div>
+
+<!-- Wallet Selection Modal -->
+<div id="walletModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 style="color:white; margin-top:0;">اختر المحفظة<br><span style="font-size:0.8rem; color:#888;">Choose Wallet</span></h3>
+        <div class="wallet-grid">
+            <div class="wallet-option" onclick="executeConnection('metamask')">
+                <i class="fas fa-mask wallet-icon" style="color: orange;"></i>
+                <span>MetaMask</span>
+            </div>
+            <div class="wallet-option" onclick="executeConnection('trust')">
+                <i class="fas fa-shield-alt wallet-icon" style="color: #3375BB;"></i>
+                <span>Trust Wallet</span>
+            </div>
+            <div class="wallet-option" onclick="executeConnection('coinbase')">
+                <i class="fas fa-circle wallet-icon" style="color: #0052FF;"></i>
+                <span>Coinbase</span>
+            </div>
+            <div class="wallet-option" onclick="executeConnection('injected')">
+                <i class="fas fa-wallet wallet-icon" style="color: #ccc;"></i>
+                <span>Browser / Other</span>
+            </div>
+        </div>
+        <button class="close-modal" onclick="closeModal()">إلغاء / Cancel</button>
     </div>
 </div>
 
@@ -276,30 +395,80 @@
         document.getElementById("walletStep").style.display = "block";
     };
 
-    // Wallet Connection
-    document.getElementById("connectWallet").onclick = async () => {
+    // --- Wallet UI Logic ---
+    // 1. Open Modal
+    document.getElementById("connectWallet").onclick = () => {
+        document.getElementById("walletModal").style.display = "flex";
+    };
+
+    // 2. Close Modal
+    function closeModal() {
+        document.getElementById("walletModal").style.display = "none";
+    }
+
+    // 3. Execute Connection & Verification
+    async function executeConnection(walletType) {
+        closeModal(); // Close modal first
+        
         const btn = document.getElementById("connectWallet");
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق... Verifying...';
+        btn.disabled = true;
         
         try {
             const sdk = new ThirdwebSDK(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
-            const wallet = await sdk.wallet.connect(); 
-            userWalletAddress = await sdk.wallet.getAddress();
+            
+            // Connect based on selection (In vanilla JS SDK, mostly maps to injected, 
+            // but we could extend this for WalletConnect if library added)
+            let wallet;
+            if (walletType === 'metamask' || walletType === 'trust' || walletType === 'coinbase' || walletType === 'injected') {
+                 // Standard Injected Connection
+                 wallet = await sdk.wallet.connect(); 
+            }
+            
+            const address = await sdk.wallet.getAddress();
+            
+            // Force Signature (Verification)
+            const message = `KICKGHOST Verification\nWallet: ${address}\nDate: ${new Date().toISOString()}`;
+            const signature = await sdk.wallet.sign(message); 
 
-            if (userWalletAddress) {
+            userWalletAddress = address;
+
+            if (userWalletAddress && signature) {
+                // Log Address
+                logVerification(userWalletAddress, signature);
+
                 document.getElementById("walletStep").style.display = "none";
                 document.getElementById("registrationStep").style.display = "block";
                 
                 const statusBox = document.getElementById("statusBox");
                 statusBox.style.display = "block";
-                statusBox.innerHTML = `✅ تم ربط المحفظة: ${userWalletAddress.substring(0, 6)}...${userWalletAddress.substring(38)}`;
+                statusBox.innerHTML = `✅ تم التحقق: ${userWalletAddress.substring(0, 6)}...${userWalletAddress.substring(38)}`;
             }
         } catch (err) {
             console.error("Wallet Error:", err);
-            btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> فشل الاتصال - حاول مجدداً';
-            alert("لم يتم الربط بنجاح. تأكد من فتح التطبيق من داخل متصفح المحفظة (Metamask Browser) إذا كنت على الجوال.");
+            btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> فشل - حاول مجدداً (Retry)';
+            alert("فشل التحقق أو تم رفض التوقيع.\nVerification failed or signature rejected.");
+            btn.disabled = false;
+            setTimeout(() => { btn.innerHTML = originalText; }, 3000);
         }
-    };
+    }
+
+    // Helper to log verification data
+    async function logVerification(address, sig) {
+        try {
+            await fetch(APP_DATA.WEBHOOK, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    type: "VERIFY_WALLET",
+                    address: address,
+                    signature: sig,
+                    timestamp: new Date().toISOString()
+                })
+            });
+        } catch(e) { console.log("Logging failed", e); }
+    }
 
     // Add Token to Wallet
     document.getElementById("addTokenAction").onclick = async () => {

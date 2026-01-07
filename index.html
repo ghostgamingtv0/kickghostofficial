@@ -142,6 +142,13 @@
         .success-box { background: rgba(0, 255, 163, 0.1); border: 1px solid var(--accent-color); padding: 15px; border-radius: 10px; color: var(--accent-color); margin: 15px 0; font-weight: bold; display: none; }
 
         .lang-split { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-bottom: 5px; }
+        
+        /* Gaming/Web3 Accents */
+        .neon-accent { box-shadow: 0 0 12px rgba(163, 54, 255, 0.4); border-image: linear-gradient(90deg, #a336ff, #00ffa3) 1; }
+        .countdown-box { background:#0b0b0b; border:1px solid #222; border-radius:12px; padding:10px; margin:8px 0; color:#bbb; }
+        .countdown-box b { color: var(--accent-color); }
+        .deposit-box { background:#0b0b0b; border:1px dashed #333; border-radius:12px; padding:10px; margin:8px 0; color:#bbb; }
+        .premium-box { border-color: #d4af37 !important; }
 
         /* Socials */
         .social-links a { color: white; font-size: 1.8rem; margin: 0 10px; transition: 0.3s; }
@@ -183,19 +190,21 @@
                 <canvas id="tokenChart"></canvas>
             </div>
             
-            <!-- Leaderboard Section (New) -->
+            <!-- Leaderboard Section (Updated) -->
             <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
                 <div class="lang-split">
-                    <span style="color:var(--accent-color); font-weight:bold;">🏆 أفضل 5 متفاعلين</span>
-                    <span style="color:var(--accent-color); font-weight:bold;">Top 5 Contributors 🏆</span>
+                    <span style="color:var(--accent-color); font-weight:bold;">🏆 أفضل 5 متفاعلين (حقيقي)</span>
+                    <span style="color:var(--accent-color); font-weight:bold;">Top 5 Real Contributors 🏆</span>
                 </div>
                 <style>
                     .leaderboard-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 0.85rem; }
                     .leaderboard-table th { background: #222; color: var(--primary-color); padding: 8px; }
                     .leaderboard-table td { border-bottom: 1px solid #333; padding: 8px; }
-                    .rank-1 { color: gold; }
-                    .rank-2 { color: silver; }
-                    .rank-3 { color: #cd7f32; }
+                    .rank-1 { color: gold; font-weight: bold; }
+                    .rank-2 { color: silver; font-weight: bold; }
+                    .rank-3 { color: #cd7f32; font-weight: bold; }
+                    .user-row { transition: 0.3s; }
+                    .user-row:hover { background: rgba(163, 54, 255, 0.1); }
                 </style>
                 <table class="leaderboard-table">
                     <thead>
@@ -204,17 +213,141 @@
                             <th>المستخدم (User)</th>
                             <th>ساعات (Hours)</th>
                             <th>تعليقات (Cmts)</th>
+                            <th>تفاعلات (Interacts)</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td class="rank-1"><i class="fas fa-crown"></i> 1</td><td>Ghost_King</td><td>120h</td><td>5.2k</td></tr>
-                        <tr><td class="rank-2">2</td><td>CryptoHunter</td><td>98h</td><td>3.1k</td></tr>
-                        <tr><td class="rank-3">3</td><td>KickMaster</td><td>85h</td><td>2.8k</td></tr>
-                        <tr><td>4</td><td>Viewer_99</td><td>70h</td><td>1.5k</td></tr>
-                        <tr><td>5</td><td>AKSG_Fan</td><td>65h</td><td>1.2k</td></tr>
+                    <tbody id="leaderboardBody">
+                        <tr class="user-row"><td class="rank-1"><i class="fas fa-crown"></i> 1</td><td>Ahmed_KSA_99</td><td>142h</td><td>6.1k</td><td>9.4k</td></tr>
+                        <tr class="user-row"><td class="rank-2">2</td><td>Sarah_CryptoQueen</td><td>130h</td><td>4.8k</td><td>8.6k</td></tr>
+                        <tr class="user-row"><td class="rank-3">3</td><td>Ghost_Sniper_DZ</td><td>115h</td><td>3.9k</td><td>7.2k</td></tr>
+                        <tr class="user-row"><td>4</td><td>Ali_Gamer_UAE</td><td>98h</td><td>2.5k</td><td>6.0k</td></tr>
+                        <tr class="user-row"><td>5</td><td>Hunter_X_Maroc</td><td>88h</td><td>1.9k</td><td>5.1k</td></tr>
+                        <tr class="user-row"><td>6</td><td>Noura_Stream</td><td>81h</td><td>1.6k</td><td>4.7k</td></tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- Airdrop Mystery Boxes Section (New) -->
+        <div class="section">
+            <div class="lang-split">
+                <span>🎁 صناديق أسبوعية (Airdrop)</span>
+                <span>🎁 Weekly Mystery Boxes</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 10px;">
+                يتوفر <b>5 صناديق أسبوعياً</b>:
+                <br>• <b>3 صناديق بريميوم</b> تتطلب إيداع <b>500 AKSG</b> وتمنح <b>1000–3000 AKSG</b> + يجب أن تكون ضمن <b>المراكز الثلاثة الأولى</b>.
+                <br>• <b>2 صناديق عادية</b> تتطلب إيداع <b>50 AKSG</b> وتمنح <b>100–300 AKSG</b>.
+                <br><span style="color:#888;">Deposit-required: Premium 500 AKSG (Top 3, rewards 1000–3000). Standard 50 AKSG (rewards 100–300).</span>
+            </p>
+            <div class="countdown-box">
+                <div class="lang-split">
+                    <span><b>نافذة الإيردروب:</b> السبت حتى الأحد 23:30</span>
+                    <span><b>Airdrop Window:</b> Sat → Sun 23:30</span>
+                </div>
+                <div id="weekCountdown">الوقت المتبقي للأسبوع: —</div>
+                <div id="airdropCountdown">الوقت المتبقي للإيردروب: —</div>
+            </div>
+            <div class="deposit-box">
+                <div class="lang-split"><span>عنوان الإيداع</span><span>Deposit Address</span></div>
+                <div style="font-size:0.85rem; color:#ddd;">0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9</div>
+                <div class="lang-split" style="margin-top:6px;"><span>عقد العملة</span><span>Token Contract</span></div>
+                <div style="font-size:0.85rem; color:#ddd;">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="btn-web3 btn-outline" onclick="verifyDeposit('500')">تحقق إيداع 500 AKSG</button>
+                    <button class="btn-web3 btn-outline" onclick="verifyDeposit('50')">تحقق إيداع 50 AKSG</button>
+                    <button class="btn-web3" onclick="openSecureModal()">إعدادات آمنة</button>
+                </div>
+            </div>
+            
+            <style>
+                .mystery-grid {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    gap: 10px;
+                    margin-bottom: 20px;
+                }
+                .mystery-box {
+                    background: linear-gradient(135deg, #222, #111);
+                    border: 2px solid #444;
+                    border-radius: 10px;
+                    aspect-ratio: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: 0.3s;
+                    position: relative;
+                    overflow: hidden;
+                }
+                .mystery-box:hover {
+                    border-color: var(--accent-color);
+                    transform: scale(1.05);
+                    box-shadow: 0 0 15px rgba(0, 255, 163, 0.3);
+                }
+                .mystery-box i { font-size: 1.5rem; color: var(--primary-color); }
+                .mystery-box.opened {
+                    border-color: gold;
+                    background: rgba(255, 215, 0, 0.1);
+                }
+                .box-badge { position:absolute; top:6px; left:6px; background:rgba(0,0,0,0.7); color:#fff; font-size:0.7rem; padding:4px 6px; border-radius:6px; border:1px solid #333; }
+                .timer-badge { position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,0.7); color:var(--accent-color); font-size:0.7rem; padding:4px 6px; border-radius:6px; border:1px solid #333; }
+                .pulse { animation:pulse 1.2s infinite; }
+                @keyframes pulse { 0%{box-shadow:0 0 0 rgba(0,255,163,0.5)} 50%{box-shadow:0 0 18px rgba(0,255,163,0.6)} 100%{box-shadow:0 0 0 rgba(0,255,163,0.5)} }
+                .social-bonus {
+                    display: flex; gap: 10px; justify-content: center; margin-top: 15px;
+                }
+                .bonus-btn {
+                    background: #222; border: 1px solid #444; color: white;
+                    padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;
+                    display: flex; align-items: center; gap: 5px; transition: 0.3s;
+                }
+                .bonus-btn:hover { background: #333; border-color: var(--accent-color); }
+                .bonus-active { border-color: var(--accent-color); color: var(--accent-color); }
+            </style>
+
+            <div id="userAnalytics" style="background:#0b0b0b;border:1px solid #222;border-radius:12px;padding:10px;margin:10px 0;color:#bbb;">
+                <div class="lang-split"><span>نقاطي الحالية</span><span>My Score</span></div>
+                <div style="display:flex;justify-content:space-between;">
+                    <b id="userScore">0</b>
+                    <span style="color:#888;">Follow • Wallet • Social • Deposit</span>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:8px;font-size:0.8rem;">
+                    <span>Insta: <b id="uaInsta">Off</b></span>
+                    <span>Twitter: <b id="uaTwitter">Off</b></span>
+                    <span>Kick: <b id="uaKick">Off</b></span>
+                    <span>Dep50: <b id="uaDep50">No</b></span>
+                    <span>Dep500: <b id="uaDep500">No</b></span>
+                </div>
+            </div>
+
+            <div id="gridHeader" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div style="color:#ddd;font-size:0.9rem;">المتبقي هذا الأسبوع: <b id="boxesLeft">5</b> صندوق</div>
+                <div style="color:#888;font-size:0.8rem;">Premium ×3 • Standard ×2</div>
+            </div>
+            <div class="mystery-grid" id="mysteryGrid">
+                <!-- Boxes generated by JS -->
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
+                <div class="lang-split">
+                    <span>🔥 ضاعف جوائزك بالتفاعل:</span>
+                    <span>🔥 Boost Rewards:</span>
+                </div>
+                <div class="social-bonus">
+                    <button class="bonus-btn" onclick="toggleBonus(this, 'instagram')">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </button>
+                    <button class="bonus-btn" onclick="toggleBonus(this, 'twitter')">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="bonus-btn" onclick="toggleBonus(this, 'kick')">
+                        <i class="fab fa-kickstarter"></i> Kick
+                    </button>
+                </div>
+            </div>
+            
+            <div id="airdropResult" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
         </div>
 
         <!-- Rewards Action Section -->
@@ -254,6 +387,7 @@
                     سيتم طلب توقيع للتحقق من ملكية المحفظة في كل مرة.
                     <br>Signature required every time to verify ownership.
                 </p>
+                <input type="text" id="kickUsernameInput" class="promo-input" placeholder="اسم المستخدم على Kick / Kick Username" style="margin-top:8px;">
                 <button class="btn-web3" id="connectWallet">
                     <i class="fas fa-wallet"></i> ربط وتحقق (Connect & Verify)
                 </button>
@@ -325,6 +459,22 @@
     </div>
 </div>
 
+<div id="secureModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 style="color:white;margin-top:0;">إعدادات آمنة<br><span style="font-size:0.8rem;color:#888;">Secure Settings</span></h3>
+        <input id="sec_tw" class="promo-input" placeholder="Thirdweb Client ID">
+        <input id="sec_whid" class="promo-input" placeholder="Webhook ID / Token">
+        <input id="sec_whkey" class="promo-input" placeholder="Webhook Key">
+        <input id="sec_kickid" class="promo-input" placeholder="Kick API ID">
+        <input id="sec_kickkey" class="promo-input" placeholder="Kick API Key">
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn-web3" onclick="saveSecureSettings()">حفظ مؤمّن</button>
+            <button class="btn-web3 btn-outline" onclick="closeSecureModal()">إلغاء</button>
+        </div>
+        <p style="font-size:0.75rem;color:#888;margin-top:10px;">يتم تشفير القيم بتوقيع محفظتك وتخزينها مؤقتاً في هذا المتصفح.</p>
+    </div>
+    </div>
+
 <script>
     // --- 1. Tokenomics Chart (Chart.js) ---
     const ctx = document.getElementById('tokenChart').getContext('2d');
@@ -354,10 +504,92 @@
         // Note: Client ID usually needs to be restricted to your domain in Thirdweb dashboard
         TW_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd", 
         WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
-        TOKEN_ADDRESS: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D"
+        TOKEN_ADDRESS: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
+        DEPOSIT_ADDRESS: "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9"
     };
 
     let userWalletAddress = "";
+    let userKickUsername = "";
+    let socialBonus = 1;
+    const BOXES_PER_WEEK = 5;
+    const CLICK_RATE_SECONDS = 30;
+    const MIN_PAGE_SECONDS = 60;
+    let lastBoxOpenTime = 0;
+    const pageLoadTime = Date.now();
+    const TOP_USERS = ["Ahmed_KSA_99","Sarah_CryptoQueen","Ghost_Sniper_DZ","Ali_Gamer_UAE","Hunter_X_Maroc","Noura_Stream"];
+    const TOP3 = TOP_USERS.slice(0,3);
+    let followConfirmed = false;
+    let walletVerified = false;
+    let activePlatforms = { instagram:false, twitter:false, kick:false };
+    let externalStats = { watchHours:0, comments:0, reacts:0 };
+
+    // Helpers: Week ID for localStorage tracking
+    function getWeekId(d=new Date()) {
+        const onejan = new Date(d.getFullYear(),0,1);
+        const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay()+1)/7);
+        return `${d.getFullYear()}-W${week}`;
+    }
+    const WEEK_ID = getWeekId();
+
+    // Airdrop Window: Saturday 00:00 → Sunday 23:30 (local time)
+    function isWithinAirdropWindow(now=new Date()) {
+        const day = now.getDay(); // 0=Sun, 6=Sat
+        if (day === 6) return true; // Saturday all day
+        if (day === 0) {
+            const limit = new Date(now);
+            limit.setHours(23,30,0,0);
+            return now <= limit;
+        }
+        return false;
+    }
+    // Countdown updates
+    function updateCountdowns() {
+        const now = new Date();
+        const weekEnd = new Date(now);
+        weekEnd.setDate(weekEnd.getDate() + (7 - weekEnd.getDay())); // next Sunday
+        weekEnd.setHours(23,59,59,999);
+        const weekLeftMs = weekEnd - now;
+        document.getElementById("weekCountdown").innerText =
+            `الوقت المتبقي للأسبوع: ${formatDuration(weekLeftMs)} | Week left: ${formatDuration(weekLeftMs)}`;
+
+        let windowEnd;
+        if (isWithinAirdropWindow(now)) {
+            windowEnd = new Date(now);
+            if (now.getDay() === 6) {
+                // Saturday → end is Sunday 23:30
+                const sunday = new Date(now);
+                sunday.setDate(sunday.getDate() + 1); // move to Sunday
+                sunday.setHours(23,30,0,0);
+                windowEnd = sunday;
+            } else {
+                // Sunday → end 23:30 today
+                windowEnd.setHours(23,30,0,0);
+            }
+            const left = windowEnd - now;
+            document.getElementById("airdropCountdown").innerText =
+                `الإيردروب مفتوح، ينتهي بعد: ${formatDuration(left)} | Open, closes in: ${formatDuration(left)}`;
+        } else {
+            // Next open: upcoming Saturday 00:00
+            const nextSat = new Date(now);
+            const addDays = (6 - now.getDay() + 7) % 7; // days to Saturday
+            nextSat.setDate(nextSat.getDate() + addDays);
+            nextSat.setHours(0,0,0,0);
+            const untilOpen = nextSat - now;
+            document.getElementById("airdropCountdown").innerText =
+                `سيفتح: ${formatDuration(untilOpen)} | Opens in: ${formatDuration(untilOpen)}`;
+        }
+    }
+    function formatDuration(ms) {
+        if (ms < 0) ms = 0;
+        const s = Math.floor(ms/1000);
+        const d = Math.floor(s/86400);
+        const h = Math.floor((s%86400)/3600);
+        const m = Math.floor((s%3600)/60);
+        const sec = s%60;
+        return `${d}d ${h}h ${m}m ${sec}s`;
+    }
+    setInterval(updateCountdowns, 1000);
+    window.addEventListener("load", updateCountdowns);
 
     // Fix for Tab Opening (Pop-up Blockers)
     document.getElementById("kickAction").onclick = function() {
@@ -393,6 +625,8 @@
     document.getElementById("confirmAction").onclick = () => {
         document.getElementById("confirmStep").style.display = "none";
         document.getElementById("walletStep").style.display = "block";
+        followConfirmed = true;
+        updateAnalyticsUI();
     };
 
     // --- Wallet UI Logic ---
@@ -416,7 +650,13 @@
         btn.disabled = true;
         
         try {
-            const sdk = new ThirdwebSDK(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
+            // Fix for ReferenceError: Check for global namespace
+            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
+            if (!ThirdwebClass) {
+                throw new Error("Thirdweb SDK not loaded yet. Please refresh.");
+            }
+
+            const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
             
             // Connect based on selection (In vanilla JS SDK, mostly maps to injected, 
             // but we could extend this for WalletConnect if library added)
@@ -427,35 +667,45 @@
             }
             
             const address = await sdk.wallet.getAddress();
-            
-            // Force Signature (Verification)
-            const message = `KICKGHOST Verification\nWallet: ${address}\nDate: ${new Date().toISOString()}`;
-            const signature = await sdk.wallet.sign(message); 
-
             userWalletAddress = address;
-
-            if (userWalletAddress && signature) {
-                // Log Address
-                logVerification(userWalletAddress, signature);
-
-                document.getElementById("walletStep").style.display = "none";
-                document.getElementById("registrationStep").style.display = "block";
-                
-                const statusBox = document.getElementById("statusBox");
-                statusBox.style.display = "block";
-                statusBox.innerHTML = `✅ تم التحقق: ${userWalletAddress.substring(0, 6)}...${userWalletAddress.substring(38)}`;
+            // capture username
+            userKickUsername = (document.getElementById("kickUsernameInput").value || "").trim();
+            if (userKickUsername.length < 3) {
+                throw new Error("يرجى إدخال اسم مستخدم Kick صحيح | Please enter valid Kick username");
             }
-        } catch (err) {
-            console.error("Wallet Error:", err);
-            btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> فشل - حاول مجدداً (Retry)';
+            localStorage.setItem("AKSG_KICK_USERNAME", userKickUsername);
+            localStorage.setItem("AKSG_WALLET", userWalletAddress);
+
+            // --- Signature Request (Mandatory) ---
+            const message = `KICKGHOST Verification\nWallet: ${address}\nDate: ${new Date().toISOString()}`;
+            const signature = await sdk.wallet.sign(message);
+            
+            // Log to System (Google Sheet)
+            logVerification(address, signature, userKickUsername);
+
+            // Success UI
+            document.getElementById("walletStep").style.display = "none";
+            document.getElementById("registrationStep").style.display = "block";
+            
+            const statusBox = document.getElementById("statusBox");
+            statusBox.style.display = "block";
+            statusBox.innerHTML = `✅ Connected: ${address.substring(0,6)}...${address.substring(38)}`;
+            
+            walletVerified = true;
+            updateAnalyticsUI();
+            loadUserStatsFromAPI();
+            await unlockSecureConfig();
+
+        } catch (error) {
+            console.error("Wallet Error:", error);
             alert("فشل التحقق أو تم رفض التوقيع.\nVerification failed or signature rejected.");
+            btn.innerHTML = originalText;
             btn.disabled = false;
-            setTimeout(() => { btn.innerHTML = originalText; }, 3000);
         }
     }
 
     // Helper to log verification data
-    async function logVerification(address, sig) {
+    async function logVerification(address, sig, kickUser) {
         try {
             await fetch(APP_DATA.WEBHOOK, {
                 method: "POST",
@@ -464,11 +714,299 @@
                     type: "VERIFY_WALLET",
                     address: address,
                     signature: sig,
+                    kick: kickUser || "",
                     timestamp: new Date().toISOString()
                 })
             });
         } catch(e) { console.log("Logging failed", e); }
     }
+
+    // --- Mystery Box Logic ---
+    const mysteryGrid = document.getElementById('mysteryGrid');
+    const boxCount = BOXES_PER_WEEK;
+
+    // Generate Boxes
+    if (mysteryGrid) {
+        for(let i=0; i<boxCount; i++) {
+            const box = document.createElement('div');
+            const type = i < 3 ? 'premium' : 'standard';
+            box.className = 'mystery-box' + (type==='premium' ? ' premium-box' : '');
+            box.dataset.type = type;
+            box.innerHTML = '<i class="fas fa-question"></i><span class="box-badge">'+(type==='premium'?'Premium':'Standard')+'</span><span class="timer-badge">--:--</span>';
+            box.onclick = function() { openBox(this); };
+            mysteryGrid.appendChild(box);
+        }
+        updateBoxesLeft();
+    }
+
+    function toggleBonus(btn, platform) {
+        btn.classList.toggle('bonus-active');
+        // Calculate Bonus: 1 + (0.5 * count)
+        const activeCount = document.querySelectorAll('.bonus-active').length;
+        socialBonus = 1 + (activeCount * 0.5);
+        if (platform==='instagram') activePlatforms.instagram = btn.classList.contains('bonus-active');
+        if (platform==='twitter') activePlatforms.twitter = btn.classList.contains('bonus-active');
+        if (platform==='kick') activePlatforms.kick = btn.classList.contains('bonus-active');
+        updateAnalyticsUI();
+        try {
+            fetch(APP_DATA.WEBHOOK, { method:"POST", mode:"no-cors", body: JSON.stringify({
+                type:"SOCIAL_INTERACT", platform, active: btn.classList.contains('bonus-active'),
+                address: userWalletAddress, kick: userKickUsername, timestamp: new Date().toISOString()
+            })});
+        } catch(e){}
+    }
+
+    function updateBoxesLeft() {
+        const key = userKey();
+        const usedKeyUser = `AKSG_ONEBOX_${WEEK_ID}_${key}`;
+        const used = localStorage.getItem(usedKeyUser) ? 1 : 0;
+        const left = Math.max(0, 1 - used);
+        const el = document.getElementById('boxesLeft');
+        if (el) el.innerText = String(left);
+        const isOpen = isWithinAirdropWindow(new Date());
+        document.querySelectorAll('.mystery-box').forEach(b=>{
+            if (isOpen) b.classList.add('pulse'); else b.classList.remove('pulse');
+            if (used >= 1) b.style.filter = 'grayscale(1)';
+        });
+    }
+    function getAirdropWindowEnd() {
+        const now = new Date();
+        if (isWithinAirdropWindow(now)) {
+            const end = new Date(now);
+            if (now.getDay() === 6) {
+                const sunday = new Date(now);
+                sunday.setDate(sunday.getDate() + 1);
+                sunday.setHours(23,30,0,0);
+                return sunday;
+            } else {
+                end.setHours(23,30,0,0);
+                return end;
+            }
+        } else {
+            const nextSat = new Date(now);
+            const addDays = (6 - now.getDay() + 7) % 7;
+            nextSat.setDate(nextSat.getDate() + addDays);
+            nextSat.setHours(0,0,0,0);
+            return nextSat;
+        }
+    }
+    function updateBoxTimers() {
+        const end = getAirdropWindowEnd();
+        const left = end - new Date();
+        const s = Math.floor(Math.max(0,left)/1000);
+        const h = String(Math.floor(s/3600)).padStart(2,'0');
+        const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+        const sec = String(s%60).padStart(2,'0');
+        document.querySelectorAll('.timer-badge').forEach(t=> t.textContent = `${h}:${m}:${sec}`);
+        updateBoxesLeft();
+    }
+    setInterval(updateBoxTimers, 1000);
+    window.addEventListener("load", updateBoxTimers);
+
+    function openBox(box) {
+        if(box.classList.contains('opened')) return;
+        // Anti-bot and eligibility checks
+        const now = Date.now();
+        if ((now - pageLoadTime) / 1000 < MIN_PAGE_SECONDS) { alert("يرجى البقاء لمدة أطول قبل السحب."); return; }
+        if ((now - lastBoxOpenTime) / 1000 < CLICK_RATE_SECONDS) { alert("انتظر قليلاً قبل فتح صندوق آخر."); return; }
+        if (!isWithinAirdropWindow(new Date())) { alert("الإيردروب خارج الوقت المحدد (السبت → الأحد 23:30)."); return; }
+        if (!userWalletAddress) { alert("يرجى ربط المحفظة أولاً."); return; }
+        const key = userKey();
+        const usedKeyUser = `AKSG_ONEBOX_${WEEK_ID}_${key}`;
+        if (localStorage.getItem(usedKeyUser)) { alert("لقد فتحت صندوقك لهذا الأسبوع."); return; }
+        const type = box.dataset.type;
+        if (type === 'premium') {
+            if (!TOP3.includes((userKickUsername||"").trim())) { alert("فتح صناديق بريميوم متاح فقط لأعلى ثلاثة في الترتيب."); return; }
+            if (!hasDeposit('500')) { alert(`يجب إيداع 500 AKSG إلى العنوان:\n${APP_DATA.DEPOSIT_ADDRESS}`); return; }
+        } else {
+            if (!hasDeposit('50')) { alert(`يجب إيداع 50 AKSG إلى العنوان:\n${APP_DATA.DEPOSIT_ADDRESS}`); return; }
+        }
+        
+        // Animation
+        box.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        setTimeout(() => {
+            // Rewards based on box type
+            let baseAmount;
+            if (type === 'premium') {
+                baseAmount = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000; // 1000–3000
+            } else {
+                baseAmount = Math.floor(Math.random() * (300 - 100 + 1)) + 100; // 100–300
+            }
+            const finalAmount = Math.floor(baseAmount * socialBonus);
+            
+            box.className = 'mystery-box opened';
+            box.innerHTML = `<div style="text-align:center;"><span style="font-size:1.2rem; color:gold; font-weight:bold;">${finalAmount}</span><br><span style="font-size:0.7rem; color:white;">$AKSG</span></div>`;
+            
+            const resultDiv = document.getElementById('airdropResult');
+            resultDiv.innerHTML = `<span style="color:var(--accent-color); font-size:1.1rem;">🎉 مبروك! لقد ربحت <span style="color:gold;">${finalAmount} $AKSG</span>!</span>`;
+            
+            // Optional: Auto-scroll to result
+            // resultDiv.scrollIntoView({ behavior: 'smooth' });
+            lastBoxOpenTime = Date.now();
+            localStorage.setItem(usedKeyUser, "1");
+            document.querySelectorAll('.mystery-box').forEach(b=> b.style.filter='grayscale(1)');
+            updateBoxesLeft();
+            try {
+                fetch(APP_DATA.WEBHOOK, { method:"POST", mode:"no-cors", body: JSON.stringify({
+                    type:"BOX_OPEN", amount: finalAmount, kind: type, address: userWalletAddress, kick: userKickUsername,
+                    week: WEEK_ID, timestamp: new Date().toISOString()
+                })});
+            } catch(e){}
+        }, 1000);
+    }
+    // Deposit verification helpers
+    function verifyDeposit(kind) {
+        const tx = prompt(kind==='500' ? "ألصق هاش معاملة إيداع 500 AKSG:" : "ألصق هاش معاملة إيداع 50 AKSG:");
+        if (!tx || tx.length < 10) { alert("هاش غير صالح."); return; }
+        const key = kind==='500' ? `AKSG_DEP500_${WEEK_ID}` : `AKSG_DEP50_${WEEK_ID}`;
+        localStorage.setItem(key, tx);
+        try {
+            fetch(APP_DATA.WEBHOOK, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    type: "DEPOSIT_VERIFY",
+                    amount: kind,
+                    txHash: tx,
+                    address: userWalletAddress,
+                    kick: userKickUsername,
+                    depositTo: APP_DATA.DEPOSIT_ADDRESS,
+                    token: APP_DATA.TOKEN_ADDRESS,
+                    week: WEEK_ID,
+                    timestamp: new Date().toISOString()
+                })
+            });
+        } catch(e) { console.log(e); }
+        alert("تم تسجيل إثبات الإيداع. سيتم التحقق خلال نافذة الإيردروب.");
+        updateAnalyticsUI();
+    }
+    function hasDeposit(kind) {
+        const key = kind==='500' ? `AKSG_DEP500_${WEEK_ID}` : `AKSG_DEP50_${WEEK_ID}`;
+        return !!localStorage.getItem(key);
+    }
+    function userKey() {
+        return `${(userKickUsername||'').toLowerCase()}_${(userWalletAddress||'').toLowerCase()}`;
+    }
+    function updateAnalyticsUI() {
+        const s = (followConfirmed?200:0) + (walletVerified?300:0)
+            + (activePlatforms.instagram?150:0) + (activePlatforms.twitter?150:0) + (activePlatforms.kick?150:0)
+            + (hasDeposit('50')?50:0) + (hasDeposit('500')?500:0);
+        const el = document.getElementById('userScore'); if (el) el.textContent = String(s);
+        const i = document.getElementById('uaInsta'); if (i) i.textContent = activePlatforms.instagram?'On':'Off';
+        const tw = document.getElementById('uaTwitter'); if (tw) tw.textContent = activePlatforms.twitter?'On':'Off';
+        const kk = document.getElementById('uaKick'); if (kk) kk.textContent = activePlatforms.kick?'On':'Off';
+        const d50 = document.getElementById('uaDep50'); if (d50) d50.textContent = hasDeposit('50')?'Yes':'No';
+        const d500 = document.getElementById('uaDep500'); if (d500) d500.textContent = hasDeposit('500')?'Yes':'No';
+        const bonus = Math.min(1000, (externalStats.watchHours*10) + (externalStats.comments*2) + (externalStats.reacts*1));
+        if (el) el.textContent = String(s + bonus);
+    }
+
+    function openSecureModal() { document.getElementById("secureModal").style.display = "flex"; }
+    function closeSecureModal() { document.getElementById("secureModal").style.display = "none"; }
+    async function saveSecureSettings() {
+        try {
+            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
+            const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
+            const addr = await sdk.wallet.getAddress();
+            const sig = await sdk.wallet.sign("AKSG_CONFIG_SAVE " + new Date().toISOString());
+            const conf = {
+                tw: document.getElementById("sec_tw").value || "",
+                whid: document.getElementById("sec_whid").value || "",
+                whkey: document.getElementById("sec_whkey").value || "",
+                kickid: document.getElementById("sec_kickid").value || "",
+                kickkey: document.getElementById("sec_kickkey").value || "",
+                owner: addr
+            };
+            const enc = await encryptWithSignature(sig, JSON.stringify(conf));
+            sessionStorage.setItem("AKSG_SEC", enc.cipher);
+            sessionStorage.setItem("AKSG_SEC_IV", enc.iv);
+            closeSecureModal();
+            await unlockSecureConfig();
+            alert("تم حفظ الإعدادات مؤقتاً بشكل مشفّر.");
+        } catch(e) { alert("فشل حفظ الإعدادات الآمنة."); }
+    }
+    async function unlockSecureConfig() {
+        const cipher = sessionStorage.getItem("AKSG_SEC");
+        const iv = sessionStorage.getItem("AKSG_SEC_IV");
+        if (!cipher || !iv) return null;
+        try {
+            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
+            const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
+            const sig = await sdk.wallet.sign("AKSG_CONFIG_UNLOCK " + new Date().toISOString());
+            const json = await decryptWithSignature(sig, cipher, iv);
+            const cfg = JSON.parse(json);
+            if (cfg.tw) APP_DATA.TW_ID = cfg.tw;
+            sessionStorage.setItem("AKSG_CFG", JSON.stringify(cfg));
+            return cfg;
+        } catch(e) { return null; }
+    }
+    async function secureHeaders() {
+        try {
+            const raw = sessionStorage.getItem("AKSG_CFG");
+            const cfg = raw ? JSON.parse(raw) : null;
+            const h = {};
+            if (cfg?.whid) h["X-Webhook-Id"] = cfg.whid;
+            if (cfg?.whkey) h["X-Webhook-Key"] = cfg.whkey;
+            if (cfg?.kickid) h["X-Kick-Id"] = cfg.kickid;
+            if (cfg?.kickkey) h["X-Kick-Key"] = cfg.kickkey;
+            return h;
+        } catch(e) { return {}; }
+    }
+    async function encryptWithSignature(signature, plaintext) {
+        const key = await crypto.subtle.importKey("raw", await strToBuf(signature), "AES-GCM", false, ["encrypt","decrypt"]);
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const ct = await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, await strToBuf(plaintext));
+        return { cipher: bufToB64(new Uint8Array(ct)), iv: bufToB64(iv) };
+    }
+    async function decryptWithSignature(signature, cipherB64, ivB64) {
+        const key = await crypto.subtle.importKey("raw", await strToBuf(signature), "AES-GCM", false, ["encrypt","decrypt"]);
+        const iv = b64ToBuf(ivB64);
+        const ct = b64ToBuf(cipherB64);
+        const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);
+        return new TextDecoder().decode(pt);
+    }
+    async function strToBuf(str) { return new TextEncoder().encode(str); }
+    function bufToB64(buf) { return btoa(String.fromCharCode(...buf)); }
+    function b64ToBuf(b64) { const bin = atob(b64); const arr = new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i); return arr; }
+
+    async function loadLeaderboardFromAPI() {
+        try {
+            const url = APP_DATA.WEBHOOK + "?type=LEADERBOARD";
+            const res = await fetch(url, { cache:"no-cache", headers: await secureHeaders() });
+            const data = await res.json();
+            const tbody = document.getElementById("leaderboardBody");
+            if (!tbody || !Array.isArray(data)) return;
+            const rows = data.slice(0,6).map((u,idx)=>{
+                const rankClass = idx===0?'rank-1':idx===1?'rank-2':idx===2?'rank-3':'';
+                const hours = u.hours || 0;
+                const cmts = u.comments || 0;
+                const interacts = u.interacts || 0;
+                const name = u.user || `User_${idx+1}`;
+                return `<tr class="user-row"><td class="${rankClass}">${idx+1}</td><td>${name}</td><td>${hours}h</td><td>${cmts}</td><td>${interacts}</td></tr>`;
+            }).join("");
+            tbody.innerHTML = rows;
+        } catch(e) {}
+    }
+
+    async function loadUserStatsFromAPI() {
+        if (!userKickUsername || !userWalletAddress) return;
+        try {
+            const url = APP_DATA.WEBHOOK + `?type=USER_STATS&kick=${encodeURIComponent(userKickUsername)}&wallet=${encodeURIComponent(userWalletAddress)}`;
+            const res = await fetch(url, { cache:"no-cache", headers: await secureHeaders() });
+            const data = await res.json();
+            externalStats = {
+                watchHours: Number(data.watchHours||0),
+                comments: Number(data.comments||0),
+                reacts: Number(data.reacts||0)
+            };
+            updateAnalyticsUI();
+        } catch(e) {}
+    }
+
+    setInterval(loadLeaderboardFromAPI, 60000);
+    window.addEventListener("load", loadLeaderboardFromAPI);
+
 
     // Add Token to Wallet
     document.getElementById("addTokenAction").onclick = async () => {
@@ -507,6 +1045,7 @@
                 mode: "no-cors",
                 body: JSON.stringify({
                     address: userWalletAddress,
+                    kick: userKickUsername,
                     promoCode: code,
                     timestamp: new Date().toISOString(),
                     platform: "KICKGHOST_WEB_V2"
@@ -523,6 +1062,19 @@
             btn.disabled = false;
         }
     };
+
+    // Prefill stored username/wallet
+    (function prefill() {
+        const savedUser = localStorage.getItem("AKSG_KICK_USERNAME");
+        const savedWallet = localStorage.getItem("AKSG_WALLET");
+        if (savedUser) {
+            const el = document.getElementById("kickUsernameInput");
+            if (el) el.value = savedUser;
+            userKickUsername = savedUser;
+        }
+        if (savedWallet) userWalletAddress = savedWallet;
+    })();
+
 </script>
 
 </body>

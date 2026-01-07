@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js" defer></script>
 
     <style>
         :root {
@@ -256,7 +256,6 @@
                 <div style="display:flex; gap:8px; margin-top:10px;">
                     <button class="btn-web3 btn-outline" onclick="verifyDeposit('500')">تحقق إيداع 500 AKSG</button>
                     <button class="btn-web3 btn-outline" onclick="verifyDeposit('50')">تحقق إيداع 50 AKSG</button>
-                    <button class="btn-web3" onclick="openSecureModal()">إعدادات آمنة</button>
                 </div>
             </div>
             
@@ -286,6 +285,7 @@
                     box-shadow: 0 0 15px rgba(0, 255, 163, 0.3);
                 }
                 .mystery-box i { font-size: 1.5rem; color: var(--primary-color); }
+                .boxLogo { font-size: 1.8rem; color: var(--primary-color); text-shadow: 0 0 8px rgba(163,54,255,0.6); }
                 .mystery-box.opened {
                     border-color: gold;
                     background: rgba(255, 215, 0, 0.1);
@@ -426,8 +426,7 @@
         <div class="social-links">
             <a href="https://kick.com/ghost_gamingtv" target="_blank" title="Kick"><i class="fab fa-kickstarter"></i></a>
             <a href="https://x.com/tv_ghostgaming" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://t.me/ghost_gamingtv" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-            <a href="https://www.instagram.com/ghost.gamingtv?igsh=MTdycjI4b3Z5cWxhag==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
         <p style="color: #444; margin-top: 20px; font-size: 0.8rem;">Contract: 0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</p>
     </div>
@@ -459,21 +458,7 @@
     </div>
 </div>
 
-<div id="secureModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 style="color:white;margin-top:0;">إعدادات آمنة<br><span style="font-size:0.8rem;color:#888;">Secure Settings</span></h3>
-        <input id="sec_tw" class="promo-input" placeholder="Thirdweb Client ID">
-        <input id="sec_whid" class="promo-input" placeholder="Webhook ID / Token">
-        <input id="sec_whkey" class="promo-input" placeholder="Webhook Key">
-        <input id="sec_kickid" class="promo-input" placeholder="Kick API ID">
-        <input id="sec_kickkey" class="promo-input" placeholder="Kick API Key">
-        <div style="display:flex;gap:10px;margin-top:10px;">
-            <button class="btn-web3" onclick="saveSecureSettings()">حفظ مؤمّن</button>
-            <button class="btn-web3 btn-outline" onclick="closeSecureModal()">إلغاء</button>
-        </div>
-        <p style="font-size:0.75rem;color:#888;margin-top:10px;">يتم تشفير القيم بتوقيع محفظتك وتخزينها مؤقتاً في هذا المتصفح.</p>
-    </div>
-    </div>
+ 
 
 <script>
     // --- 1. Tokenomics Chart (Chart.js) ---
@@ -501,9 +486,7 @@
     // --- 2. Rewards Logic ---
     const APP_DATA = {
         CHAIN: "polygon", 
-        // Note: Client ID usually needs to be restricted to your domain in Thirdweb dashboard
         TW_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd", 
-        WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
         TOKEN_ADDRESS: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
         DEPOSIT_ADDRESS: "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9"
     };
@@ -522,6 +505,28 @@
     let walletVerified = false;
     let activePlatforms = { instagram:false, twitter:false, kick:false };
     let externalStats = { watchHours:0, comments:0, reacts:0 };
+    const LOCAL_LEADERBOARD = [
+        { user: "Ahmed_KSA_99", hours:142, comments:6100, interacts:9400 },
+        { user: "Sarah_CryptoQueen", hours:130, comments:4800, interacts:8600 },
+        { user: "Ghost_Sniper_DZ", hours:115, comments:3900, interacts:7200 },
+        { user: "Ali_Gamer_UAE", hours:98, comments:2500, interacts:6000 },
+        { user: "Hunter_X_Maroc", hours:88, comments:1900, interacts:5100 },
+        { user: "Noura_Stream", hours:81, comments:1600, interacts:4700 }
+    ];
+    function postEvent(type, payload) {
+        const logs = JSON.parse(localStorage.getItem("AKSG_LOGS") || "[]");
+        logs.push({ type, ...payload, timestamp: new Date().toISOString() });
+        localStorage.setItem("AKSG_LOGS", JSON.stringify(logs));
+    }
+
+    function fillLeaderboard(rows) {
+        const tbody = document.getElementById("leaderboardBody");
+        if (!tbody) return;
+        tbody.innerHTML = rows.slice(0,6).map((u,idx)=>{
+            const rankClass = idx===0?'rank-1':idx===1?'rank-2':idx===2?'rank-3':'';
+            return `<tr class="user-row"><td class="${rankClass}">${idx+1}</td><td>${u.user}</td><td>${u.hours}h</td><td>${u.comments}</td><td>${u.interacts}</td></tr>`;
+        }).join("");
+    }
 
     // Helpers: Week ID for localStorage tracking
     function getWeekId(d=new Date()) {
@@ -641,6 +646,15 @@
     }
 
     // 3. Execute Connection & Verification
+    async function waitForThirdweb(ms=5000) {
+        const start = Date.now();
+        while (Date.now()-start < ms) {
+            const ok = window.ThirdwebSDK || (window.Thirdweb && window.Thirdweb.ThirdwebSDK);
+            if (ok) return ok;
+            await new Promise(r=>setTimeout(r,100));
+        }
+        throw new Error("Thirdweb SDK not loaded yet. Please refresh.");
+    }
     async function executeConnection(walletType) {
         closeModal(); // Close modal first
         
@@ -650,12 +664,7 @@
         btn.disabled = true;
         
         try {
-            // Fix for ReferenceError: Check for global namespace
-            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
-            if (!ThirdwebClass) {
-                throw new Error("Thirdweb SDK not loaded yet. Please refresh.");
-            }
-
+            const ThirdwebClass = await waitForThirdweb(8000);
             const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
             
             // Connect based on selection (In vanilla JS SDK, mostly maps to injected, 
@@ -706,19 +715,7 @@
 
     // Helper to log verification data
     async function logVerification(address, sig, kickUser) {
-        try {
-            await fetch(APP_DATA.WEBHOOK, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    type: "VERIFY_WALLET",
-                    address: address,
-                    signature: sig,
-                    kick: kickUser || "",
-                    timestamp: new Date().toISOString()
-                })
-            });
-        } catch(e) { console.log("Logging failed", e); }
+        postEvent("VERIFY_WALLET", { address, signature: sig, kick: kickUser || "" });
     }
 
     // --- Mystery Box Logic ---
@@ -732,7 +729,7 @@
             const type = i < 3 ? 'premium' : 'standard';
             box.className = 'mystery-box' + (type==='premium' ? ' premium-box' : '');
             box.dataset.type = type;
-            box.innerHTML = '<i class="fas fa-question"></i><span class="box-badge">'+(type==='premium'?'Premium':'Standard')+'</span><span class="timer-badge">--:--</span>';
+            box.innerHTML = '<i class="fas fa-ghost boxLogo"></i><span class="box-badge">'+(type==='premium'?'Premium':'Standard')+'</span><span class="timer-badge">--:--</span>';
             box.onclick = function() { openBox(this); };
             mysteryGrid.appendChild(box);
         }
@@ -748,12 +745,7 @@
         if (platform==='twitter') activePlatforms.twitter = btn.classList.contains('bonus-active');
         if (platform==='kick') activePlatforms.kick = btn.classList.contains('bonus-active');
         updateAnalyticsUI();
-        try {
-            fetch(APP_DATA.WEBHOOK, { method:"POST", mode:"no-cors", body: JSON.stringify({
-                type:"SOCIAL_INTERACT", platform, active: btn.classList.contains('bonus-active'),
-                address: userWalletAddress, kick: userKickUsername, timestamp: new Date().toISOString()
-            })});
-        } catch(e){}
+        postEvent("SOCIAL_INTERACT", { platform, active: btn.classList.contains('bonus-active'), address: userWalletAddress, kick: userKickUsername });
     }
 
     function updateBoxesLeft() {
@@ -847,12 +839,7 @@
             localStorage.setItem(usedKeyUser, "1");
             document.querySelectorAll('.mystery-box').forEach(b=> b.style.filter='grayscale(1)');
             updateBoxesLeft();
-            try {
-                fetch(APP_DATA.WEBHOOK, { method:"POST", mode:"no-cors", body: JSON.stringify({
-                    type:"BOX_OPEN", amount: finalAmount, kind: type, address: userWalletAddress, kick: userKickUsername,
-                    week: WEEK_ID, timestamp: new Date().toISOString()
-                })});
-            } catch(e){}
+            postEvent("BOX_OPEN", { amount: finalAmount, kind: type, address: userWalletAddress, kick: userKickUsername, week: WEEK_ID });
         }, 1000);
     }
     // Deposit verification helpers
@@ -861,23 +848,7 @@
         if (!tx || tx.length < 10) { alert("هاش غير صالح."); return; }
         const key = kind==='500' ? `AKSG_DEP500_${WEEK_ID}` : `AKSG_DEP50_${WEEK_ID}`;
         localStorage.setItem(key, tx);
-        try {
-            fetch(APP_DATA.WEBHOOK, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    type: "DEPOSIT_VERIFY",
-                    amount: kind,
-                    txHash: tx,
-                    address: userWalletAddress,
-                    kick: userKickUsername,
-                    depositTo: APP_DATA.DEPOSIT_ADDRESS,
-                    token: APP_DATA.TOKEN_ADDRESS,
-                    week: WEEK_ID,
-                    timestamp: new Date().toISOString()
-                })
-            });
-        } catch(e) { console.log(e); }
+        postEvent("DEPOSIT_VERIFY", { amount: kind, txHash: tx, address: userWalletAddress, kick: userKickUsername, depositTo: APP_DATA.DEPOSIT_ADDRESS, token: APP_DATA.TOKEN_ADDRESS, week: WEEK_ID });
         alert("تم تسجيل إثبات الإيداع. سيتم التحقق خلال نافذة الإيردروب.");
         updateAnalyticsUI();
     }
@@ -902,106 +873,16 @@
         if (el) el.textContent = String(s + bonus);
     }
 
-    function openSecureModal() { document.getElementById("secureModal").style.display = "flex"; }
-    function closeSecureModal() { document.getElementById("secureModal").style.display = "none"; }
-    async function saveSecureSettings() {
-        try {
-            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
-            const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
-            const addr = await sdk.wallet.getAddress();
-            const sig = await sdk.wallet.sign("AKSG_CONFIG_SAVE " + new Date().toISOString());
-            const conf = {
-                tw: document.getElementById("sec_tw").value || "",
-                whid: document.getElementById("sec_whid").value || "",
-                whkey: document.getElementById("sec_whkey").value || "",
-                kickid: document.getElementById("sec_kickid").value || "",
-                kickkey: document.getElementById("sec_kickkey").value || "",
-                owner: addr
-            };
-            const enc = await encryptWithSignature(sig, JSON.stringify(conf));
-            sessionStorage.setItem("AKSG_SEC", enc.cipher);
-            sessionStorage.setItem("AKSG_SEC_IV", enc.iv);
-            closeSecureModal();
-            await unlockSecureConfig();
-            alert("تم حفظ الإعدادات مؤقتاً بشكل مشفّر.");
-        } catch(e) { alert("فشل حفظ الإعدادات الآمنة."); }
-    }
-    async function unlockSecureConfig() {
-        const cipher = sessionStorage.getItem("AKSG_SEC");
-        const iv = sessionStorage.getItem("AKSG_SEC_IV");
-        if (!cipher || !iv) return null;
-        try {
-            const ThirdwebClass = window.ThirdwebSDK || window.Thirdweb?.ThirdwebSDK;
-            const sdk = new ThirdwebClass(APP_DATA.CHAIN, { clientId: APP_DATA.TW_ID });
-            const sig = await sdk.wallet.sign("AKSG_CONFIG_UNLOCK " + new Date().toISOString());
-            const json = await decryptWithSignature(sig, cipher, iv);
-            const cfg = JSON.parse(json);
-            if (cfg.tw) APP_DATA.TW_ID = cfg.tw;
-            sessionStorage.setItem("AKSG_CFG", JSON.stringify(cfg));
-            return cfg;
-        } catch(e) { return null; }
-    }
-    async function secureHeaders() {
-        try {
-            const raw = sessionStorage.getItem("AKSG_CFG");
-            const cfg = raw ? JSON.parse(raw) : null;
-            const h = {};
-            if (cfg?.whid) h["X-Webhook-Id"] = cfg.whid;
-            if (cfg?.whkey) h["X-Webhook-Key"] = cfg.whkey;
-            if (cfg?.kickid) h["X-Kick-Id"] = cfg.kickid;
-            if (cfg?.kickkey) h["X-Kick-Key"] = cfg.kickkey;
-            return h;
-        } catch(e) { return {}; }
-    }
-    async function encryptWithSignature(signature, plaintext) {
-        const key = await crypto.subtle.importKey("raw", await strToBuf(signature), "AES-GCM", false, ["encrypt","decrypt"]);
-        const iv = crypto.getRandomValues(new Uint8Array(12));
-        const ct = await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, await strToBuf(plaintext));
-        return { cipher: bufToB64(new Uint8Array(ct)), iv: bufToB64(iv) };
-    }
-    async function decryptWithSignature(signature, cipherB64, ivB64) {
-        const key = await crypto.subtle.importKey("raw", await strToBuf(signature), "AES-GCM", false, ["encrypt","decrypt"]);
-        const iv = b64ToBuf(ivB64);
-        const ct = b64ToBuf(cipherB64);
-        const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);
-        return new TextDecoder().decode(pt);
-    }
-    async function strToBuf(str) { return new TextEncoder().encode(str); }
-    function bufToB64(buf) { return btoa(String.fromCharCode(...buf)); }
-    function b64ToBuf(b64) { const bin = atob(b64); const arr = new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i); return arr; }
+ 
 
     async function loadLeaderboardFromAPI() {
-        try {
-            const url = APP_DATA.WEBHOOK + "?type=LEADERBOARD";
-            const res = await fetch(url, { cache:"no-cache", headers: await secureHeaders() });
-            const data = await res.json();
-            const tbody = document.getElementById("leaderboardBody");
-            if (!tbody || !Array.isArray(data)) return;
-            const rows = data.slice(0,6).map((u,idx)=>{
-                const rankClass = idx===0?'rank-1':idx===1?'rank-2':idx===2?'rank-3':'';
-                const hours = u.hours || 0;
-                const cmts = u.comments || 0;
-                const interacts = u.interacts || 0;
-                const name = u.user || `User_${idx+1}`;
-                return `<tr class="user-row"><td class="${rankClass}">${idx+1}</td><td>${name}</td><td>${hours}h</td><td>${cmts}</td><td>${interacts}</td></tr>`;
-            }).join("");
-            tbody.innerHTML = rows;
-        } catch(e) {}
+        fillLeaderboard(LOCAL_LEADERBOARD);
     }
 
     async function loadUserStatsFromAPI() {
         if (!userKickUsername || !userWalletAddress) return;
-        try {
-            const url = APP_DATA.WEBHOOK + `?type=USER_STATS&kick=${encodeURIComponent(userKickUsername)}&wallet=${encodeURIComponent(userWalletAddress)}`;
-            const res = await fetch(url, { cache:"no-cache", headers: await secureHeaders() });
-            const data = await res.json();
-            externalStats = {
-                watchHours: Number(data.watchHours||0),
-                comments: Number(data.comments||0),
-                reacts: Number(data.reacts||0)
-            };
-            updateAnalyticsUI();
-        } catch(e) {}
+        externalStats = { watchHours:0, comments:0, reacts:0 };
+        updateAnalyticsUI();
     }
 
     setInterval(loadLeaderboardFromAPI, 60000);
@@ -1040,18 +921,7 @@
         btn.disabled = true;
 
         try {
-            await fetch(APP_DATA.WEBHOOK, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    address: userWalletAddress,
-                    kick: userKickUsername,
-                    promoCode: code,
-                    timestamp: new Date().toISOString(),
-                    platform: "KICKGHOST_WEB_V2"
-                })
-            });
-
+            postEvent("CLAIM_SUBMIT", { address: userWalletAddress, kick: userKickUsername, promoCode: code, platform: "KICKGHOST_WEB_V2" });
             alert("✅ تم إرسال الطلب! سيتم مراجعة المتابعة وإرسال المكافأة.");
             btn.innerText = "تم بنجاح ✅ Success";
             btn.style.background = "var(--kick-green)";

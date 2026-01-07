@@ -3,267 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST ($AKSG) - Rewards Hub</title>
+    <title>KICKGHOST ($AKSG) - مركز المكافآت الذكي</title>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@3.10.59/dist/thirdweb-sdk.browser.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
         :root {
-            --primary-color: #a336ff; --accent-color: #00ffa3; --bg-dark: #020202;
-            --card-bg: #111111; --kick-green: #00e701; --warning-red: #ff4d4d;
+            --primary-color: #a336ff; 
+            --accent-color: #00ffa3;  
+            --bg-dark: #020202;
+            --card-bg: #111111;
+            --kick-green: #00e701;
+            --warning-red: #ff4d4d;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; overflow-x: hidden; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 0; }
+        .container { max-width: 950px; margin: 0 auto; padding: 20px; }
         
-        header { text-align: center; padding: 30px 0; }
-        .logo-container img { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 25px var(--primary-color); }
+        header { text-align: center; padding: 40px 0; }
+        .logo-container img { width: 130px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 30px var(--primary-color); }
 
-        .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 25px; }
-        
+        .section { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 25px; }
+        h2 { color: var(--accent-color); border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
         .btn-web3 { 
             background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
-            color: white; border: none; padding: 18px; width: 100%; border-radius: 12px;
+            color: white; border: none; padding: 16px; width: 100%; border-radius: 12px;
             font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 15px;
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-web3:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-web3:hover { opacity: 0.9; transform: scale(1.01); }
         .btn-kick { background: var(--kick-green); color: black; }
-        
+        .btn-outline { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); }
+
         .promo-input {
-            width: 100%; padding: 18px; margin-top: 10px; border-radius: 12px; border: 2px solid var(--primary-color);
-            background: #000; color: var(--accent-color); text-align: center; font-weight: bold; font-size: 1.3rem; box-sizing: border-box;
+            width: 100%; padding: 15px; margin-top: 10px; border-radius: 10px; border: 2px solid var(--primary-color);
+            background: #000; color: var(--accent-color); text-align: center; font-size: 1.3rem; box-sizing: border-box;
         }
 
-        #chart-container { width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
-        #chart-container iframe { width: 100%; height: 100%; border: none; }
+        .status-box { padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid #333; }
         
-        #confirmStep, #walletStep, #registrationStep { display: none; }
-        .warning-box { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--warning-red); padding: 20px; border-radius: 15px; color: var(--warning-red); margin-bottom: 25px; font-weight: bold; }
-        
-        .social-links a { color: white; font-size: 2.2rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
-        .social-links a:hover { color: var(--primary-color); transform: scale(1.1); }
-        .lang-sub { display: block; font-size: 0.8rem; opacity: 0.7; font-weight: normal; margin-top: 4px; }
+        #steps-container > div { display: none; }
+        #steps-container div.active { display: block; }
 
-        /* ستايل الرصيد والترتيب الجديد */
-        .balance-box { margin-top: 10px; font-size: 1.2rem; color: var(--accent-color); display: none; font-weight: bold; border: 1px dashed var(--accent-color); padding: 10px; border-radius: 10px; }
-        .leaderboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        @media (max-width: 600px) { .leaderboard-grid { grid-template-columns: 1fr; } }
-        .rank-card { background: #000; border: 1px solid #333; border-radius: 15px; padding: 15px; text-align: right; }
-        .rank-card h4 { color: var(--primary-color); margin-top: 0; border-bottom: 1px solid #222; padding-bottom: 8px; }
-        .rank-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #111; font-size: 0.9rem; }
-        .rank-item span:first-child { color: var(--accent-color); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .stat-card { background: #000; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #222; }
+        .stat-card span { display: block; font-size: 0.8rem; color: #888; }
+        .stat-card b { font-size: 1.4rem; color: var(--accent-color); }
+
+        .leaderboard-list { list-style: none; padding: 0; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 12px; background: #000; margin-bottom: 5px; border-radius: 8px; border-right: 4px solid var(--accent-color); }
+
+        .social-links { text-align: center; margin: 20px 0; }
+        .social-links a { color: white; font-size: 2rem; margin: 0 15px; transition: 0.3s; }
+        .social-links a:hover { color: var(--accent-color); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="logo-container"><img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST"></div>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST Logo">
+        </div>
         <h1>KICKGHOST ($AKSG)</h1>
-        <p>المنصة الرسمية للمكافآت | Official Rewards Hub</p>
+        <p>نظام المكافآت الذكي لجيش Ghost Gaming</p>
     </header>
 
     <div class="section">
-        <div class="warning-box" id="statusBox">يرجى إتمام الخطوات بالترتيب | Follow steps in order.</div>
-        
-        <div id="balanceDisplay" class="balance-box">
-            رصيدك الحالي: <span id="tokenAmount">0.00</span> $AKSG
-        </div>
+        <h2><i class="fas fa-info-circle"></i> كيف يعمل النظام؟</h2>
+        <p style="color: #ccc; line-height: 1.6;">
+            يقوم النظام بربط محفظتك بحساب Kick الخاص بك تلقائياً للتحقق من ساعات المشاهدة والتفاعل. كلما زاد تفاعلك، زادت فرصك في الحصول على مكافآت $AKSG أكبر.
+        </p>
+    </div>
 
-        <button class="btn-web3" style="background:#1a1a1a; border: 1px solid var(--accent-color); color: var(--accent-color); margin-bottom: 20px;" id="addTokenAction">
-            <div>
-                <i class="fas fa-plus-circle"></i> إضافة $AKSG للمحفظة تلقائياً
-                <span class="lang-sub">Add $AKSG Automatically to Wallet</span>
+    <div class="section" id="reward-hub">
+        <h2><i class="fas fa-vault"></i> مركز المكافآت</h2>
+        <div class="status-box" id="statusBox">يرجى تسجيل الدخول لبدء التحقق</div>
+
+        <div id="steps-container">
+            <div id="step1" class="active">
+                <button class="btn-web3 btn-kick" id="btn-kick-verify">
+                    <i class="fab fa-kickstarter"></i> التحقق من حساب Kick وساعات المشاهدة
+                </button>
             </div>
-        </button>
 
-        <div id="kickStep">
-            <button class="btn-web3 btn-kick" id="kickAction">
-                <div>
-                    <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
-                    <span class="lang-sub">Follow on Kick</span>
-                </div>
-            </button>
-            <div id="timerBox" style="display:none; margin-top:15px;">انتظر: <span id="seconds">5</span> ثانية</div>
-        </div>
-
-        <div id="confirmStep">
-            <button class="btn-web3" id="confirmAction">
-                <div>2. لقد قمت بالمتابعة ✅ <span class="lang-sub">I have followed</span></div>
-            </button>
-        </div>
-
-        <div id="walletStep">
-            <button class="btn-web3" id="connectWallet">
-                <div>
-                    <i class="fas fa-wallet"></i> 3. ربط المحفظة (نافذة الاختيار)
-                    <span class="lang-sub">Connect Wallet (Selection Window)</span>
-                </div>
-            </button>
-        </div>
-
-        <div id="registrationStep">
-            <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل كود الجائزة | Enter Code">
-            <button class="btn-web3" id="submitAction">تسجيل المحفظة الآن (Claim)</button>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3 style="margin-bottom: 10px;">لوحة الشرف والمشاركة 🏆</h3>
-        <div class="leaderboard-grid">
-            <div class="rank-card">
-                <h4><i class="fas fa-eye"></i> الأكثر مشاهدة</h4>
-                <div id="topViewers">
-                    <div class="rank-item"><span>1. Ghost_Fan</span> <span>120h</span></div>
-                    <div class="rank-item"><span>2. King_Kick</span> <span>95h</span></div>
-                    <div class="rank-item"><span>3. User_99</span> <span>80h</span></div>
-                </div>
+            <div id="step2">
+                <button class="btn-web3" id="btn-connect-wallet">
+                    <i class="fas fa-wallet"></i> ربط محفظة الاستلام (Multi-Wallet)
+                </button>
             </div>
-            <div class="rank-card">
-                <h4><i class="fas fa-comment"></i> الأكثر تعليقاً</h4>
-                <div id="topChatters">
-                    <div class="rank-item"><span>1. Legend_7</span> <span>1.5k</span></div>
-                    <div class="rank-item"><span>2. AKSG_Moon</span> <span>1.2k</span></div>
-                    <div class="rank-item"><span>3. Hero_Ghost</span> <span>900</span></div>
+
+            <div id="step3">
+                <div class="stats-grid">
+                    <div class="stat-card"><span>ساعات المشاهدة</span><b id="watch-hours">0.0</b></div>
+                    <div class="stat-card"><span>حالة المتابعة</span><b id="follow-status">غير متابع</b></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="social-links">
-            <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
-            <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/ghost.gamingtv" target="_blank"><i class="fab fa-instagram"></i></a>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>شارت العملة المباشر | Live Chart</h3>
-        <div id="chart-container">
-            <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=1&info=0"></iframe>
-        </div>
-    </div>
-</div>
-
-<script>
-    const DATA = {
-        CLIENT: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd",
-        HOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
-        TOKEN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D"
-    };
-
-    let wallet = "";
-    let sdk;
-
-    // 1. Kick & Timer
-    document.getElementById("kickAction").onclick = function() {
-        window.open("https://kick.com/ghost_gamingtv", "_blank");
-        this.disabled = true;
-        document.getElementById("timerBox").style.display = "block";
-        let time = 5;
-        const interval = setInterval(() => {
-            time--;
-            document.getElementById("seconds").innerText = time;
-            if(time <= 0) {
-                clearInterval(interval);
-                document.getElementById("kickStep").style.display = "none";
-                document.getElementById("confirmStep").style.display = "block";
-            }
-        }, 1000);
-    };
-
-    document.getElementById("confirmAction").onclick = () => {
-        document.getElementById("confirmStep").style.display = "none";
-        document.getElementById("walletStep").style.display = "block";
-    };
-
-    // 2. الربط وجلب الرصيد
-    document.getElementById("connectWallet").onclick = async () => {
-        if (typeof ThirdwebSDK === "undefined") {
-            alert("المكتبة قيد التحميل.. انتظر لحظة.");
-            return;
-        }
-
-        try {
-            sdk = new ThirdwebSDK("polygon", { clientId: DATA.CLIENT });
-            wallet = await sdk.wallet.connect(); 
-            const addr = await sdk.wallet.getAddress();
-
-            if (addr) {
-                wallet = addr;
-                document.getElementById("walletStep").style.display = "none";
-                document.getElementById("registrationStep").style.display = "block";
-                document.getElementById("statusBox").innerHTML = "✅ مربوط: " + addr.substring(0, 6) + "...";
-                document.getElementById("statusBox").style.color = "var(--accent-color)";
                 
-                // جلب الرصيد وإظهاره
-                fetchBalance(addr);
-            }
-        } catch (err) {
-            console.error(err);
-            alert("خطأ في الربط! يرجى اختيار محفظة واحدة فقط.");
-        }
-    };
+                <input type="text" id="promoCode" class="promo-input" placeholder="أدخل كود البرومو الخاص بالبث">
+                
+                <button class="btn-web3" id="btn-claim-reward">
+                    <i class="fas fa-hand-holding-dollar"></i> استلام مكافأة التفاعل
+                </button>
 
-    async function fetchBalance(address) {
-        try {
-            const tokenContract = await sdk.getContract(DATA.TOKEN);
-            const balance = await tokenContract.erc20.balanceOf(address);
-            document.getElementById("tokenAmount").innerText = parseFloat(balance.displayValue).toFixed(2);
-            document.getElementById("balanceDisplay").style.display = "block";
-        } catch (e) {
-            console.error("Error fetching balance:", e);
-        }
-    }
+                <button class="btn-web3 btn-outline" id="btn-add-token">
+                    <i class="fas fa-plus-circle"></i> إضافة $AKSG للمحفظة
+                </button>
+            </div>
+        </div>
+    </div>
 
-    // 3. إضافة العملة تلقائياً
-    document.getElementById("addTokenAction").onclick = async () => {
-        if (!window.ethereum) {
-            alert("يرجى استخدام محفظة Web3");
-            return;
-        }
-        try {
-            await window.ethereum.request({
-                method: 'wallet_watchAsset',
-                params: {
-                    type: 'ERC20',
-                    options: { 
-                        address: DATA.TOKEN, 
-                        symbol: 'AKSG', 
-                        decimals: 18, 
-                        image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg' 
-                    },
-                },
-            });
-        } catch (e) {}
-    };
-
-    // 4. تسجيل البيانات
-    document.getElementById("submitAction").onclick = async () => {
-        const code = document.getElementById("promoCodeInput").value.trim();
-        if (!code) { alert("أدخل الكود!"); return; }
-
-        const btn = document.getElementById("submitAction");
-        btn.disabled = true; 
-        btn.innerText = "جاري التسجيل...";
-
-        try {
-            await fetch(DATA.HOOK, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ address: wallet, code: code, date: new Date().toISOString() })
-            });
-            alert("✅ تم التسجيل بنجاح!");
-            btn.innerText = "تم التسجيل ✅";
-        } catch (err) {
-            alert("فشل التسجيل.");
-            btn.disabled = false;
-        }
-    };
-</script>
-</body>
-</html>
+    <div class="section">
+        <h2><i class="fas fa-chart-line"></i> إحصائيات المجتمع</h2>
+        <ul class="leaderboard-list">
+            <li class="leaderboard-item"><span>الأكثر تعليقاً</span> <span style="color:var(--accent-color)">Ghost_Admin</span></li>
+            <li class="

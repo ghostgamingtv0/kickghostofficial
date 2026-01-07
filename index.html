@@ -167,6 +167,10 @@
         
         /* Fallback Link */
         .fallback-link { display: none; color: var(--accent-color); font-size: 0.9rem; margin-top: 10px; text-decoration: underline; cursor: pointer; }
+        
+        /* Gecko Chart */
+        #gecko-chart-container { width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #gecko-chart-container iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -187,23 +191,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Top Dashboard Grid -->
     <div class="dashboard-grid">
-        <!-- Tokenomics Chart Section -->
+        <!-- Live Chart (GeckoTerminal) -->
         <div class="section">
             <div class="lang-split">
-                <span>حول المشروع</span>
-                <span>About Project</span>
+                <span>الشارت المباشر</span>
+                <span>Live Chart</span>
             </div>
-            <p style="font-size: 0.9rem; line-height: 1.6; color: #ccc; margin-bottom: 20px;">
-                مشروع KICKGHOST ($AKSG) هو نظام مكافآت لامركزي مصمم لدعم مجتمع البث المباشر. احصل على عملات مقابل المشاهدة والتفاعل.
-                <br>
-                <span style="color:#888; display:block; margin-top:5px; font-size: 0.8rem;">
-                KICKGHOST ($AKSG) is a decentralized rewards system designed to support the streaming community. Earn tokens for watching and interacting.
-                </span>
-            </p>
-
-            <h2><i class="fas fa-chart-pie"></i> توزيع العملة (Tokenomics)</h2>
-            <div class="chart-wrapper">
-                <canvas id="tokenChart"></canvas>
+            <div id="gecko-chart-container">
+                <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249"></iframe>
             </div>
             
             <!-- Leaderboard Section (Updated) -->
@@ -430,13 +425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
-    <!-- Live Chart Section -->
-    <div class="section">
-        <h2><i class="fas fa-chart-line"></i> الشارت المباشر (Live Chart)</h2>
-        <div id="chart-frame-container">
-            <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=1&info=1"></iframe>
-        </div>
-    </div>
+    
 
     <!-- Socials & Footer -->
     <div class="section" style="margin-top: 25px;">

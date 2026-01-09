@@ -1,297 +1,158 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
+    <title>KICKGHOST</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST ($AKSG) - Official Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+Arabic:wght@300;700&display=swap');
-
-        :root {
-            --primary: #a336ff; /* Purple */
-            --kick: #00e701;    /* Kick Green */
-            --dark: #050505;
-            --card: #121212;
-            --accent: #00ffa3;
-            --text: #ffffff;
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
         }
-
-        body {
-            background-color: var(--dark);
-            color: var(--text);
-            font-family: 'Noto Sans Arabic', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #050505 100%);
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            position: relative;
-        }
-
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .main-logo {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 4px solid var(--kick);
-            box-shadow: 0 0 30px rgba(0, 231, 1, 0.3);
-            transition: 0.5s;
-            cursor: pointer;
-        }
-
-        .main-logo:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 50px var(--kick);
-        }
-
-        .glitch-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            margin: 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: white;
-            text-shadow: 3px 3px var(--primary);
-        }
-
-        .glitch-title span { color: var(--kick); }
-
-        /* Auth Buttons */
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        .btn {
-            padding: 18px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: none;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .btn-kick {
-            background: var(--kick);
-            color: black;
-            box-shadow: 0 4px 15px rgba(0, 231, 1, 0.3);
-        }
-
-        .btn-wallet {
-            background: white;
-            color: black;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
-
-        /* Dashboard Grid */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stat-card {
-            background: var(--card);
-            border: 1px solid rgba(163, 54, 255, 0.2);
-            padding: 25px;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-
-        .stat-card h3 { color: #888; font-size: 0.9rem; margin-bottom: 10px; }
-        .stat-card .value { font-size: 2rem; font-weight: bold; color: var(--accent); font-family: 'Orbitron', sans-serif;}
-
-        /* Contract Section */
-        .contract-section {
-            background: rgba(163, 54, 255, 0.1);
-            margin: 40px 20px;
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px dashed var(--primary);
-            text-align: center;
-        }
-
-        .address-bar {
-            background: #000;
-            padding: 15px;
-            border-radius: 10px;
-            color: var(--kick);
-            font-family: monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            cursor: pointer;
-        }
-
-        .step-list {
-            text-align: right;
-            max-width: 600px;
-            margin: 0 auto;
-            list-style: none;
-            padding: 0;
-        }
-
-        .step-list li {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .step-list i { color: var(--kick); }
-
-        /* Status Animations */
-        .status-online {
-            width: 10px; height: 10px;
-            background: var(--kick);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px var(--kick);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        #notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            padding: 10px 30px;
-            border-radius: 50px;
-            display: none;
-            z-index: 1000;
-        }
+        .text-neon-green { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+        .bg-neon-green { background-color: #00ff00; }
+        .btn-hover:hover { transform: scale(1.02); transition: all 0.2s; }
+        .glow { box-shadow: 0 0 20px rgba(0, 255, 0, 0.3); }
     </style>
 </head>
-<body>
+<body class="flex flex-col items-center min-h-screen p-4 pb-20">
 
-    <section class="hero">
-        <div class="logo-wrapper">
-            <img src="https://i.ibb.co/vD7v4Rz/kickghost-logo.png" class="main-logo" alt="KICKGHOST" onclick="celebrate()">
-        </div>
-        <h1 class="glitch-title">KICK<span>GHOST</span></h1>
-        <p><span class="status-online"></span> Live interaction & Rewards System [cite: 2025-12-28]</p>
+    <!-- Header Section -->
+    <header class="mt-8 text-center animate-fade-in-down">
+        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" 
+             class="w-24 h-24 mx-auto rounded-full border-4 border-[#00ff00] glow mb-4">
         
-        <div class="auth-container">
-            <button class="btn btn-kick" onclick="window.location.href='https://kick.com/kickghost'">
-                <i class="fa-brands fa-kickstarter"></i> STEP 1: LOGIN WITH KICK
-            </button>
-            <button id="connectBtn" class="btn btn-wallet" onclick="connectWallet()">
-                <i class="fa-solid fa-wallet"></i> STEP 2: CONNECT WALLET
-            </button>
+        <h1 class="text-5xl font-black italic tracking-tighter uppercase">
+            KICK<span class="text-neon-green">GHOST</span>
+        </h1>
+        <p class="text-gray-400 font-bold tracking-widest mt-2 text-sm uppercase">The Ultimate Interactive Token</p>
+        
+        <!-- Social Links (Preserved) -->
+        <div class="flex justify-center gap-6 mt-4 text-sm font-bold text-gray-300">
+            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="hover:text-[#00ff00]">KICK</a>
+            <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="hover:text-[#00ff00]">INSTAGRAM</a>
+            <a href="https://x.com/tv_ghostgaming" target="_blank" class="hover:text-[#00ff00]">TWITTER</a>
         </div>
-    </section>
+    </header>
 
-    <div class="dashboard">
-        <div class="stat-card">
-            <h3>رصيد العملة ($AKSG) [cite: 2025-12-28]</h3>
-            <div class="value" id="balance">0.00</div>
+    <!-- Actions Section -->
+    <div class="mt-10 w-full max-w-md space-y-6">
+        
+        <!-- Step 1: Login -->
+        <div class="text-center">
+            <button onclick="loginWithKick()" 
+                    class="w-full bg-[#00ff00] text-black py-4 rounded-xl font-black text-xl shadow-lg btn-hover flex items-center justify-center gap-2">
+                STEP 1: LOGIN WITH KICK 🎥
+            </button>
+            <p class="text-[#00ff00] text-xs mt-1 font-bold">المرحلة 1: تسجيل الدخول عبر كيك</p>
         </div>
-        <div class="stat-card">
-            <h3>نقاط التفاعل (XP)</h3>
-            <div class="value">1,450</div>
+
+        <!-- Step 2: Connect Wallet -->
+        <div class="text-center">
+            <button onclick="connectWallet()" 
+                    class="w-full bg-white text-black py-4 rounded-xl font-black text-xl shadow-lg btn-hover flex items-center justify-center gap-2">
+                STEP 2: CONNECT WALLET 👻
+            </button>
+            <p class="text-white text-xs mt-1 font-bold">المرحلة 2: ربط المحفظة</p>
+            <p id="walletAddress" class="text-[#00ff00] font-mono mt-2 text-sm break-all hidden"></p>
         </div>
-        <div class="stat-card">
-            <h3>المستوى (Level)</h3>
-            <div class="value">GHOST VIP</div>
+
+        <!-- Step 3: Claim (Preserved) -->
+        <div class="text-center">
+            <button onclick="claim()" 
+                    class="w-full bg-gray-800 text-white border border-gray-600 py-4 rounded-xl font-bold text-lg shadow-lg btn-hover flex items-center justify-center gap-2">
+                CLAIM 1000 (WEEKLY) 🎁
+            </button>
+            <p id="claimMsg" class="text-yellow-400 font-bold mt-2 text-sm"></p>
         </div>
+
     </div>
 
-    <section class="contract-section">
-        <h2>إضافة العملة لمحفظتك [cite: 2025-12-28]</h2>
-        <div class="address-bar" onclick="copyAddress()">
-            <span id="contractAddr">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</span>
-            <i class="fa-regular fa-copy"></i>
+    <!-- Chart Section -->
+    <div class="mt-16 w-full max-w-5xl relative">
+        <div class="flex items-center gap-2 mb-2 px-2">
+            <!-- GeckoTerminal Logo Placeholder / Text -->
+            <span class="text-gray-400 text-sm font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#00ff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Powered by GeckoTerminal
+            </span>
         </div>
         
-        <ul class="step-list">
-            <li><i class="fas fa-check-circle"></i> حمل MetaMask أو Binance Web3 [cite: 2025-12-28]</li>
-            <li><i class="fas fa-check-circle"></i> اختر شبكة Polygon (MATIC) [cite: 2025-12-28]</li>
-            <li><i class="fas fa-check-circle"></i> اضغط Import Token وألصق العنوان أعلاه [cite: 2025-12-28]</li>
-        </ul>
-    </section>
-
-    <div id="notification">تم النسخ بنجاح! 👻</div>
+        <div class="h-[600px] border-2 border-[#00ff00] rounded-2xl overflow-hidden shadow-2xl shadow-[#00ff00]/20 bg-gray-900">
+            <!-- GeckoTerminal Widget -->
+            <!-- Using WPOL pool on Polygon as placeholder since specific token address is unknown. 
+                 User can replace the address in the src URL. -->
+            <iframe height="100%" width="100%" id="geckoterminal-embed" title="GeckoTerminal Embed" src="https://www.geckoterminal.com/polygon/pools/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270?embed=1&info=0&swaps=0" frameborder="0" allow="clipboard-write" allowfullscreen></iframe>
+        </div>
+        <p class="text-center text-gray-500 text-xs mt-2">If the chart is incorrect, please update the pool address in index.html line 88.</p>
+    </div>
 
     <script>
-        // Copy functionality
-        function copyAddress() {
-            const addr = document.getElementById('contractAddr').innerText;
-            navigator.clipboard.writeText(addr);
-            const notify = document.getElementById('notification');
-            notify.style.display = 'block';
-            setTimeout(() => notify.style.display = 'none', 2000);
+        let userAddress = null;
+
+        // Login with Kick
+        function loginWithKick(){
+            window.location.href = "/api/kick/login";
         }
 
-        // Web3 Connection
-        async function connectWallet() {
-            if (window.ethereum) {
+        // Connect Wallet using Ethers.js
+        async function connectWallet(){
+            if(window.ethereum){
                 try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    document.getElementById('connectBtn').innerHTML = `<i class="fa-solid fa-circle-check"></i> ${accounts[0].substring(0, 6)}...${accounts[0].substring(38)}`;
-                    document.getElementById('balance').innerText = "150,000"; // Fake balance for demo
-                    celebrate();
-                } catch (err) {
-                    console.error("User denied account access");
+                    const provider = new ethers.BrowserProvider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    const signer = await provider.getSigner();
+                    userAddress = await signer.getAddress();
+                    
+                    const walletEl = document.getElementById("walletAddress");
+                    walletEl.innerText = "Connected: " + userAddress;
+                    walletEl.classList.remove("hidden");
+                    
+                } catch (error) {
+                    console.error(error);
+                    alert("Error connecting wallet: " + error.message);
                 }
             } else {
-                alert("Please install MetaMask!");
+                alert("Please install MetaMask, TrustWallet, or Coinbase Wallet!");
             }
         }
 
-        // Fun Effect
-        function celebrate() {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#a336ff', '#00e701', '#ffffff']
-            });
+        // Claim Function
+        async function claim(){
+            if(!userAddress){ 
+                alert("Please connect your wallet first (Step 2)!"); 
+                return; 
+            }
+            
+            const btn = document.querySelector('button[onclick="claim()"]');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch("/api/claim",{
+                    method:"POST",
+                    headers:{ "Content-Type":"application/json" },
+                    body:JSON.stringify({ address: userAddress })
+                });
+                const data = await res.json();
+                document.getElementById("claimMsg").innerText = data.message;
+            } catch (e) {
+                document.getElementById("claimMsg").innerText = "Error claiming.";
+            }
+            
+            btn.innerText = originalText;
+            btn.disabled = false;
         }
     </script>
 </body>

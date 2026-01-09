@@ -3,218 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST ($AKSG) - Rewards Hub</title>
+    <title>KICKGHOST ($AKSG) - Official Dashboard</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+Arabic:wght@300;700&display=swap');
+
         :root {
-            --primary-color: #a336ff; 
-            --accent-color: #00ffa3;  
-            --bg-dark: #020202;
-            --card-bg: #111111;
-            --kick-green: #00e701;
-            --warning-red: #ff4d4d;
+            --primary: #a336ff; /* Purple */
+            --kick: #00e701;    /* Kick Green */
+            --dark: #050505;
+            --card: #121212;
+            --accent: #00ffa3;
+            --text: #ffffff;
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background-color: var(--bg-dark); 
-            color: white; margin: 0; padding: 0; 
-            line-height: 1.6;
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            font-family: 'Noto Sans Arabic', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #050505 100%);
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 30px 0; }
-        .logo-main { width: 120px; border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: 0 0 20px var(--primary-color); }
-        
-        .section { 
-            background: var(--card-bg); padding: 25px; border-radius: 20px; 
-            border: 1px solid #222; margin-bottom: 25px; position: relative;
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
         }
 
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        @media (max-width: 850px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
 
-        /* Buttons */
-        .btn-web3 { 
-            background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
-            color: white; border: none; padding: 15px; width: 100%; border-radius: 12px;
-            font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        .main-logo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid var(--kick);
+            box-shadow: 0 0 30px rgba(0, 231, 1, 0.3);
+            transition: 0.5s;
+            cursor: pointer;
         }
-        .btn-web3:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(163, 54, 255, 0.4); }
-        .btn-outline { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); margin-top: 10px; }
 
-        /* Wallet Modal */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        .main-logo:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 50px var(--kick);
         }
-        .modal-content {
-            background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid var(--primary-color);
-            width: 90%; max-width: 400px; text-align: center;
-        }
-        .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .wallet-option {
-            background: #000; border: 1px solid #333; border-radius: 12px; padding: 15px; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s;
-        }
-        .wallet-option:hover { border-color: var(--accent-color); background: #050505; }
 
-        /* Mystery Boxes */
-        .mystery-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; }
-        .mystery-box { 
-            background: #1a1a1a; border: 2px solid #333; border-radius: 10px; aspect-ratio: 1;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: white;
+            text-shadow: 3px 3px var(--primary);
         }
-        .mystery-box:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
-        .lang-split { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; margin-bottom: 10px; }
-        .token-info { background: #050505; padding: 10px; border-radius: 10px; font-family: monospace; font-size: 0.8rem; word-break: break-all; color: #aaa; border: 1px dashed #333; }
+        .glitch-title span { color: var(--kick); }
+
+        /* Auth Buttons */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .btn-kick {
+            background: var(--kick);
+            color: black;
+            box-shadow: 0 4px 15px rgba(0, 231, 1, 0.3);
+        }
+
+        .btn-wallet {
+            background: white;
+            color: black;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid rgba(163, 54, 255, 0.2);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .stat-card h3 { color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+        .stat-card .value { font-size: 2rem; font-weight: bold; color: var(--accent); font-family: 'Orbitron', sans-serif;}
+
+        /* Contract Section */
+        .contract-section {
+            background: rgba(163, 54, 255, 0.1);
+            margin: 40px 20px;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px dashed var(--primary);
+            text-align: center;
+        }
+
+        .address-bar {
+            background: #000;
+            padding: 15px;
+            border-radius: 10px;
+            color: var(--kick);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .step-list {
+            text-align: right;
+            max-width: 600px;
+            margin: 0 auto;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-list i { color: var(--kick); }
+
+        /* Status Animations */
+        .status-online {
+            width: 10px; height: 10px;
+            background: var(--kick);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--kick);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        #notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            padding: 10px 30px;
+            border-radius: 50px;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="Logo" class="logo-main">
-        <h1>KICKGHOST ($AKSG)</h1>
-        <p style="color: var(--accent-color)">المنصة الرسمية للمكافآت | Official Rewards Hub</p>
+    <section class="hero">
+        <div class="logo-wrapper">
+            <img src="https://i.ibb.co/vD7v4Rz/kickghost-logo.png" class="main-logo" alt="KICKGHOST" onclick="celebrate()">
+        </div>
+        <h1 class="glitch-title">KICK<span>GHOST</span></h1>
+        <p><span class="status-online"></span> Live interaction & Rewards System [cite: 2025-12-28]</p>
         
-        <div style="margin-top: 15px;">
-            <a href="https://x.com/tv_ghostgaming" target="_blank" style="color:white; font-size: 1.5rem; margin: 0 10px;"><i class="fab fa-x-twitter"></i></a>
-            <a href="https://www.instagram.com/ghost.gamingtv" target="_blank" style="color:white; font-size: 1.5rem; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
-        </div>
-    </header>
-
-    <div class="dashboard-grid">
-        <div class="section">
-            <div class="lang-split">
-                <span><i class="fas fa-chart-line"></i> الشارت المباشر</span>
-                <span>Live Chart</span>
-            </div>
-            <div style="text-align: center; margin-bottom: 10px;">
-                <img src="https://raw.githubusercontent.com/ghostgamingtv0/kickghostofficial/main/geckoterminal_light.png" alt="GeckoTerminal" style="height: 30px;">
-            </div>
-            <div style="height: 450px; border-radius: 15px; overflow: hidden; border: 1px solid #333;">
-                <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=0&light_chart=0&chart_type=price&resolution=1d&bg_color=111827" 
-                style="width: 100%; height: 100%; border: none;"></iframe>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="lang-split">
-                <span><i class="fas fa-wallet"></i> المحفظة والمكافآت</span>
-                <span>Wallet & Rewards</span>
-            </div>
-            
-            <button class="btn-web3" id="connectWalletBtn">
-                <i class="fas fa-plug"></i> ربط المحفظة | Connect Wallet
+        <div class="auth-container">
+            <button class="btn btn-kick" onclick="window.location.href='https://kick.com/kickghost'">
+                <i class="fa-brands fa-kickstarter"></i> STEP 1: LOGIN WITH KICK
             </button>
+            <button id="connectBtn" class="btn btn-wallet" onclick="connectWallet()">
+                <i class="fa-solid fa-wallet"></i> STEP 2: CONNECT WALLET
+            </button>
+        </div>
+    </section>
 
-            <div id="walletConnectedArea" style="display:none; margin-top: 20px;">
-                <div class="token-info" id="userAddress">0x...</div>
-                <button class="btn-web3 btn-outline" onclick="addAKSGToken()">
-                    <i class="fas fa-plus"></i> إضافة $AKSG للمحفظة
-                </button>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #222; margin: 25px 0;">
-
-            <h3>🎁 صناديق أسبوعية | Weekly Boxes</h3>
-            <div class="mystery-grid">
-                <div class="mystery-box"><i class="fas fa-box"></i></div>
-                <div class="mystery-box"><i class="fas fa-box"></i></div>
-                <div class="mystery-box"><i class="fas fa-box"></i></div>
-                <div class="mystery-box"><i class="fas fa-box"></i></div>
-                <div class="mystery-box"><i class="fas fa-box"></i></div>
-            </div>
-            <p style="font-size: 0.8rem; color: #666; text-align: center;">العقد: 0x58F821f9...2a4D</p>
+    <div class="dashboard">
+        <div class="stat-card">
+            <h3>رصيد العملة ($AKSG) [cite: 2025-12-28]</h3>
+            <div class="value" id="balance">0.00</div>
+        </div>
+        <div class="stat-card">
+            <h3>نقاط التفاعل (XP)</h3>
+            <div class="value">1,450</div>
+        </div>
+        <div class="stat-card">
+            <h3>المستوى (Level)</h3>
+            <div class="value">GHOST VIP</div>
         </div>
     </div>
 
-    <footer style="text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem;">
-        <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" width="40" style="border-radius: 50%; margin-bottom: 10px;"><br>
-        © 2026 KICKGHOST | Ghost Gaming TV Ecosystem
-    </footer>
-</div>
-
-<div id="walletModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3>اختر المحفظة | Select Wallet</h3>
-        <div class="wallet-grid">
-            <div class="wallet-option" onclick="connectWallet('metamask')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="40">
-                <span>MetaMask</span>
-            </div>
-            <div class="wallet-option" onclick="connectWallet('trust')">
-                <img src="https://trustwallet.com/assets/images/media/assets/trust_wallet_logo.svg" width="40">
-                <span>Trust Wallet</span>
-            </div>
+    <section class="contract-section">
+        <h2>إضافة العملة لمحفظتك [cite: 2025-12-28]</h2>
+        <div class="address-bar" onclick="copyAddress()">
+            <span id="contractAddr">0x539A66654cf4e71cB7207ac6B3A56B789FBcbFce</span>
+            <i class="fa-regular fa-copy"></i>
         </div>
-        <button onclick="closeModal()" style="background:none; border:none; color:#888; margin-top:20px; cursor:pointer; text-decoration:underline;">إغلاق</button>
-    </div>
-</div>
+        
+        <ul class="step-list">
+            <li><i class="fas fa-check-circle"></i> حمل MetaMask أو Binance Web3 [cite: 2025-12-28]</li>
+            <li><i class="fas fa-check-circle"></i> اختر شبكة Polygon (MATIC) [cite: 2025-12-28]</li>
+            <li><i class="fas fa-check-circle"></i> اضغط Import Token وألصق العنوان أعلاه [cite: 2025-12-28]</li>
+        </ul>
+    </section>
 
-<script>
-    const TOKEN_CONFIG = {
-        address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
-        symbol: 'AKSG',
-        decimals: 18,
-        image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
-    };
+    <div id="notification">تم النسخ بنجاح! 👻</div>
 
-    const modal = document.getElementById('walletModal');
-    const connectBtn = document.getElementById('connectWalletBtn');
+    <script>
+        // Copy functionality
+        function copyAddress() {
+            const addr = document.getElementById('contractAddr').innerText;
+            navigator.clipboard.writeText(addr);
+            const notify = document.getElementById('notification');
+            notify.style.display = 'block';
+            setTimeout(() => notify.style.display = 'none', 2000);
+        }
 
-    connectBtn.onclick = () => modal.style.display = 'flex';
-    function closeModal() { modal.style.display = 'none'; }
-
-    async function connectWallet(type) {
-        if (window.ethereum) {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const address = accounts[0];
-                
-                document.getElementById('userAddress').innerText = address;
-                document.getElementById('walletConnectedArea').style.display = 'block';
-                connectBtn.innerHTML = '<i class="fas fa-check-circle"></i> تم الربط | Connected';
-                connectBtn.style.background = 'var(--kick-green)';
-                closeModal();
-
-                // عرض طلب إضافة العملة تلقائياً عند أول ربط
-                addAKSGToken();
-                
-            } catch (err) {
-                console.error("User rejected");
+        // Web3 Connection
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('connectBtn').innerHTML = `<i class="fa-solid fa-circle-check"></i> ${accounts[0].substring(0, 6)}...${accounts[0].substring(38)}`;
+                    document.getElementById('balance').innerText = "150,000"; // Fake balance for demo
+                    celebrate();
+                } catch (err) {
+                    console.error("User denied account access");
+                }
+            } else {
+                alert("Please install MetaMask!");
             }
-        } else {
-            alert("يرجى تثبيت MetaMask أو Trust Wallet");
         }
-    }
 
-    async function addAKSGToken() {
-        if (!window.ethereum) return;
-        try {
-            await window.ethereum.request({
-                method: 'wallet_watchAsset',
-                params: {
-                    type: 'ERC20',
-                    options: TOKEN_CONFIG,
-                },
+        // Fun Effect
+        function celebrate() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#a336ff', '#00e701', '#ffffff']
             });
-        } catch (error) {
-            console.log("Error adding token:", error);
         }
-    }
-
-    // إغلاق المودال عند الضغط خارجه
-    window.onclick = (event) => {
-        if (event.target == modal) closeModal();
-    }
-</script>
-
+    </script>
 </body>
 </html>

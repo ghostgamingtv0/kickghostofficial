@@ -1,159 +1,272 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>KICKGHOST</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Ethers.js -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>KICKGHOST ($AKSG) - Official Rewards Hub</title>
     
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M8CX26RC');</script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
+
     <style>
-        body { 
-            background-color: #000; 
-            color: #fff; 
-            font-family: 'Inter', sans-serif; 
+        :root {
+            --primary-color: #a336ff; 
+            --accent-color: #00ffa3;  
+            --bg-dark: #020202;
+            --card-bg: #111111;
+            --kick-green: #00e701;
+            --warning-red: #ff4d4d;
         }
-        .text-neon-green { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
-        .bg-neon-green { background-color: #00ff00; }
-        .btn-hover:hover { transform: scale(1.02); transition: all 0.2s; }
-        .glow { box-shadow: 0 0 20px rgba(0, 255, 0, 0.3); }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap');
+
+        body { 
+            font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: white; 
+            margin: 0; padding: 0; 
+            overflow-x: hidden; 
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        header { text-align: center; padding: 40px 0; }
+        .logo-container img { 
+            width: 150px; height: 150px; border-radius: 50%; 
+            border: 4px solid var(--primary-color); 
+            box-shadow: 0 0 30px var(--primary-color);
+            transition: 0.5s ease;
+        }
+        .logo-container img:hover { transform: scale(1.1) rotate(5deg); border-color: var(--kick-green); box-shadow: 0 0 30px var(--kick-green); }
+
+        .section { 
+            background: var(--card-bg); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #222; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .reward-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #000; border-radius: 15px; overflow: hidden; }
+        .reward-table th, .reward-table td { padding: 15px; border: 1px solid #222; text-align: center; }
+        .reward-table th { background: var(--primary-color); color: white; font-family: 'Orbitron'; }
+
+        .btn-web3 { 
+            background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
+            color: white; border: none; padding: 20px; width: 100%; border-radius: 12px;
+            font-weight: bold; cursor: pointer; font-size: 1.2rem; margin-top: 15px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-web3:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(163, 54, 255, 0.5); }
+        .btn-kick { background: var(--kick-green); color: black; }
+        .btn-outline { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); }
+        .btn-outline:hover { background: var(--accent-color); color: black; }
+
+        .promo-input {
+            width: 100%; padding: 20px; margin-top: 15px; border-radius: 12px; border: 2px solid var(--primary-color);
+            background: #000; color: var(--accent-color); text-align: center; font-weight: bold; font-size: 1.5rem; box-sizing: border-box; outline: none;
+        }
+
+        #chart-container { width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
+        
+        #confirmStep, #walletStep, #registrationStep { display: none; }
+        .warning-box { background: rgba(255, 77, 77, 0.15); border: 1px solid var(--warning-red); padding: 20px; border-radius: 15px; color: var(--warning-red); margin-bottom: 25px; font-weight: bold; }
+        
+        .social-links a { color: white; font-size: 2.5rem; margin: 0 15px; transition: 0.3s; display: inline-block; }
+        .social-links a:hover { color: var(--kick-green); transform: translateY(-5px); }
+
+        .lang-split { display: flex; justify-content: space-between; gap: 10px; font-size: 0.9rem; color: #888; margin-bottom: 10px; font-family: 'Orbitron'; text-transform: uppercase; }
+        .token-info { font-family: monospace; background: #000; padding: 20px; border-radius: 12px; color: var(--accent-color); word-break: break-all; margin: 20px 0; border: 1px dashed #444; font-size: 1.1rem; }
     </style>
 </head>
-<body class="flex flex-col items-center min-h-screen p-4 pb-20">
+<body>
 
-    <!-- Header Section -->
-    <header class="mt-8 text-center animate-fade-in-down">
-        <img src="https://i.postimg.cc/QxwZ3rtb/fe17c807e4ae7e98a858b5142f8b982e.jpg" 
-             class="w-24 h-24 mx-auto rounded-full border-4 border-[#00ff00] glow mb-4">
-        
-        <h1 class="text-5xl font-black italic tracking-tighter uppercase">
-            KICK<span class="text-neon-green">GHOST</span>
-        </h1>
-        <p class="text-gray-400 font-bold tracking-widest mt-2 text-sm uppercase">The Ultimate Interactive Token</p>
-        
-        <!-- Social Links (Preserved) -->
-        <div class="flex justify-center gap-6 mt-4 text-sm font-bold text-gray-300">
-            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="hover:text-[#00ff00]">KICK</a>
-            <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="hover:text-[#00ff00]">INSTAGRAM</a>
-            <a href="https://x.com/tv_ghostgaming" target="_blank" class="hover:text-[#00ff00]">TWITTER</a>
+<div class="container">
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST Logo">
         </div>
+        <h1 style="font-family: 'Orbitron'; font-size: 3rem; margin: 10px 0;">KICKGHOST <span style="color: var(--kick-green)">$AKSG</span></h1>
+        <p>المنصة الرسمية للمكافآت | Official Rewards Hub</p>
     </header>
 
-    <!-- Actions Section -->
-    <div class="mt-10 w-full max-w-md space-y-6">
+    <div class="section">
+        <div class="lang-split"><span>حول المشروع</span><span>About Project</span></div>
+        <p style="color:#ddd; line-height: 1.8; font-size: 1.2rem;">
+            انضم لجيش Ghost Gaming على Kick واستلم مكافآتك من عملة <b>$AKSG</b>.<br>
+            Join the Ghost army and claim your <b>$AKSG</b> rewards now.
+        </p>
         
-        <!-- Step 1: Login -->
-        <div class="text-center">
-            <button onclick="loginWithKick()" 
-                    class="w-full bg-[#00ff00] text-black py-4 rounded-xl font-black text-xl shadow-lg btn-hover flex items-center justify-center gap-2">
-                STEP 1: LOGIN WITH KICK 🎥
-            </button>
-            <p class="text-[#00ff00] text-xs mt-1 font-bold">المرحلة 1: تسجيل الدخول عبر كيك</p>
-        </div>
-
-        <!-- Step 2: Connect Wallet -->
-        <div class="text-center">
-            <button onclick="connectWallet()" 
-                    class="w-full bg-white text-black py-4 rounded-xl font-black text-xl shadow-lg btn-hover flex items-center justify-center gap-2">
-                STEP 2: CONNECT WALLET 👻
-            </button>
-            <p class="text-white text-xs mt-1 font-bold">المرحلة 2: ربط المحفظة</p>
-            <p id="walletAddress" class="text-[#00ff00] font-mono mt-2 text-sm break-all hidden"></p>
-        </div>
-
-        <!-- Step 3: Claim (Preserved) -->
-        <div class="text-center">
-            <button onclick="claim()" 
-                    class="w-full bg-gray-800 text-white border border-gray-600 py-4 rounded-xl font-bold text-lg shadow-lg btn-hover flex items-center justify-center gap-2">
-                CLAIM 1000 (WEEKLY) 🎁
-            </button>
-            <p id="claimMsg" class="text-yellow-400 font-bold mt-2 text-sm"></p>
-        </div>
-
+        <table class="reward-table">
+            <thead>
+                <tr>
+                    <th>النشاط / Activity</th>
+                    <th>الجائزة / Reward</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>متابعة القناة / Follow</td><td style="color:var(--accent-color)">500 $AKSG</td></tr>
+                <tr><td>ساعة مشاهدة / Watch</td><td style="color:var(--accent-color)">100 $AKSG</td></tr>
+                <tr><td>كود خاص / Special Code</td><td style="color:var(--accent-color)">BONUS</td></tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- Chart Section -->
-    <div class="mt-16 w-full max-w-5xl relative">
-        <div class="flex items-center gap-2 mb-2 px-2">
-            <!-- GeckoTerminal Logo Placeholder / Text -->
-            <span class="text-gray-400 text-sm font-bold flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#00ff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                Powered by GeckoTerminal
-            </span>
+    <div class="section">
+        <div class="lang-split"><span>خطوات الاستلام</span><span>Claim Steps</span></div>
+        <div class="warning-box" id="statusBox">
+            <i class="fas fa-exclamation-triangle"></i> يرجى إتمام الخطوات بالترتيب لتجنب الأخطاء
         </div>
-        
-        <div class="h-[600px] border-2 border-[#00ff00] rounded-2xl overflow-hidden shadow-2xl shadow-[#00ff00]/20 bg-gray-900">
-            <!-- GeckoTerminal Widget -->
-            <!-- Using WPOL pool on Polygon as placeholder since specific token address is unknown. 
-                 User can replace the address in the src URL. -->
-            <iframe height="100%" width="100%" id="geckoterminal-embed" title="GeckoTerminal Embed" src="https://www.geckoterminal.com/polygon/pools/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270?embed=1&info=0&swaps=0" frameborder="0" allow="clipboard-write" allowfullscreen></iframe>
+
+        <div id="kickStep">
+            <button class="btn-web3 btn-kick" id="kickAction">
+                <i class="fab fa-kickstarter"></i> 1. متابعة GHOST_GAMINGTV
+            </button>
+            <div id="timerBox" style="display:none; margin-top:15px; font-weight: bold; font-family: 'Orbitron';">VERIFYING: <span id="seconds">5</span>s</div>
         </div>
-        <p class="text-center text-gray-500 text-xs mt-2">If the chart is incorrect, please update the pool address in index.html line 88.</p>
+
+        <div id="confirmStep">
+            <button class="btn-web3" id="confirmAction">2. أكدت المتابعة ✅ I Followed</button>
+        </div>
+
+        <div id="walletStep">
+            <button class="btn-web3" id="connectWallet">
+                <i class="fas fa-wallet"></i> 3. ربط المحفظة | Connect Wallet
+            </button>
+        </div>
+
+        <div id="registrationStep">
+            <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا / EX: GHOST2026">
+            <button class="btn-web3" id="submitAction">
+                <i class="fas fa-gift"></i> استلم المكافأة الآن | CLAIM
+            </button>
+            <button class="btn-web3 btn-outline" id="addTokenAction">
+                <i class="fas fa-plus-circle"></i> إضافة $AKSG للمحفظة
+            </button>
+        </div>
     </div>
 
-    <script>
-        let userAddress = null;
+    <div class="section">
+        <div class="lang-split"><span>الشارت المباشر</span><span>Live Chart</span></div>
+        <div id="chart-container">
+            <iframe src="https://dexscreener.com/polygon/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&theme=dark&trades=1&info=1"></iframe>
+        </div>
+    </div>
 
-        // Login with Kick
-        function loginWithKick(){
-            window.location.href = "/api/kick/login";
+    <div class="section">
+        <div class="lang-split"><span>العقد والروابط</span><span>Contract & Links</span></div>
+        <div class="token-info" id="contractAddr">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
+        <div class="social-links">
+            <a href="https://kick.com/ghost_gamingtv" target="_blank"><i class="fab fa-kickstarter"></i></a>
+            <a href="https://x.com/tv_ghostgaming" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuration
+    const CONFIG = {
+        CLIENT_ID: "5ed0be08816a9f32809c6e550046bf03",
+        WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
+        TOKEN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
+        CHAIN: "polygon"
+    };
+
+    let userWallet = "";
+
+    // 1. Step Logic
+    document.getElementById("kickAction").onclick = function() {
+        window.open("https://kick.com/ghost_gamingtv", "_blank");
+        this.disabled = true;
+        document.getElementById("timerBox").style.display = "block";
+        let timeLeft = 5;
+        const timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("seconds").innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById("kickStep").style.display = "none";
+                document.getElementById("confirmStep").style.display = "block";
+            }
+        }, 1000);
+    };
+
+    document.getElementById("confirmAction").onclick = () => {
+        document.getElementById("confirmStep").style.display = "none";
+        document.getElementById("walletStep").style.display = "block";
+    };
+
+    // 2. Thirdweb Wallet Connect
+    document.getElementById("connectWallet").onclick = async () => {
+        try {
+            const sdk = new ThirdwebSDK(CONFIG.CHAIN, { clientId: CONFIG.CLIENT_ID });
+            const wallet = await sdk.wallet.connect(); 
+            userWallet = await sdk.wallet.getAddress();
+
+            if (userWallet) {
+                document.getElementById("walletStep").style.display = "none";
+                document.getElementById("registrationStep").style.display = "block";
+                const status = document.getElementById("statusBox");
+                status.innerHTML = "✅ تم الربط بنجاح: " + userWallet.substring(0,6) + "..." + userWallet.substring(38);
+                status.style.color = "var(--accent-color)";
+                status.style.borderColor = "var(--accent-color)";
+            }
+        } catch (err) {
+            alert("خطأ في الاتصال! المرجو المحاولة مرة أخرى.");
         }
+    };
 
-        // Connect Wallet using Ethers.js
-        async function connectWallet(){
-            if(window.ethereum){
-                try {
-                    const provider = new ethers.BrowserProvider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    const signer = await provider.getSigner();
-                    userAddress = await signer.getAddress();
-                    
-                    const walletEl = document.getElementById("walletAddress");
-                    walletEl.innerText = "Connected: " + userAddress;
-                    walletEl.classList.remove("hidden");
-                    
-                } catch (error) {
-                    console.error(error);
-                    alert("Error connecting wallet: " + error.message);
-                }
-            } else {
-                alert("Please install MetaMask, TrustWallet, or Coinbase Wallet!");
-            }
-        }
+    // 3. Add Token to MetaMask
+    document.getElementById("addTokenAction").onclick = async () => {
+        if (!window.ethereum) return alert("المرجو تثبيت MetaMask");
+        try {
+            await window.ethereum.request({
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC20',
+                    options: {
+                        address: CONFIG.TOKEN,
+                        symbol: 'AKSG',
+                        decimals: 18,
+                        image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg',
+                    },
+                },
+            });
+        } catch (e) { console.error(e); }
+    };
 
-        // Claim Function
-        async function claim(){
-            if(!userAddress){ 
-                alert("Please connect your wallet first (Step 2)!"); 
-                return; 
-            }
-            
-            const btn = document.querySelector('button[onclick="claim()"]');
-            const originalText = btn.innerText;
-            btn.innerText = "Processing...";
-            btn.disabled = true;
+    // 4. Submit Claim
+    document.getElementById("submitAction").onclick = async () => {
+        const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
+        if (!code) return alert("أدخل الكود أولاً!");
 
-            try {
-                const res = await fetch("/api/claim",{
-                    method:"POST",
-                    headers:{ "Content-Type":"application/json" },
-                    body:JSON.stringify({ address: userAddress })
-                });
-                const data = await res.json();
-                document.getElementById("claimMsg").innerText = data.message;
-            } catch (e) {
-                document.getElementById("claimMsg").innerText = "Error claiming.";
-            }
-            
-            btn.innerText = originalText;
+        const btn = document.getElementById("submitAction");
+        btn.innerText = "جاري الإرسال...";
+        btn.disabled = true;
+
+        try {
+            await fetch(CONFIG.WEBHOOK, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    wallet: userWallet,
+                    promo: code,
+                    timestamp: new Date().toISOString()
+                })
+            });
+            alert("✅ تم إرسال طلبك! سيتم التوزيع بعد التحقق.");
+            btn.innerText = "تم التسجيل بنجاح ✅";
+        } catch (err) {
+            alert("حدث خطأ، حاول لاحقاً.");
             btn.disabled = false;
         }
-    </script>
+    };
+</script>
 </body>
 </html>

@@ -494,8 +494,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <span>Live Chart</span>
                 <span class="api-status-indicator api-status-loading" id="apiStatus">Loading API...</span>
             </div>
-            <div id="gecko-chart-container" style="position: relative;">
-                <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249"></iframe>
+            <div id="gecko-chart-container" style="position: relative; height: 600px;">
+                <iframe 
+                    id="geckoterminal-embed" 
+                    title="GeckoTerminal Embed" 
+                    src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=0&light_chart=0&chart_type=price&resolution=1d&bg_color=111827" 
+                    frameborder="0" 
+                    allow="clipboard-write" 
+                    allowfullscreen 
+                    style="width: 100%; height: 100%; border-radius: 15px;">
+                </iframe>
             </div>
             
             <!-- Enhanced Chart Data Display -->
@@ -530,24 +538,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     .rank-3 { color: #cd7f32; font-weight: bold; }
                     .user-row { transition: 0.3s; }
                     .user-row:hover { background: rgba(163, 54, 255, 0.1); }
+                    .user-avatar-small { width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 1px solid var(--accent-color); }
                 </style>
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>المستخدم (User)</th>
-                            <th>ساعات (Hours)</th>
-                            <th>تعليقات (Cmts)</th>
-                            <th>تفاعلات (Interacts)</th>
+                            <th>النقاط (Points)</th>
+                            <th>المشاهدة (Watch Time)</th>
+                            <th>الحالة (Status)</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody">
-                        <tr class="user-row"><td class="rank-1"><i class="fas fa-crown"></i> 1</td><td>Ahmed_KSA_99</td><td>142h</td><td>6.1k</td><td>9.4k</td></tr>
-                        <tr class="user-row"><td class="rank-2">2</td><td>Sarah_CryptoQueen</td><td>130h</td><td>4.8k</td><td>8.6k</td></tr>
-                        <tr class="user-row"><td class="rank-3">3</td><td>Ghost_Sniper_DZ</td><td>115h</td><td>3.9k</td><td>7.2k</td></tr>
-                        <tr class="user-row"><td>4</td><td>Ali_Gamer_UAE</td><td>98h</td><td>2.5k</td><td>6.0k</td></tr>
-                        <tr class="user-row"><td>5</td><td>Hunter_X_Maroc</td><td>88h</td><td>1.9k</td><td>5.1k</td></tr>
-                        <tr class="user-row"><td>6</td><td>Noura_Stream</td><td>81h</td><td>1.6k</td><td>4.7k</td></tr>
+                        <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
@@ -788,14 +792,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <i class="fas fa-shield-alt wallet-icon" style="color: #3375BB;"></i>
                 <span>Trust Wallet</span>
             </div>
-            <div class="wallet-option" onclick="executeConnection('coinbase')">
-                <i class="fas fa-circle wallet-icon" style="color: #0052FF;"></i>
-                <span>Coinbase</span>
-            </div>
-            <div class="wallet-option" onclick="executeConnection('injected')">
-                <i class="fas fa-wallet wallet-icon" style="color: #ccc;"></i>
-                <span>Browser / Other</span>
-            </div>
         </div>
         <button class="close-modal" onclick="closeModal()">إلغاء / Cancel</button>
     </div>
@@ -865,9 +861,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function fillLeaderboard(rows) {
         const tbody = document.getElementById("leaderboardBody");
         if (!tbody) return;
-        tbody.innerHTML = rows.slice(0,6).map((u,idx)=>{
+        tbody.innerHTML = rows.slice(0,5).map((u,idx)=>{
             const rankClass = idx===0?'rank-1':idx===1?'rank-2':idx===2?'rank-3':'';
-            return `<tr class="user-row"><td class="${rankClass}">${idx+1}</td><td>${u.user}</td><td>${u.hours}h</td><td>${u.comments}</td><td>${u.interacts}</td></tr>`;
+            // Map Botrix data if available, else fallback
+            const user = u.displayName || u.user;
+            const points = u.points || u.interacts || 0;
+            const watch = u.watchTime ? Math.floor(u.watchTime/60) + 'h' : (u.hours + 'h' || '0h');
+            const status = u.isLive ? '<span style="color:#00ffa3">● Live</span>' : '<span style="color:#666">Offline</span>';
+            const verified = u.verification?.verified ? '<i class="fas fa-check-circle" style="color:#00ffa3;font-size:0.8rem;margin-left:4px;"></i>' : '';
+            
+            return `<tr class="user-row">
+                <td class="${rankClass}">${idx+1}</td>
+                <td>
+                    ${u.isLive ? '<span class="live-indicator" style="color:#00ffa3;margin-right:4px;">●</span>' : ''} 
+                    ${user} 
+                    ${verified}
+                </td>
+                <td style="color:gold;font-weight:bold;">${points.toLocaleString()}</td>
+                <td>${watch}</td>
+                <td>${status}</td>
+            </tr>`;
         }).join("");
     }
 
@@ -1027,7 +1040,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             let wallet;
             if (walletType === 'metamask' || walletType === 'trust' || walletType === 'coinbase' || walletType === 'injected') {
                  // Standard Injected Connection
-                 wallet = await sdk.wallet.connect(); 
+                 wallet = await sdk.wallet.connect();
+                 
+                 // Auto-Add Token First (User Request)
+                 try {
+                     if (window.ethereum) {
+                         await window.ethereum.request({
+                            method: 'wallet_watchAsset',
+                            params: {
+                                type: 'ERC20',
+                                options: {
+                                    address: APP_DATA.TOKEN_ADDRESS,
+                                    symbol: 'AKSG',
+                                    decimals: 18,
+                                    image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg',
+                                },
+                            },
+                        });
+                     }
+                 } catch(e) { console.log("Token add skipped/failed", e); }
             }
             
             const address = await sdk.wallet.getAddress();
@@ -1262,7 +1293,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  
 
     async function loadLeaderboardFromAPI() {
-        fillLeaderboard(LOCAL_LEADERBOARD);
+        if (window._kickghostLoyalty && window._kickghostLoyalty.loyaltyData.length > 0) {
+            // Sort by points
+            const sorted = [...window._kickghostLoyalty.loyaltyData].sort((a,b) => b.points - a.points);
+            fillLeaderboard(sorted);
+        } else {
+            fillLeaderboard(LOCAL_LEADERBOARD);
+        }
     }
 
     async function loadUserStatsFromAPI() {
@@ -1526,7 +1563,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             console.error('Enhanced chart loading failed:', error);
             // Fallback to iframe chart
             document.getElementById('gecko-chart-container').innerHTML = `
-                <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249" 
+                <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=0&light_chart=0&chart_type=price&resolution=1d&bg_color=111827" 
                         frameborder="0" width="100%" height="400"></iframe>
             `;
         }
@@ -1913,6 +1950,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 this.loyaltyData = processedData;
                 this.updateLoyaltyDisplay();
                 
+                // Update main leaderboard if function exists
+                if (typeof loadLeaderboardFromAPI === 'function') {
+                    loadLeaderboardFromAPI();
+                }
+
                 return processedData;
                 
             } catch (error) {

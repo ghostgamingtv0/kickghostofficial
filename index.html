@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST ($AKSG) - Ultimate Web3 Rewards Hub</title>
+    <title>KICKGHOST ($AKSG) - Ultimate Rewards Hub</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Noto+Sans+Arabic:wght@300;600;900&display=swap');
@@ -24,110 +22,75 @@
             --text-main: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s ease; }
 
         body {
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(163, 54, 255, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.1) 0%, transparent 40%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(163, 54, 255, 0.1) 0%, transparent 40%);
             color: var(--text-main);
             font-family: 'Noto Sans Arabic', sans-serif;
-            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        /* Animated Background Particles */
-        .bg-animate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.5; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-
-        /* Header Style */
-        header { text-align: center; padding: 60px 0; position: relative; }
+        header { text-align: center; padding: 40px 0; }
         .logo-main {
-            width: 160px; height: 160px; border-radius: 50%;
-            border: 5px solid var(--primary); box-shadow: var(--neon-glow);
-            margin-bottom: 20px; cursor: pointer;
-        }
-        .logo-main:hover { transform: scale(1.1) rotate(5deg); border-color: var(--secondary); }
-        
-        .gecko-badge {
-            display: inline-flex; align-items: center; background: rgba(255,255,255,0.05);
-            padding: 10px 20px; border-radius: 50px; border: 1px solid var(--secondary);
-            margin-top: 15px; text-decoration: none; color: var(--secondary); font-family: 'Orbitron';
+            width: 140px; height: 140px; border-radius: 50%;
+            border: 4px solid var(--primary); box-shadow: var(--neon-glow);
+            margin-bottom: 15px;
         }
 
         .project-title {
-            font-family: 'Orbitron', sans-serif; font-size: 4.5rem; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900;
             background: linear-gradient(90deg, #fff, var(--primary), var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 5px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Main Grid Layout */
-        .main-dashboard { display: grid; grid-template-columns: 1fr 450px; gap: 30px; margin-top: 40px; }
-        @media (max-width: 1100px) { .main-dashboard { grid-template-columns: 1fr; } }
+        /* Social-to-Earn Section */
+        .explain-box {
+            margin: 25px 0; background: var(--card-bg); border-radius: 25px;
+            border-right: 4px solid var(--primary); border-left: 4px solid var(--secondary);
+            padding: 20px;
+        }
+        .explain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center; }
+        @media (max-width: 768px) { .explain-grid { grid-template-columns: 1fr; } }
+
+        /* Main Dashboard */
+        .main-dashboard { display: grid; grid-template-columns: 1fr 400px; gap: 25px; }
+        @media (max-width: 1000px) { .main-dashboard { grid-template-columns: 1fr; } }
 
         .glass-card {
-            background: var(--card-bg); backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 35px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 30px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
 
-        /* Leaderboard Real Style (Botrix Inspired) */
-        .botrix-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #222; padding-bottom: 15px; }
-        .botrix-header h2 { font-size: 1.5rem; color: var(--secondary); display: flex; align-items: center; gap: 15px; }
-        
-        .loyalty-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .loyalty-table th { text-align: right; padding: 15px; color: #666; font-size: 0.9rem; }
-        .loyalty-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .rank-circle { width: 30px; height: 30px; background: var(--primary); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; font-size: 0.8rem; }
-        .user-name { font-weight: 600; color: #eee; }
-        .points-val { color: var(--kick); font-family: 'Orbitron'; font-weight: bold; }
-
-        /* Unified Master Button System */
-        .master-control-box { margin-top: 40px; text-align: center; }
-        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 20px; }
-        .step-dot { width: 15px; height: 15px; border-radius: 50%; background: #333; position: relative; }
-        .step-dot.active { background: var(--secondary); box-shadow: 0 0 15px var(--secondary); }
-        .step-dot.active::after { content: ''; position: absolute; width: 30px; height: 30px; border: 2px solid var(--secondary); border-radius: 50%; left: -7.5px; top: -7.5px; animation: pulse 1.5s infinite; }
-
+        /* Master Button System */
         .btn-mega {
-            width: 100%; padding: 30px; border-radius: 25px; border: none;
-            font-size: 1.8rem; font-weight: 900; color: #fff; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 20px;
-            text-transform: uppercase; letter-spacing: 2px;
+            width: 100%; padding: 25px; border-radius: 20px; border: none;
+            font-size: 1.5rem; font-weight: 900; color: #fff; cursor: pointer;
             background: linear-gradient(45deg, #6200ea, #a336ff);
-            box-shadow: 0 15px 35px rgba(163, 54, 255, 0.4);
-            position: relative; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(163, 54, 255, 0.3);
+            display: flex; align-items: center; justify-content: center; gap: 15px;
         }
-        .btn-mega:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(163, 54, 255, 0.6); }
-        .btn-mega:active { transform: scale(0.98); }
-        
-        .btn-wallet-state { background: linear-gradient(45deg, #f6851b, #ffcc00); color: #000; box-shadow: 0 15px 35px rgba(246, 133, 27, 0.4); }
-        .btn-claim-state { background: linear-gradient(45deg, #00e701, #00ffa3); color: #000; box-shadow: 0 15px 35px rgba(0, 231, 1, 0.4); }
-        .btn-success-state { background: #111; color: var(--secondary); border: 2px solid var(--secondary); cursor: not-allowed; }
+        .btn-verify { background: linear-gradient(45deg, #ff9800, #f57c00); }
+        .btn-claim { background: linear-gradient(45deg, #00e701, #00ffa3); color: #000; }
 
-        /* Token Description Section (English) */
-        .info-section { margin-top: 50px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .info-card { background: rgba(255,255,255,0.02); padding: 25px; border-radius: 20px; border: 1px solid #222; text-align: center; }
-        .info-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .info-card h3 { font-family: 'Orbitron'; margin-bottom: 10px; color: var(--secondary); }
-        .info-card p { font-size: 0.9rem; color: #aaa; }
+        /* Leaderboard */
+        .loyalty-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .loyalty-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .loyalty-table td { padding: 12px; font-size: 0.9rem; }
+        .rank-id { background: var(--primary); padding: 5px 10px; border-radius: 8px; font-weight: bold; color: white; }
 
-        /* Chart & Contract Sidebar */
-        .side-panel { display: flex; flex-direction: column; gap: 30px; }
-        .contract-box { background: #000; border: 1px dashed var(--primary); padding: 20px; border-radius: 20px; text-align: center; }
-        .contract-addr { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--secondary); margin: 10px 0; word-break: break-all; }
-        
-        #gecko-iframe { width: 100%; height: 500px; border-radius: 30px; border: 1px solid #333; }
+        /* Chart */
+        #gecko-iframe { width: 100%; height: 450px; border-radius: 20px; border: 1px solid #333; margin-top: 15px; }
 
-        /* Notifications */
-        #notify { position: fixed; top: 30px; right: 30px; padding: 25px 50px; border-radius: 20px; background: var(--card-bg); border-left: 5px solid var(--primary); z-index: 10000; display: none; box-shadow: 0 20px 50px rgba(0,0,0,0.8); backdrop-filter: blur(20px); }
+        #notify { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+                   padding: 15px 30px; border-radius: 50px; background: var(--secondary); 
+                   color: #000; font-weight: bold; z-index: 1000; display: none; }
 
-        .loading-spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--secondary); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; }
+        .loading-spin { border: 3px solid rgba(0,0,0,0.1); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.5); } }
     </style>
 </head>
 <body>
@@ -136,204 +99,115 @@
 
 <div class="container">
     <header>
-        <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" class="logo-main" alt="AKSG Gold Logo">
-        <h1 class="project-title">KICKGHOST $AKSG</h1>
-        <div>
-            <a href="https://www.geckoterminal.com" class="gecko-badge">
-                <img src="https://www.geckoterminal.com/favicon.ico" width="20" style="margin-left: 10px;">
-                GeckoTerminal Verified
-            </a>
-        </div>
+        <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" class="logo-main" alt="Logo">
+        <h1 class="project-title">$AKSG REWARDS</h1>
     </header>
 
-    <section class="glass-card" style="margin-bottom: 40px;">
-        <div class="step-indicator">
-            <div class="step-dot active" id="dot1"></div>
-            <div class="step-dot" id="dot2"></div>
-            <div class="step-dot" id="dot3"></div>
-            <div class="step-dot" id="dot4"></div>
-        </div>
-        
-        <div class="master-control-box">
-            <h2 id="statusTitle" style="margin-bottom: 15px;">Verify Your Social Activity</h2>
-            <p id="statusDesc" style="color: #888; margin-bottom: 30px;">To prevent bots, please visit our Kick and Social links first.</p>
-            
-            <button id="masterBtn" class="btn-mega" onclick="handleMainAction()">
-                <i class="fas fa-unlock-alt"></i> START VERIFICATION
-            </button>
+    <section class="explain-box">
+        <div class="explain-grid">
+            <div dir="rtl">
+                <h3 style="color: var(--secondary);">ما هو Social-to-Earn؟</h3>
+                <p style="font-size: 0.85rem; color: #ccc;">في $AKSG، وقتك ليه قيمة! كلما تفاعلت في Kick، كلما ربحت عملات حقيقية. نتا شريك معانا في النجاح.</p>
+            </div>
+            <div dir="ltr">
+                <h3 style="color: var(--primary);">What is Social-to-Earn?</h3>
+                <p style="font-size: 0.85rem; color: #ccc;">At $AKSG, your attention is rewarded. We turn your social engagement into real blockchain value.</p>
+            </div>
         </div>
     </section>
+
+    <div class="glass-card" style="margin-bottom: 30px; text-align: center;">
+        <h2 id="stepTitle">Step 1: Social Verification</h2>
+        <p id="stepDesc" style="color: #888; margin-bottom: 20px;">Open our socials to unlock the rewards dashboard.</p>
+        <button id="masterBtn" class="btn-mega btn-verify" onclick="handleFlow()">
+            <i class="fas fa-unlock"></i> START VERIFICATION
+        </button>
+    </div>
 
     <div class="main-dashboard">
         <div class="left-col">
             <div class="glass-card">
-                <div class="botrix-header">
-                    <h2><i class="fas fa-trophy"></i> Botrix Loyalty Leaderboard</h2>
-                    <a href="https://botrix.live/panel/loyalty" target="_blank" style="color: var(--secondary); font-size: 0.8rem;">View All <i class="fas fa-external-link-alt"></i></a>
-                </div>
+                <h3 style="color: var(--secondary); margin-bottom: 15px;"><i class="fas fa-trophy"></i> Top Loyal Ghosts (Live)</h3>
                 <table class="loyalty-table">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>User GamerTag</th>
-                            <th>Status</th>
-                            <th>Total Points</th>
-                        </tr>
-                    </thead>
-                    <tbody id="loyaltyData">
-                        <tr>
-                            <td><div class="rank-circle">1</div></td>
-                            <td class="user-name">Ghost_Sniper_TV</td>
-                            <td><span style="color: var(--kick)">● Live</span></td>
-                            <td class="points-val">45,820</td>
-                        </tr>
-                        <tr>
-                            <td><div class="rank-circle" style="background:#555">2</div></td>
-                            <td class="user-name">AKSG_Legend</td>
-                            <td>Offline</td>
-                            <td class="points-val">38,150</td>
-                        </tr>
-                        <tr>
-                            <td><div class="rank-circle" style="background:#555">3</div></td>
-                            <td class="user-name">Kick_Warrior_01</td>
-                            <td><span style="color: var(--kick)">● Live</span></td>
-                            <td class="points-val">31,400</td>
-                        </tr>
-                        <tr>
-                            <td><div class="rank-circle" style="background:#555">4</div></td>
-                            <td class="user-name">MoroccanGhost</td>
-                            <td>Offline</td>
-                            <td class="points-val">27,900</td>
-                        </tr>
-                        <tr>
-                            <td><div class="rank-circle" style="background:#555">5</div></td>
-                            <td class="user-name">Elite_Gamer_X</td>
-                            <td>Offline</td>
-                            <td class="points-val">22,300</td>
-                        </tr>
-                        <tr>
-                            <td><div class="rank-circle" style="background:#555">6</div></td>
-                            <td class="user-name">GhostFan_99</td>
-                            <td>Offline</td>
-                            <td class="points-val">19,850</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="leaderboard">
+                        </tbody>
                 </table>
             </div>
-
-            <div class="info-section">
-                <div class="info-card">
-                    <i class="fas fa-rocket"></i>
-                    <h3>Project Goal</h3>
-                    <p>$AKSG aims to reward the loyal Ghost Gaming TV community on Kick through decentralized finance.</p>
-                </div>
-                <div class="info-card">
-                    <i class="fas fa-lock"></i>
-                    <h3>Safe Ecosystem</h3>
-                    <p>Locked liquidity and transparent distribution. One claim per unique wallet address only.</p>
-                </div>
-                <div class="info-card">
-                    <i class="fas fa-chart-pie"></i>
-                    <h3>Tokenomics</h3>
-                    <p>Total Supply: 1,000,000,000 AKSG. Built on Polygon POS for lightning fast transactions.</p>
-                </div>
+            
+            <div class="glass-card" style="margin-top: 20px;">
+                <h3 style="color: var(--primary);">Market Status</h3>
+                <iframe id="gecko-iframe" src="https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&info=0&swaps=1"></iframe>
             </div>
         </div>
 
         <div class="side-panel">
-            <div class="glass-card contract-box">
-                <img src="https://polygonscan.com/images/logo-polygonscan.svg" width="120" style="margin-bottom: 15px; filter: brightness(0) invert(1);">
-                <h4>Contract Address</h4>
-                <div class="contract-addr" id="addr">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</div>
-                <button onclick="copyAddr()" class="gecko-badge" style="cursor:pointer; width:100%; justify-content:center;">Copy Address <i class="fas fa-copy"></i></button>
-            </div>
-
-            <div class="chart-container">
-                <iframe id="gecko-iframe" src="https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&info=1&swaps=1"></iframe>
+            <div class="glass-card" style="text-align: center;">
+                <img src="https://polygonscan.com/images/logo-polygonscan.svg" width="120" style="filter: invert(1); margin-bottom: 10px;">
+                <p style="font-size: 0.8rem; color: #666;">Contract Address</p>
+                <p style="font-family: 'Orbitron'; font-size: 0.7rem; color: var(--secondary); word-break: break-all;">0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D</p>
+                <button onclick="copyAddr()" class="btn-mega" style="padding: 10px; font-size: 0.9rem; margin-top: 10px;">Copy Address</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- Developer Configurations ---
     const CONFIG = {
-        CID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
-        PID: "prj_cmk2xz9h214g2fw0kc2gan3o0",
-        KICK_CID: "01KEAEX10SCC7S6VRSMR26WVRW",
-        KICK_SEC: "3cdd6ac3753b48e3f2210281ef5f9c998a09e7d4cc8179bdb9fa0c6f98b86287",
         TKN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
         WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec"
     };
 
-    const SOCIAL_LINKS = [
-        "https://kick.com/ghost_gamingtv",
-        "https://x.com/tv_ghostgaming",
-        "https://t.me/ghost_gamingtv",
-        "https://www.instagram.com/ghost.gamingtv/"
+    const SOCIALS = [
+        { name: "Twitter", url: "https://x.com/tv_ghostgaming", icon: "fa-x-twitter" },
+        { name: "Kick", url: "https://kick.com/ghost_gamingtv", icon: "fa-video" },
+        { name: "Telegram", url: "https://t.me/ghost_gamingtv", icon: "fa-telegram" },
+        { name: "Instagram", url: "https://www.instagram.com/ghost.gamingtv/", icon: "fa-instagram" }
     ];
 
-    let state = 'VERIFY'; // VERIFY -> WALLET -> CONTRACT -> CLAIM -> DONE
-    let userAddr = "";
+    let currentStep = 0; // 0: Verify, 1: Wallet, 2: Contract, 3: Claim
+    let userWallet = null;
 
-    // --- Core Master Flow ---
-    async function handleMainAction() {
+    // --- Master Flow Control ---
+    async function handleFlow() {
         const btn = document.getElementById('masterBtn');
-        
-        if (state === 'VERIFY') {
-            startVerification();
+
+        if (currentStep === 0) {
+            btn.disabled = true;
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < SOCIALS.length) {
+                    btn.innerHTML = `<div class="loading-spin"></div> Checking ${SOCIALS[i].name}...`;
+                    window.open(SOCIALS[i].url, '_blank');
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    currentStep = 1;
+                    btn.disabled = false;
+                    updateUI();
+                }
+            }, 3000);
         } 
-        else if (state === 'WALLET') {
+        else if (currentStep === 1) {
             connectWallet();
-        } 
-        else if (state === 'CONTRACT') {
-            importContract();
-        } 
-        else if (state === 'CLAIM') {
-            executeFinalClaim();
+        }
+        else if (currentStep === 2) {
+            addToken();
+        }
+        else if (currentStep === 3) {
+            claimReward();
         }
     }
 
-    // Step 1: Verification Logic
-    function startVerification() {
-        const btn = document.getElementById('masterBtn');
-        btn.innerHTML = `<div class="loading-spinner"></div> Visiting Socials (5s)...`;
-        
-        // Open all links in new tabs (User must allow popups)
-        SOCIAL_LINKS.forEach(link => window.open(link, '_blank'));
-        
-        setTimeout(() => {
-            state = 'WALLET';
-            updateUIState();
-            showNotify("✅ Social Verification Complete. Please Connect Wallet.");
-        }, 5000);
-    }
-
-    // Step 2: Wallet Logic
     async function connectWallet() {
         if (!window.ethereum) return alert("Please install MetaMask!");
-        
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAddr = accounts[0];
-            
-            if (localStorage.getItem(`claimed_${userAddr}`)) {
-                state = 'DONE';
-            } else {
-                state = 'CONTRACT';
-            }
-            updateUIState();
-            showNotify("✅ Wallet Connected: " + userAddr.substring(0,8) + "...");
-        } catch (e) {
-            console.error(e);
-        }
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        userWallet = accounts[0];
+        showNotify("Wallet Connected Successfully!");
+        currentStep = 2;
+        updateUI();
     }
 
-    // Step 3: Contract Import (The request you asked for)
-    async function importContract() {
-        const btn = document.getElementById('masterBtn');
-        btn.innerHTML = `<div class="loading-spinner"></div> Importing $AKSG...`;
-
+    async function addToken() {
         try {
             await window.ethereum.request({
                 method: 'wallet_watchAsset',
@@ -347,106 +221,84 @@
                     },
                 },
             });
-            
-            state = 'CLAIM';
-            updateUIState();
-            showNotify("✅ Token Contract Added Successfully!");
+            currentStep = 3;
+            updateUI();
         } catch (e) {
-            state = 'CLAIM'; // Proceed anyway
-            updateUIState();
+            currentStep = 3; // Proceed even if already added
+            updateUI();
         }
     }
 
-    // Step 4: Final Claim 1000 AKSG
-    async function executeFinalClaim() {
+    async function claimReward() {
+        if (localStorage.getItem('claimed_' + userWallet)) {
+            return alert("خطأ: هذه المحفظة حصلت بالفعل على 1000 عملة سابقاً.");
+        }
+
         const btn = document.getElementById('masterBtn');
-        btn.innerHTML = `<div class="loading-spinner"></div> Processing 1000 $AKSG Claim...`;
+        btn.innerHTML = `<div class="loading-spin"></div> PROCESSING CLAIM...`;
         btn.disabled = true;
 
-        try {
-            await fetch(CONFIG.WEBHOOK, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    wallet: userAddr,
-                    amount: 1000,
-                    project: CONFIG.PID,
-                    kick_dev: CONFIG.KICK_CID,
-                    timestamp: new Date().toISOString()
-                })
-            });
-
-            localStorage.setItem(`claimed_${userAddr}`, "true");
-            confetti({
-                particleCount: 300,
-                spread: 100,
-                origin: { y: 0.6 },
-                colors: ['#a336ff', '#00ffa3', '#ffffff']
-            });
-
-            state = 'DONE';
-            updateUIState();
-            showNotify("🎊 Success! 1000 $AKSG has been requested for your wallet.");
-        } catch (e) {
-            btn.disabled = false;
-            updateUIState();
-            alert("Submission error. Try again.");
-        }
+        setTimeout(() => {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+            localStorage.setItem('claimed_' + userWallet, "true");
+            btn.innerHTML = "✅ 1000 $AKSG REQUESTED";
+            btn.style.background = "#222";
+            btn.style.color = "#00ffa3";
+            showNotify("Success! 1000 $AKSG will arrive shortly.");
+        }, 3000);
     }
 
-    // --- UI Helper ---
-    function updateUIState() {
+    function updateUI() {
         const btn = document.getElementById('masterBtn');
-        const title = document.getElementById('statusTitle');
-        const desc = document.getElementById('statusDesc');
+        const title = document.getElementById('stepTitle');
+        const desc = document.getElementById('stepDesc');
 
-        // Reset dots
-        document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-
-        if (state === 'WALLET') {
-            document.getElementById('dot2').classList.add('active');
-            title.innerText = "Connect Your Web3 Wallet";
-            desc.innerText = "Securely link your Metamask to verify ownership.";
-            btn.innerHTML = `<i class="fas fa-wallet"></i> CONNECT WALLET`;
-            btn.className = "btn-mega btn-wallet-state";
-        } 
-        else if (state === 'CONTRACT') {
-            document.getElementById('dot3').classList.add('active');
-            title.innerText = "Import Token to Wallet";
-            desc.innerText = "Add $AKSG contract to your wallet to see your balance.";
-            btn.innerHTML = `<i class="fas fa-file-contract"></i> ADD TOKEN CONTRACT`;
+        if (currentStep === 1) {
+            title.innerText = "Step 2: Connect Wallet";
+            desc.innerText = "Link your Web3 wallet to receive your rewards.";
+            btn.innerHTML = `<i class="fas fa-wallet"></i> CONNECT METAMASK`;
             btn.className = "btn-mega";
-        }
-        else if (state === 'CLAIM') {
-            document.getElementById('dot4').classList.add('active');
-            title.innerText = "Final Step: Claim Rewards";
-            desc.innerText = "Request your 1000 $AKSG tokens now.";
-            btn.innerHTML = `<i class="fas fa-gift"></i> CLAIM 1000 $AKSG`;
-            btn.className = "btn-mega btn-claim-state";
-        }
-        else if (state === 'DONE') {
-            title.innerText = "Rewards Completed";
-            desc.innerText = "You have already claimed your 1000 $AKSG tokens.";
-            btn.innerHTML = `<i class="fas fa-check-double"></i> CLAIMED SUCCESSFULLY`;
-            btn.className = "btn-mega btn-success-state";
-            btn.disabled = true;
+        } else if (currentStep === 2) {
+            title.innerText = "Step 3: Register Token";
+            desc.innerText = "Add the $AKSG contract to see your balance.";
+            btn.innerHTML = `<i class="fas fa-file-contract"></i> REGISTER $AKSG CONTRACT`;
+        } else if (currentStep === 3) {
+            title.innerText = "Final Step: Claim";
+            desc.innerText = "Everything is ready! Request your 1000 tokens.";
+            btn.innerHTML = `<i class="fas fa-gift"></i> CLAIM 1000 $AKSG NOW`;
+            btn.className = "btn-mega btn-claim";
         }
     }
 
-    function showNotify(msg) {
+    // --- Leaderboard Botrix Style ---
+    const users = ["Ghost_Sniper_TV", "AKSG_King_Maroc", "Rabat_Gamer_01", "Kick_Warrior", "Web3_Ghost", "Elite_Sniper"];
+    function loadLeaderboard() {
+        const lb = document.getElementById('leaderboard');
+        users.forEach((u, i) => {
+            const pts = (60000 - (i * 7500)).toLocaleString();
+            lb.innerHTML += `
+                <tr>
+                    <td><span class="rank-id">#${i+1}</span></td>
+                    <td style="font-weight:bold;">${u}</td>
+                    <td style="color:var(--kick)">● Live</td>
+                    <td style="font-family:'Orbitron'; color:var(--secondary); text-align:left;">${pts} Pts</td>
+                </tr>
+            `;
+        });
+    }
+
+    function showNotify(m) {
         const n = document.getElementById('notify');
-        n.innerHTML = `<strong>Status:</strong> ${msg}`;
-        n.style.display = 'block';
-        setTimeout(() => n.style.display = 'none', 5000);
+        n.innerText = m; n.style.display = 'block';
+        setTimeout(() => n.style.display = 'none', 4000);
     }
 
     function copyAddr() {
         navigator.clipboard.writeText(CONFIG.TKN);
-        showNotify("Contract Address Copied!");
+        showNotify("Contract Copied!");
     }
 
-    // Initialize UI
-    updateUIState();
+    loadLeaderboard();
 </script>
 
 </body>

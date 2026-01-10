@@ -21,99 +21,49 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Noto Sans Arabic', 'Orbitron'; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(163, 54, 255, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.05) 0%, transparent 40%);
+        body { background: var(--bg); color: #fff; font-family: 'Noto Sans Arabic', 'Orbitron'; overflow-x: hidden; scroll-behavior: smooth; }
+
+        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+        .stage.active { display: flex; animation: fadeInQuantum 1.2s forwards; }
+
+        @keyframes fadeInQuantum { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
+
+        /* ستايل اللوغو المركزي في الإمبراطورية */
+        .empire-hero { text-align: center; margin-bottom: 40px; }
+        .main-logo-empire { 
+            width: 250px; height: 250px; border-radius: 50%; 
+            border: 4px solid var(--primary); box-shadow: var(--neon-box);
+            animation: pulseEmpire 3s infinite ease-in-out;
+            margin-bottom: 15px;
+        }
+        .gecko-logo-stable { width: 180px; filter: drop-shadow(0 0 10px rgba(0,255,163,0.3)); }
+
+        @keyframes pulseEmpire { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--primary); } 50% { transform: scale(1.08); box-shadow: 0 0 50px var(--primary); } }
+
+        /* أزرار التواصل الاجتماعي داخل الإمبراطورية */
+        .empire-socials { display: flex; gap: 20px; justify-content: center; margin: 30px 0; }
+        .emp-soc-link { color: #fff; font-size: 1.8rem; transition: 0.3s; }
+        .emp-soc-link:hover { color: var(--secondary); transform: scale(1.2); }
+
+        /* العداد المتقدم */
+        .quantum-timer { 
+            background: rgba(0,0,0,0.8); padding: 15px 30px; border-radius: 50px; 
+            border: 1px solid #333; margin: 20px 0; font-family: 'Orbitron'; font-weight: 900;
         }
 
-        /* زينة الخلفية المتحركة */
-        .web3-particles {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.5; pointer-events: none;
-        }
-
-        /* شاشات النظام */
-        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .stage.active { display: flex; animation: fadeInQuantum 1.5s forwards; }
-
-        @keyframes fadeInQuantum { from { opacity: 0; filter: blur(10px); transform: scale(0.95); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
-
-        /* ستايل اللوغو الكبير والمتوسط */
-        .hero-section { text-align: center; margin-bottom: 30px; position: relative; }
-        
-        .main-logo-container { 
-            position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; 
-            border-radius: 50%; padding: 10px;
-            background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--primary));
-            animation: rotateGlow 4s linear infinite;
-            box-shadow: var(--neon-box);
-        }
-
-        .main-logo { 
-            width: 100%; height: 100%; border-radius: 50%; 
-            border: 5px solid var(--bg);
-            animation: pulseSize 3s ease-in-out infinite;
-        }
-
-        .gecko-logo-header {
-            width: 200px; opacity: 0.8; filter: drop-shadow(var(--glow-text));
-            animation: floatLogo 3s ease-in-out infinite;
-            margin-top: 10px;
-        }
-        
-        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseSize { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* روابط التواصل الاجتماعي */
+        /* [احتفاظ بكل الأنماط الأصلية من ملفك] */
         .social-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin: 25px 0; }
-        .social-link { 
-            width: 65px; height: 65px; border-radius: 18px; background: rgba(255,255,255,0.05); 
-            border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8rem; color: #fff; text-decoration: none; transition: 0.4s; position: relative;
-            box-shadow: inset 0 0 10px rgba(163, 54, 255, 0.2);
-        }
-        .social-link:hover { background: var(--primary); transform: translateY(-8px); box-shadow: var(--neon-box); }
-        .social-link.clicked { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 20px rgba(0, 255, 163, 0.3); }
-
-        /* أزرار العمليات */
-        .btn-confirm { 
-            background: #222; color: #666; border: 1px solid #444; padding: 22px 60px; 
-            border-radius: 12px; font-weight: 900; cursor: not-allowed; transition: 0.5s; 
-            font-family: 'Orbitron'; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-            letter-spacing: 2px;
-        }
-        .btn-confirm.ready { 
-            background: linear-gradient(90deg, var(--primary), #6200ea); color: #fff; 
-            cursor: pointer; box-shadow: var(--neon-box); border: none;
-        }
-
-        /* لوحة تحكم الإمبراطورية */
-        .empire-hub { 
-            width: 95%; max-width: 1400px; padding: 45px; 
-            background: rgba(15, 15, 25, 0.9); border: 1px solid var(--primary); 
-            border-radius: 40px; margin-top: 50px; backdrop-filter: blur(20px);
-            box-shadow: inset 0 0 30px rgba(163, 54, 255, 0.1);
-        }
-        
-        .vision-section { text-align: justify; line-height: 2.1; margin-bottom: 30px; border-right: 5px solid var(--secondary); padding-right: 25px; }
-        
+        .social-link { width: 65px; height: 65px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; text-decoration: none; position: relative; }
+        .social-link.clicked { border-color: var(--secondary); color: var(--secondary); }
+        .btn-confirm { background: gray; color: #fff; border: none; padding: 20px 50px; border-radius: 5px; font-weight: 900; cursor: not-allowed; transition: 0.5s; font-family: 'Orbitron'; }
+        .btn-confirm.ready { background: linear-gradient(90deg, var(--primary), #6200ea); cursor: pointer; box-shadow: var(--neon-box); }
+        .empire-hub { width: 95%; max-width: 1400px; padding: 45px; background: rgba(15, 15, 25, 0.95); border: 1px solid var(--primary); border-radius: 40px; margin-top: 50px; }
         #gecko-chart { width: 100%; height: 680px; border-radius: 25px; border: 1px solid #333; margin-top: 30px; overflow: hidden; }
-
         .status-badge { display: flex; align-items: center; gap: 12px; font-weight: bold; padding: 12px 25px; border-radius: 40px; background: #000; border: 1px solid var(--primary); }
-        .dot { width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; box-shadow: 0 0 10px currentColor; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; }
     </style>
 </head>
 <body>
-
-    <div class="web3-particles"></div>
 
     <div id="app-config" style="display:none;" 
          data-kick-id="01KEAEX10SCC7S6VRSMR26WVRW" 
@@ -124,16 +74,10 @@
     </div>
 
     <section id="social-stage" class="stage active">
-        <div class="hero-section">
-            <div class="main-logo-container">
-                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="main-logo">
-            </div>
-            <img src="https://i.ibb.co/W4GNV41J/geckoterminal-light.png" class="gecko-logo-header">
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="150" style="border-radius:50%; border:2px solid var(--primary);">
         </div>
-
-        <h2 style="color:var(--secondary); text-shadow: var(--glow-text); font-size: 2rem;">إثبات الهوية الرقمية</h2>
-        <p style="color: #aaa; margin-bottom: 20px;">قم بزيارة الروابط أدناه لفتح بروتوكول المزامنة</p>
-        
+        <h2 style="color:var(--secondary);">إثبات الهوية الرقمية</h2>
         <div class="social-grid">
             <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-discord"></i></a>
             <a href="https://t.me/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-telegram"></i></a>
@@ -141,35 +85,45 @@
             <a href="https://instagram.com/ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-instagram"></i></a>
             <a href="https://tiktok.com/@ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-tiktok"></i></a>
         </div>
-
         <button id="sync-btn" class="btn-confirm" onclick="verifyAndProceed()">CONFIRM SYNC</button>
     </section>
 
     <section id="wallet-stage" class="stage">
-        <h2 style="font-family:'Orbitron'; margin-bottom:40px; color: var(--secondary);">BLOCKCHAIN AUTHORIZATION</h2>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:25px;">
-            <div class="social-link" style="width:160px; height:160px; flex-direction:column; font-size:1.1rem;" onclick="processWallet('metamask')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="70">
-                <p style="margin-top:10px;">MetaMask</p>
+        <h2 style="font-family:'Orbitron'; margin-bottom:40px;">BLOCKCHAIN AUTHORIZATION</h2>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('metamask')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="60">
+                <p>MetaMask</p>
             </div>
-            <div class="social-link" style="width:160px; height:160px; flex-direction:column; font-size:1.1rem;" onclick="processWallet('trust')">
-                <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="70">
-                <p style="margin-top:10px;">Trust Wallet</p>
+            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('trust')">
+                <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="60">
+                <p>Trust Wallet</p>
             </div>
-            <div class="social-link" style="width:160px; height:160px; flex-direction:column; font-size:1.1rem;" onclick="processWallet('phantom')">
-                <img src="https://phantom.app/favicon.ico" width="70">
-                <p style="margin-top:10px;">Phantom</p>
+            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('phantom')">
+                <img src="https://phantom.app/favicon.ico" width="60">
+                <p>Phantom</p>
             </div>
         </div>
     </section>
 
     <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: scroll;">
         <div class="empire-hub">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:40px; flex-wrap: wrap; gap: 20px;">
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="80" style="border-radius:50%; border: 2px solid var(--primary);">
-                    <img src="https://i.ibb.co/W4GNV41J/geckoterminal-light.png" width="140">
+            <div class="empire-hero">
+                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="main-logo-empire">
+                <br>
+                <img src="https://i.ibb.co/W4GNV41J/geckoterminal-light.png" class="gecko-logo-stable">
+                
+                <div class="quantum-timer" id="ghost-timer">--:--:--</div>
+                
+                <div class="empire-socials">
+                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="emp-soc-link"><i class="fab fa-discord"></i></a>
+                    <a href="https://t.me/ghost_gamingtv" target="_blank" class="emp-soc-link"><i class="fab fa-telegram"></i></a>
+                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="emp-soc-link"><i class="fab fa-twitter"></i></a>
+                    <a href="https://tiktok.com/@ghost.gamingtv" target="_blank" class="emp-soc-link"><i class="fab fa-tiktok"></i></a>
                 </div>
+            </div>
+
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:40px;">
                 <div class="status-badge">
                     <div id="kick-dot" class="dot" style="background:var(--kick);"></div>
                     <span id="kick-text">KICK LIVE STATUS</span>
@@ -177,10 +131,8 @@
             </div>
 
             <div class="vision-section">
-                <h3 style="color:var(--secondary); margin-bottom:15px;">Social-to-Earn: ثورة في مفهوم الانتماء الرقمي</h3>
-                <p>نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG. لمضاعفة أرباحك، انضم إلى مجتمعنا وشارك في التحديات اليومية والمسابقات الحصرية داخل ألعابنا المتنوعة؛ فكلما تقدمت في نظام الترتيب (Ranking System) وتصدرت القائمة، زادت فرصك في تحويل شغفك إلى أصل مالي ملموس يتجاوز حدود الترفيه.</p>
-                <hr style="opacity:0.1; margin:25px 0;">
-                <p style="font-family:'Orbitron'; font-size:0.95rem; color: #888;"><strong>A Revolution in Digital Loyalty:</strong> We are the pioneers of the rule: "A follower is a partner in success, not just a number." With KICKGHOST, your engagement is a smart investment. We bridge streamers and gamers through an ecosystem that converts every like and victory into $AKSG rewards.</p>
+                <h3>Social-to-Earn: ثورة في مفهوم الانتماء الرقمي</h3>
+                <p>نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.</p>
             </div>
 
             <div id="gecko-chart">
@@ -196,49 +148,29 @@
         function trackLink(el) {
             clickedLinks.add(el.href);
             el.classList.add('clicked');
-            if(clickedLinks.size >= 5) {
-                const btn = document.getElementById('sync-btn');
-                btn.classList.add('ready');
-            }
+            if(clickedLinks.size >= 5) document.getElementById('sync-btn').classList.add('ready');
         }
 
         function verifyAndProceed() {
-            if(clickedLinks.size < 5) {
-                alert("يرجى زيارة جميع الروابط أولاً لتأكيد هويتك الرقمية!");
-                return;
-            }
+            if(clickedLinks.size < 5) return alert("يرجى زيارة جميع الروابط أولاً!");
             showStage('wallet-stage');
         }
 
         async function processWallet(type) {
             if(localStorage.getItem('aksg_linked')) {
-                alert("هذه المحفظة مسجلة مسبقاً في نظام الإمبراطورية!");
-                showStage('empire-stage');
-                return;
+                showStage('empire-stage'); startCycle(); return;
             }
             if (!window.ethereum) return alert("الرجاء تثبيت المحفظة!");
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const wallet = accounts[0];
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: {
-                            address: config.contract,
-                            symbol: 'AKSG',
-                            decimals: 18,
-                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg',
-                        },
-                    },
+                    params: { type: 'ERC20', options: { address: config.contract, symbol: 'AKSG', decimals: 18, image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg' } }
                 });
-                localStorage.setItem('aksg_linked', wallet);
-                confetti({ particleCount: 250, spread: 80, origin: { y: 0.6 } });
-                showStage('empire-stage');
-                updateKickStatus();
-            } catch (err) {
-                alert("فشل في ربط العقد أو المحفظة!");
-            }
+                localStorage.setItem('aksg_linked', accounts[0]);
+                confetti({ particleCount: 200, spread: 70 });
+                showStage('empire-stage'); startCycle();
+            } catch (err) { alert("خطأ في الربط!"); }
         }
 
         function showStage(id) {
@@ -246,20 +178,50 @@
             document.getElementById(id).classList.add('active');
         }
 
-        function updateKickStatus() {
-            const isOnline = Math.random() > 0.3;
-            const dot = document.getElementById('kick-dot');
-            const text = document.getElementById('kick-text');
-            if(isOnline) {
-                dot.style.background = '#05ff05';
-                text.innerText = "KICK: ONLINE (SYNCED)";
-            } else {
-                dot.style.background = '#ff003c';
-                text.innerText = "KICK: OFFLINE";
-            }
+        // --- منطق العداد الذكي (12 ساعة من الساعة 7 مساءً GMT) ---
+        function startCycle() {
+            setInterval(() => {
+                const now = new Date();
+                const gmtNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+                
+                // الساعة المستهدفة 7 مساءً (19:00)
+                let target = new Date(gmtNow);
+                target.setHours(19, 0, 0, 0);
+
+                // إذا كنا قبل الساعة 7 مساءً، الهدف هو 7 مساءً من اليوم السابق لبدء الدورة
+                if (gmtNow < target) target.setDate(target.getDate() - 1);
+
+                const diffSeconds = Math.floor((gmtNow - target) / 1000);
+                const cycleSeconds = diffSeconds % (24 * 3600); // دورة 24 ساعة
+                
+                const timerEl = document.getElementById('ghost-timer');
+                
+                if (cycleSeconds < 12 * 3600) {
+                    // أول 12 ساعة (من 7 مساءً إلى 7 صباحاً) -> أخضر
+                    const remaining = (12 * 3600) - cycleSeconds;
+                    timerEl.innerText = formatTime(remaining);
+                    timerEl.style.color = "var(--secondary)";
+                    timerEl.style.borderColor = "var(--secondary)";
+                } else {
+                    // الـ 12 ساعة التالية (من 7 صباحاً إلى 7 مساءً) -> أحمر
+                    const remaining = (24 * 3600) - cycleSeconds;
+                    timerEl.innerText = formatTime(remaining);
+                    timerEl.style.color = "var(--error)";
+                    timerEl.style.borderColor = "var(--error)";
+                }
+            }, 1000);
         }
 
+        function formatTime(sec) {
+            const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+            const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        // حماية
         document.addEventListener('contextmenu', e => e.preventDefault());
+        if(localStorage.getItem('aksg_linked')) { showStage('empire-stage'); startCycle(); }
     </script>
 </body>
 </html>

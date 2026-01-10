@@ -3,972 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KICKGHOST ($AKSG) - Rewards Hub</title>
-    
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M8CX26RC');</script>
-    <!-- End Google Tag Manager -->
-    
-    <!-- Libraries -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
-
-    <style>
-        :root {
-            --primary-color: #a336ff; 
-            --accent-color: #00ffa3;  
-            --bg-dark: #020202;
-            --card-bg: #111111;
-            --kick-green: #00e701;
-            --warning-red: #ff4d4d;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background-color: var(--bg-dark); 
-            color: white; 
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        /* Header Styles */
-        header { 
-            text-align: center; 
-            padding: 40px 0; 
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            border-radius: 20px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: url('https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg') center/cover;
-            opacity: 0.1;
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .logo-container { position: relative; z-index: 2; }
-        .logo-container img { 
-            width: 150px; 
-            border-radius: 50%; 
-            border: 4px solid white; 
-            box-shadow: 0 0 40px rgba(255,255,255,0.3);
-            margin-bottom: 20px;
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        .subtitle { font-size: 1.2rem; opacity: 0.9; }
-
-        /* Section Styles */
-        .section { 
-            background: var(--card-bg); 
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 1px solid #333; 
-            margin-bottom: 25px; 
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(163, 54, 255, 0.2);
-        }
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .lang-split { 
-            display: flex; 
-            justify-content: space-between; 
-            gap: 10px; 
-            font-size: 0.9rem; 
-            color: #aaa; 
-            font-weight: bold; 
-        }
-
-        /* Reward Table */
-        .reward-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 20px 0; 
-            background: #000; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .reward-table th, .reward-table td { 
-            padding: 15px; 
-            border: 1px solid #333; 
-            text-align: center; 
-        }
-
-        .reward-table th { 
-            background: var(--primary-color); 
-            color: white; 
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .reward-table tr:nth-child(even) { background: rgba(255,255,255,0.05); }
-        .reward-table tr:hover { background: rgba(163, 54, 255, 0.1); }
-
-        /* Button Styles */
-        .btn-web3 { 
-            background: linear-gradient(90deg, var(--primary-color), #7a1fd1);
-            color: white; 
-            border: none; 
-            padding: 18px 25px; 
-            border-radius: 12px;
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 1.1rem; 
-            margin-top: 15px;
-            transition: all 0.3s ease; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(163, 54, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-web3::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-web3:hover::before {
-            left: 100%;
-        }
-
-        .btn-web3:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 25px rgba(163, 54, 255, 0.5); 
-        }
-
-        .btn-kick { 
-            background: var(--kick-green); 
-            color: black; 
-            box-shadow: 0 4px 15px rgba(0, 231, 1, 0.3);
-        }
-
-        .btn-kick:hover { 
-            background: #00c701; 
-            box-shadow: 0 8px 25px rgba(0, 231, 1, 0.5); 
-        }
-        
-        .btn-outline { 
-            background: transparent; 
-            border: 2px solid var(--accent-color); 
-            color: var(--accent-color); 
-            margin-top: 10px; 
-        }
-
-        .btn-outline:hover { 
-            background: var(--accent-color); 
-            color: black; 
-            box-shadow: 0 8px 25px rgba(0, 255, 163, 0.3);
-        }
-
-        /* Input Styles */
-        .promo-input {
-            width: 100%; 
-            padding: 18px; 
-            margin-top: 15px; 
-            border-radius: 12px; 
-            border: 2px solid var(--primary-color);
-            background: #000; 
-            color: var(--accent-color); 
-            text-align: center; 
-            font-weight: bold; 
-            font-size: 1.3rem; 
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .promo-input:focus { 
-            border-color: var(--accent-color); 
-            box-shadow: 0 0 20px var(--accent-color);
-            transform: scale(1.02);
-        }
-
-        /* Status and Warning Boxes */
-        .warning-box { 
-            background: rgba(255, 77, 77, 0.1); 
-            border: 2px solid var(--warning-red); 
-            padding: 20px; 
-            border-radius: 15px; 
-            color: var(--warning-red); 
-            margin-bottom: 25px; 
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-success {
-            background: rgba(0, 255, 163, 0.1);
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        /* Chart Container */
-        #chart-container { 
-            width: 100%; 
-            height: 500px; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            border: 2px solid #333; 
-            margin-top: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        #chart-container iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-        }
-
-        /* Social Links */
-        .social-links { 
-            margin: 30px 0; 
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-
-        .social-links a { 
-            color: white; 
-            font-size: 2.5rem; 
-            transition: all 0.3s ease; 
-            display: inline-block;
-            padding: 15px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .social-links a:hover { 
-            color: var(--primary-color); 
-            transform: scale(1.2) rotate(10deg);
-            background: rgba(163, 54, 255, 0.2);
-            box-shadow: 0 10px 25px rgba(163, 54, 255, 0.3);
-        }
-
-        /* Token Info */
-        .token-info { 
-            font-family: monospace; 
-            background: #000; 
-            padding: 20px; 
-            border-radius: 15px; 
-            color: var(--accent-color); 
-            word-break: break-all; 
-            margin: 20px 0; 
-            border: 2px dashed #444;
-            font-size: 1.1rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .token-info::before {
-            content: '📋 انقر للنسخ';
-            position: absolute;
-            top: -10px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .token-info:hover::before {
-            opacity: 1;
-        }
-
-        /* Step Containers */
-        .step-container {
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(0,0,0,0.3);
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
-        }
-
-        .step-container:hover {
-            background: rgba(163, 54, 255, 0.1);
-            transform: translateX(5px);
-        }
-
-        /* Timer Box */
-        #timerBox {
-            background: rgba(0, 231, 1, 0.1);
-            border: 2px solid var(--kick-green);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-            color: var(--kick-green);
-        }
-
-        /* Hidden steps */
-        #confirmStep, #walletStep, #registrationStep { 
-            display: none; 
-        }
-
-        /* Logo placements for branding */
-        .floating-logo {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-logo:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
-        .floating-logo:nth-child(2) { top: 20%; right: 5%; animation-delay: 1s; }
-        .floating-logo:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 2s; }
-        .floating-logo:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 3s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container { padding: 15px; }
-            h1 { font-size: 2rem; }
-            .section { padding: 20px; }
-            .social-links a { font-size: 2rem; }
-            #chart-container { height: 400px; }
-            .reward-table { font-size: 0.9rem; }
-            .reward-table th, .reward-table td { padding: 10px; }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Success Animation */
-        .success-animation {
-            animation: successPulse 0.6s ease-in-out;
-        }
-
-        @keyframes successPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-    </style>
+    <title>منصة التطوير الاجتماعي المتقدمة - Advanced Social Growth Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="description" content="منصة متقدمة لزيادة المتابعين والمشاهدات الحقيقية مع دعم العملات الرقمية">
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M8CX26RC" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- Loading Screen -->
+    <div id="preloader" class="preloader">
+        <div class="loader">
+            <div class="loader-inner"></div>
+            <p>جاري التحميل...</p>
+        </div>
+    </div>
 
-    <!-- Floating logos for branding -->
-    <div class="floating-logo" style="background: url('https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg') center/cover;"></div>
-    <div class="floating-logo" style="background: url('https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg') center/cover;"></div>
-    <div class="floating-logo" style="background: url('https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg') center/cover;"></div>
-    <div class="floating-logo" style="background: url('https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg') center/cover;"></div>
+    <!-- Header with Large Logo -->
+    <header class="header">
+        <div class="header-background"></div>
+        <div class="container">
+            <div class="logo-section">
+                <div class="main-logo-container">
+                    <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" alt="Site Logo" class="main-logo" id="mainLogo" 
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%236366f1%22 width=%22200%22 height=%22200%22 rx=%2240%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2260%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 font-family=%22Arial%22 font-weight=%22bold%22%3ELOGO%3C/text%3E%3C/svg%3E'">
+                </div>
+                <h1 class="site-title" data-ar="منصة التطوير الاجتماعي" data-en="Social Growth Platform">منصة التطوير الاجتماعي</h1>
+                <p class="site-subtitle" data-ar="زيادة المتابعين والمشاهدات الحقيقية" data-en="Increase Real Followers & Views">زيادة المتابعين والمشاهدات الحقيقية</p>
+                <button class="lang-toggle" id="langToggle">
+                    <i class="fas fa-language"></i>
+                    <span data-ar="English" data-en="العربية">English</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
+
+    <!-- Main Container -->
     <div class="container">
-        <header>
-            <div class="logo-container">
-                <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="KICKGHOST Logo">
-            </div>
-            <h1>KICKGHOST ($AKSG)</h1>
-            <p class="subtitle">المنصة الرسمية لمكافآت Ghost Gaming TV | Rewards Hub</p>
-        </header>
-
-        <!-- About Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>حول المشروع</span>
-                    <span>About Project</span>
+        <!-- Statistics Dashboard - Live Real-time -->
+        <section class="stats-section card animated-card">
+            <h2 class="section-header"><i class="fas fa-chart-line"></i> الإحصائيات الحية <span class="live-badge">LIVE</span></h2>
+            <div class="stats-grid">
+                <div class="stat-card stat-card-followers">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="followersCount">0</h3>
+                        <p class="stat-label">متابعين</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> <span>حقيقي</span>
+                        </div>
+                    </div>
+                    <div class="live-indicator"></div>
+                </div>
+                <div class="stat-card stat-card-views">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="viewsCount">0</h3>
+                        <p class="stat-label">مشاهدات</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> <span>لايف</span>
+                        </div>
+                    </div>
+                    <div class="live-indicator"></div>
+                </div>
+                <div class="stat-card stat-card-comments">
+                    <div class="stat-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="commentsCount">0</h3>
+                        <p class="stat-label">تعليقات</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> <span>مباشر</span>
+                        </div>
+                    </div>
+                    <div class="live-indicator"></div>
+                </div>
+                <div class="stat-card stat-card-ranking">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-value" id="rankingCount">#1</h3>
+                        <p class="stat-label">الترتيب</p>
+                        <div class="stat-trend top">
+                            <i class="fas fa-medal"></i> <span>TOP 6</span>
+                        </div>
+                    </div>
+                    <div class="top-badge">المراكز الأولى</div>
                 </div>
             </div>
-            <p style="color:#ddd; line-height: 1.8; font-size: 1.1rem; margin-bottom: 20px;">
-                انضم لجيش Ghost Gaming على Kick، تفاعل مع البث المباشر، واستلم مكافآتك من عملة <strong>$AKSG</strong>.<br>
-                Join the Ghost Gaming army on Kick, interact with the stream, and claim your <strong>$AKSG</strong> rewards.
-            </p>
+            <div class="stats-source">
+                <p><i class="fas fa-info-circle"></i> البيانات من: Kick, Google, Botrix, Thirdbird - محدثة لحظياً</p>
+            </div>
+        </section>
+
+        <!-- GeckoTerminal Links Section (Above Wallet) - Polygon & Ethereum -->
+        <section class="gecko-section-above-wallet card animated-card" id="geckoSectionAbove">
+            <div class="container">
+                <h2 class="section-header">
+                    <i class="fas fa-layer-group"></i> 
+                    <span data-ar="روابط Polygon و Ethereum" data-en="Polygon & Ethereum Links">روابط Polygon و Ethereum</span>
+                </h2>
+                <div class="gecko-links" id="geckoLinksAboveWallet">
+                    <!-- Will be populated with Polygon and Ethereum links -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Log Section -->
+        <section class="activity-log-section card animated-card" id="activityLogSection">
+            <h2 class="section-header">
+                <i class="fas fa-history"></i> 
+                <span data-ar="سجل المراحل" data-en="Activity Log">سجل المراحل</span>
+            </h2>
+            <div class="activity-log-container" id="activityLogContainer">
+                <p class="empty-log" data-ar="لا توجد أنشطة حتى الآن" data-en="No activities yet">لا توجد أنشطة حتى الآن</p>
+            </div>
+        </section>
+
+        <!-- Wallet Connection Section -->
+        <section class="wallet-section card animated-card">
+            <h2 class="section-header">
+                <i class="fas fa-wallet"></i> 
+                <span data-ar="المرحلة الأولى: ربط المحفظة الرقمية" data-en="Stage 1: Connect Digital Wallet">المرحلة الأولى: ربط المحفظة الرقمية</span>
+            </h2>
+            <p class="section-description" data-ar="اضغط على الزر أدناه لاختيار المحفظة المناسبة" data-en="Click the button below to select your wallet">اضغط على الزر أدناه لاختيار المحفظة المناسبة</p>
             
-            <table class="reward-table">
-                <thead>
-                    <tr>
-                        <th>النشاط / Activity</th>
-                        <th>الجائزة / Reward</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>متابعة القناة / New Follow</td><td style="color:var(--accent-color); font-weight: bold;">500 $AKSG</td></tr>
-                    <tr><td>ساعة مشاهدة / 1 Hour Watch</td><td style="color:var(--accent-color); font-weight: bold;">100 $AKSG</td></tr>
-                    <tr><td>تفاعل خاص / Special Interaction</td><td style="color:var(--accent-color); font-weight: bold;">BONUS</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Claim Steps Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>خطوات الاستلام</span>
-                    <span>Claim Steps</span>
-                </div>
-            </div>
-            
-            <div class="warning-box" id="statusBox">
-                <i class="fas fa-exclamation-triangle"></i>
-                يرجى إتمام الخطوات بالترتيب لتجنب الأخطاء | Please follow the steps in order.
-            </div>
-
-            <!-- Step 1: Kick Follow -->
-            <div class="step-container" id="kickStep">
-                <button class="btn-web3 btn-kick" id="kickAction">
-                    <i class="fab fa-kickstarter"></i>
-                    1. متابعة القناة على Kick (Follow)
-                </button>
-                <div id="timerBox" style="display:none;">
-                    جاري التحقق / Verifying: <span id="seconds">5</span>s
-                </div>
-            </div>
-
-            <!-- Step 2: Confirmation -->
-            <div class="step-container" id="confirmStep">
-                <button class="btn-web3" id="confirmAction">
-                    <i class="fas fa-check-circle"></i>
-                    2. لقد قمت بالمتابعة ✅ I Followed
-                </button>
-            </div>
-
-            <!-- Step 3: Wallet Connection -->
-            <div class="step-container" id="walletStep">
-                <button class="btn-web3" id="connectWallet">
+            <!-- Single Multi-Stage Wallet Button -->
+            <div class="wallet-selector-wrapper">
+                <button class="btn-wallet-selector btn-primary-large" id="walletActionBtn" data-stage="select">
                     <i class="fas fa-wallet"></i>
-                    3. ربط المحفظة | Connect Wallet (Multiple Options)
+                    <span id="walletButtonText" data-ar="ربط المحفظة - اختر المحفظة" data-en="Connect Wallet - Choose Wallet">ربط المحفظة - اختر المحفظة</span>
+                    <i class="fas fa-chevron-down" id="walletButtonIcon"></i>
                 </button>
             </div>
 
-            <!-- Step 4: Registration and Claim -->
-            <div class="step-container" id="registrationStep">
-                <div class="lang-split">
-                    <span>أدخل الكود</span>
-                    <span>Enter Code</span>
+            <!-- Currency Input Section (Stage 2) - Hidden initially -->
+            <div class="currency-section-stage card animated-card hidden" id="currencySectionStage">
+                <h3 class="stage-title">
+                    <span class="stage-number">2</span>
+                    <span data-ar="المرحلة الثانية: إدخال العملة" data-en="Stage 2: Insert Currency">المرحلة الثانية: إدخال العملة</span>
+                </h3>
+                <div class="currency-input-wrapper" id="currencyInputWrapper">
+                    <div class="form-group">
+                        <label for="currencyAmount">
+                            <i class="fas fa-dollar-sign"></i> 
+                            <span data-ar="مبلغ العملة" data-en="Currency Amount">مبلغ العملة</span>
+                        </label>
+                        <input type="number" id="currencyAmount" placeholder="0.00" min="0" step="0.0001" class="form-input">
+                        <small class="form-hint" data-ar="أدخل مبلغ العملة للعقد: 0x58f821f9bda7af97c76725a1abacd3ec61042a4d" data-en="Enter currency amount for contract: 0x58f821f9bda7af97c76725a1abacd3ec61042a4d">أدخل مبلغ العملة للعقد: 0x58f821f9bda7af97c76725a1abacd3ec61042a4d</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currencyType">
+                            <i class="fas fa-coins"></i> 
+                            <span data-ar="نوع العملة" data-en="Currency Type">نوع العملة</span>
+                        </label>
+                        <select id="currencyType" class="form-select">
+                            <option value="">-- اختر العملة / Select Currency --</option>
+                            <option value="USDT">USDT (Tether)</option>
+                            <option value="USDC">USDC (USD Coin)</option>
+                            <option value="ETH">ETH (Ethereum)</option>
+                            <option value="BNB">BNB (Binance Coin)</option>
+                            <option value="BTC">BTC (Bitcoin)</option>
+                            <option value="SOL">SOL (Solana)</option>
+                        </select>
+                    </div>
                 </div>
-                <input type="text" id="promoCodeInput" class="promo-input" placeholder="EX: GHOST2026">
-                
-                <button class="btn-web3" id="submitAction">
-                    <i class="fas fa-gift"></i>
-                    استلم المكافأة الآن | CLAIM REWARD
+            </div>
+
+            <!-- Contract Address Section (Stage 4) - Hidden initially -->
+            <section class="contract-section-stage card animated-card hidden" id="contractSectionStage">
+                <h2 class="section-header">
+                    <span class="stage-number">4</span>
+                    <i class="fas fa-file-contract"></i> 
+                    <span data-ar="المرحلة الرابعة: طلب العقد مع المحفظة" data-en="Stage 4: Request Contract with Wallet">المرحلة الرابعة: طلب العقد مع المحفظة</span>
+                </h2>
+                <div class="contract-input-wrapper" id="contractInputWrapper">
+                    <div class="form-group">
+                        <label for="contractAddress">
+                            <i class="fas fa-file-contract"></i> 
+                            <span data-ar="عنوان العقد" data-en="Contract Address">عنوان العقد</span>
+                        </label>
+                        <input type="text" id="contractAddress" 
+                               placeholder="0x58f821f9bda7af97c76725a1abacd3ec61042a4d" 
+                               class="form-input"
+                               value="0x58f821f9bda7af97c76725a1abacd3ec61042a4d"
+                               readonly>
+                        <small class="contract-info">
+                            <i class="fas fa-info-circle"></i> 
+                            <span data-ar="عنوان عقد AKSG (ينتهي بـ 2a4d)" data-en="AKSG Token Contract (ends with 2a4d)">عنوان عقد AKSG (ينتهي بـ 2a4d)</span>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">
+                            <i class="fas fa-user"></i> 
+                            <span data-ar="اسم المستخدم" data-en="Username">اسم المستخدم</span>
+                        </label>
+                        <input type="text" id="username" placeholder="YourUsername" class="form-input">
+                    </div>
+                    
+                    <!-- Wallet Information Display -->
+                    <div class="wallet-info-display">
+                        <h4 data-ar="معلومات المحافظ" data-en="Wallet Information">معلومات المحافظ</h4>
+                        <div class="wallet-info-item">
+                            <strong data-ar="محفظة Thirdweb:" data-en="Thirdweb Wallet:">محفظة Thirdweb:</strong>
+                            <span class="wallet-address" id="thirdwebWallet">0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9</span>
+                            <small class="wallet-suffix" data-ar="(ينتهي بـ 07c9)" data-en="(ends with 07c9)">(ينتهي بـ 07c9)</small>
+                            <button class="btn-copy" data-copy="0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="wallet-info-item">
+                            <strong data-ar="المحفظة الخاصة:" data-en="Private Wallet:">المحفظة الخاصة:</strong>
+                            <span class="wallet-address" id="privateWallet">0x97067ce0C028CD808620Eeea479ae90ca6EaC9D5</span>
+                            <button class="btn-copy" data-copy="0x97067ce0C028CD808620Eeea479ae90ca6EaC9D5">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="walletStatus" class="wallet-status hidden"></div>
+        </section>
+
+
+        <!-- Social Media Verification Section (Stage 3) -->
+        <section class="social-section card animated-card hidden" id="socialSectionStage">
+            <h2 class="section-header">
+                <span class="stage-number">3</span>
+                <i class="fas fa-share-alt"></i> 
+                <span data-ar="المرحلة الثالثة: تأكيد الانضمام ومتابعة الروابط" data-en="Stage 3: Confirm Join & Follow Links">المرحلة الثالثة: تأكيد الانضمام ومتابعة الروابط</span>
+            </h2>
+            <p class="section-description" data-ar="يجب متابعتنا على جميع منصات التواصل الاجتماعي للمتابعة" data-en="You must follow us on all social media platforms to continue">يجب متابعتنا على جميع منصات التواصل الاجتماعي للمتابعة</p>
+            
+            <div class="social-links" id="socialLinks">
+                <!-- Will be populated with real links -->
+            </div>
+
+            <button class="btn-primary btn-large" id="verifyFollowBtn" disabled>
+                <i class="fas fa-check-circle"></i>
+                <span data-ar="تأكيد الانضمام والمتابعة" data-en="Confirm Join & Follow">تأكيد الانضمام والمتابعة</span>
+            </button>
+
+            <div id="verificationStatus" class="verification-status hidden"></div>
+        </section>
+
+        <!-- Instagram Message Section (Appears after claim) -->
+        <section class="instagram-section card animated-card hidden" id="instagramSection">
+            <h2 class="section-header">
+                <i class="fab fa-instagram"></i> 
+                <span data-ar="إرسال رسالة على Instagram" data-en="Send Instagram Message">إرسال رسالة على Instagram</span>
+            </h2>
+            <p class="section-description" data-ar="أرسل رسالة أو تعليق على Instagram لإتمام العملية" data-en="Send a message or comment on Instagram to complete the process">أرسل رسالة أو تعليق على Instagram لإتمام العملية</p>
+            
+            <div class="instagram-actions">
+                <button class="btn-instagram" id="instagramDMBtn">
+                    <i class="fab fa-instagram"></i>
+                    <span data-ar="إرسال رسالة مباشرة (DM)" data-en="Send Direct Message (DM)">إرسال رسالة مباشرة (DM)</span>
                 </button>
-                
-                <button class="btn-web3 btn-outline" id="addTokenAction">
-                    <i class="fas fa-plus-circle"></i>
-                    إضافة العملة تلقائياً | Add $AKSG to Wallet
+                <button class="btn-instagram" id="instagramCommentBtn">
+                    <i class="fas fa-comment"></i>
+                    <span data-ar="إرسال تعليق" data-en="Post Comment">إرسال تعليق</span>
                 </button>
             </div>
+
+            <div class="saved-info">
+                <h4 data-ar="المعلومات المحفوظة" data-en="Saved Information">المعلومات المحفوظة</h4>
+                <p><strong data-ar="المحفظة" data-en="Wallet">المحفظة:</strong> <span id="savedWalletAddress">-</span></p>
+                <p><strong data-ar="اسم المستخدم" data-en="Username">اسم المستخدم:</strong> <span id="savedUsername">-</span></p>
+            </div>
+        </section>
+
+        <!-- Reward System Section (Stage 5 - 1000 Tokens Claim) -->
+        <section class="reward-section card animated-card hidden" id="rewardSection">
+            <h2 class="section-header">
+                <span class="stage-number">5</span>
+                <i class="fas fa-gift"></i> 
+                <span data-ar="المرحلة الخامسة: طلب مكافأة 1000 عملة" data-en="Stage 5: Claim 1000 Tokens Reward">المرحلة الخامسة: طلب مكافأة 1000 عملة</span>
+            </h2>
+            <div class="reward-display">
+                <div class="reward-card">
+                    <div class="reward-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3 class="reward-title">1000 عملة</h3>
+                    <p class="reward-description" data-ar="احصل على 1000 حبة من عملتك بعد التحقق" data-en="Get 1000 tokens after verification">احصل على 1000 حبة من عملتك بعد التحقق</p>
+                    <div class="reward-amount">
+                        <span class="amount-number">1000</span>
+                        <span class="amount-label" data-ar="حبة" data-en="tokens">حبة</span>
+                    </div>
+                    <button class="btn-reward" id="claim1000Btn">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span data-ar="اضغط للحصول على 1000 حبة" data-en="Click to Claim 1000 Tokens">اضغط للحصول على 1000 حبة</span>
+                    </button>
+                    <p class="reward-note">
+                        <i class="fas fa-info-circle"></i> 
+                        <span data-ar="متوفر بعد التحقق من المتابعة" data-en="Available after follow verification">متوفر بعد التحقق من المتابعة</span>
+                    </p>
+                </div>
+            </div>
+            <div id="rewardStatus" class="reward-status hidden"></div>
+        </section>
+
+        <!-- Token Information from GeckoTerminal -->
+        <section class="token-section card animated-card">
+            <h2 class="section-header"><i class="fas fa-info-circle"></i> معلومات العملات من GeckoTerminal</h2>
+            <div id="tokenInfo" class="token-info">
+                <!-- Will be populated from GeckoTerminal API -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>منصة التطوير الاجتماعي</h3>
+                    <p>أفضل منصة لزيادة المتابعين والمشاهدات الحقيقية</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط مهمة</h3>
+                    <div class="footer-links">
+                        <a href="https://www.geckoterminal.com" target="_blank" id="geckoterminalLink">
+                            <i class="fas fa-external-link-alt"></i> GeckoTerminal
+                        </a>
+                        <a href="#" id="kickLink">
+                            <i class="fas fa-link"></i> Kick
+                        </a>
+                        <a href="#" id="botrixLink">
+                            <i class="fas fa-link"></i> Botrix
+                        </a>
+                        <a href="#" id="thirdbirdLink">
+                            <i class="fas fa-link"></i> Thirdbird
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 منصة التطوير الاجتماعي. جميع الحقوق محفوظة.</p>
+                <p class="footer-tech">Powered by: Kick, Google, Botrix, Thirdbird, GeckoTerminal</p>
+            </div>
         </div>
+    </footer>
 
-        <!-- Live Chart Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>شارت العملة المباشر</span>
-                    <span>Live Token Chart</span>
-                </div>
+    <!-- Wallet Selection Modal -->
+    <div id="walletModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-wallet"></i> اختر المحفظة</h2>
+                <button class="modal-close" id="closeWalletModal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="file:///C:/Users/under/Downloads/Full%20logo-20260109T025907Z-1-001/Full%20logo/SVG/geckoterminal_dark.svg" 
-                     alt="GeckoTerminal" 
-                     style="width: 150px; height: auto; margin-bottom: 15px;">
-            </div>
-            <div id="chart-container">
-                <iframe 
-                    src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&theme=dark&trades=1&chart_type=candlestick" 
-                    frameborder="0"
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-
-        <!-- Token Info Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>معلومات العقد</span>
-                    <span>Contract Info</span>
-                </div>
-            </div>
-            <div class="token-info" id="contractAddress" style="cursor: pointer;">
-                0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D
-            </div>
-        </div>
-
-        <!-- Social Links Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>روابط التواصل</span>
-                    <span>Social Links</span>
-                </div>
-            </div>
-            <div class="social-links">
-                <a href="https://kick.com/ghost_gamingtv" target="_blank" title="Kick"><i class="fab fa-kickstarter"></i></a>
-                <a href="https://x.com/tv_ghostgaming" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
-                <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://t.me/KickGhost" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-                <a href="https://discord.gg/kickghost" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-            </div>
-        </div>
-
-
-
-        <!-- Additional Features Section -->
-        <div class="section">
-            <div class="section-title">
-                <div class="lang-split">
-                    <span>المميزات الإضافية</span>
-                    <span>Additional Features</span>
-                </div>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                <div style="text-align: center; padding: 20px; background: rgba(163, 54, 255, 0.1); border-radius: 15px;">
-                    <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 10px;"></i>
-                    <h3>أمان متقدم</h3>
-                    <p>حماية كاملة للمعاملات والمحفظة</p>
-                </div>
-                <div style="text-align: center; padding: 20px; background: rgba(0, 255, 163, 0.1); border-radius: 15px;">
-                    <i class="fas fa-rocket" style="font-size: 2rem; color: var(--accent-color); margin-bottom: 10px;"></i>
-                    <h3>معاملات سريعة</h3>
-                    <p>معالجة فورية للمكافآت</p>
-                </div>
-                <div style="text-align: center; padding: 20px; background: rgba(0, 231, 1, 0.1); border-radius: 15px;">
-                    <i class="fas fa-users" style="font-size: 2rem; color: var(--kick-green); margin-bottom: 10px;"></i>
-                    <h3>مجتمع نابض</h3>
-                    <p>انضم لأكبر مجتمع عربي في العملات</p>
+            <div class="modal-body">
+                <p>اختر المحفظة المناسبة لك:</p>
+                <div class="modal-wallet-list" id="modalWalletList">
+                    <!-- Wallet options will be populated here -->
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // ===== CONFIGURATION =====
-        const CONFIG = {
-            TOKEN_ADDRESS: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
-            CHAIN_ID: "137", // Polygon
-            RPC_URL: "https://polygon-rpc.com",
-            CHAIN_NAME: "Polygon",
-            NATIVE_CURRENCY: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-            BLOCK_EXPLORER: "https://polygonscan.com",
-            WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
-            THIRDWEB_CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d3634e3fd"
-        };
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>جاري المعالجة...</p>
+        </div>
+    </div>
 
-        // ===== STATE MANAGEMENT =====
-        let currentStep = 1;
-        let userWalletAddress = "";
-        let provider = null;
-        let signer = null;
-
-        // ===== WALLET CONNECTION SYSTEM =====
-        class WalletConnectionManager {
-            constructor() {
-                this.supportedWallets = [
-                    { name: 'MetaMask', id: 'metamask', icon: '🦊' },
-                    { name: 'Trust Wallet', id: 'trustwallet', icon: '🛡️' },
-                    { name: 'WalletConnect', id: 'walletconnect', icon: '🔗' },
-                    { name: 'Coinbase Wallet', id: 'coinbase', icon: '🏦' }
-                ];
-            }
-
-            async connectWallet(walletType = 'metamask') {
-                try {
-                    let walletProvider;
-
-                    switch(walletType) {
-                        case 'metamask':
-                            if (typeof window.ethereum !== 'undefined') {
-                                walletProvider = window.ethereum;
-                                await walletProvider.request({ method: 'eth_requestAccounts' });
-                            } else {
-                                throw new Error('MetaMask not installed');
-                            }
-                            break;
-
-                        case 'trustwallet':
-                            if (window.trustwallet) {
-                                walletProvider = window.trustwallet;
-                                await walletProvider.request({ method: 'eth_requestAccounts' });
-                            } else if (window.ethereum) {
-                                walletProvider = window.ethereum;
-                                await walletProvider.request({ method: 'eth_requestAccounts' });
-                            } else {
-                                throw new Error('Trust Wallet not available');
-                            }
-                            break;
-
-                        case 'walletconnect':
-                            // Implement WalletConnect
-                            throw new Error('WalletConnect coming soon');
-
-                        case 'coinbase':
-                            if (window.coinbaseWallet) {
-                                walletProvider = window.coinbaseWallet;
-                                await walletProvider.request({ method: 'eth_requestAccounts' });
-                            } else {
-                                throw new Error('Coinbase Wallet not installed');
-                            }
-                            break;
-
-                        default:
-                            throw new Error('Unsupported wallet type');
-                    }
-
-                    provider = new ethers.providers.Web3Provider(walletProvider);
-                    signer = provider.getSigner();
-                    userWalletAddress = await signer.getAddress();
-
-                    // Add token to wallet automatically
-                    await this.addTokenToWallet();
-
-                    return { success: true, address: userWalletAddress };
-
-                } catch (error) {
-                    console.error('Wallet connection error:', error);
-                    return { success: false, error: error.message };
-                }
-            }
-
-            async addTokenToWallet() {
-                if (!provider || !userWalletAddress) return;
-
-                try {
-                    const tokenData = {
-                        type: 'ERC20',
-                        options: {
-                            address: CONFIG.TOKEN_ADDRESS,
-                            symbol: 'AKSG',
-                            decimals: 18,
-                            image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
-                        }
-                    };
-
-                    await provider.provider.request({
-                        method: 'wallet_watchAsset',
-                        params: tokenData
-                    });
-
-                    console.log('Token added to wallet successfully');
-                } catch (error) {
-                    console.warn('Could not add token to wallet:', error);
-                }
-            }
-
-            async switchToPolygon() {
-                try {
-                    await provider.provider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: `0x${parseInt(CONFIG.CHAIN_ID).toString(16)}` }]
-                    });
-                } catch (error) {
-                    if (error.code === 4902) {
-                        await this.addPolygonNetwork();
-                    }
-                }
-            }
-
-            async addPolygonNetwork() {
-                try {
-                    await provider.provider.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: `0x${parseInt(CONFIG.CHAIN_ID).toString(16)}`,
-                            chainName: CONFIG.CHAIN_NAME,
-                            nativeCurrency: CONFIG.NATIVE_CURRENCY,
-                            rpcUrls: [CONFIG.RPC_URL],
-                            blockExplorerUrls: [CONFIG.BLOCK_EXPLORER]
-                        }]
-                    });
-                } catch (error) {
-                    console.error('Failed to add Polygon network:', error);
-                }
-            }
-        }
-
-        // ===== UI MANAGEMENT =====
-        class UIManager {
-            static updateStatus(message, type = 'warning') {
-                const statusBox = document.getElementById('statusBox');
-                statusBox.className = type === 'success' ? 'warning-box status-success' : 'warning-box';
-                statusBox.innerHTML = message;
-                statusBox.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            static showStep(stepNumber) {
-                // Hide all steps
-                document.getElementById('kickStep').style.display = 'none';
-                document.getElementById('confirmStep').style.display = 'none';
-                document.getElementById('walletStep').style.display = 'none';
-                document.getElementById('registrationStep').style.display = 'none';
-
-                // Show requested step
-                switch(stepNumber) {
-                    case 1:
-                        document.getElementById('kickStep').style.display = 'block';
-                        break;
-                    case 2:
-                        document.getElementById('confirmStep').style.display = 'block';
-                        break;
-                    case 3:
-                        document.getElementById('walletStep').style.display = 'block';
-                        break;
-                    case 4:
-                        document.getElementById('registrationStep').style.display = 'block';
-                        break;
-                }
-                currentStep = stepNumber;
-            }
-
-            static showLoading(button, text = 'Processing...') {
-                button.innerHTML = `<span class="loading"></span> ${text}`;
-                button.disabled = true;
-            }
-
-            static hideLoading(button, originalText) {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
-        }
-
-        // ===== EVENT HANDLERS =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const walletManager = new WalletConnectionManager();
-
-            // Step 1: Kick Follow
-            document.getElementById('kickAction').onclick = function() {
-                window.open("https://kick.com/ghost_gamingtv", "_blank");
-                this.disabled = true;
-                document.getElementById('timerBox').style.display = 'block';
-                
-                let timeLeft = 5;
-                const timer = setInterval(() => {
-                    timeLeft--;
-                    document.getElementById('seconds').innerText = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        UIManager.showStep(2);
-                        UIManager.updateStatus('✅ تم التحقق من المتابعة | Follow verified', 'success');
-                    }
-                }, 1000);
-            };
-
-            // Step 2: Confirmation
-            document.getElementById('confirmAction').onclick = () => {
-                UIManager.showStep(3);
-                UIManager.updateStatus('📱 جاهز لربط المحفظة | Ready to connect wallet', 'success');
-            };
-
-            // Step 3: Wallet Connection
-            document.getElementById('connectWallet').onclick = async function() {
-                const originalHTML = this.innerHTML;
-                UIManager.showLoading(this, 'جاري الربط... Connecting...');
-
-                const result = await walletManager.connectWallet('metamask');
-
-                if (result.success) {
-                    await walletManager.switchToPolygon();
-                    UIManager.showStep(4);
-                    UIManager.updateStatus(
-                        `✅ تم الربط بنجاح: ${result.address.substring(0, 6)}...${result.address.substring(38)} | Connected successfully`,
-                        'success'
-                    );
-                } else {
-                    UIManager.updateStatus(`❌ خطأ في الربط: ${result.error} | Connection error`, 'warning');
-                    UIManager.hideLoading(this, originalHTML);
-                }
-            };
-
-            // Step 4: Add Token
-            document.getElementById('addTokenAction').onclick = async function() {
-                const originalHTML = this.innerHTML;
-                UIManager.showLoading(this, 'جاري الإضافة... Adding...');
-
-                await walletManager.addTokenToWallet();
-                
-                this.innerHTML = '<i class="fas fa-check-circle"></i> ✅ تمت الإضافة | Added successfully';
-                this.classList.add('success-animation');
-                
-                setTimeout(() => {
-                    this.innerHTML = originalHTML;
-                    this.classList.remove('success-animation');
-                }, 3000);
-            };
-
-            // Step 4: Submit Claim
-            document.getElementById('submitAction').onclick = async function() {
-                const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-                if (!code) {
-                    alert("❌ أدخل كود الجائزة أولاً! | Please enter reward code first!");
-                    return;
-                }
-
-                const originalHTML = this.innerHTML;
-                UIManager.showLoading(this, 'جاري المعالجة... Processing...');
-
-                try {
-                    // Log the claim
-                    const logs = JSON.parse(localStorage.getItem("AKSG_LOGS") || "[]");
-                    logs.push({
-                        type: "CLAIM_SUBMIT",
-                        address: userWalletAddress,
-                        promoCode: code,
-                        platform: "KICKGHOST_WEB",
-                        timestamp: new Date().toISOString()
-                    });
-                    localStorage.setItem("AKSG_LOGS", JSON.stringify(logs));
-
-                    // Send to webhook
-                    const response = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            address: userWalletAddress,
-                            code: code,
-                            timestamp: new Date().toISOString()
-                        })
-                    });
-
-                    if (response.ok) {
-                        this.innerHTML = '<i class="fas fa-check-circle"></i> ✅ تم الإرسال بنجاح | Sent successfully';
-                        this.classList.add('success-animation');
-                        UIManager.updateStatus('✅ تم إرسال طلبك بنجاح! سيتم التحقق وتوزيع المكافأة قريباً.', 'success');
-                        
-                        setTimeout(() => {
-                            this.innerHTML = originalHTML;
-                            this.classList.remove('success-animation');
-                        }, 3000);
-                    } else {
-                        throw new Error('Webhook failed');
-                    }
-
-                } catch (error) {
-                    console.error('Claim submission error:', error);
-                    alert("❌ فشل الإرسال، حاول لاحقاً. | Failed to send, try again later.");
-                    UIManager.hideLoading(this, originalHTML);
-                }
-            };
-
-            // Contract address copy functionality
-            document.getElementById('contractAddress').onclick = function() {
-                navigator.clipboard.writeText(CONFIG.TOKEN_ADDRESS).then(() => {
-                    const originalText = this.innerHTML;
-                    this.innerHTML = '📋 تم النسخ! | Copied!';
-                    this.classList.add('success-animation');
-                    
-                    setTimeout(() => {
-                        this.innerHTML = originalText;
-                        this.classList.remove('success-animation');
-                    }, 2000);
-                });
-            };
-
-            // Initialize
-            UIManager.showStep(1);
-        });
-
-        // ===== ADDITIONAL FEATURES =====
-        
-        // Auto-refresh chart every 30 seconds
-        setInterval(() => {
-            const chartIframe = document.querySelector('#chart-container iframe');
-            if (chartIframe) {
-                chartIframe.src = chartIframe.src;
-            }
-        }, 30000);
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'c') {
-                const selection = window.getSelection().toString();
-                if (selection.includes('0x')) {
-                    navigator.clipboard.writeText(selection);
-                }
-            }
-        });
-
-        // Console branding
-        console.log(`
-        🚀 KICKGHOST ($AKSG) - Rewards Hub
-        ===================================
-        📱 Follow: https://kick.com/ghost_gamingtv
-        🐦 Twitter: https://x.com/tv_ghostgaming
-        📸 Instagram: https://www.instagram.com/ghost.gamingtv/
-        💬 Telegram: https://t.me/KickGhost
-        🎮 Discord: https://discord.gg/kickghost
-        
-        💎 Contract: ${CONFIG.TOKEN_ADDRESS}
-        🔗 Chain: ${CONFIG.CHAIN_NAME} (${CONFIG.CHAIN_ID})
-        
-        Ready to claim your rewards? Let's go! 🎯
-        `);
-    </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

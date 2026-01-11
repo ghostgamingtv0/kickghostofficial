@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
-        /* [CSS QUANTUM DESIGN - NEON EMPIRE] */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+Arabic:wght@300;600;900&display=swap');
 
         :root {
@@ -22,47 +20,35 @@
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { background: var(--bg); color: #fff; font-family: 'Noto Sans Arabic', 'Orbitron'; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* شاشات النظام */
-        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .stage.active { display: flex; animation: fadeInQuantum 1.5s forwards; }
+        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 1.2s; }
+        .stage.active { display: flex; animation: fadeInQuantum 1s forwards; }
 
         @keyframes fadeInQuantum { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
 
-        /* ستايل لوغو النيون المطور */
         .main-logo-container { position: relative; width: 180px; height: 180px; margin-bottom: 20px; }
         .main-logo { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--primary); box-shadow: var(--neon-box); animation: floatLogo 4s infinite ease-in-out; }
         
-        @keyframes floatLogo { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* روابط التواصل الاجتماعي - تحسين للهاتف */
         .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; width: 100%; max-width: 400px; }
         @media (min-width: 600px) { .social-grid { grid-template-columns: repeat(6, 1fr); max-width: 600px; } }
 
         .social-link { width: 100%; aspect-ratio: 1/1; border-radius: 15px; background: #111; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; text-decoration: none; transition: 0.4s; position: relative; }
-        .social-link:hover { background: var(--primary); transform: translateY(-5px); box-shadow: var(--neon-box); }
-        .social-link.clicked { border-color: var(--secondary); color: var(--secondary); }
-        .social-link.clicked::after { content: '✔'; position: absolute; top: -5px; right: -5px; background: var(--secondary); color: #000; font-size: 10px; border-radius: 50%; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; }
+        .social-link.clicked { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 15px var(--secondary); }
+        .social-link.clicked::after { content: '✔'; position: absolute; top: -5px; right: -5px; background: var(--secondary); color: #000; font-size: 10px; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* أزرار المحافظ - تحسين للهاتف */
-        .wallet-card { cursor: pointer; background: #111; padding: 20px; border-radius: 20px; border: 1px solid var(--primary); display: flex; flex-direction: column; align-items: center; transition: 0.3s; width: 100%; text-align: center; }
-        .wallet-card:active { transform: scale(0.95); }
+        .wallet-card { cursor: pointer; background: #111; padding: 20px; border-radius: 20px; border: 1px solid var(--primary); display: flex; flex-direction: column; align-items: center; transition: 0.3s; width: 100%; }
         .wallet-card img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--secondary); }
-        .wallet-card p { font-family: 'Orbitron'; font-size: 0.8rem; color: #fff; }
 
-        /* أزرار العمليات */
-        .btn-confirm { background: gray; color: #fff; border: none; padding: 18px 40px; border-radius: 5px; font-weight: 900; cursor: not-allowed; transition: 0.5s; font-family: 'Orbitron'; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); width: 80%; max-width: 300px; }
+        .btn-confirm { background: #333; color: #fff; border: none; padding: 18px 40px; border-radius: 5px; font-weight: 900; cursor: not-allowed; transition: 0.5s; width: 80%; max-width: 300px; }
         .btn-confirm.ready { background: linear-gradient(90deg, var(--primary), #6200ea); cursor: pointer; box-shadow: var(--neon-box); }
 
-        /* لوحة تحكم الإمبراطورية */
-        .empire-hub { width: 100%; max-width: 1400px; padding: 20px; background: rgba(20,20,30,0.95); border: 1px solid var(--primary); border-radius: 20px; margin-top: 20px; }
-        @media (min-width: 768px) { .empire-hub { padding: 40px; border-radius: 40px; } }
-        
-        .vision-section { text-align: justify; line-height: 1.8; margin-bottom: 30px; border-right: 4px solid var(--secondary); padding-right: 15px; }
-        #gecko-chart { width: 100%; height: 400px; border-radius: 20px; border: 1px solid #333; margin-top: 30px; }
-        @media (min-width: 768px) { #gecko-chart { height: 650px; } }
-
-        .status-badge { display: flex; align-items: center; gap: 10px; font-weight: bold; padding: 8px 15px; border-radius: 30px; background: rgba(0,0,0,0.5); border: 1px solid #333; font-size: 0.8rem; }
+        .empire-hub { width: 100%; max-width: 1400px; padding: 20px; background: rgba(10,10,20,0.9); border: 1px solid var(--primary); border-radius: 20px; margin: 20px 0; }
+        .status-badge { display: flex; align-items: center; gap: 10px; padding: 8px 15px; border-radius: 30px; background: #000; border: 1px solid #333; }
         .dot { width: 10px; height: 10px; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.3; } }
+
+        #gecko-chart { width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 1px solid var(--primary); margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -79,8 +65,8 @@
         <div class="main-logo-container">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="main-logo">
         </div>
-        <h2 style="color:var(--secondary); text-align:center;">إثبات الهوية الرقمية</h2>
-        <p style="text-align:center; padding: 0 10px;">قم بزيارة الروابط أدناه لتمكين بروتوكول المزامنة</p>
+        <h2>إثبات الهوية الرقمية</h2>
+        <p style="margin-bottom:20px;">قم بزيارة الروابط أدناه لتمكين المزامنة</p>
         
         <div class="social-grid">
             <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-discord"></i></a>
@@ -88,50 +74,41 @@
             <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-instagram"></i></a>
             <a href="https://tiktok.com/@ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-tiktok"></i></a>
-            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fa-brands fa-kickstarter-k"></i> </a>
+            <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fa-brands fa-kickstarter-k"></i></a>
         </div>
-
         <button id="sync-btn" class="btn-confirm" onclick="verifyAndProceed()">CONFIRM SYNC</button>
     </section>
 
     <section id="wallet-stage" class="stage">
-        <h2 style="font-family:'Orbitron'; margin-bottom:30px; color: var(--secondary); text-align:center;">BLOCKCHAIN AUTHORIZATION</h2>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:15px; width:100%; max-width:500px;">
-            
+        <h2 style="color:var(--secondary); margin-bottom:30px;">BLOCKCHAIN AUTHORIZATION</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px; width:100%; max-width:500px;">
             <div class="wallet-card" onclick="processWallet('MetaMask')">
-                <img src="https://i.ibb.co/H1LzqWL/images.png" alt="MetaMask">
+                <img src="https://i.ibb.co/H1LzqWL/images.png">
                 <p>MetaMask</p>
             </div>
-
             <div class="wallet-card" onclick="processWallet('Trust')">
-                <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" alt="Trust">
+                <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png">
                 <p>Trust Wallet</p>
             </div>
-
             <div class="wallet-card" onclick="processWallet('Phantom')">
-                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" alt="Phantom">
+                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg">
                 <p>Phantom</p>
             </div>
-
         </div>
     </section>
 
-    <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: scroll;">
+    <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: auto;">
         <div class="empire-hub">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:30px; flex-wrap: wrap; gap: 15px;">
-                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="80" style="border-radius:50%; border: 2px solid var(--primary);">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:20px; flex-wrap: wrap;">
+                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="60" style="border-radius:50%; border:2px solid var(--primary);">
                 <div class="status-badge">
-                    <div id="kick-dot" class="dot" style="background:var(--kick);"></div>
-                    <span id="kick-text">تحميل الحالة...</span>
+                    <div id="kick-dot" class="dot"></div>
+                    <span id="kick-text">KICK LIVE STATUS</span>
                 </div>
-                <img src="https://i.ibb.co/W4GNV41J/geckoterminal-light.png" width="100">
             </div>
-
-            <div class="vision-section">
-                <h3 style="color: var(--secondary); margin-bottom: 10px;">Social-to-Earn: ثورة الانتماء الرقمي</h3>
-                <p>نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح". مع KICKGHOST، متابعتك استثمار ذكي؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.</p>
-            </div>
-
+            <h3>Social-to-Earn: ثورة الانتماء الرقمي</h3>
+            <p style="font-size: 0.9rem; margin-top:10px; line-height: 1.6;">نحن نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.</p>
+            
             <div id="gecko-chart">
                 <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0"></iframe>
             </div>
@@ -145,28 +122,36 @@
         function trackLink(el) {
             clickedLinks.add(el.href);
             el.classList.add('clicked');
-            if(clickedLinks.size >= 5) {
-                document.getElementById('sync-btn').classList.add('ready');
-            }
+            if(clickedLinks.size >= 5) document.getElementById('sync-btn').classList.add('ready');
         }
 
         function verifyAndProceed() {
-            if(clickedLinks.size < 5) {
-                alert("يرجى زيارة جميع الروابط أولاً (بما فيها TikTok) لتمكين المزامنة!");
-                return;
-            }
+            if(clickedLinks.size < 5) return alert("يرجى زيارة 5 روابط على الأقل!");
             showStage('wallet-stage');
         }
 
         async function processWallet(type) {
-            if (!window.ethereum) return alert("الرجاء فتح هذه الصفحة داخل متصفح تطبيق " + type);
+            // حل مشكلة المتصفح الخارجي في الهواتف
+            if (!window.ethereum) {
+                alert("يرجى فتح الرابط داخل متصفح تطبيق " + type);
+                window.location.href = "https://metamask.app.link/dapp/" + window.location.host;
+                return;
+            }
 
             try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
                 const signer = provider.getSigner();
 
-                // إضافة العملة تلقائياً
+                // 1. محاولة تبديل الشبكة لـ Polygon تلقائياً
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x89' }], 
+                    });
+                } catch (e) { console.log("Network switch skipped"); }
+
+                // 2. إضافة العملة للمحفظة
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
@@ -180,23 +165,22 @@
                     },
                 }).catch(() => null);
 
-                // طلب تأكيد التعاقد (المزامنة)
-                const tx = {
+                // 3. المزامنة (إرسال معاملة صفرية للعقد لتأكيد الهوية)
+                const tx = await signer.sendTransaction({
                     to: config.contract,
-                    value: ethers.utils.parseEther("0.0"),
-                    data: "0x" 
-                };
+                    value: 0,
+                    data: "0x"
+                });
 
-                alert("يرجى تأكيد بروتوكول المزامنة في محفظة " + type);
-                await signer.sendTransaction(tx);
+                alert("جاري المزامنة مع البلوكشين... يرجى الانتظار");
+                await tx.wait(); // انتظار تأكيد الشبكة
 
-                localStorage.setItem('aksg_linked', accounts[0]);
-                confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+                localStorage.setItem('aksg_linked', 'true');
+                confetti({ particleCount: 150, spread: 60 });
                 showStage('empire-stage');
-                updateKickStatus();
 
             } catch (err) {
-                alert("فشل في المزامنة: " + (err.message || "رفض المستخدم الطلب"));
+                alert("فشل المزامنة: " + (err.message.includes("user rejected") ? "تم رفض الطلب" : "تأكد من وجود رسوم ماتيك (Gas)"));
             }
         }
 
@@ -207,16 +191,11 @@
         }
 
         function updateKickStatus() {
-            const isOnline = Math.random() > 0.3;
+            const isOnline = Math.random() > 0.4;
             const dot = document.getElementById('kick-dot');
             const text = document.getElementById('kick-text');
-            if(isOnline) {
-                dot.style.background = '#05ff05';
-                text.innerText = "KICK: ONLINE (STREAMING)";
-            } else {
-                dot.style.background = '#ff003c';
-                text.innerText = "KICK: OFFLINE";
-            }
+            dot.style.background = isOnline ? '#05ff05' : '#ff003c';
+            text.innerText = isOnline ? "KICK: ONLINE" : "KICK: OFFLINE";
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());

@@ -8,9 +8,11 @@
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
+    <!-- Thirdweb SDK - Use npm CDN or jsDelivr for better reliability -->
+    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js" 
+            onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js'"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap');
@@ -1522,33 +1524,143 @@
         <div class="empire-header">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire">
             <h1 class="empire-title">GHOST EMPIRE</h1>
-            <p style="font-size: 1.2rem; color: #888; margin-bottom: 40px;">Welcome to the Ultimate Web3 Gaming Platform</p>
+            
+            <!-- Welcome Message (Bilingual) -->
+            <div class="welcome-message-empire" style="text-align: center; margin-bottom: 40px; padding: 30px; background: rgba(163, 54, 255, 0.1); border-radius: 25px; border: 2px solid var(--primary);">
+                <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 2rem;">
+                    <i class="fas fa-crown"></i> مرحباً بك في إمبراطورية الأشباح
+                </h2>
+                <p style="font-size: 1.3rem; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">
+                    Welcome to the Ghost Empire
+                </p>
+                <p style="font-size: 1.1rem; color: #888; line-height: 1.8;">
+                    مرحباً بك في مستقبل الألعاب على الويب 3.0 | Welcome to the future of Web3 Gaming
+                </p>
+            </div>
         </div>
+        
         <div class="empire-content">
+            <!-- Project Explanation Section (Bilingual) -->
+            <div class="empire-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 30px; font-size: 2rem; text-align: center;">
+                    <i class="fas fa-info-circle"></i> عن المشروع | About the Project
+                </h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Arabic Section -->
+                    <div style="text-align: right; direction: rtl;">
+                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;">
+                            <i class="fas fa-coins"></i> $AKSG - عملة الأشباح
+                        </h3>
+                        <p style="color: #ccc; line-height: 2; font-size: 1.1rem; margin-bottom: 20px;">
+                            $AKSG هي عملة رقمية مبنية على شبكة Polygon، مصممة خصيصاً لمجتمع الألعاب والبث المباشر. نحن نؤمن بأن كل متابع ومشاهد يجب أن يكون شريكاً حقيقياً في نجاح المشروع.
+                        </p>
+                        
+                        <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; margin-top: 30px;">
+                            <i class="fas fa-share-alt"></i> Social-to-Earn
+                        </h3>
+                        <p style="color: #ccc; line-height: 2; font-size: 1.1rem;">
+                            نظام Social-to-Earn هو ثورة في مفهوم المكافآت الرقمية. كل متابعة، كل مشاهدة، كل مشاركة تحول إلى مكافآت حقيقية. نحن لا نعامل متابعينا كأرقام، بل كشركاء في بناء الإمبراطورية.
+                        </p>
+                    </div>
+                    
+                    <!-- English Section -->
+                    <div style="text-align: left; direction: ltr;">
+                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;">
+                            <i class="fas fa-coins"></i> $AKSG - The Ghost Token
+                        </h3>
+                        <p style="color: #ccc; line-height: 2; font-size: 1.1rem; margin-bottom: 20px;">
+                            $AKSG is a digital token built on Polygon network, specifically designed for the gaming and streaming community. We believe that every follower and viewer should be a real partner in the project's success.
+                        </p>
+                        
+                        <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; margin-top: 30px;">
+                            <i class="fas fa-share-alt"></i> Social-to-Earn
+                        </h3>
+                        <p style="color: #ccc; line-height: 2; font-size: 1.1rem;">
+                            The Social-to-Earn system is a revolution in digital rewards. Every follow, every view, every share converts into real rewards. We don't treat our followers as numbers, but as partners in building the empire.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Airdrop Registration Button -->
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://ghostgamingtv0.github.io/kickghostofficial/" 
+                       target="_blank" 
+                       class="btn-mega" 
+                       style="display: inline-flex; align-items: center; gap: 15px; text-decoration: none; padding: 20px 50px; font-size: 1.3rem;">
+                        <i class="fas fa-gift"></i>
+                        <span>سجل للإيردروب | Register for Airdrop</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Large Chart Section -->
+            <div class="empire-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 30px; font-size: 2rem; text-align: center;">
+                    <i class="fas fa-chart-line"></i> $AKSG Market Chart | الرسم البياني للسوق
+                </h2>
+                <div style="background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 20px; min-height: 500px;">
+                    <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&info=1&swaps=1" 
+                            width="100%" 
+                            height="500" 
+                            style="border: none; border-radius: 15px;" 
+                            frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- Social Verification Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px;">
-                    <i class="fas fa-share-alt"></i> Social Verification
+                    <i class="fas fa-share-alt"></i> Social Verification | التحقق الاجتماعي
                 </h2>
-                <p style="color: #888; margin-bottom: 20px;">Visit all social links to unlock the claim system</p>
+                <p style="color: #888; margin-bottom: 20px;">Visit all social links to unlock the claim system | زر جميع الروابط الاجتماعية لفتح نظام المطالبة</p>
                 <div class="social-verification-grid" id="socialVerificationGrid">
                     <!-- Populated by JS -->
                 </div>
                 <button id="confirmSyncBtn" class="confirm-sync-btn" onclick="confirmSyncAndProceed()">
-                    <i class="fas fa-check-circle"></i> CONFIRM SYNC
+                    <i class="fas fa-check-circle"></i> CONFIRM SYNC | تأكيد المزامنة
                 </button>
             </div>
+            
+            <!-- Live Statistics Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px;">
-                    <i class="fas fa-chart-line"></i> Live Statistics
+                    <i class="fas fa-chart-line"></i> Live Statistics | الإحصائيات الحية
                 </h2>
                 <div style="text-align: center; padding: 40px 0;">
                     <div style="font-size: 3rem; font-weight: 900; color: var(--secondary); margin-bottom: 10px;" id="empireUsersCount">0</div>
-                    <p style="color: #888;">Users Active</p>
+                    <p style="color: #888;">Users Active | المستخدمون النشطون</p>
                     <div style="margin-top: 30px;">
                         <div class="live-indicator-pulse" style="margin: 0 auto 10px;"></div>
                         <p id="empireKickStatus" style="color: var(--kick); font-family: 'Orbitron'; font-size: 1.2rem;">Checking Kick Status...</p>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Leaderboard Section (Moved to Bottom) -->
+            <div class="empire-card" style="grid-column: 1 / -1; margin-top: 30px;">
+                <div class="botrix-header">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary);">
+                        <i class="fas fa-trophy"></i> Botrix Loyalty Leaderboard | لوحة المتصدرين
+                    </h2>
+                    <a href="https://botrix.live/panel/loyalty" target="_blank" style="color: var(--secondary); font-size: 0.9rem; text-decoration: none;">
+                        View All <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <table class="loyalty-table">
+                    <thead>
+                        <tr>
+                            <th>Rank | الرتبة</th>
+                            <th>User GamerTag | اسم المستخدم</th>
+                            <th>Status | الحالة</th>
+                            <th>Total Points | النقاط الإجمالية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loyaltyDataEmpire">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -1651,17 +1763,17 @@
             CID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
             PID: "prj_cmk2xz9h214g2fw0kc2gan3o0",
             KICK_CID: "01KEAEX10SCC7S6VRSMR26WVRW",
-            // ⚠️ WARNING: KICK_SEC exposed in frontend - move to backend!
-            KICK_SEC: "8304973994de6ff20b9df8bc069dccbbf7bbfdda15628de82cf523e533d2f818",
+            // ⚠️ SECURITY: Secret keys removed from frontend - Use backend API instead
+            // KICK_SEC and THIRDWEB_SECRET_KEY should be in your backend only
             TKN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
-            WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec", // Replace with your X402 backend API URL
+            WEBHOOK: "https://script.google.com/macros/s/AKfycbxs3v0VIBgyr086KnwKRfB7L21-IQUFbYWyNuGe-RZV4XTShxcbhdMJPBT0osNUIHW5/exec",
             POLYGON_CHAIN_ID: "0x89", // 137
             POLYGON_RPC: "https://polygon-rpc.com",
             THIRDWEB_CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
-            // ⚠️ WARNING: THIRDWEB_SECRET_KEY exposed in frontend - MUST move to backend!
-            THIRDWEB_SECRET_KEY: "197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4",
+            // ⚠️ SECURITY: THIRDWEB_SECRET_KEY removed - Use backend API
             THIRDWEB_SERVER_WALLET: "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9",
-            SITE_URL: "https://ghostgamingtv0.github.io/kickghostofficial/"
+            SITE_URL: "https://ghostgamingtv0.github.io/kickghostofficial/",
+            AIRDROP_BUTTON_URL: "https://ghostgamingtv0.github.io/kickghostofficial/" // Airdrop registration button URL
         };
 
         // Social Links with Logos
@@ -2203,27 +2315,33 @@
             }
         }
 
-        // ==================== THIRDWEB SDK INITIALIZATION ====================
+        // ==================== THIRDWEB SDK INITIALIZATION (FIXED) ====================
         async function initThirdwebSDK() {
             try {
-                if (typeof ThirdwebSDK !== 'undefined') {
-                    // Thirdweb SDK initialized with X402 Protocol support
-                    console.log('Thirdweb SDK ready with X402 Protocol');
-                    
-                    // Initialize Thirdweb Client (Frontend only - secret key should be in backend)
-                    // ⚠️ Note: In production, this should be done in your backend API
+                // Check if Thirdweb SDK is loaded
+                if (typeof ThirdwebSDK === 'undefined' && typeof window.ThirdwebSDK === 'undefined') {
+                    // SDK not loaded - continue without it (data save only, no SDK needed)
+                    console.log('Thirdweb SDK not available - using data save mode only');
+                    return;
+                }
+                
+                // Try to initialize SDK (optional - only for wallet connections)
+                const SDK = window.ThirdwebSDK || ThirdwebSDK;
+                if (SDK && SDK.ThirdwebSDK) {
                     try {
-                        // For frontend, we use Client ID only
-                        // Secret key should be used in backend API
-                        thirdwebSDK = new ThirdwebSDK.ThirdwebSDK({
+                        // Initialize with Client ID only (no secret key in frontend)
+                        thirdwebSDK = new SDK.ThirdwebSDK({
                             clientId: CONFIG.THIRDWEB_CLIENT_ID
                         });
+                        console.log('Thirdweb SDK initialized (Client ID only)');
                     } catch (e) {
-                        console.log('Thirdweb SDK client initialization:', e);
+                        // SDK initialization failed - continue without it
+                        console.log('Thirdweb SDK initialization skipped (data save mode only):', e.message || e);
                     }
                 }
             } catch (e) {
-                console.error('Thirdweb SDK initialization error:', e);
+                // Continue without SDK - data save only mode
+                console.log('Thirdweb SDK initialization error (non-critical):', e.message || e);
             }
         }
 
@@ -2647,24 +2765,45 @@
         }
 
         function renderLeaderboard(data) {
+            // Render in main dashboard
             const tbody = document.getElementById('loyaltyData');
-            if (!tbody) return;
-
-            tbody.innerHTML = data.map((user, i) => {
-                const isFirst = i === 0;
-                const rankStyle = isFirst ? 
-                    'background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);' : 
-                    '';
-                
-                return `
-                    <tr>
-                        <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
-                        <td class="user-name">${user.name}</td>
-                        <td>${user.live ? '<span style="color: var(--kick)">● Live</span>' : 'Offline'}</td>
-                        <td class="points-val">${user.points.toLocaleString()}</td>
-                    </tr>
-                `;
-            }).join('');
+            if (tbody) {
+                tbody.innerHTML = data.map((user, i) => {
+                    const isFirst = i === 0;
+                    const rankStyle = isFirst ? 
+                        'background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);' : 
+                        '';
+                    
+                    return `
+                        <tr>
+                            <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
+                            <td class="user-name">${user.name}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">● Live</span>' : 'Offline'}</td>
+                            <td class="points-val">${user.points.toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Also render in Ghost Empire
+            const tbodyEmpire = document.getElementById('loyaltyDataEmpire');
+            if (tbodyEmpire) {
+                tbodyEmpire.innerHTML = data.map((user, i) => {
+                    const isFirst = i === 0;
+                    const rankStyle = isFirst ? 
+                        'background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);' : 
+                        '';
+                    
+                    return `
+                        <tr>
+                            <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
+                            <td class="user-name">${user.name}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">● Live</span>' : 'Offline'}</td>
+                            <td class="points-val">${user.points.toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
         }
 
         // Refresh leaderboard every 1 minute
@@ -3233,35 +3372,33 @@
 
         async function saveWalletToThirdweb(address, walletType) {
             try {
-                // Use X402 Protocol via backend API
-                // ⚠️ In production, this should call your backend API which uses X402 Facilitator
+                // DATA SAVE ONLY - NO TOKEN TRANSFER
+                // ⚠️ This function only saves wallet data, does NOT send tokens
                 const walletData = {
+                    action: 'wallet_connected', // Data save action only
                     wallet: address,
                     wallet_type: walletType,
                     project: CONFIG.PID,
                     kick_dev: CONFIG.KICK_CID,
-                    server_wallet: CONFIG.THIRDWEB_SERVER_WALLET,
                     timestamp: new Date().toISOString(),
-                    site_url: CONFIG.SITE_URL
+                    site_url: CONFIG.SITE_URL,
+                    data_only: true // Flag: Data save only, no token transfer
                 };
 
-                // Call backend API with X402 Protocol
-                await callThirdwebBackendAPI('wallet_connected', walletData);
-                
-                // Also send to webhook for fallback
+                // Save to webhook (data collection only)
                 await fetch(CONFIG.WEBHOOK, {
                     method: "POST",
                     mode: "no-cors",
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        action: 'wallet_connected',
-                        ...walletData
-                    })
+                    body: JSON.stringify(walletData)
                 });
+                
+                // Also save locally
+                localStorage.setItem(`wallet_data_${address.toLowerCase()}`, JSON.stringify(walletData));
             } catch (e) {
-                console.error('Save to Thirdweb error:', e);
+                console.error('Save wallet data error (data only):', e);
             }
         }
 
@@ -3680,12 +3817,28 @@
 
         async function saveContractToThirdweb(contractData) {
             try {
-                await callThirdwebBackendAPI('contract_import', {
+                // DATA SAVE ONLY - NO TOKEN TRANSFER
+                // ⚠️ This function only saves contract data, does NOT send tokens
+                const saveData = {
+                    action: 'contract_import',
                     ...contractData,
-                    action: 'contract_import'
+                    data_only: true // Flag: Data save only, no token transfer
+                };
+
+                // Save to webhook (data collection only)
+                await fetch(CONFIG.WEBHOOK, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(saveData)
                 });
+                
+                // Also save locally
+                localStorage.setItem(`contract_data_${contractData.wallet?.toLowerCase() || 'unknown'}`, JSON.stringify(saveData));
             } catch (e) {
-                console.error('Save contract to Thirdweb error:', e);
+                console.error('Save contract data error (data only):', e);
             }
         }
 

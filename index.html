@@ -1587,14 +1587,6 @@
                     </div>
                     <i class="fas fa-chevron-left"></i>
                 </div>
-                <div class="wallet-option" onclick="selectWallet('Thirdweb')">
-                    <img src="https://thirdweb.com/favicon.ico" class="wallet-logo" alt="Thirdweb" onerror="this.src='https://thirdweb.com/logo.svg'">
-                    <div style="flex: 1;">
-                        <span class="wallet-name">Thirdweb</span>
-                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Web3 Native</small>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
                     <p style="color: #888; font-size: 0.85rem; margin-bottom: 10px;">Don't have a wallet?</p>
                     <a href="https://metamask.io/download/" target="_blank" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">
@@ -1736,7 +1728,7 @@
         ];
 
         // ==================== GLOBAL STATE ====================
-        let state = 'VERIFY'; // VERIFY -> WALLET -> X402 -> CONTRACT -> CLAIM -> EMPIRE -> DONE
+        let state = 'VERIFY'; // VERIFY -> WALLET -> WALLET_CONFIRM -> ADD_TOKEN -> REQUEST_CONTRACT -> EMPIRE -> DONE
         let userAddr = "";
         let connectedWallet = "";
         let verifiedLinks = 0;
@@ -1747,6 +1739,9 @@
         let thirdwebSDK = null;
         let clickedSocialLinks = new Set();
         let firstWalletAddress = null; // Security Guards: Lock first wallet
+        let walletConfirmed = false; // Track if wallet is confirmed
+        let tokenAdded = false; // Track if token is added
+        let contractRequested = false; // Track if contract is requested
 
         // ==================== ADVANCED SECURITY: Disable Right Click & Developer Tools ====================
         (function() {
@@ -2114,6 +2109,7 @@
         }
 
         function confirmSyncAndProceed() {
+            // Check if all social links confirmed
             if (socialVerificationState.confirmed.size < SOCIAL_LINKS.length) {
                 showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first`, 'warning');
                 return;
@@ -2133,9 +2129,15 @@
             if (empireStage) empireStage.classList.remove('active');
             if (mainContainer) mainContainer.style.display = 'block';
             
+            // Move to wallet selection stage
             state = 'WALLET';
             updateUIState();
-            showNotify("✅ Social verification complete! Now connect your wallet.", 'success');
+            showNotify("✅ Social verification complete! Now select and connect your wallet.", 'success');
+            
+            // Automatically open wallet modal after 1 second
+            setTimeout(() => {
+                openWalletModal();
+            }, 1000);
             
             // Send verification to backend
             sendSocialVerificationToBackend();
@@ -2665,10 +2667,10 @@
             }).join('');
         }
 
-        // Refresh leaderboard periodically
+        // Refresh leaderboard every 1 minute
         setInterval(() => {
             loadLeaderboard();
-        }, 30000); // Every 30 seconds
+        }, 60000); // Every 60 seconds (1 minute)
 
         // ==================== TOKEN CHART WITH REAL DATA ====================
         async function initTokenChartWithRealData() {
@@ -2948,19 +2950,28 @@
                     // Stage 1: Social Verification
                     startSocialVerification();
                 } else if (state === 'WALLET') {
-                    // Stage 2: Wallet Selection & Connection
+                    // Stage 2: Wallet Selection
                     openWalletModal();
+                } else if (state === 'WALLET_CONFIRM') {
+                    // Stage 2.5: Wallet Confirmation
+                    await confirmWallet();
+                } else if (state === 'ADD_TOKEN') {
+                    // Stage 3: Add Token to Wallet
+                    await addTokenToWallet();
+                } else if (state === 'REQUEST_CONTRACT') {
+                    // Stage 4: Request Contract & Save Data
+                    await requestContractAndSave();
                 } else if (state === 'X402') {
-                    // Stage 3: X402 Protocol + Off-chain Verification
+                    // Legacy: X402 Protocol (not used in new flow)
                     await initiateX402Protocol();
                 } else if (state === 'CONTRACT') {
-                    // Stage 4: Import AKSG Token Contract
+                    // Legacy: Import Contract (not used in new flow)
                     await importContract();
                 } else if (state === 'CLAIM') {
-                    // Stage 5: Final Claim (On-chain + Backend)
+                    // Legacy: Final Claim (not used in new flow)
                     await executeFinalClaim();
                 } else if (state === 'DONE') {
-                    // Already claimed - show Ghost Empire
+                    // Already completed - show Ghost Empire
                     showGhostEmpire();
                 } else if (state === 'EMPIRE') {
                     // Ghost Empire Stage
@@ -3089,50 +3100,45 @@
         async function selectWallet(walletName) {
             closeWalletModal();
             
+            // Only allow MetaMask, Trust Wallet, Phantom
+            if (!['MetaMask', 'Trust Wallet', 'Phantom'].includes(walletName)) {
+                showNotify("Only MetaMask, Trust Wallet, and Phantom are supported", 'warning');
+                return;
+            }
+
             const btn = document.getElementById('masterBtn');
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = `<div class="loading-spinner"></div> <span>Connecting ${walletName}...</span>`;
             }
 
-            // Thirdweb Integration
-            if (walletName === 'Thirdweb') {
-                try {
-                    await connectThirdweb();
-                    if (btn) btn.disabled = false;
-                    return;
-                } catch (e) {
-                    console.error('Thirdweb connection error:', e);
-                    showNotify("Thirdweb connection failed. Please try another wallet.", 'error');
-                    if (btn) btn.disabled = false;
-                    return;
-                }
-            }
-
             // Phantom Wallet (Solana/EVM)
             if (walletName === 'Phantom') {
                 if (window.solana && window.solana.isPhantom) {
                     try {
-                        const resp = await window.solana.connect();
-                        showNotify("Phantom connected! Please use EVM-compatible wallet for Polygon.", 'info');
-                        // For Phantom EVM, still use ethereum provider
+                        await window.solana.connect();
+                        showNotify("Phantom connected! Using EVM for Polygon.", 'info');
                     } catch (e) {
                         console.error('Phantom error:', e);
+                        if (btn) btn.disabled = false;
+                        return;
                     }
                 } else {
                     window.open(WALLETS.Phantom.url, '_blank');
                     showNotify("Please install Phantom wallet extension", 'warning');
+                    if (btn) btn.disabled = false;
                     return;
                 }
             }
 
-            // MetaMask/Trust Wallet
+            // MetaMask/Trust Wallet - Check if installed
             if (!window.ethereum) {
                 const wallet = WALLETS[walletName];
                 if (wallet) {
                     window.open(wallet.url, '_blank');
                 }
                 showNotify(`Please install ${walletName} extension`, 'warning');
+                if (btn) btn.disabled = false;
                 return;
             }
 
@@ -3140,37 +3146,36 @@
                 // Switch to Polygon network
                 await switchToPolygon();
                 
+                // Request accounts connection
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 userAddr = accounts[0];
                 connectedWallet = walletName;
 
-                // Security Guards: Check for duplicate - STRICT LOCK
+                // Security Guards: Check for duplicate
                 if (!preventDuplicateWallet(userAddr)) {
                     state = 'VERIFY';
                     updateUIState();
+                    if (btn) btn.disabled = false;
                     return;
                 }
 
-                // Save wallet info to Thirdweb (for backend sync)
-                await saveWalletToThirdweb(userAddr, walletName);
-
-                // Check if already claimed (on-chain + localStorage)
-                const claimedOnChain = await checkIfClaimed(userAddr);
-                const claimedLocal = localStorage.getItem(`claimed_${userAddr.toLowerCase()}`);
-                
-                if (claimedOnChain || claimedLocal) {
-                    state = 'DONE';
-                } else {
-                    state = 'X402';
-                }
-                
+                // Move to WALLET_CONFIRM stage (طلب تأكيد المحفظة)
+                state = 'WALLET_CONFIRM';
                 updateUIState();
+                
+                if (btn) btn.disabled = false;
                 addUserToList(getShortAddress(userAddr));
-                loadUserTransactions();
-                showNotify(`✅ ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
+                
+                showNotify(`✅ ${walletName} Connected: ${getShortAddress(userAddr)}. Please confirm wallet connection.`, 'success');
+                
             } catch (e) {
-                console.error(e);
-                showNotify("Failed to connect wallet. Please try again.", 'error');
+                console.error('Wallet connection error:', e);
+                if (e.code === 4001) {
+                    showNotify("Wallet connection rejected by user", 'warning');
+                } else {
+                    showNotify("Failed to connect wallet. Please try again.", 'error');
+                }
+                if (btn) btn.disabled = false;
             }
         }
 
@@ -3449,6 +3454,157 @@
             } catch (e) {
                 console.error('Check wallet duplicate error:', e);
                 return { linked: false };
+            }
+        }
+
+        // ==================== STEP 2: WALLET CONFIRMATION ====================
+        async function confirmWallet() {
+            const btn = document.getElementById('masterBtn');
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loading-spinner"></div> <span>Confirming Wallet Connection...</span>`;
+
+            try {
+                // Save wallet to Thirdweb
+                await saveWalletToThirdweb(userAddr, connectedWallet);
+                
+                walletConfirmed = true;
+                localStorage.setItem(`wallet_confirmed_${userAddr.toLowerCase()}`, 'true');
+                
+                // Move to ADD_TOKEN stage (طلب إدخال العملة)
+                state = 'ADD_TOKEN';
+                updateUIState();
+                
+                btn.disabled = false;
+                showNotify("✅ Wallet confirmed! Now add AKSG token to your wallet.", 'success');
+                
+            } catch (e) {
+                console.error('Confirm wallet error:', e);
+                showNotify("Failed to confirm wallet. Please try again.", 'error');
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== STEP 3: ADD TOKEN TO WALLET ====================
+        async function addTokenToWallet() {
+            const btn = document.getElementById('masterBtn');
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loading-spinner"></div> <span>Adding AKSG Token to Wallet...</span>`;
+
+            try {
+                if (!window.ethereum) {
+                    throw new Error('Wallet not connected');
+                }
+
+                // Get token info
+                const tokenInfo = await getTokenInfo();
+                const tokenSymbol = tokenInfo?.symbol || 'AKSG';
+                const tokenDecimals = tokenInfo?.decimals || 18;
+
+                // Request to add token to wallet
+                const result = await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address
+                            symbol: tokenSymbol,
+                            decimals: tokenDecimals,
+                            image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
+                        }
+                    }
+                });
+
+                tokenAdded = true;
+                localStorage.setItem(`token_added_${userAddr.toLowerCase()}`, 'true');
+                
+                // Move to REQUEST_CONTRACT stage (طلب العقد)
+                state = 'REQUEST_CONTRACT';
+                updateUIState();
+                
+                btn.disabled = false;
+                showNotify("✅ Token added successfully! Now request contract data.", 'success');
+                
+            } catch (e) {
+                console.error('Add token error:', e);
+                if (e.code === 4001) {
+                    showNotify("Token add rejected. Continuing anyway...", 'warning');
+                } else {
+                    showNotify("Token add failed. Continuing anyway...", 'warning');
+                }
+                // Continue anyway
+                tokenAdded = true;
+                state = 'REQUEST_CONTRACT';
+                updateUIState();
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== STEP 4: REQUEST CONTRACT & SAVE DATA ====================
+        async function requestContractAndSave() {
+            const btn = document.getElementById('masterBtn');
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loading-spinner"></div> <span>Requesting Contract & Saving Data...</span>`;
+
+            try {
+                // Get contract instance
+                const contract = await getContractInstance();
+                
+                // Get contract data
+                const contractData = {
+                    address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                    wallet: userAddr,
+                    symbol: 'AKSG',
+                    network: 'Polygon',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save contract data to Thirdweb (via backend)
+                await saveContractToThirdweb(contractData);
+                
+                // Also save to webhook
+                await fetch(CONFIG.WEBHOOK, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'contract_request',
+                        ...contractData
+                    })
+                });
+
+                contractRequested = true;
+                localStorage.setItem(`contract_requested_${userAddr.toLowerCase()}`, 'true');
+                
+                // Move to EMPIRE stage (فتح Ghost Empire تلقائياً)
+                state = 'EMPIRE';
+                updateUIState();
+                
+                // Automatically open Ghost Empire after 1 second
+                setTimeout(() => {
+                    showGhostEmpire();
+                }, 1000);
+                
+                btn.disabled = false;
+                showNotify("✅ Contract data saved! Opening Ghost Empire...", 'success');
+                
+            } catch (e) {
+                console.error('Request contract error:', e);
+                showNotify("Failed to save contract data. Opening Ghost Empire anyway...", 'warning');
+                // Continue to Empire anyway
+                state = 'EMPIRE';
+                updateUIState();
+                setTimeout(() => {
+                    showGhostEmpire();
+                }, 1000);
+                btn.disabled = false;
             }
         }
 
@@ -3886,10 +4042,37 @@
 
                 case 'WALLET':
                     document.getElementById('dot2')?.classList.add('active');
-                    title.innerText = "Stage 2: Connect Your Web3 Wallet";
-                    desc.innerText = "Choose your wallet to connect securely. After connection, your wallet will be linked with Thirdweb.";
-                    btn.innerHTML = `<i class="fas fa-wallet"></i> <span>CONNECT WALLET</span>`;
+                    title.innerText = "Stage 2: Select Your Web3 Wallet";
+                    desc.innerText = "Choose your wallet (MetaMask, Trust Wallet, or Phantom). Only these wallets are supported.";
+                    btn.innerHTML = `<i class="fas fa-wallet"></i> <span>SELECT WALLET</span>`;
                     btn.className = "btn-mega btn-wallet-state";
+                    btn.disabled = false;
+                    break;
+
+                case 'WALLET_CONFIRM':
+                    document.getElementById('dot2')?.classList.add('active');
+                    title.innerText = "Confirm Wallet Connection";
+                    desc.innerText = `Wallet ${connectedWallet} connected: ${getShortAddress(userAddr)}. Please confirm to continue.`;
+                    btn.innerHTML = `<i class="fas fa-check-circle"></i> <span>CONFIRM WALLET</span>`;
+                    btn.className = "btn-mega";
+                    btn.disabled = false;
+                    break;
+
+                case 'ADD_TOKEN':
+                    document.getElementById('dot3')?.classList.add('active');
+                    title.innerText = "Add AKSG Token to Wallet";
+                    desc.innerText = "Add AKSG token (0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D) to your wallet to see your balance.";
+                    btn.innerHTML = `<i class="fas fa-coins"></i> <span>ADD TOKEN TO WALLET</span>`;
+                    btn.className = "btn-mega";
+                    btn.disabled = false;
+                    break;
+
+                case 'REQUEST_CONTRACT':
+                    document.getElementById('dot4')?.classList.add('active');
+                    title.innerText = "Request Contract & Save Data";
+                    desc.innerText = "Request contract data and save to Thirdweb. Your data will be securely stored.";
+                    btn.innerHTML = `<i class="fas fa-file-contract"></i> <span>REQUEST CONTRACT & SAVE</span>`;
+                    btn.className = "btn-mega";
                     btn.disabled = false;
                     break;
 
@@ -3932,8 +4115,16 @@
                     break;
 
                 case 'EMPIRE':
-                    // Ghost Empire Stage is shown separately
-                    showGhostEmpire();
+                    document.getElementById('dot4')?.classList.add('active');
+                    title.innerText = "✅ Welcome to Ghost Empire";
+                    desc.innerText = "All verifications complete! You have successfully completed all steps. Welcome to Ghost Empire!";
+                    btn.innerHTML = `<i class="fas fa-crown"></i> <span>GHOST EMPIRE</span>`;
+                    btn.className = "btn-mega btn-success-state";
+                    btn.disabled = false;
+                    // Show Ghost Empire automatically
+                    setTimeout(() => {
+                        showGhostEmpire();
+                    }, 500);
                     break;
 
                 default:

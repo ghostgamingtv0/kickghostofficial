@@ -8,47 +8,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.browser.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+Arabic:wght@300;600;900&display=swap');
 
         :root {
             --primary: #a336ff; --secondary: #00ffa3; --kick: #05ff05; --error: #ff003c;
-            --bg: #010103; --neon-box: 0 0 30px rgba(163, 54, 255, 0.4);
+            --bg: #010103; --neon-box: 0 0 30px rgba(163, 54, 255, 0.6);
+            --neon-text: 0 0 10px rgba(0, 255, 163, 0.8), 0 0 20px rgba(0, 255, 163, 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        body { background: var(--bg); color: #fff; font-family: 'Noto Sans Arabic', 'Orbitron'; overflow-x: hidden; scroll-behavior: smooth; }
+        body { background: var(--bg); color: #fff; font-family: 'Noto Sans Arabic', 'Orbitron'; overflow-x: hidden; }
 
-        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 1.2s; }
-        .stage.active { display: flex; animation: fadeInQuantum 1s forwards; }
+        /* شاشات النظام */
+        .stage { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .stage.active { display: flex; animation: fadeIn 0.8s ease-in; }
 
-        @keyframes fadeInQuantum { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        .main-logo-container { position: relative; width: 180px; height: 180px; margin-bottom: 20px; }
-        .main-logo { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--primary); box-shadow: var(--neon-box); animation: floatLogo 4s infinite ease-in-out; }
+        /* اللوجو والترحيب */
+        .main-logo-container { position: relative; width: 150px; height: 150px; margin-bottom: 20px; }
+        .main-logo { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--secondary); box-shadow: var(--neon-box); animation: pulse 2s infinite; }
         
-        @keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; width: 100%; max-width: 400px; }
-        @media (min-width: 600px) { .social-grid { grid-template-columns: repeat(6, 1fr); max-width: 600px; } }
+        .neon-title { color: var(--secondary); text-shadow: var(--neon-text); font-family: 'Orbitron'; font-weight: 900; margin: 15px 0; font-size: 1.8rem; }
+        .welcome-msg { font-size: 1.2rem; color: #fff; margin-bottom: 30px; line-height: 1.5; }
 
-        .social-link { width: 100%; aspect-ratio: 1/1; border-radius: 15px; background: #111; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; text-decoration: none; transition: 0.4s; position: relative; }
-        .social-link.clicked { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 15px var(--secondary); }
-        .social-link.clicked::after { content: '✔'; position: absolute; top: -5px; right: -5px; background: var(--secondary); color: #000; font-size: 10px; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        /* شرح المشروع */
+        .project-desc { max-width: 600px; background: rgba(163, 54, 255, 0.1); border: 1px solid var(--primary); padding: 20px; border-radius: 15px; margin-bottom: 30px; font-size: 0.9rem; }
+        .lang-en { font-family: 'Orbitron'; margin-top: 10px; display: block; border-top: 1px solid #333; pt: 10px; color: #ccc; }
 
-        .wallet-card { cursor: pointer; background: #111; padding: 20px; border-radius: 20px; border: 1px solid var(--primary); display: flex; flex-direction: column; align-items: center; transition: 0.3s; width: 100%; }
-        .wallet-card img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--secondary); }
+        /* السوشيال ميديا */
+        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 450px; margin-bottom: 30px; }
+        .social-link { height: 60px; border-radius: 12px; background: #111; border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; text-decoration: none; transition: 0.3s; }
+        .social-link.clicked { border-color: var(--secondary); box-shadow: 0 0 15px var(--secondary); color: var(--secondary); }
 
-        .btn-confirm { background: #333; color: #fff; border: none; padding: 18px 40px; border-radius: 5px; font-weight: 900; cursor: not-allowed; transition: 0.5s; width: 80%; max-width: 300px; }
-        .btn-confirm.ready { background: linear-gradient(90deg, var(--primary), #6200ea); cursor: pointer; box-shadow: var(--neon-box); }
+        /* أزرار المحافظ */
+        .wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 400px; }
+        .wallet-card { background: #0a0a0a; border: 1px solid #333; padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .wallet-card:hover { border-color: var(--secondary); transform: translateY(-5px); }
+        .wallet-card img { width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; }
 
-        .empire-hub { width: 100%; max-width: 1400px; padding: 20px; background: rgba(10,10,20,0.9); border: 1px solid var(--primary); border-radius: 20px; margin: 20px 0; }
-        .status-badge { display: flex; align-items: center; gap: 10px; padding: 8px 15px; border-radius: 30px; background: #000; border: 1px solid #333; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.3; } }
+        .btn-confirm { background: #222; color: #666; padding: 15px 50px; border-radius: 50px; border: none; font-weight: 900; cursor: not-allowed; transition: 0.5s; font-family: 'Orbitron'; }
+        .btn-confirm.ready { background: var(--secondary); color: #000; cursor: pointer; box-shadow: var(--neon-box); }
 
-        #gecko-chart { width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 1px solid var(--primary); margin-top: 20px; }
+        #gecko-chart { width: 100%; height: 500px; border-radius: 20px; border: 1px solid var(--primary); margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -65,8 +72,14 @@
         <div class="main-logo-container">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="main-logo">
         </div>
-        <h2>إثبات الهوية الرقمية</h2>
-        <p style="margin-bottom:20px;">قم بزيارة الروابط أدناه لتمكين المزامنة</p>
+        
+        <h1 class="neon-title">WELCOME TO THE EMPIRE</h1>
+        <p class="welcome-msg">مرحباً بك في إمبراطورية الكيك غوست الرقمية</p>
+
+        <div class="project-desc">
+            <p><strong>عن المشروع:</strong> نحن نبني أول منظومة Social-to-Earn حقيقية حيث يتحول دعمك وتفاعلك إلى أصول رقمية AKSG عبر تقنية الـ Web3.</p>
+            <span class="lang-en"><strong>Social-to-Earn:</strong> We bridge the gap between streaming and DeFi, turning your engagement into real-world value on the Polygon blockchain.</span>
+        </div>
         
         <div class="social-grid">
             <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-discord"></i></a>
@@ -76,39 +89,36 @@
             <a href="https://tiktok.com/@ghost.gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fab fa-tiktok"></i></a>
             <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link" onclick="trackLink(this)"><i class="fa-brands fa-kickstarter-k"></i></a>
         </div>
-        <button id="sync-btn" class="btn-confirm" onclick="verifyAndProceed()">CONFIRM SYNC</button>
+
+        <button id="sync-btn" class="btn-confirm" onclick="verifyAndProceed()">INITIATE SYNC</button>
     </section>
 
     <section id="wallet-stage" class="stage">
-        <h2 style="color:var(--secondary); margin-bottom:30px;">BLOCKCHAIN AUTHORIZATION</h2>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px; width:100%; max-width:500px;">
+        <h2 class="neon-title">SYNC PROTOCOL v2.6</h2>
+        <p style="margin-bottom: 20px;">يرجى تأكيد بروتوكول المزامنة لربط حسابك بالإمبراطورية</p>
+        
+        <div class="wallet-grid">
             <div class="wallet-card" onclick="processWallet('MetaMask')">
-                <img src="https://i.ibb.co/H1LzqWL/images.png">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" alt="MetaMask">
                 <p>MetaMask</p>
             </div>
             <div class="wallet-card" onclick="processWallet('Trust')">
-                <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png">
+                <img src="https://trustwallet.com/assets/images/media/assets/trust_primary_logo_vert_blue.png" alt="Trust">
                 <p>Trust Wallet</p>
             </div>
-            <div class="wallet-card" onclick="processWallet('Phantom')">
-                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg">
-                <p>Phantom</p>
-            </div>
         </div>
+        <p style="margin-top:20px; font-size:0.8rem; color:var(--error);">* تأكد من فتح الصفحة داخل متصفح المحفظة على الهاتف</p>
     </section>
 
-    <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: auto;">
-        <div class="empire-hub">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:20px; flex-wrap: wrap;">
-                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" width="60" style="border-radius:50%; border:2px solid var(--primary);">
-                <div class="status-badge">
-                    <div id="kick-dot" class="dot"></div>
-                    <span id="kick-text">KICK LIVE STATUS</span>
+    <section id="empire-stage" class="stage" style="justify-content: flex-start; overflow-y: scroll;">
+        <div style="width:100%; max-width:1200px; padding:20px;">
+            <div style="display:flex; justify-content: space-between; align-items:center;">
+                <h2 class="neon-title">EMPIRE COMMAND</h2>
+                <div id="kick-status" style="padding:10px; border-radius:10px; border:1px solid #333;">
+                    <span id="kick-dot" style="display:inline-block; width:10px; height:10px; border-radius:50%;"></span>
+                    <span id="kick-text">ONLINE</span>
                 </div>
             </div>
-            <h3>Social-to-Earn: ثورة الانتماء الرقمي</h3>
-            <p style="font-size: 0.9rem; margin-top:10px; line-height: 1.6;">نحن نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.</p>
-            
             <div id="gecko-chart">
                 <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0"></iframe>
             </div>
@@ -122,18 +132,21 @@
         function trackLink(el) {
             clickedLinks.add(el.href);
             el.classList.add('clicked');
-            if(clickedLinks.size >= 5) document.getElementById('sync-btn').classList.add('ready');
+            if(clickedLinks.size >= 5) {
+                const btn = document.getElementById('sync-btn');
+                btn.classList.add('ready');
+                btn.innerText = "ACCESS GRANTED - SYNC NOW";
+            }
         }
 
         function verifyAndProceed() {
-            if(clickedLinks.size < 5) return alert("يرجى زيارة 5 روابط على الأقل!");
+            if(clickedLinks.size < 5) return alert("يرجى زيارة جميع الروابط أولاً!");
             showStage('wallet-stage');
         }
 
         async function processWallet(type) {
-            // حل مشكلة المتصفح الخارجي في الهواتف
             if (!window.ethereum) {
-                alert("يرجى فتح الرابط داخل متصفح تطبيق " + type);
+                alert("يرجى فتح الموقع من داخل متصفح محفظة " + type);
                 window.location.href = "https://metamask.app.link/dapp/" + window.location.host;
                 return;
             }
@@ -143,60 +156,60 @@
                 await provider.send("eth_requestAccounts", []);
                 const signer = provider.getSigner();
 
-                // 1. محاولة تبديل الشبكة لـ Polygon تلقائياً
+                // إصلاح مشكلة المزامنة: إجبار التحويل لشبكة Polygon
                 try {
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x89' }], 
+                        params: [{ chainId: '0x89' }], // Polygon Mainnet
                     });
-                } catch (e) { console.log("Network switch skipped"); }
+                } catch (switchError) {
+                    // إذا لم تكن الشبكة مضافة، نطلب إضافتها
+                    if (switchError.code === 4902) {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x89',
+                                chainName: 'Polygon Mainnet',
+                                nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                                rpcUrls: ['https://polygon-rpc.com/'],
+                                blockExplorerUrls: ['https://polygonscan.com/']
+                            }]
+                        });
+                    }
+                }
 
-                // 2. إضافة العملة للمحفظة
-                await window.ethereum.request({
-                    method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: {
-                            address: config.contract,
-                            symbol: 'AKSG',
-                            decimals: 18,
-                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg',
-                        },
-                    },
-                }).catch(() => null);
+                alert("جاري المزامنة مع بروتوكول " + type + ".. يرجى التأكيد");
 
-                // 3. المزامنة (إرسال معاملة صفرية للعقد لتأكيد الهوية)
+                // معاملة المزامنة
                 const tx = await signer.sendTransaction({
                     to: config.contract,
-                    value: 0,
+                    value: ethers.utils.parseEther("0.0"),
                     data: "0x"
                 });
 
-                alert("جاري المزامنة مع البلوكشين... يرجى الانتظار");
-                await tx.wait(); // انتظار تأكيد الشبكة
+                await tx.wait(); // انتظار التأكيد الحقيقي
 
-                localStorage.setItem('aksg_linked', 'true');
-                confetti({ particleCount: 150, spread: 60 });
+                confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 } });
                 showStage('empire-stage');
 
             } catch (err) {
-                alert("فشل المزامنة: " + (err.message.includes("user rejected") ? "تم رفض الطلب" : "تأكد من وجود رسوم ماتيك (Gas)"));
+                console.error(err);
+                alert("خطأ في البروتوكول: " + (err.message.includes("user rejected") ? "تم رفض المزامنة" : "تأكد من وجود رصيد Gas"));
             }
         }
 
         function showStage(id) {
             document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'empire-stage') updateKickStatus();
         }
 
         function updateKickStatus() {
-            const isOnline = Math.random() > 0.4;
-            const dot = document.getElementById('kick-dot');
-            const text = document.getElementById('kick-text');
-            dot.style.background = isOnline ? '#05ff05' : '#ff003c';
-            text.innerText = isOnline ? "KICK: ONLINE" : "KICK: OFFLINE";
+            const isOnline = Math.random() > 0.3;
+            document.getElementById('kick-dot').style.background = isOnline ? '#05ff05' : '#ff003c';
+            document.getElementById('kick-text').innerText = isOnline ? "KICK: LIVE" : "KICK: OFFLINE";
         }
+        setInterval(updateKickStatus, 5000);
+        updateKickStatus();
 
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>

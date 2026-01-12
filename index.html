@@ -6168,4 +6168,416 @@
             // 1. فحص سرعة الضغطة (البوتات تضغط بسرعة غير بشرية)
             // إذا ضغط المستخدم في أقل من 500ms بعد تحميل الصفحة = مشبوه
             if (timeSinceLoad < 500) {
-                console.warn('Bot Detection: Click too fast after page loa
+                console.warn('Bot Detection: Click too fast after page load');
+                return false;
+            }
+            
+            // 2. فحص حركة الماوس (البوتات لا تحرك الماوس)
+            // يجب أن تكون هناك حركة ماوس قبل الضغطة (على الأقل 10 بكسل)
+            if (!mouseMovementData.hasMovement || mouseMovementData.totalDistance < 10) {
+                // استثناء للموبايل - فحص اللمسة بدلاً من الماوس
+                if (!touchData.hasTouch) {
+                    console.warn('Bot Detection: No mouse movement detected');
+                    return false;
+                }
+            }
+            
+            // 3. فحص مساحة سطح اللمس للموبايل (البوتات لا تحاكي اللمسة البشرية بدقة)
+            if (touchData.hasTouch && touchData.touches.length > 0) {
+                const lastTouch = touchData.touches[touchData.touches.length - 1];
+                const touchArea = (lastTouch.radiusX || 0) * (lastTouch.radiusY || 0);
+                // اللمسة البشرية عادة لها مساحة أكبر من 0
+                if (touchArea === 0 && !mouseMovementData.hasMovement) {
+                    console.warn('Bot Detection: Invalid touch area');
+                    return false;
+                }
+            }
+            
+            // 4. فحص إحداثيات الضغطة (البوتات قد تضغط في نفس المكان دائماً)
+            if (event && event.clientX !== undefined && event.clientY !== undefined) {
+                // التحقق من أن الضغطة في نطاق معقول (ليست في الزاوية 0,0 دائماً)
+                if (event.clientX === 0 && event.clientY === 0) {
+                    console.warn('Bot Detection: Suspicious click coordinates');
+                    return false;
+                }
+            }
+            
+            // 5. فحص نمط الحركة (البوتات قد تحرك الماوس بشكل خطي أو منتظم)
+            if (mouseMovementData.movements.length >= 3) {
+                let isLinear = true;
+                for (let i = 1; i < mouseMovementData.movements.length - 1; i++) {
+                    const prev = mouseMovementData.movements[i - 1];
+                    const curr = mouseMovementData.movements[i];
+                    const next = mouseMovementData.movements[i + 1];
+                    
+                    const angle1 = Math.atan2(curr.y - prev.y, curr.x - prev.x);
+                    const angle2 = Math.atan2(next.y - curr.y, next.x - curr.x);
+                    const angleDiff = Math.abs(angle2 - angle1);
+                    
+                    // الحركة البشرية عادة غير خطية (زوايا متغيرة)
+                    if (angleDiff > 0.1) {
+                        isLinear = false;
+                        break;
+                    }
+                }
+                if (isLinear && mouseMovementData.movements.length > 5) {
+                    console.warn('Bot Detection: Linear mouse movement pattern');
+                    return false;
+                }
+            }
+            
+            // جميع الفحوصات نجحت - المستخدم بشري
+            return true;
+        }
+        
+        // ==================== INITIALIZATION FUNCTION ====================
+        function initApp(event) {
+            // منع تداخل الأحداث - منع أي سكريبت آخر من التنفيذ
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            
+            // فحص البوت أولاً - بوابة الحماية
+            if (!detectBot(event)) {
+                console.error('Bot Detection Failed: Access Denied');
+                // حظر المستخدم - إظهار رسالة خطأ
+                const welcomeLayer = document.getElementById('welcome-layer');
+                if (welcomeLayer) {
+                    welcomeLayer.innerHTML = `
+                        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: default;">
+                            <h2 style="font-family: 'Orbitron'; color: #ff4444; font-size: 2rem; margin-bottom: 15px;">
+                                Access Denied
+                            </h2>
+                            <p style="color: #888; font-size: 1.1rem; line-height: 1.8;">
+                                Verification failed. Please refresh and try again.
+                            </p>
+                        </div>
+                    `;
+                }
+                return; // إيقاف التنفيذ - لا يتم فتح التطبيق
+            }
+            
+            // التحقق نجح - المتابعة بالتهيئة
+            const welcomeLayer = document.getElementById('welcome-layer');
+            const container = document.querySelector('.container');
+            
+            // 1. إخفاء طبقة الترحيب وإظهار التطبيق بقوة !important
+            if (welcomeLayer) {
+                welcomeLayer.style.setProperty('display', 'none', 'important');
+            }
+            
+            if (container) {
+                container.style.setProperty('display', 'block', 'important');
+                container.style.opacity = '1';
+            }
+            
+            // 2. تفعيل الصوت (فقط بعد نجاح التحقق من البوت)
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                // Create a silent buffer to unlock audio
+                const buffer = audioCtx.createBuffer(1, 1, 22050);
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+            } catch (e) {
+                console.warn('AudioContext initialization failed:', e);
+            }
+            
+            // 3. تحديث الحالة وبدء المرحلة الأولى
+            state = 'VERIFY';
+            if (typeof updateUIState === 'function') {
+                updateUIState();
+            }
+            if (typeof showStage1 === 'function') {
+                showStage1();
+            }
+            
+            console.log("App Initialized on First Click - Human Verified");
+        }
+        
+        // ربط الدالة بالطبقة عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            pageLoadTime = Date.now(); // تسجيل وقت التحميل
+            const welcome = document.getElementById('welcome-layer');
+            if (welcome) {
+                // use capture: true لضمان التقاط الضغطة قبل أي عنصر آخر
+                welcome.addEventListener('click', initApp, { once: true, capture: true });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

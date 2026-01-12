@@ -1037,7 +1037,7 @@
             max-width: 500px;
             text-align: center;
             padding: 50px 40px;
-            cursor: default;
+            cursor: pointer;
             animation: slideUp 0.6s ease-out;
         }
 
@@ -6098,7 +6098,7 @@
     
     <!-- Welcome Layer -->
     <div id="welcome-layer">
-        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: default;" onclick="event.stopPropagation()">
+        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: pointer;">
             <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
                 Welcome to KICKGHOST Empire
             </h2>
@@ -7179,7 +7179,7 @@
             max-width: 500px;
             text-align: center;
             padding: 50px 40px;
-            cursor: default;
+            cursor: pointer;
             animation: slideUp 0.6s ease-out;
         }
 
@@ -12240,7 +12240,7 @@
     
     <!-- Welcome Layer -->
     <div id="welcome-layer">
-        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: default;" onclick="event.stopPropagation()">
+        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: pointer;">
             <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
                 Welcome to KICKGHOST Empire
             </h2>
@@ -12378,76 +12378,111 @@
         
         // ==================== INITIALIZATION FUNCTION ====================
         function initApp(event) {
-            // منع تداخل الأحداث - منع أي سكريبت آخر من التنفيذ
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            
-            // فحص البوت أولاً - بوابة الحماية
-            if (!detectBot(event)) {
-                console.error('Bot Detection Failed: Access Denied');
-                // حظر المستخدم - إظهار رسالة خطأ
-                const welcomeLayer = document.getElementById('welcome-layer');
-                if (welcomeLayer) {
-                    welcomeLayer.innerHTML = `
-                        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: default;">
-                            <h2 style="font-family: 'Orbitron'; color: #ff4444; font-size: 2rem; margin-bottom: 15px;">
-                                Access Denied
-                            </h2>
-                            <p style="color: #888; font-size: 1.1rem; line-height: 1.8;">
-                                Verification failed. Please refresh and try again.
-                            </p>
-                        </div>
-                    `;
-                }
-                return; // إيقاف التنفيذ - لا يتم فتح التطبيق
+            // منع تداخل الأحداث
+            if (event) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
             }
             
-            // التحقق نجح - المتابعة بالتهيئة
+            // إخفاء جميع شاشات الترحيب
             const welcomeLayer = document.getElementById('welcome-layer');
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeModal = document.getElementById('welcomeModal');
             const container = document.querySelector('.container');
             
-            // 1. إخفاء طبقة الترحيب وإظهار التطبيق بقوة !important
+            // إخفاء welcome-layer
             if (welcomeLayer) {
                 welcomeLayer.style.setProperty('display', 'none', 'important');
+                welcomeLayer.style.setProperty('opacity', '0', 'important');
+                welcomeLayer.style.setProperty('visibility', 'hidden', 'important');
             }
             
+            // إخفاء welcome-overlay
+            if (welcomeOverlay) {
+                welcomeOverlay.style.setProperty('display', 'none', 'important');
+                welcomeOverlay.style.setProperty('opacity', '0', 'important');
+                welcomeOverlay.style.setProperty('visibility', 'hidden', 'important');
+            }
+            
+            // إخفاء welcomeModal
+            if (welcomeModal) {
+                welcomeModal.style.setProperty('display', 'none', 'important');
+                welcomeModal.style.setProperty('visibility', 'hidden', 'important');
+            }
+            
+            // إظهار التطبيق الرئيسي
             if (container) {
                 container.style.setProperty('display', 'block', 'important');
-                container.style.opacity = '1';
+                container.style.setProperty('opacity', '1', 'important');
+                container.style.setProperty('visibility', 'visible', 'important');
             }
             
-            // 2. تفعيل الصوت (فقط بعد نجاح التحقق من البوت)
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                // Create a silent buffer to unlock audio
-                const buffer = audioCtx.createBuffer(1, 1, 22050);
-                const source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0);
-            } catch (e) {
-                console.warn('AudioContext initialization failed:', e);
+            // حفظ في localStorage أن المستخدم رأى الرسالة
+            localStorage.setItem('welcome_seen', 'true');
+            
+            // تحديث الحالة وبدء المرحلة الأولى
+            if (typeof state !== 'undefined') {
+                state = 'HUMAN_VERIFY';
             }
             
-            // 3. تحديث الحالة وبدء المرحلة الأولى
-            state = 'VERIFY';
             if (typeof updateUIState === 'function') {
                 updateUIState();
             }
-            if (typeof showStage1 === 'function') {
-                showStage1();
+            
+            if (typeof initializeStages === 'function') {
+                initializeStages();
             }
             
-            console.log("App Initialized on First Click - Human Verified");
+            console.log("Welcome screen closed - App started");
         }
         
-        // ربط الدالة بالطبقة عند تحميل الصفحة
+        // دالة بسيطة لإخفاء شاشة الترحيب (بدون فحص البوت)
+        function closeWelcomeScreen() {
+            initApp(null);
+        }
+        
+        // ربط الدالة بجميع شاشات الترحيب عند تحميل الصفحة
         window.addEventListener('load', function() {
             pageLoadTime = Date.now(); // تسجيل وقت التحميل
-            const welcome = document.getElementById('welcome-layer');
-            if (welcome) {
-                // use capture: true لضمان التقاط الضغطة قبل أي عنصر آخر
-                welcome.addEventListener('click', initApp, { once: true, capture: true });
+            
+            // التحقق من localStorage
+            const welcomeSeen = localStorage.getItem('welcome_seen');
+            
+            // ربط welcome-layer - استخدام closeWelcomeScreen مباشرة
+            const welcomeLayer = document.getElementById('welcome-layer');
+            if (welcomeLayer) {
+                welcomeLayer.addEventListener('click', closeWelcomeScreen, { once: true });
+                welcomeLayer.addEventListener('touchstart', closeWelcomeScreen, { once: true });
+            }
+            
+            // ربط welcome-overlay - استخدام closeWelcomeScreen مباشرة
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', closeWelcomeScreen, { once: true });
+                welcomeOverlay.addEventListener('touchstart', closeWelcomeScreen, { once: true });
+            }
+            
+            // إذا كان المستخدم قد رأى الرسالة من قبل، إخفاء الشاشة مباشرة
+            if (welcomeSeen === 'true') {
+                setTimeout(() => {
+                    closeWelcomeScreen();
+                }, 100);
+            }
+        });
+        
+        // أيضاً ربط عند DOMContentLoaded كنسخة احتياطية
+        document.addEventListener('DOMContentLoaded', function() {
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
+            
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', closeWelcomeScreen, { once: true });
+                welcomeOverlay.addEventListener('touchstart', closeWelcomeScreen, { once: true });
+            }
+            
+            if (welcomeLayer) {
+                welcomeLayer.addEventListener('click', closeWelcomeScreen, { once: true });
+                welcomeLayer.addEventListener('touchstart', closeWelcomeScreen, { once: true });
             }
         });
     </script>

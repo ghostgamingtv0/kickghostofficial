@@ -1733,10 +1733,15 @@
         <!-- Master Control Section -->
         <section class="glass-card" style="margin-bottom: 40px;">
             <div class="step-indicator">
-                <div class="step-dot active" id="dot1" title="Human Verification | التأكد الحيوي"></div>
-                <div class="step-dot" id="dot2" title="Social Follow | المتابعة الاجتماعية"></div>
-                <div class="step-dot" id="dot3" title="Add Token & Wallet | إدراج عملة ومحفظة"></div>
-                <div class="step-dot" id="dot4" title="Claim Code | الحصول على الكود"></div>
+                <div class="step-dot active" id="dot1" title="1. Human Verification | التأكد الحيوي"></div>
+                <div class="step-dot" id="dot2" title="2. Social Verification | المتابعة الاجتماعية"></div>
+                <div class="step-dot" id="dot3" title="3. Select Wallet | اختيار المحفظة"></div>
+                <div class="step-dot" id="dot4" title="4. Confirm Wallet | تأكيد المحفظة"></div>
+                <div class="step-dot" id="dot5" title="5. Add Token | إضافة العملة"></div>
+                <div class="step-dot" id="dot6" title="6. Request Contract | طلب العقد"></div>
+                <div class="step-dot" id="dot7" title="7. X402 Protocol | بروتوكول X402"></div>
+                <div class="step-dot" id="dot8" title="8. Claim Code | الحصول على الكود"></div>
+                <div class="step-dot" id="dot9" title="9. Ghost Empire | إمبراطورية الأشباح"></div>
             </div>
             
             <div class="master-control-box">
@@ -6112,6 +6117,460 @@
     </div>
     
     <script>
+        // ==================== ENHANCED SMART CONTRACT FUNCTIONS ====================
+        // Complete Smart Contract integration with ethers.js
+        
+        async function handleMainAction() {
+            const btn = document.getElementById('masterBtn');
+            if (!btn || btn.disabled) return;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<div class="loading-spinner"></div> <span>Processing...</span>';
+                
+                // Check current state and execute appropriate action
+                if (state === 'HUMAN_VERIFY') {
+                    // Stage 1: Human Verification - Already handled by welcome screen
+                    state = 'SOCIAL_VERIFY';
+                    updateUIState();
+                } else if (state === 'SOCIAL_VERIFY') {
+                    // Stage 2: Social Verification - Check if all links confirmed
+                    if (socialVerificationState.confirmed.size >= SOCIAL_LINKS.length) {
+                        state = 'WALLET';
+                        updateUIState();
+                        openWalletModal();
+                    } else {
+                        showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first`, 'warning');
+                    }
+                } else if (state === 'WALLET') {
+                    // Stage 3: Wallet Selection
+                    openWalletModal();
+                } else if (state === 'WALLET_CONFIRM') {
+                    // Stage 4: Confirm Wallet Connection
+                    await confirmWallet();
+                } else if (state === 'ADD_TOKEN') {
+                    // Stage 5: Add AKSG Token
+                    await addTokenToWallet();
+                } else if (state === 'REQUEST_CONTRACT') {
+                    // Stage 6: Request Contract & Save to Thirdweb
+                    await requestContractAndSave();
+                } else if (state === 'X402') {
+                    // Stage 7: X402 Protocol - Message Signing
+                    await initiateX402Protocol();
+                } else if (state === 'CLAIM_CODE') {
+                    // Stage 8: Generate Claim Code (Secure Generator)
+                    await generateClaimCode();
+                } else if (state === 'EMPIRE') {
+                    // Stage 9: Show Ghost Empire
+                    showGhostEmpire();
+                }
+            } catch (e) {
+                console.error('Handle main action error:', e);
+                showNotify("An error occurred. Please try again.", 'error');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+        
+        // Enhanced refreshTransactions function
+        async function refreshTransactions() {
+            const btn = event?.target;
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
+                btn.disabled = true;
+            }
+            
+            try {
+                if (!userAddr) {
+                    showNotify("Please connect your wallet first", 'warning');
+                    return;
+                }
+                
+                // Load transactions from PolygonScan
+                await loadUserTransactions();
+                
+                // Also refresh from contract events
+                await refreshContractTransactions();
+                
+                showNotify("✅ Transactions refreshed successfully", 'success');
+            } catch (e) {
+                console.error('Refresh transactions error:', e);
+                showNotify("Failed to refresh transactions", 'error');
+            } finally {
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+                    btn.disabled = false;
+                }
+            }
+        }
+        
+        // Refresh transactions from contract events
+        async function refreshContractTransactions() {
+            try {
+                if (!userAddr || !contractInstance) return;
+                
+                const provider = await getContractProvider();
+                if (!provider) return;
+                
+                // Get Claimed events for this user
+                const contract = new ethers.Contract(CONFIG.TKN, CONTRACT_ABI, provider);
+                const filter = contract.filters.Claimed(userAddr);
+                const events = await contract.queryFilter(filter);
+                
+                // Add to transactions list
+                events.forEach(event => {
+                    addTransaction('Claim', event.transactionHash, `${ethers.utils.formatEther(event.args.amount)} AKSG`);
+                });
+            } catch (e) {
+                console.error('Refresh contract transactions error:', e);
+            }
+        }
+        
+        // Enhanced connectWallet with Phantom support
+        async function connectWalletEnhanced(walletName) {
+            try {
+                // Close modal if open
+                closeWalletModal();
+                
+                const wallet = WALLETS[walletName];
+                if (!wallet) {
+                    showNotify(`Wallet ${walletName} not supported`, 'error');
+                    return;
+                }
+                
+                // Check wallet installation
+                if (walletName === 'Phantom') {
+                    // Phantom EVM support for Polygon
+                    if (!window.ethereum && !window.solana) {
+                        window.open(wallet.url, '_blank');
+                        showNotify(`Please install ${walletName} wallet`, 'warning');
+                        return;
+                    }
+                    // Phantom uses window.ethereum for EVM chains (Polygon)
+                } else {
+                    // MetaMask/Trust Wallet
+                    if (!window.ethereum) {
+                        window.open(wallet.url, '_blank');
+                        showNotify(`Please install ${walletName} extension`, 'warning');
+                        return;
+                    }
+                }
+                
+                // Switch to Polygon network
+                const switched = await switchToPolygon();
+                if (!switched) {
+                    showNotify("Please switch to Polygon network manually", 'warning');
+                    return;
+                }
+                
+                // Request accounts
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAddr = accounts[0];
+                connectedWallet = walletName;
+                
+                // Security Guards: Check for duplicate wallet
+                const duplicateCheck = await preventDuplicateWallet(userAddr);
+                if (!duplicateCheck) {
+                    return;
+                }
+                
+                // Save first wallet address
+                if (!firstWalletAddress) {
+                    firstWalletAddress = userAddr.toLowerCase();
+                    sessionStorage.setItem('aksg_first_wallet_session', firstWalletAddress);
+                }
+                
+                // Move to WALLET_CONFIRM stage
+                state = 'WALLET_CONFIRM';
+                updateUIState();
+                
+                showNotify(`✅ ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
+                addUserToList(getShortAddress(userAddr));
+                
+            } catch (e) {
+                console.error('Connect wallet enhanced error:', e);
+                if (e.code === 4001) {
+                    showNotify("Wallet connection rejected by user", 'warning');
+                } else {
+                    showNotify("Failed to connect wallet. Please try again.", 'error');
+                }
+            }
+        }
+        
+        // Confirm wallet connection
+        async function confirmWallet() {
+            try {
+                if (!userAddr) {
+                    showNotify("Please connect your wallet first", 'warning');
+                    return;
+                }
+                
+                // Save wallet data to Thirdweb (via backend)
+                await saveWalletToThirdweb(userAddr, connectedWallet);
+                
+                // Move to ADD_TOKEN stage
+                state = 'ADD_TOKEN';
+                updateUIState();
+                
+                showNotify("✅ Wallet confirmed! Now add AKSG token to your wallet.", 'success');
+            } catch (e) {
+                console.error('Confirm wallet error:', e);
+                showNotify("Failed to confirm wallet", 'error');
+            }
+        }
+        
+        // Add token to wallet
+        async function addTokenToWallet() {
+            try {
+                if (!window.ethereum) {
+                    showNotify("Please connect your wallet first", 'warning');
+                    return;
+                }
+                
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: CONFIG.TKN,
+                            symbol: 'AKSG',
+                            decimals: 18,
+                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                        }
+                    }
+                });
+                
+                tokenAdded = true;
+                
+                // Move to REQUEST_CONTRACT stage
+                state = 'REQUEST_CONTRACT';
+                updateUIState();
+                
+                showNotify("✅ AKSG token added to wallet! Now request contract.", 'success');
+            } catch (e) {
+                console.error('Add token error:', e);
+                showNotify("Failed to add token. Please try again.", 'error');
+            }
+        }
+        
+        // Request contract and save to Thirdweb
+        async function requestContractAndSave() {
+            try {
+                if (!userAddr) {
+                    showNotify("Please connect your wallet first", 'warning');
+                    return;
+                }
+                
+                // Get contract instance
+                const contract = await getContractInstance();
+                if (!contract) {
+                    showNotify("Failed to load contract. Please try again.", 'error');
+                    return;
+                }
+                
+                // Save contract data to Thirdweb (via backend)
+                await callThirdwebBackendAPI('save_contract_data', {
+                    wallet: userAddr,
+                    contract_address: CONFIG.TKN,
+                    wallet_type: connectedWallet,
+                    timestamp: new Date().toISOString()
+                });
+                
+                contractRequested = true;
+                
+                // Move to X402 stage (message signing)
+                state = 'X402';
+                updateUIState();
+                
+                showNotify("✅ Contract data saved! Now sign message for verification.", 'success');
+            } catch (e) {
+                console.error('Request contract error:', e);
+                showNotify("Failed to save contract data", 'error');
+            }
+        }
+        
+        // ==================== SECURE CLAIM CODE GENERATOR ====================
+        // مولد كود آمن يمنح كود فقط لمن أكمل جميع المهام بشكل صحيح
+        
+        // Global used codes storage (prevents duplicates across sessions)
+        let globalUsedCodes = new Set(JSON.parse(localStorage.getItem('aksg_global_used_codes') || '[]'));
+        
+        // Verify all tasks completed before generating code
+        function verifyAllTasksCompleted() {
+            const checks = {
+                humanVerify: state !== 'HUMAN_VERIFY', // Stage 1 completed
+                socialVerify: socialVerificationState.confirmed.size >= SOCIAL_LINKS.length, // Stage 2 completed
+                walletConnected: !!userAddr && !!connectedWallet, // Stage 3 completed
+                walletConfirmed: walletConfirmed, // Stage 4 completed
+                tokenAdded: tokenAdded, // Stage 5 completed
+                contractRequested: contractRequested, // Stage 6 completed
+                x402Signed: state === 'CLAIM_CODE' || state === 'EMPIRE' // Stage 7 completed
+            };
+            
+            // Log verification status
+            console.log('Task Verification:', checks);
+            
+            // All checks must pass
+            return Object.values(checks).every(check => check === true);
+        }
+        
+        // Generate unique 6-digit code with security checks
+        function generateSecureClaimCode() {
+            // Security Check 1: Verify all tasks completed
+            if (!verifyAllTasksCompleted()) {
+                showNotify("⚠️ Security Check Failed: Please complete all tasks first", 'error');
+                return null;
+            }
+            
+            // Security Check 2: Verify wallet is connected and confirmed
+            if (!userAddr || !walletConfirmed) {
+                showNotify("⚠️ Security Check Failed: Wallet not confirmed", 'error');
+                return null;
+            }
+            
+            // Security Check 3: Verify token is added
+            if (!tokenAdded) {
+                showNotify("⚠️ Security Check Failed: Token not added to wallet", 'error');
+                return null;
+            }
+            
+            // Security Check 4: Verify contract is requested
+            if (!contractRequested) {
+                showNotify("⚠️ Security Check Failed: Contract not requested", 'error');
+                return null;
+            }
+            
+            // Security Check 5: Check if wallet already has a code
+            const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
+            if (existingCode) {
+                showNotify("⚠️ This wallet already has a claim code", 'warning');
+                return existingCode;
+            }
+            
+            // Generate unique 6-digit code (no duplicates)
+            let code;
+            let attempts = 0;
+            const maxAttempts = 1000;
+            
+            do {
+                // Generate random 6-digit code (100000-999999)
+                code = Math.floor(100000 + Math.random() * 900000).toString();
+                attempts++;
+                
+                // Prevent infinite loop
+                if (attempts > maxAttempts) {
+                    // Fallback: use timestamp + wallet hash
+                    const walletHash = userAddr.slice(2, 8).toLowerCase();
+                    const timestamp = Date.now().toString().slice(-6);
+                    code = (parseInt(walletHash, 16) % 900000 + 100000).toString();
+                    break;
+                }
+            } while (globalUsedCodes.has(code) || usedCodes.has(code));
+            
+            // Mark code as used in both sets
+            globalUsedCodes.add(code);
+            usedCodes.add(code);
+            
+            // Save to localStorage (persistent across sessions)
+            const storedCodes = JSON.parse(localStorage.getItem('aksg_global_used_codes') || '[]');
+            storedCodes.push(code);
+            // Keep last 10000 codes to prevent duplicates
+            localStorage.setItem('aksg_global_used_codes', JSON.stringify(storedCodes.slice(-10000)));
+            
+            // Also save in session storage
+            localStorage.setItem('aksg_used_codes', JSON.stringify(Array.from(usedCodes)));
+            
+            // Save code with wallet address (one code per wallet)
+            localStorage.setItem(`claim_code_${userAddr.toLowerCase()}`, code);
+            localStorage.setItem(`claim_code_timestamp_${userAddr.toLowerCase()}`, Date.now().toString());
+            
+            // Save code-wallet pair for verification
+            const codeWalletPairs = JSON.parse(localStorage.getItem('aksg_code_wallet_pairs') || '[]');
+            codeWalletPairs.push({
+                code: code,
+                wallet: userAddr.toLowerCase(),
+                timestamp: Date.now(),
+                verified: true
+            });
+            localStorage.setItem('aksg_code_wallet_pairs', JSON.stringify(codeWalletPairs.slice(-10000)));
+            
+            console.log(`✅ Secure Claim Code Generated: ${code} for wallet: ${getShortAddress(userAddr)}`);
+            
+            return code;
+        }
+        
+        // Generate claim code (6 digits) - Enhanced with security
+        async function generateClaimCode() {
+            try {
+                // Security Check: Verify wallet is connected
+                if (!userAddr) {
+                    showNotify("⚠️ Please connect your wallet first", 'warning');
+                    return;
+                }
+                
+                // Security Check: Verify all tasks completed
+                if (!verifyAllTasksCompleted()) {
+                    showNotify("⚠️ Security Check Failed: Please complete all tasks first", 'error');
+                    return;
+                }
+                
+                // Check if wallet already has a code
+                const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
+                if (existingCode) {
+                    showNotify("✅ You already have a claim code!", 'info');
+                    userClaimCode = existingCode;
+                    displayClaimCode(existingCode);
+                    state = 'EMPIRE';
+                    updateUIState();
+                    return;
+                }
+                
+                // Generate secure unique code
+                const code = generateSecureClaimCode();
+                if (!code) {
+                    showNotify("⚠️ Failed to generate claim code. Please try again.", 'error');
+                    return;
+                }
+                
+                userClaimCode = code;
+                
+                // Save to backend (via API)
+                try {
+                    await callThirdwebBackendAPI('save_claim_code', {
+                        wallet: userAddr,
+                        claim_code: code,
+                        timestamp: new Date().toISOString(),
+                        verified: true
+                    });
+                } catch (e) {
+                    console.error('Backend save error (non-critical):', e);
+                }
+                
+                // Move to EMPIRE stage
+                state = 'EMPIRE';
+                updateUIState();
+                
+                // Show claim code
+                displayClaimCode(code);
+                
+                // Show confetti celebration
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 500,
+                        spread: 120,
+                        origin: { y: 0.6 },
+                        colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
+                    });
+                }
+                
+                showNotify(`✅ Secure Claim Code Generated: ${code} | كود آمن تم إنشاؤه`, 'success');
+                
+            } catch (e) {
+                console.error('Generate claim code error:', e);
+                showNotify("Failed to generate claim code", 'error');
+            }
+        }
+        
         window.addEventListener('load', function() {
             // نضمن أن كل شيء محمل قبل تفعيل الضغط
             const welcomeLayer = document.getElementById('welcome-layer'); 
@@ -7875,10 +8334,15 @@
         <!-- Master Control Section -->
         <section class="glass-card" style="margin-bottom: 40px;">
             <div class="step-indicator">
-                <div class="step-dot active" id="dot1" title="Human Verification | التأكد الحيوي"></div>
-                <div class="step-dot" id="dot2" title="Social Follow | المتابعة الاجتماعية"></div>
-                <div class="step-dot" id="dot3" title="Add Token & Wallet | إدراج عملة ومحفظة"></div>
-                <div class="step-dot" id="dot4" title="Claim Code | الحصول على الكود"></div>
+                <div class="step-dot active" id="dot1" title="1. Human Verification | التأكد الحيوي"></div>
+                <div class="step-dot" id="dot2" title="2. Social Verification | المتابعة الاجتماعية"></div>
+                <div class="step-dot" id="dot3" title="3. Select Wallet | اختيار المحفظة"></div>
+                <div class="step-dot" id="dot4" title="4. Confirm Wallet | تأكيد المحفظة"></div>
+                <div class="step-dot" id="dot5" title="5. Add Token | إضافة العملة"></div>
+                <div class="step-dot" id="dot6" title="6. Request Contract | طلب العقد"></div>
+                <div class="step-dot" id="dot7" title="7. X402 Protocol | بروتوكول X402"></div>
+                <div class="step-dot" id="dot8" title="8. Claim Code | الحصول على الكود"></div>
+                <div class="step-dot" id="dot9" title="9. Ghost Empire | إمبراطورية الأشباح"></div>
             </div>
             
             <div class="master-control-box">
@@ -12488,545 +12952,5 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

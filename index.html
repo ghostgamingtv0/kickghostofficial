@@ -2316,13 +2316,14 @@
             }
         })();
 
-        // Social Links with Logos - Updated with correct URLs (5 mandatory platforms only)
+        // Social Links with Logos - Updated with correct URLs (6 platforms including Discord)
         const SOCIAL_LINKS = [
             { url: "https://kick.com/ghost_gamingtv", name: "Kick", icon: "fa-brands fa-kickstarter-k", logo: "https://kick.com/favicon.ico" },
             { url: "https://twitter.com/tv_ghostgaming", name: "Twitter/X", icon: "fab fa-x-twitter", logo: "https://abs.twimg.com/favicons/twitter.3.ico" },
             { url: "https://t.me/ghost_gamingtv", name: "Telegram", icon: "fab fa-telegram", logo: "https://telegram.org/favicon.ico" },
             { url: "https://www.instagram.com/ghost.gamingtv/", name: "Instagram", icon: "fab fa-instagram", logo: "https://www.instagram.com/favicon.ico" },
-            { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" }
+            { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" },
+            { url: "https://discord.gg/NMrnjQ7E", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" }
         ];
 
         // Wallet Information with Links
@@ -2342,10 +2343,14 @@
                 url: "https://phantom.app/",
                 deepLink: "https://phantom.app/"
             },
+            // NOTE: Thirdweb is NOT a wallet - it's a platform/API service for Web3 development
+            // Thirdweb collects information and provides APIs, but does not function as a wallet
+            // Users should use MetaMask, Trust Wallet, or Phantom for actual wallet functionality
             Thirdweb: {
                 logo: "https://thirdweb.com/favicon.ico",
                 url: "https://thirdweb.com/",
-                deepLink: "https://thirdweb.com/"
+                deepLink: "https://thirdweb.com/",
+                note: "Thirdweb is a platform/API service, not a wallet. Use MetaMask, Trust Wallet, or Phantom for wallet functionality."
             }
         };
 
@@ -2446,31 +2451,8 @@
                 }
             }, false);
             
-            // Disable console access
-            const noop = function() {};
-            Object.defineProperty(window, 'console', {
-                get: function() {
-                    return {
-                        log: noop,
-                        debug: noop,
-                        info: noop,
-                        warn: noop,
-                        error: noop,
-                        clear: noop,
-                        trace: noop,
-                        dir: noop,
-                        dirxml: noop,
-                        group: noop,
-                        groupEnd: noop,
-                        time: noop,
-                        timeEnd: noop,
-                        assert: noop,
-                        profile: noop,
-                        profileEnd: noop
-                    };
-                },
-                set: function() {}
-            });
+            // Note: Console disabling removed - weak protection that can be easily bypassed
+            // Better security should be implemented server-side
             
             // Disable DevTools detection
             let devtools = {open: false};

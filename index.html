@@ -19,6 +19,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
+        /* تأكد أن هذا القسم في أعلى الـ CSS */
+        #welcome-layer {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 999999; /* أعلى من كل شيء */
+            cursor: pointer;
+        }
+        
+        .app-container {
+            display: none; /* مخفي تماماً في البداية */
+            opacity: 0;
+        }
+        
+        .app-active {
+            display: block !important;
+            opacity: 1 !important;
+        }
         
         :root {
             --primary: #a336ff;
@@ -6068,5 +6092,317 @@
     <noscript>
         <meta http-equiv="refresh" content="0; url=about:blank">
     </noscript>
+    
+    <!-- Welcome Layer -->
+    <div id="welcome-layer">
+        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: default;" onclick="event.stopPropagation()">
+            <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
+                Welcome to KICKGHOST Empire
+            </h2>
+            <p style="color: var(--secondary); font-size: 1.2rem; line-height: 1.8;">
+                The future of Web3 Gaming starts here.
+            </p>
+            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic;">
+                Click anywhere to continue
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        window.addEventListener('load', function() {
+            // نضمن أن كل شيء محمل قبل تفعيل الضغط
+            const welcomeLayer = document.getElementById('welcome-layer'); 
+            const mainApp = document.querySelector('.container'); // أو اسم الكلاس الرئيسي عندك
+
+            document.body.addEventListener('click', function() {
+                if (welcomeLayer) {
+                    welcomeLayer.style.display = 'none'; // إخفاء طبقة الترحيب
+                    if (mainApp) {
+                        mainApp.classList.add('app-active'); // إظهار الكود الـ 5500 سطر
+                        mainApp.style.display = 'block';
+                    }
+                    console.log("Empire Started...");
+                    // هنا تبدأ المرحلة 1 تلقائياً
+                    if(typeof startStage1 === "function") startStage1();
+                    // إذا لم تكن الدالة موجودة، استخدم showStage1
+                    if(typeof showStage1 === "function") showStage1();
+                }
+            }, { once: true });
+        });
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

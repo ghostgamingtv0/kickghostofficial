@@ -2436,56 +2436,26 @@
         
         // ==================== WELCOME MODAL CLOSE AND START ====================
         function closeWelcomeModalAndStart() {
-            console.log('closeWelcomeModalAndStart called'); // Debug
-            
+            // بسيط: إخفاء Welcome Modal وإظهار Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
             const container = document.querySelector('.container');
             
-            // Save to localStorage that user has seen welcome message
+            // حفظ في localStorage أن المستخدم رأى الرسالة
             localStorage.setItem('welcome_seen', 'true');
             
-            // Check if elements exist
-            if (!welcomeModal) {
-                console.error('Welcome modal not found!');
-                return;
-            }
-            
-            if (!container) {
-                console.error('Container not found!');
-                return;
-            }
-            
-            // Close welcome modal with fade-out animation
-            welcomeModal.style.opacity = '0';
-            welcomeModal.style.transition = 'opacity 0.3s ease-in-out';
-            
-            setTimeout(() => {
-                // Hide welcome modal completely
+            // إخفاء Welcome Modal
+            if (welcomeModal) {
                 welcomeModal.style.display = 'none';
-                welcomeModal.style.opacity = '1'; // Reset for next time
-                
-                // Show container immediately
+            }
+            
+            // إظهار Dashboard
+            if (container) {
                 container.style.display = 'block';
-                container.style.opacity = '0';
-                container.style.transition = 'opacity 0.5s ease-in-out';
-                
-                // Trigger reflow for animation
-                void container.offsetHeight;
-                
-                // Fade in container
-                setTimeout(() => {
-                    container.style.opacity = '1';
-                    
-                    // Scroll to top
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Initialize stages after showing container
-                    initializeStages();
-                }, 50);
-            }, 300);
+                // Scroll إلى الأعلى
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // تهيئة المراحل
+                initializeStages();
+            }
         }
         
         // Start Tasks Flow - Transition from Stage 1 to Stage 2

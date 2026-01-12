@@ -1063,8 +1063,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
+            min-height: 100vh;
+            width: 100%;
             padding: 40px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
+            z-index: 10000;
+            overflow-y: auto;
         }
 
         .social-icons-grid {
@@ -1150,11 +1157,17 @@
         .ghost-empire-stage {
             display: none; /* Strictly hidden by default */
             min-height: 100vh;
+            width: 100%;
             padding: 40px 20px;
             background: radial-gradient(circle at center, rgba(163, 54, 255, 0.1), rgba(0, 0, 0, 0.9));
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            overflow-y: auto;
         }
 
         .ghost-empire-stage.active {
@@ -2648,13 +2661,46 @@
 
         function closeStage0() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             if (welcomeOverlay) {
                 welcomeOverlay.style.opacity = '0';
                 welcomeOverlay.style.transition = 'opacity 0.5s ease-in-out';
                 setTimeout(() => {
                     welcomeOverlay.style.display = 'none';
                     // Start Stage 1: Social Tasks
-                    showStage1();
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
+                        }
+                    }
+                }, 500);
+            }
+            // Also handle welcome-layer
+            if (welcomeLayer) {
+                welcomeLayer.style.opacity = '0';
+                welcomeLayer.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    welcomeLayer.style.display = 'none';
+                    // Start Stage 1: Social Tasks
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
+                        }
+                    }
                 }, 500);
             }
         }
@@ -2667,16 +2713,37 @@
         };
 
         function showStage1() {
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
+            if (ghostEmpire) {
+                ghostEmpire.style.display = 'none';
+                ghostEmpire.classList.remove('active');
+            }
+            
+            // Show Stage 1 on full screen
             if (container) {
                 container.style.display = 'block';
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100%';
+                container.style.height = '100vh';
+                container.style.zIndex = '10000';
+                container.style.overflowY = 'auto';
+                container.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                 container.innerHTML = `
                     <div class="stage1-social-container">
                         <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
-                            <i class="fas fa-share-alt"></i> Social Verification
+                            <i class="fas fa-share-alt"></i> Social Verification | التحقق الاجتماعي
                         </h1>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
-                            Click on each social media icon to verify your accounts
+                            Click on each social media icon to verify your accounts | اضغط على كل أيقونة للتحقق من حساباتك
                         </p>
                         
                         <div class="social-icons-grid">
@@ -2695,7 +2762,7 @@
                         </div>
                         
                         <button id="stage1ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage2()" disabled>
-                            Continue to Wallet Connection
+                            <i class="fas fa-arrow-right"></i> Continue to Wallet Connection | المتابعة لربط المحفظة
                         </button>
                     </div>
                 `;
@@ -2739,26 +2806,61 @@
         }
 
         function proceedToStage2() {
+            // Mark Stage 1 (SOCIAL_VERIFY) as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('SOCIAL_VERIFY');
+            }
+            
             // Hide Stage 1, Show Stage 2
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'none';
+            }
+            
+            // Show Stage 2: Wallet Connection
+            if (typeof showStage2 === 'function') {
                 showStage2();
+            } else {
+                // Fallback: show container
+                if (container) {
+                    container.style.display = 'block';
+                }
             }
         }
 
         // ==================== STAGE 2: WALLET & ASSET INJECTION ====================
         function showStage2() {
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
+            if (ghostEmpire) {
+                ghostEmpire.style.display = 'none';
+                ghostEmpire.classList.remove('active');
+            }
+            
+            // Show Stage 2 on full screen
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'block';
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100%';
+                container.style.height = '100vh';
+                container.style.zIndex = '10000';
+                container.style.overflowY = 'auto';
+                container.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                 container.innerHTML = `
-                    <div style="min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
+                    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
                         <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
-                            <i class="fas fa-wallet"></i> Connect Your Wallet
+                            <i class="fas fa-wallet"></i> Connect Your Wallet | ربط المحفظة
                         </h1>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
-                            Choose your wallet to connect to the KICKGHOST Empire
+                            Choose your wallet to connect to the KICKGHOST Empire | اختر محفظتك للاتصال بإمبراطورية KICKGHOST
                         </p>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; margin-bottom: 40px;">
@@ -2786,7 +2888,7 @@
                         </div>
                         
                         <button id="stage2ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage3()" disabled style="margin-top: 40px; display: none;">
-                            Continue to Empire Dashboard
+                            <i class="fas fa-arrow-right"></i> Continue to Empire Dashboard | المتابعة إلى لوحة الإمبراطورية
                         </button>
                     </div>
                 `;
@@ -2862,14 +2964,34 @@
 
         function proceedToStage3() {
             if (!tokenAddedStage2) {
-                alert('Please add $AKSG token to your wallet first');
+                if (typeof showNotify === 'function') {
+                    showNotify('Please add $AKSG token to your wallet first | يرجى إضافة عملة AKSG إلى محفظتك أولاً', 'warning');
+                } else {
+                    alert('Please add $AKSG token to your wallet first');
+                }
                 return;
             }
+            
+            // Mark Stage 2 (WALLET and ADD_TOKEN) as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('WALLET');
+                markStageCompleted('ADD_TOKEN');
+            }
+            
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'none';
             }
-            showStage3();
+            
+            // Show Stage 3: Ghost Empire
+            if (typeof showStage3 === 'function') {
+                showStage3();
+            } else {
+                // Fallback: show container
+                if (container) {
+                    container.style.display = 'block';
+                }
+            }
         }
 
         // ==================== STAGE 3 & 4: EMPIRE DASHBOARD & CLAIM SYSTEM ====================
@@ -2878,8 +3000,13 @@
         let usedClaimCodes = new Set(JSON.parse(localStorage.getItem('usedClaimCodes') || '[]'));
 
         function showStage3() {
-            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
             
             // Hide container with fade-out
             if (container) {
@@ -2890,7 +3017,18 @@
                 }, 500);
             }
             
+            // Show Stage 3 (Ghost Empire) on full screen
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
             if (ghostEmpire) {
+                // Set full screen styles
+                ghostEmpire.style.position = 'fixed';
+                ghostEmpire.style.top = '0';
+                ghostEmpire.style.left = '0';
+                ghostEmpire.style.width = '100%';
+                ghostEmpire.style.height = '100vh';
+                ghostEmpire.style.zIndex = '10000';
+                ghostEmpire.style.overflowY = 'auto';
+                
                 // Show Ghost Empire with fade-in
                 ghostEmpire.style.display = 'block';
                 ghostEmpire.style.opacity = '0';
@@ -2904,9 +3042,15 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
                 // Initialize Empire features
-                initEmpireDashboard();
-                checkKickFollowerStatus();
-                loadLeaderboardData();
+                if (typeof initEmpireDashboard === 'function') {
+                    initEmpireDashboard();
+                }
+                if (typeof checkKickFollowerStatus === 'function') {
+                    checkKickFollowerStatus();
+                }
+                if (typeof loadLeaderboardData === 'function') {
+                    loadLeaderboardData();
+                }
             }
         }
 
@@ -3067,23 +3211,47 @@
         function closeWelcomeModalAndStart() {
             // بسيط: إخفاء Welcome Modal وإظهار Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
             
             // حفظ في localStorage أن المستخدم رأى الرسالة
             localStorage.setItem('welcome_seen', 'true');
+            
+            // Mark HUMAN_VERIFY stage as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('HUMAN_VERIFY');
+            }
             
             // إخفاء Welcome Modal
             if (welcomeModal) {
                 welcomeModal.style.display = 'none';
             }
             
-            // إظهار Dashboard
-            if (container) {
-                container.style.display = 'block';
-                // Scroll إلى الأعلى
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                // تهيئة المراحل
-                initializeStages();
+            // إخفاء welcome-overlay
+            if (welcomeOverlay) {
+                welcomeOverlay.style.display = 'none';
+            }
+            
+            // إخفاء welcome-layer
+            if (welcomeLayer) {
+                welcomeLayer.style.display = 'none';
+            }
+            
+            // Start Stage 1: Social Tasks
+            if (typeof showStage1 === 'function') {
+                showStage1();
+            } else {
+                // Fallback: إظهار Dashboard
+                if (container) {
+                    container.style.display = 'block';
+                    // Scroll إلى الأعلى
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // تهيئة المراحل
+                    if (typeof initializeStages === 'function') {
+                        initializeStages();
+                    }
+                }
             }
         }
         
@@ -3180,37 +3348,26 @@
             
             // ==================== START TASKS BUTTON CLICK HANDLER ====================
             const startBtn = document.getElementById('startTasksBtn');
-            const mainContainer = document.querySelector('.container');
-            const stage2 = document.querySelector('.ghost-empire-stage');
-
-            if (startBtn && mainContainer && stage2) {
+            if (startBtn) {
                 startBtn.addEventListener('click', () => {
-                    // 1. إضافة انيميشن الاختفاء للمرحلة الأولى
-                    mainContainer.classList.add('hidden');
+                    // Mark HUMAN_VERIFY stage as completed
+                    if (typeof markStageCompleted === 'function') {
+                        markStageCompleted('HUMAN_VERIFY');
+                    }
                     
-                    // 2. إظهار المرحلة الثانية بعد وقت قصير (Smooth transition)
-                    setTimeout(() => {
-                        mainContainer.style.display = 'none'; // قفل التبويب/المرحلة الأولى
-                        stage2.style.display = 'block'; // إظهار المرحلة الثانية
-                        stage2.classList.add('active'); // تفعيل المرحلة الثانية
-                        
-                        // إضافة انيميشن الدخول
-                        stage2.style.opacity = '1';
-                        stage2.style.transform = 'translateY(0)';
-                        
-                        // الصعود لأعلى الصفحة
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        
-                        // تحديث النقط في المراحل (Progress dots)
-                        const dot2 = document.getElementById('dot2');
-                        if (dot2) dot2.classList.add('active');
-                        
-                        // Initialize social verification grid if not already done
-                        const grid = document.getElementById('socialVerificationGrid');
-                        if (grid && (!grid.innerHTML || grid.innerHTML.includes('Populated by JS'))) {
-                            initGhostEmpire();
+                    // Start Stage 1: Social Tasks
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container and initialize
+                        const mainContainer = document.querySelector('.container');
+                        if (mainContainer) {
+                            mainContainer.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
                         }
-                    }, 500);
+                    }
                 });
             }
             
@@ -3363,7 +3520,9 @@
             }
             
             // Mark SOCIAL_VERIFY stage as completed
-            markStageCompleted('SOCIAL_VERIFY');
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('SOCIAL_VERIFY');
+            }
             
             // Save verification state
             localStorage.setItem('social_verification_complete', 'true');
@@ -3372,25 +3531,39 @@
                 timestamps: socialVerificationState.timestamps
             }));
             
-            // Hide Ghost Empire, show main dashboard
-            const empireStage = document.getElementById('ghostEmpireStage');
-            const mainContainer = document.querySelector('.container');
+            // Proceed to Stage 2: Wallet Connection
+            if (typeof showStage2 === 'function') {
+                showStage2();
+            } else {
+                // Fallback: Hide Ghost Empire, show main dashboard
+                const empireStage = document.getElementById('ghostEmpireStage');
+                const mainContainer = document.querySelector('.container');
+                
+                if (empireStage) empireStage.classList.remove('active');
+                if (mainContainer) mainContainer.style.display = 'block';
+                
+                // Move to wallet selection stage
+                if (typeof state !== 'undefined') {
+                    state = 'WALLET';
+                }
+                if (typeof updateUIState === 'function') {
+                    updateUIState();
+                }
+                
+                // Automatically open wallet modal after 1 second
+                if (typeof openWalletModal === 'function') {
+                    setTimeout(() => {
+                        openWalletModal();
+                    }, 1000);
+                }
+            }
             
-            if (empireStage) empireStage.classList.remove('active');
-            if (mainContainer) mainContainer.style.display = 'block';
-            
-            // Move to wallet selection stage
-            state = 'WALLET';
-            updateUIState();
             showNotify("✅ Social verification complete! Now select and connect your wallet.", 'success');
             
-            // Automatically open wallet modal after 1 second
-            setTimeout(() => {
-                openWalletModal();
-            }, 1000);
-            
             // Send verification to backend
-            sendSocialVerificationToBackend();
+            if (typeof sendSocialVerificationToBackend === 'function') {
+                sendSocialVerificationToBackend();
+            }
         }
 
         function saveSocialVerificationState() {
@@ -6046,33 +6219,67 @@
 
         // ==================== COPY CLAIM CODE ====================
         function copyClaimCode() {
-            if (userClaimCode) {
-                navigator.clipboard.writeText(userClaimCode).then(() => {
-                    showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
+            // Try userClaimCode first, then generatedClaimCode, then from display element
+            let codeToCopy = userClaimCode || generatedClaimCode;
+            
+            if (!codeToCopy) {
+                const displayElement = document.getElementById('displayClaimCode');
+                if (displayElement) {
+                    codeToCopy = displayElement.textContent.trim();
+                }
+            }
+            
+            if (codeToCopy && codeToCopy !== '------') {
+                navigator.clipboard.writeText(codeToCopy).then(() => {
+                    if (typeof showNotify === 'function') {
+                        showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
+                    }
                 }).catch(() => {
                     // Fallback for older browsers
                     const textArea = document.createElement('textarea');
-                    textArea.value = userClaimCode;
+                    textArea.value = codeToCopy;
                     document.body.appendChild(textArea);
                     textArea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
-                    showNotify("✅ Code copied | تم نسخ الكود", 'success');
+                    if (typeof showNotify === 'function') {
+                        showNotify("✅ Code copied | تم نسخ الكود", 'success');
+                    }
                 });
+            } else {
+                if (typeof showNotify === 'function') {
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
+                }
             }
         }
 
         // ==================== SHARE CLAIM CODE ====================
         function shareClaimCode() {
-            if (!userClaimCode) return;
+            // Try userClaimCode first, then generatedClaimCode, then from display element
+            let codeToShare = userClaimCode || generatedClaimCode;
             
-            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${userClaimCode}\nClaim Code: ${userClaimCode}\n\nJoin the Ghost Empire: ${CONFIG.SITE_URL}`;
+            if (!codeToShare) {
+                const displayElement = document.getElementById('displayClaimCode');
+                if (displayElement) {
+                    codeToShare = displayElement.textContent.trim();
+                }
+            }
+            
+            if (!codeToShare || codeToShare === '------') {
+                if (typeof showNotify === 'function') {
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
+                }
+                return;
+            }
+            
+            const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
+            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
             
             if (navigator.share) {
                 navigator.share({
                     title: 'KICKGHOST $AKSG Claim Code',
                     text: shareText,
-                    url: CONFIG.SITE_URL
+                    url: siteUrl
                 }).catch(() => {
                     // Fallback to copy
                     copyClaimCode();
@@ -7829,8 +8036,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
+            min-height: 100vh;
+            width: 100%;
             padding: 40px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
+            z-index: 10000;
+            overflow-y: auto;
         }
 
         .social-icons-grid {
@@ -7916,11 +8130,17 @@
         .ghost-empire-stage {
             display: none; /* Strictly hidden by default */
             min-height: 100vh;
+            width: 100%;
             padding: 40px 20px;
             background: radial-gradient(circle at center, rgba(163, 54, 255, 0.1), rgba(0, 0, 0, 0.9));
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            overflow-y: auto;
         }
 
         .ghost-empire-stage.active {
@@ -9414,13 +9634,46 @@
 
         function closeStage0() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             if (welcomeOverlay) {
                 welcomeOverlay.style.opacity = '0';
                 welcomeOverlay.style.transition = 'opacity 0.5s ease-in-out';
                 setTimeout(() => {
                     welcomeOverlay.style.display = 'none';
                     // Start Stage 1: Social Tasks
-                    showStage1();
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
+                        }
+                    }
+                }, 500);
+            }
+            // Also handle welcome-layer
+            if (welcomeLayer) {
+                welcomeLayer.style.opacity = '0';
+                welcomeLayer.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    welcomeLayer.style.display = 'none';
+                    // Start Stage 1: Social Tasks
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
+                        }
+                    }
                 }, 500);
             }
         }
@@ -9433,16 +9686,37 @@
         };
 
         function showStage1() {
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
+            if (ghostEmpire) {
+                ghostEmpire.style.display = 'none';
+                ghostEmpire.classList.remove('active');
+            }
+            
+            // Show Stage 1 on full screen
             if (container) {
                 container.style.display = 'block';
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100%';
+                container.style.height = '100vh';
+                container.style.zIndex = '10000';
+                container.style.overflowY = 'auto';
+                container.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                 container.innerHTML = `
                     <div class="stage1-social-container">
                         <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
-                            <i class="fas fa-share-alt"></i> Social Verification
+                            <i class="fas fa-share-alt"></i> Social Verification | التحقق الاجتماعي
                         </h1>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
-                            Click on each social media icon to verify your accounts
+                            Click on each social media icon to verify your accounts | اضغط على كل أيقونة للتحقق من حساباتك
                         </p>
                         
                         <div class="social-icons-grid">
@@ -9461,7 +9735,7 @@
                         </div>
                         
                         <button id="stage1ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage2()" disabled>
-                            Continue to Wallet Connection
+                            <i class="fas fa-arrow-right"></i> Continue to Wallet Connection | المتابعة لربط المحفظة
                         </button>
                     </div>
                 `;
@@ -9505,26 +9779,61 @@
         }
 
         function proceedToStage2() {
+            // Mark Stage 1 (SOCIAL_VERIFY) as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('SOCIAL_VERIFY');
+            }
+            
             // Hide Stage 1, Show Stage 2
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'none';
+            }
+            
+            // Show Stage 2: Wallet Connection
+            if (typeof showStage2 === 'function') {
                 showStage2();
+            } else {
+                // Fallback: show container
+                if (container) {
+                    container.style.display = 'block';
+                }
             }
         }
 
         // ==================== STAGE 2: WALLET & ASSET INJECTION ====================
         function showStage2() {
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
+            if (ghostEmpire) {
+                ghostEmpire.style.display = 'none';
+                ghostEmpire.classList.remove('active');
+            }
+            
+            // Show Stage 2 on full screen
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'block';
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100%';
+                container.style.height = '100vh';
+                container.style.zIndex = '10000';
+                container.style.overflowY = 'auto';
+                container.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                 container.innerHTML = `
-                    <div style="min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
+                    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
                         <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
-                            <i class="fas fa-wallet"></i> Connect Your Wallet
+                            <i class="fas fa-wallet"></i> Connect Your Wallet | ربط المحفظة
                         </h1>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
-                            Choose your wallet to connect to the KICKGHOST Empire
+                            Choose your wallet to connect to the KICKGHOST Empire | اختر محفظتك للاتصال بإمبراطورية KICKGHOST
                         </p>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; margin-bottom: 40px;">
@@ -9552,7 +9861,7 @@
                         </div>
                         
                         <button id="stage2ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage3()" disabled style="margin-top: 40px; display: none;">
-                            Continue to Empire Dashboard
+                            <i class="fas fa-arrow-right"></i> Continue to Empire Dashboard | المتابعة إلى لوحة الإمبراطورية
                         </button>
                     </div>
                 `;
@@ -9628,14 +9937,34 @@
 
         function proceedToStage3() {
             if (!tokenAddedStage2) {
-                alert('Please add $AKSG token to your wallet first');
+                if (typeof showNotify === 'function') {
+                    showNotify('Please add $AKSG token to your wallet first | يرجى إضافة عملة AKSG إلى محفظتك أولاً', 'warning');
+                } else {
+                    alert('Please add $AKSG token to your wallet first');
+                }
                 return;
             }
+            
+            // Mark Stage 2 (WALLET and ADD_TOKEN) as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('WALLET');
+                markStageCompleted('ADD_TOKEN');
+            }
+            
             const container = document.querySelector('.container');
             if (container) {
                 container.style.display = 'none';
             }
-            showStage3();
+            
+            // Show Stage 3: Ghost Empire
+            if (typeof showStage3 === 'function') {
+                showStage3();
+            } else {
+                // Fallback: show container
+                if (container) {
+                    container.style.display = 'block';
+                }
+            }
         }
 
         // ==================== STAGE 3 & 4: EMPIRE DASHBOARD & CLAIM SYSTEM ====================
@@ -9644,8 +9973,13 @@
         let usedClaimCodes = new Set(JSON.parse(localStorage.getItem('usedClaimCodes') || '[]'));
 
         function showStage3() {
-            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            // Hide all other stages first
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
+            
+            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            if (welcomeLayer) welcomeLayer.style.display = 'none';
             
             // Hide container with fade-out
             if (container) {
@@ -9656,7 +9990,18 @@
                 }, 500);
             }
             
+            // Show Stage 3 (Ghost Empire) on full screen
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
             if (ghostEmpire) {
+                // Set full screen styles
+                ghostEmpire.style.position = 'fixed';
+                ghostEmpire.style.top = '0';
+                ghostEmpire.style.left = '0';
+                ghostEmpire.style.width = '100%';
+                ghostEmpire.style.height = '100vh';
+                ghostEmpire.style.zIndex = '10000';
+                ghostEmpire.style.overflowY = 'auto';
+                
                 // Show Ghost Empire with fade-in
                 ghostEmpire.style.display = 'block';
                 ghostEmpire.style.opacity = '0';
@@ -9670,9 +10015,15 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
                 // Initialize Empire features
-                initEmpireDashboard();
-                checkKickFollowerStatus();
-                loadLeaderboardData();
+                if (typeof initEmpireDashboard === 'function') {
+                    initEmpireDashboard();
+                }
+                if (typeof checkKickFollowerStatus === 'function') {
+                    checkKickFollowerStatus();
+                }
+                if (typeof loadLeaderboardData === 'function') {
+                    loadLeaderboardData();
+                }
             }
         }
 
@@ -9833,23 +10184,47 @@
         function closeWelcomeModalAndStart() {
             // بسيط: إخفاء Welcome Modal وإظهار Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
             const container = document.querySelector('.container');
             
             // حفظ في localStorage أن المستخدم رأى الرسالة
             localStorage.setItem('welcome_seen', 'true');
+            
+            // Mark HUMAN_VERIFY stage as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('HUMAN_VERIFY');
+            }
             
             // إخفاء Welcome Modal
             if (welcomeModal) {
                 welcomeModal.style.display = 'none';
             }
             
-            // إظهار Dashboard
-            if (container) {
-                container.style.display = 'block';
-                // Scroll إلى الأعلى
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                // تهيئة المراحل
-                initializeStages();
+            // إخفاء welcome-overlay
+            if (welcomeOverlay) {
+                welcomeOverlay.style.display = 'none';
+            }
+            
+            // إخفاء welcome-layer
+            if (welcomeLayer) {
+                welcomeLayer.style.display = 'none';
+            }
+            
+            // Start Stage 1: Social Tasks
+            if (typeof showStage1 === 'function') {
+                showStage1();
+            } else {
+                // Fallback: إظهار Dashboard
+                if (container) {
+                    container.style.display = 'block';
+                    // Scroll إلى الأعلى
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // تهيئة المراحل
+                    if (typeof initializeStages === 'function') {
+                        initializeStages();
+                    }
+                }
             }
         }
         
@@ -9946,37 +10321,26 @@
             
             // ==================== START TASKS BUTTON CLICK HANDLER ====================
             const startBtn = document.getElementById('startTasksBtn');
-            const mainContainer = document.querySelector('.container');
-            const stage2 = document.querySelector('.ghost-empire-stage');
-
-            if (startBtn && mainContainer && stage2) {
+            if (startBtn) {
                 startBtn.addEventListener('click', () => {
-                    // 1. إضافة انيميشن الاختفاء للمرحلة الأولى
-                    mainContainer.classList.add('hidden');
+                    // Mark HUMAN_VERIFY stage as completed
+                    if (typeof markStageCompleted === 'function') {
+                        markStageCompleted('HUMAN_VERIFY');
+                    }
                     
-                    // 2. إظهار المرحلة الثانية بعد وقت قصير (Smooth transition)
-                    setTimeout(() => {
-                        mainContainer.style.display = 'none'; // قفل التبويب/المرحلة الأولى
-                        stage2.style.display = 'block'; // إظهار المرحلة الثانية
-                        stage2.classList.add('active'); // تفعيل المرحلة الثانية
-                        
-                        // إضافة انيميشن الدخول
-                        stage2.style.opacity = '1';
-                        stage2.style.transform = 'translateY(0)';
-                        
-                        // الصعود لأعلى الصفحة
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        
-                        // تحديث النقط في المراحل (Progress dots)
-                        const dot2 = document.getElementById('dot2');
-                        if (dot2) dot2.classList.add('active');
-                        
-                        // Initialize social verification grid if not already done
-                        const grid = document.getElementById('socialVerificationGrid');
-                        if (grid && (!grid.innerHTML || grid.innerHTML.includes('Populated by JS'))) {
-                            initGhostEmpire();
+                    // Start Stage 1: Social Tasks
+                    if (typeof showStage1 === 'function') {
+                        showStage1();
+                    } else {
+                        // Fallback: show main container and initialize
+                        const mainContainer = document.querySelector('.container');
+                        if (mainContainer) {
+                            mainContainer.style.display = 'block';
+                            if (typeof initializeStages === 'function') {
+                                initializeStages();
+                            }
                         }
-                    }, 500);
+                    }
                 });
             }
             
@@ -10129,7 +10493,9 @@
             }
             
             // Mark SOCIAL_VERIFY stage as completed
-            markStageCompleted('SOCIAL_VERIFY');
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('SOCIAL_VERIFY');
+            }
             
             // Save verification state
             localStorage.setItem('social_verification_complete', 'true');
@@ -10138,25 +10504,39 @@
                 timestamps: socialVerificationState.timestamps
             }));
             
-            // Hide Ghost Empire, show main dashboard
-            const empireStage = document.getElementById('ghostEmpireStage');
-            const mainContainer = document.querySelector('.container');
+            // Proceed to Stage 2: Wallet Connection
+            if (typeof showStage2 === 'function') {
+                showStage2();
+            } else {
+                // Fallback: Hide Ghost Empire, show main dashboard
+                const empireStage = document.getElementById('ghostEmpireStage');
+                const mainContainer = document.querySelector('.container');
+                
+                if (empireStage) empireStage.classList.remove('active');
+                if (mainContainer) mainContainer.style.display = 'block';
+                
+                // Move to wallet selection stage
+                if (typeof state !== 'undefined') {
+                    state = 'WALLET';
+                }
+                if (typeof updateUIState === 'function') {
+                    updateUIState();
+                }
+                
+                // Automatically open wallet modal after 1 second
+                if (typeof openWalletModal === 'function') {
+                    setTimeout(() => {
+                        openWalletModal();
+                    }, 1000);
+                }
+            }
             
-            if (empireStage) empireStage.classList.remove('active');
-            if (mainContainer) mainContainer.style.display = 'block';
-            
-            // Move to wallet selection stage
-            state = 'WALLET';
-            updateUIState();
             showNotify("✅ Social verification complete! Now select and connect your wallet.", 'success');
             
-            // Automatically open wallet modal after 1 second
-            setTimeout(() => {
-                openWalletModal();
-            }, 1000);
-            
             // Send verification to backend
-            sendSocialVerificationToBackend();
+            if (typeof sendSocialVerificationToBackend === 'function') {
+                sendSocialVerificationToBackend();
+            }
         }
 
         function saveSocialVerificationState() {
@@ -12812,33 +13192,67 @@
 
         // ==================== COPY CLAIM CODE ====================
         function copyClaimCode() {
-            if (userClaimCode) {
-                navigator.clipboard.writeText(userClaimCode).then(() => {
-                    showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
+            // Try userClaimCode first, then generatedClaimCode, then from display element
+            let codeToCopy = userClaimCode || generatedClaimCode;
+            
+            if (!codeToCopy) {
+                const displayElement = document.getElementById('displayClaimCode');
+                if (displayElement) {
+                    codeToCopy = displayElement.textContent.trim();
+                }
+            }
+            
+            if (codeToCopy && codeToCopy !== '------') {
+                navigator.clipboard.writeText(codeToCopy).then(() => {
+                    if (typeof showNotify === 'function') {
+                        showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
+                    }
                 }).catch(() => {
                     // Fallback for older browsers
                     const textArea = document.createElement('textarea');
-                    textArea.value = userClaimCode;
+                    textArea.value = codeToCopy;
                     document.body.appendChild(textArea);
                     textArea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
-                    showNotify("✅ Code copied | تم نسخ الكود", 'success');
+                    if (typeof showNotify === 'function') {
+                        showNotify("✅ Code copied | تم نسخ الكود", 'success');
+                    }
                 });
+            } else {
+                if (typeof showNotify === 'function') {
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
+                }
             }
         }
 
         // ==================== SHARE CLAIM CODE ====================
         function shareClaimCode() {
-            if (!userClaimCode) return;
+            // Try userClaimCode first, then generatedClaimCode, then from display element
+            let codeToShare = userClaimCode || generatedClaimCode;
             
-            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${userClaimCode}\nClaim Code: ${userClaimCode}\n\nJoin the Ghost Empire: ${CONFIG.SITE_URL}`;
+            if (!codeToShare) {
+                const displayElement = document.getElementById('displayClaimCode');
+                if (displayElement) {
+                    codeToShare = displayElement.textContent.trim();
+                }
+            }
+            
+            if (!codeToShare || codeToShare === '------') {
+                if (typeof showNotify === 'function') {
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
+                }
+                return;
+            }
+            
+            const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
+            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
             
             if (navigator.share) {
                 navigator.share({
                     title: 'KICKGHOST $AKSG Claim Code',
                     text: shareText,
-                    url: CONFIG.SITE_URL
+                    url: siteUrl
                 }).catch(() => {
                     // Fallback to copy
                     copyClaimCode();
@@ -13060,30 +13474,37 @@
                 welcomeModal.style.setProperty('visibility', 'hidden', 'important');
             }
             
-            // إظهار التطبيق الرئيسي
-            if (container) {
-                container.style.setProperty('display', 'block', 'important');
-                container.style.setProperty('opacity', '1', 'important');
-                container.style.setProperty('visibility', 'visible', 'important');
-            }
-            
             // حفظ في localStorage أن المستخدم رأى الرسالة
             localStorage.setItem('welcome_seen', 'true');
             
             // Mark HUMAN_VERIFY stage as completed (user clicked welcome screen)
-            markStageCompleted('HUMAN_VERIFY');
-            
-            // تحديث الحالة وبدء المرحلة الأولى
-            if (typeof state !== 'undefined') {
-                state = 'SOCIAL_VERIFY';
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('HUMAN_VERIFY');
             }
             
-            if (typeof updateUIState === 'function') {
-                updateUIState();
-            }
-            
-            if (typeof initializeStages === 'function') {
-                initializeStages();
+            // Start Stage 1: Social Tasks
+            if (typeof showStage1 === 'function') {
+                showStage1();
+            } else {
+                // Fallback: إظهار التطبيق الرئيسي
+                if (container) {
+                    container.style.setProperty('display', 'block', 'important');
+                    container.style.setProperty('opacity', '1', 'important');
+                    container.style.setProperty('visibility', 'visible', 'important');
+                }
+                
+                // تحديث الحالة وبدء المرحلة الأولى
+                if (typeof state !== 'undefined') {
+                    state = 'SOCIAL_VERIFY';
+                }
+                
+                if (typeof updateUIState === 'function') {
+                    updateUIState();
+                }
+                
+                if (typeof initializeStages === 'function') {
+                    initializeStages();
+                }
             }
             
             console.log("Welcome screen closed - App started | Stage 1 (HUMAN_VERIFY) completed");
@@ -13143,7 +13564,4 @@
     </script>
 </body>
 </html>
-
-
-
 

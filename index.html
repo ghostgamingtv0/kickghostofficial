@@ -2625,23 +2625,23 @@
         // ==================== STAGE MANAGEMENT ====================
         let currentStage = 1; // Stage 1: Initial Dashboard, Stage 2: Social Verification
         
-        // Initialize Stage 1 (Hide Ghost Empire, Show Dashboard)
+        // Initialize Stage 1 (Hide Ghost Empire, Show Stage 1)
         function initializeStages() {
             const container = document.querySelector('.container');
             const ghostEmpire = document.getElementById('ghostEmpireStage');
             
-            if (container) {
-                container.style.display = 'block';
-                container.style.opacity = '1';
-                container.style.transform = 'translateY(0)';
-                container.classList.remove('hidden');
-            }
-            
+            // Hide Ghost Empire initially
             if (ghostEmpire) {
-                // Strictly hide Ghost Empire Stage initially (display: none)
                 ghostEmpire.classList.remove('active');
                 ghostEmpire.style.display = 'none';
                 ghostEmpire.style.opacity = '0';
+            }
+            
+            // Don't show container dashboard - wait for showStage1() to be called
+            // This ensures user goes through stages in order
+            if (container) {
+                container.style.display = 'none';
+                container.style.opacity = '0';
             }
             
             currentStage = 1;
@@ -2949,6 +2949,9 @@
                 });
                 
                 tokenAddedStage2 = true;
+                // Save to localStorage
+                localStorage.setItem('token_added', 'true');
+                
                 const continueBtn = document.getElementById('stage2ContinueBtn');
                 if (continueBtn) {
                     continueBtn.style.display = 'block';
@@ -2956,9 +2959,13 @@
                     continueBtn.classList.add('enabled');
                 }
                 
-                showNotify('Token added successfully!', 'success');
+                if (typeof showNotify === 'function') {
+                    showNotify('Token added successfully! | تم إضافة العملة بنجاح!', 'success');
+                }
             } catch (error) {
-                showNotify('Failed to add token', 'error');
+                if (typeof showNotify === 'function') {
+                    showNotify('Failed to add token | فشل إضافة العملة', 'error');
+                }
             }
         }
 
@@ -3067,8 +3074,14 @@
                 // const response = await fetch('https://kick.com/api/v2/channels/ghost_gamingtv/followers');
                 // kickFollowerStatus = response.data.includes(userKickUsername);
                 
-                // Simulated: User needs to follow to unlock
-                kickFollowerStatus = false; // Default: not following
+                // For testing: Allow user to claim code after completing all stages
+                // Check if all previous stages are completed
+                const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+                const walletConnected = localStorage.getItem('connectedWallet') !== null;
+                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                
+                // Enable claim if all stages completed
+                kickFollowerStatus = socialComplete && walletConnected && tokenAdded;
                 
                 updateClaimButton();
             } catch (error) {
@@ -3116,13 +3129,24 @@
         }
 
         function claimCode() {
-            if (!kickFollowerStatus) {
-                showNotify('Please follow on Kick.com first to unlock your claim code', 'error');
+            // Check if all stages are completed
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            
+            if (!socialComplete || !walletConnected || !tokenAdded) {
+                if (typeof showNotify === 'function') {
+                    showNotify('Please complete all previous stages first | يرجى إتمام جميع المراحل السابقة أولاً', 'warning');
+                } else {
+                    alert('Please complete all previous stages first');
+                }
                 return;
             }
             
             if (generatedClaimCode) {
-                showNotify('You have already claimed your code!', 'info');
+                if (typeof showNotify === 'function') {
+                    showNotify('You have already claimed your code! | لقد حصلت على الكود بالفعل!', 'info');
+                }
                 displayClaimCode(generatedClaimCode);
                 return;
             }
@@ -3130,17 +3154,31 @@
             // Generate unique 6-digit code
             generatedClaimCode = generateUniqueClaimCode();
             
+            // Save to localStorage
+            localStorage.setItem('userClaimCode', generatedClaimCode);
+            const walletAddress = localStorage.getItem('connectedWallet');
+            if (walletAddress) {
+                localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+            }
+            
             // Display the code
             displayClaimCode(generatedClaimCode);
             
             // Show success notification
-            showNotify('Claim code generated successfully!', 'success');
+            if (typeof showNotify === 'function') {
+                showNotify('✅ Claim code generated successfully! | تم إنشاء كود المطالبة بنجاح!', 'success');
+            }
+            
+            // Mark CLAIM_CODE stage as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('CLAIM_CODE');
+            }
             
             // Update button
             const claimBtn = document.getElementById('empireClaimBtn');
             if (claimBtn) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed';
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | تم الحصول على الكود';
             }
         }
 
@@ -9598,23 +9636,23 @@
         // ==================== STAGE MANAGEMENT ====================
         let currentStage = 1; // Stage 1: Initial Dashboard, Stage 2: Social Verification
         
-        // Initialize Stage 1 (Hide Ghost Empire, Show Dashboard)
+        // Initialize Stage 1 (Hide Ghost Empire, Show Stage 1)
         function initializeStages() {
             const container = document.querySelector('.container');
             const ghostEmpire = document.getElementById('ghostEmpireStage');
             
-            if (container) {
-                container.style.display = 'block';
-                container.style.opacity = '1';
-                container.style.transform = 'translateY(0)';
-                container.classList.remove('hidden');
-            }
-            
+            // Hide Ghost Empire initially
             if (ghostEmpire) {
-                // Strictly hide Ghost Empire Stage initially (display: none)
                 ghostEmpire.classList.remove('active');
                 ghostEmpire.style.display = 'none';
                 ghostEmpire.style.opacity = '0';
+            }
+            
+            // Don't show container dashboard - wait for showStage1() to be called
+            // This ensures user goes through stages in order
+            if (container) {
+                container.style.display = 'none';
+                container.style.opacity = '0';
             }
             
             currentStage = 1;
@@ -9922,6 +9960,9 @@
                 });
                 
                 tokenAddedStage2 = true;
+                // Save to localStorage
+                localStorage.setItem('token_added', 'true');
+                
                 const continueBtn = document.getElementById('stage2ContinueBtn');
                 if (continueBtn) {
                     continueBtn.style.display = 'block';
@@ -9929,9 +9970,13 @@
                     continueBtn.classList.add('enabled');
                 }
                 
-                showNotify('Token added successfully!', 'success');
+                if (typeof showNotify === 'function') {
+                    showNotify('Token added successfully! | تم إضافة العملة بنجاح!', 'success');
+                }
             } catch (error) {
-                showNotify('Failed to add token', 'error');
+                if (typeof showNotify === 'function') {
+                    showNotify('Failed to add token | فشل إضافة العملة', 'error');
+                }
             }
         }
 
@@ -10040,8 +10085,14 @@
                 // const response = await fetch('https://kick.com/api/v2/channels/ghost_gamingtv/followers');
                 // kickFollowerStatus = response.data.includes(userKickUsername);
                 
-                // Simulated: User needs to follow to unlock
-                kickFollowerStatus = false; // Default: not following
+                // For testing: Allow user to claim code after completing all stages
+                // Check if all previous stages are completed
+                const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+                const walletConnected = localStorage.getItem('connectedWallet') !== null;
+                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                
+                // Enable claim if all stages completed
+                kickFollowerStatus = socialComplete && walletConnected && tokenAdded;
                 
                 updateClaimButton();
             } catch (error) {
@@ -10089,13 +10140,24 @@
         }
 
         function claimCode() {
-            if (!kickFollowerStatus) {
-                showNotify('Please follow on Kick.com first to unlock your claim code', 'error');
+            // Check if all stages are completed
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            
+            if (!socialComplete || !walletConnected || !tokenAdded) {
+                if (typeof showNotify === 'function') {
+                    showNotify('Please complete all previous stages first | يرجى إتمام جميع المراحل السابقة أولاً', 'warning');
+                } else {
+                    alert('Please complete all previous stages first');
+                }
                 return;
             }
             
             if (generatedClaimCode) {
-                showNotify('You have already claimed your code!', 'info');
+                if (typeof showNotify === 'function') {
+                    showNotify('You have already claimed your code! | لقد حصلت على الكود بالفعل!', 'info');
+                }
                 displayClaimCode(generatedClaimCode);
                 return;
             }
@@ -10103,17 +10165,31 @@
             // Generate unique 6-digit code
             generatedClaimCode = generateUniqueClaimCode();
             
+            // Save to localStorage
+            localStorage.setItem('userClaimCode', generatedClaimCode);
+            const walletAddress = localStorage.getItem('connectedWallet');
+            if (walletAddress) {
+                localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+            }
+            
             // Display the code
             displayClaimCode(generatedClaimCode);
             
             // Show success notification
-            showNotify('Claim code generated successfully!', 'success');
+            if (typeof showNotify === 'function') {
+                showNotify('✅ Claim code generated successfully! | تم إنشاء كود المطالبة بنجاح!', 'success');
+            }
+            
+            // Mark CLAIM_CODE stage as completed
+            if (typeof markStageCompleted === 'function') {
+                markStageCompleted('CLAIM_CODE');
+            }
             
             // Update button
             const claimBtn = document.getElementById('empireClaimBtn');
             if (claimBtn) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed';
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | تم الحصول على الكود';
             }
         }
 
@@ -13564,4 +13640,545 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

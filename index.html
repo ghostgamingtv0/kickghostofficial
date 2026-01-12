@@ -21,17 +21,16 @@
     <style>
         /* تأكد أن هذا القسم في أعلى الـ CSS */
         #welcome-layer {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
             background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
-            display: flex; 
-            justify-content: center; 
+            display: flex !important;
+            justify-content: center;
             align-items: center;
-            z-index: 999999; /* أعلى من كل شيء */
-            cursor: pointer;
+            z-index: 9999 !important;
+            cursor: pointer !important;
         }
         
         .app-container {
@@ -6109,25 +6108,59 @@
     </div>
     
     <script>
+        // ==================== INITIALIZATION FUNCTION ====================
+        const initApp = function(event) {
+            // Stop event propagation and prevent default behavior
+            event.stopPropagation();
+            event.preventDefault();
+            
+            const welcomeLayer = document.getElementById('welcome-layer');
+            const container = document.querySelector('.container');
+            
+            // Hide welcome layer
+            if (welcomeLayer) {
+                welcomeLayer.style.display = 'none';
+            }
+            
+            // Force container to display
+            if (container) {
+                container.style.setProperty('display', 'block', 'important');
+            }
+            
+            // Set initial state
+            state = 'VERIFY';
+            
+            // Initialize Audio Context to unlock sound
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Create a silent buffer to unlock audio
+                const buffer = audioContext.createBuffer(1, 1, 22050);
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+            } catch (e) {
+                console.warn('AudioContext initialization failed:', e);
+            }
+            
+            // Update UI state and show stage 1
+            if (typeof updateUIState === 'function') {
+                updateUIState();
+            }
+            
+            if (typeof showStage1 === 'function') {
+                showStage1();
+            }
+            
+            console.log("Empire Started... State:", state);
+        };
+        
+        // Attach initialization listener to welcome layer
         window.addEventListener('load', function() {
-            // نضمن أن كل شيء محمل قبل تفعيل الضغط
-            const welcomeLayer = document.getElementById('welcome-layer'); 
-            const mainApp = document.querySelector('.container'); // أو اسم الكلاس الرئيسي عندك
-
-            document.body.addEventListener('click', function() {
-                if (welcomeLayer) {
-                    welcomeLayer.style.display = 'none'; // إخفاء طبقة الترحيب
-                    if (mainApp) {
-                        mainApp.classList.add('app-active'); // إظهار الكود الـ 5500 سطر
-                        mainApp.style.display = 'block';
-                    }
-                    console.log("Empire Started...");
-                    // هنا تبدأ المرحلة 1 تلقائياً
-                    if(typeof startStage1 === "function") startStage1();
-                    // إذا لم تكن الدالة موجودة، استخدم showStage1
-                    if(typeof showStage1 === "function") showStage1();
-                }
-            }, { once: true });
+            const welcomeLayer = document.getElementById('welcome-layer');
+            if (welcomeLayer) {
+                welcomeLayer.addEventListener('click', initApp, { once: true, capture: true });
+            }
         });
     </script>
 </body>

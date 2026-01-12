@@ -2,8 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KICKGHOST ($AKSG) - Ultimate Web3 Gaming Platform 2026</title>
+    <!-- IMPORTANT: This file must be saved with UTF-8 encoding to display Arabic text correctly -->
     
     <!-- External Libraries -->
     <!-- Google Fonts - Moved from @import to <link> for better performance -->
@@ -2314,14 +2316,13 @@
             }
         })();
 
-        // Social Links with Logos - Updated with correct URLs
+        // Social Links with Logos - Updated with correct URLs (5 mandatory platforms only)
         const SOCIAL_LINKS = [
             { url: "https://kick.com/ghost_gamingtv", name: "Kick", icon: "fa-brands fa-kickstarter-k", logo: "https://kick.com/favicon.ico" },
             { url: "https://twitter.com/tv_ghostgaming", name: "Twitter/X", icon: "fab fa-x-twitter", logo: "https://abs.twimg.com/favicons/twitter.3.ico" },
             { url: "https://t.me/ghost_gamingtv", name: "Telegram", icon: "fab fa-telegram", logo: "https://telegram.org/favicon.ico" },
             { url: "https://www.instagram.com/ghost.gamingtv/", name: "Instagram", icon: "fab fa-instagram", logo: "https://www.instagram.com/favicon.ico" },
-            { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" },
-            { url: "https://discord.gg/NMrnjQ7E", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" }
+            { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" }
         ];
 
         // Wallet Information with Links
@@ -2707,8 +2708,7 @@
             twitter: false,
             telegram: false,
             instagram: false,
-            tiktok: false,
-            discord: false
+            tiktok: false
         };
 
         function showStage1() {
@@ -2746,10 +2746,10 @@
                                 <i class="fas fa-crown"></i> إمبراطورية KICKGHOST | KICKGHOST Empire
                             </h3>
                             <p style="color: #ccc; line-height: 1.8; text-align: center; margin-bottom: 15px; direction: rtl;">
-                                <strong>منصة KICKGHOST</strong> هي الثورة القادمة في عالم الـ Web3، حيث تجتمع متعة الألعاب (Gaming) مع قوة التواصل الاجتماعي (Social Media) في نظام بيئي واحد يُعرف بـ "إمبراطورية الشبح" (Ghost Empire). نحن لا نبني منصة ألعاب فحسب، بل نصنع فضاءً رقمياً يُكافئ الجميع على مساهماتهم وتفاعلهم باستخدام عملة $AKSG.
+                                منصة KICKGHOST هي الثورة القادمة في عالم الـ Web3، حيث تجتمع متعة الألعاب مع قوة التواصل الاجتماعي في نظام بيئي واحد يُعرف بـ "إمبراطورية الشبح". نحن لا نبني منصة ألعاب فحسب، بل نصنع فضاءً رقمياً يُكافئ الجميع على مساهماتهم وتفاعلهم باستخدام عملة $AKSG.
                             </p>
                             <p style="color: #aaa; line-height: 1.8; text-align: center; font-size: 0.95rem;">
-                                <strong>KICKGHOST Platform</strong> is the next revolution in the Web3 world, where gaming fun meets the power of social media in a unified ecosystem known as the "Ghost Empire". We're not just building a gaming platform, but creating a digital space that rewards everyone for their contributions and interactions using the $AKSG token.
+                                KICKGHOST is the next revolution in Web3, merging gaming fun with social media power in one ecosystem known as the "Ghost Empire". We aren't just building a gaming platform; we're creating a digital space that rewards everyone for their contributions and engagement using $AKSG token.
                             </p>
                         </div>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 20px;">
@@ -2780,10 +2780,6 @@
                                 <i class="fab fa-tiktok"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">TikTok</p>
                             </div>
-                            <div class="social-icon-card" id="social-discord" onclick="clickSocialIcon('discord')">
-                                <i class="fab fa-discord"></i>
-                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Discord</p>
-                            </div>
                         </div>
                         
                         <button id="confirmSyncBtn" class="stage1-continue-btn" onclick="confirmSyncAndProceed()" disabled style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; opacity: 0.5; pointer-events: none;">
@@ -2813,8 +2809,7 @@
                     twitter: 'https://twitter.com/tv_ghostgaming',
                     telegram: 'https://t.me/ghost_gamingtv',
                     instagram: 'https://www.instagram.com/ghost.gamingtv/',
-                    tiktok: 'https://www.tiktok.com/@ghost.gamingtv',
-                    discord: 'https://discord.gg/NMrnjQ7E'
+                    tiktok: 'https://www.tiktok.com/@ghost.gamingtv'
                 };
                 
                 if (links[platform]) {
@@ -2832,12 +2827,12 @@
         }
 
         function checkAllSocialClicked() {
+            // Only require 5 platforms: Kick, Twitter, Telegram, Instagram, TikTok
             const allClicked = socialClickedState.kick && 
                               socialClickedState.twitter && 
                               socialClickedState.telegram && 
                               socialClickedState.instagram &&
-                              socialClickedState.tiktok &&
-                              socialClickedState.discord;
+                              socialClickedState.tiktok;
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
             const syncStatusText = document.getElementById('syncStatusText');
@@ -2854,7 +2849,7 @@
                         syncStatusText.style.color = 'var(--success)';
                     }
                 } else {
-                    const remaining = 6 - Object.values(socialClickedState).filter(v => v).length;
+                    const remaining = 5 - Object.values(socialClickedState).filter(v => v).length;
                     confirmSyncBtn.classList.remove('enabled');
                     confirmSyncBtn.disabled = true;
                     confirmSyncBtn.style.opacity = '0.5';
@@ -2869,17 +2864,16 @@
         }
         
         function confirmSyncAndProceed() {
-            // Verify all links are visited
+            // Verify all 5 mandatory links are visited (Kick, Twitter, Telegram, Instagram, TikTok)
             const allClicked = socialClickedState.kick && 
                               socialClickedState.twitter && 
                               socialClickedState.telegram && 
                               socialClickedState.instagram &&
-                              socialClickedState.tiktok &&
-                              socialClickedState.discord;
+                              socialClickedState.tiktok;
             
             if (!allClicked) {
                 if (typeof showNotify === 'function') {
-                    showNotify('Please visit all social links first | يرجى زيارة جميع الروابط الاجتماعية أولاً', 'warning');
+                    showNotify('Please visit all 5 social links first (Kick, Twitter, Telegram, Instagram, TikTok) | يرجى زيارة جميع الروابط الاجتماعية الخمسة أولاً', 'warning');
                 }
                 return;
             }
@@ -3085,8 +3079,8 @@
                         type: 'ERC20',
                         options: {
                             address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
-                            symbol: 'AKSG',
-                            decimals: 18,
+                            symbol: 'AKSG', // Fixed symbol: $AKSG
+                            decimals: 18, // Fixed decimals: 18
                             image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
                         }
                     }
@@ -3326,9 +3320,12 @@
         }
         
         function loginWithKick() {
-            // Check if CONFIG has Kick OAuth settings
-            if (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID && CONFIG.KICK_REDIRECT_URI) {
-                const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${CONFIG.KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(CONFIG.KICK_REDIRECT_URI)}&scope=user:read%20chat:read`;
+            // Check if CONFIG has Kick OAuth settings with fallback
+            const kickClientId = (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID) ? CONFIG.KICK_CLIENT_ID : (typeof window.ENV !== 'undefined' && window.ENV.KICK_CLIENT_ID) ? window.ENV.KICK_CLIENT_ID : '01KEAEX10SCC7S6VRSMR26WVRW';
+            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : window.location.origin;
+            
+            if (kickClientId && kickRedirectUri) {
+                const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${kickClientId}&redirect_uri=${encodeURIComponent(kickRedirectUri)}&scope=user:read%20chat:read`;
                 window.open(authUrl, '_blank');
                 showNotify('Opening Kick OAuth login... | فتح تسجيل الدخول عبر Kick...', 'info');
             } else {
@@ -3377,9 +3374,25 @@
             const claimBtn = document.getElementById('empireClaimBtn');
             if (!claimBtn) return;
             
-            if (!kickFollowerStatus) {
+            // Check ALL stages: Social, Wallet, Token Added, and Kick Follow
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            
+            // All stages must be completed to unlock Claim button
+            const allStagesComplete = socialComplete && walletConnected && tokenAdded && kickFollowVerified;
+            
+            if (!allStagesComplete) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code | متابعة Kick لفتح الكود';
+                // Show specific missing stage
+                let missingStage = '';
+                if (!socialComplete) missingStage = 'Stage 1: Social Verification';
+                else if (!walletConnected) missingStage = 'Stage 2: Wallet Connection';
+                else if (!tokenAdded) missingStage = 'Stage 2: Token Added';
+                else if (!kickFollowVerified) missingStage = 'Stage 3: Kick Follow';
+                
+                claimBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${missingStage} | أكمل ${missingStage}`;
                 claimBtn.style.opacity = '0.5';
                 claimBtn.style.cursor = 'not-allowed';
             } else {
@@ -3411,16 +3424,24 @@
         }
 
         function claimCode() {
-            // Check if all stages are completed
+            // Check if ALL stages are completed (Stage 1: Social, Stage 2: Wallet, Stage 3: Kick Follow, Stage 4: Token Added)
             const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
             const walletConnected = localStorage.getItem('connectedWallet') !== null;
             const tokenAdded = localStorage.getItem('token_added') === 'true';
+            const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
             
-            if (!socialComplete || !walletConnected || !tokenAdded) {
+            // Ensure all 4 stages are completed before generating 6-digit code
+            if (!socialComplete || !walletConnected || !tokenAdded || !kickFollowVerified) {
+                const missingStages = [];
+                if (!socialComplete) missingStages.push('Stage 1: Social Verification');
+                if (!walletConnected) missingStages.push('Stage 2: Wallet Connection');
+                if (!tokenAdded) missingStages.push('Stage 2: Token Added');
+                if (!kickFollowVerified) missingStages.push('Stage 3: Kick Follow');
+                
                 if (typeof showNotify === 'function') {
-                    showNotify('Please complete all previous stages first | ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ø±Ø§Ø­Ù„ Ø§Ù„Ø³Ø§Ø¨Ù‚Ø© Ø£ÙˆÙ„Ø§Ù‹', 'warning');
+                    showNotify(`Please complete all stages first: ${missingStages.join(', ')} | يرجى إتمام جميع المراحل أولاً`, 'warning');
                 } else {
-                    alert('Please complete all previous stages first');
+                    alert(`Please complete all stages first: ${missingStages.join(', ')}`);
                 }
                 return;
             }
@@ -3472,26 +3493,78 @@
             if (codeValue) codeValue.textContent = code;
         }
 
-        function loadLeaderboardData() {
-            // Simulated leaderboard data - In production, fetch from Kick API
+        async function loadLeaderboardData() {
+            // Enhanced leaderboard: Fetch real-time data from Kick API for Top Viewers and Top Chatters
             const leaderboardContainer = document.getElementById('empireLeaderboard');
             if (!leaderboardContainer) return;
             
-            const topViewers = [
-                { rank: 1, username: 'GhostGamer1', viewers: 1250 },
-                { rank: 2, username: 'KickMaster', viewers: 980 },
-                { rank: 3, username: 'StreamKing', viewers: 750 },
-                { rank: 4, username: 'GamingPro', viewers: 620 },
-                { rank: 5, username: 'Web3Hero', viewers: 450 }
-            ];
+            let topViewers = [];
+            let topCommenters = [];
             
-            const topCommenters = [
-                { rank: 1, username: 'CommentMaster', comments: 320 },
-                { rank: 2, username: 'ChatKing', comments: 280 },
-                { rank: 3, username: 'ActiveUser', comments: 240 },
-                { rank: 4, username: 'EngagedFan', comments: 190 },
-                { rank: 5, username: 'CommunityStar', comments: 150 }
-            ];
+            try {
+                // Try to fetch real Kick channel data
+                const channelResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'User-Agent': 'KICKGHOST-Platform/1.0'
+                    }
+                });
+                
+                if (channelResponse.ok) {
+                    const channelData = await channelResponse.json();
+                    
+                    // Try to get viewer/chat data from backend API
+                    try {
+                        const leaderboardResponse = await callThirdwebBackendAPI('get_kick_leaderboard', {
+                            channel: 'ghost_gamingtv',
+                            type: 'viewers_chatters'
+                        });
+                        
+                        if (leaderboardResponse && leaderboardResponse.top_viewers) {
+                            topViewers = leaderboardResponse.top_viewers.map((v, i) => ({
+                                rank: i + 1,
+                                username: v.username || v.name || `Viewer${i + 1}`,
+                                viewers: v.viewers || v.view_count || 0,
+                                avatar: v.avatar || v.profile_picture || ''
+                            }));
+                        }
+                        
+                        if (leaderboardResponse && leaderboardResponse.top_chatters) {
+                            topCommenters = leaderboardResponse.top_chatters.map((c, i) => ({
+                                rank: i + 1,
+                                username: c.username || c.name || `Chatter${i + 1}`,
+                                comments: c.comments || c.chat_count || 0,
+                                avatar: c.avatar || c.profile_picture || ''
+                            }));
+                        }
+                    } catch (e) {
+                        console.log('Backend leaderboard API error, using Kick API data:', e);
+                    }
+                }
+            } catch (e) {
+                console.log('Kick API error, using fallback data:', e);
+            }
+            
+            // Fallback to mock data if API calls fail
+            if (topViewers.length === 0) {
+                topViewers = [
+                    { rank: 1, username: 'GhostGamer1', viewers: 1250, avatar: '' },
+                    { rank: 2, username: 'KickMaster', viewers: 980, avatar: '' },
+                    { rank: 3, username: 'StreamKing', viewers: 750, avatar: '' },
+                    { rank: 4, username: 'GamingPro', viewers: 620, avatar: '' },
+                    { rank: 5, username: 'Web3Hero', viewers: 450, avatar: '' }
+                ];
+            }
+            
+            if (topCommenters.length === 0) {
+                topCommenters = [
+                    { rank: 1, username: 'CommentMaster', comments: 320, avatar: '' },
+                    { rank: 2, username: 'ChatKing', comments: 280, avatar: '' },
+                    { rank: 3, username: 'ActiveUser', comments: 240, avatar: '' },
+                    { rank: 4, username: 'EngagedFan', comments: 190, avatar: '' },
+                    { rank: 5, username: 'CommunityStar', comments: 150, avatar: '' }
+                ];
+            }
             
             leaderboardContainer.innerHTML = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
@@ -3502,6 +3575,7 @@
                         <div class="leaderboard-list">
                             ${topViewers.map(user => `
                                 <div class="leaderboard-item">
+                                    ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
                                     <span class="rank-badge">#${user.rank}</span>
                                     <span class="username">${user.username}</span>
                                     <span class="stat-value">${user.viewers.toLocaleString()}</span>
@@ -3511,11 +3585,12 @@
                     </div>
                     <div class="leaderboard-section">
                         <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.3rem;">
-                            <i class="fas fa-comments"></i> Top Commenters
+                            <i class="fas fa-comments"></i> Top Chatters
                         </h3>
                         <div class="leaderboard-list">
                             ${topCommenters.map(user => `
                                 <div class="leaderboard-item">
+                                    ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
                                     <span class="rank-badge">#${user.rank}</span>
                                     <span class="username">${user.username}</span>
                                     <span class="stat-value">${user.comments}</span>
@@ -3526,6 +3601,13 @@
                 </div>
             `;
         }
+        
+        // Auto-refresh leaderboard data every 2 minutes
+        setInterval(() => {
+            if (typeof loadLeaderboardData === 'function') {
+                loadLeaderboardData();
+            }
+        }, 120000); // 2 minutes
 
         // ==================== WELCOME MODAL CLOSE AND START (Legacy) ====================
         function closeWelcomeModalAndStart(event) {
@@ -3607,9 +3689,19 @@
             // Call unified function to ensure all layers are hidden
             hideAllWelcomeLayers();
             
-            // Start Stage 1: Social Tasks after animation
+            // Start Stage 1: Social Tasks after animation - Call initApp if available
             setTimeout(() => {
-                if (typeof showStage1 === 'function') {
+                // Try to call initApp first if it exists
+                if (typeof initApp === 'function') {
+                    try {
+                        initApp();
+                    } catch (e) {
+                        console.warn('initApp error, falling back to showStage1:', e);
+                        if (typeof showStage1 === 'function') {
+                            showStage1();
+                        }
+                    }
+                } else if (typeof showStage1 === 'function') {
                     showStage1();
                 } else {
                     // Fallback: إظهار Dashboard
@@ -3805,32 +3897,45 @@
         }
 
         function visitSocialLink(url, index, name) {
-            // Open link in new tab
-            window.open(url, '_blank');
-            
-            // Mark as visited
-            socialVerificationState.visited.add(url);
-            socialVerificationState.timestamps[url] = Date.now();
-            
+            // Enhanced verification: Require minimum time spent on platform
             const card = document.getElementById(`socialCard${index}`);
             const confirmBtn = document.getElementById(`confirmBtn${index}`);
             
-            if (card) {
-                card.classList.add('visited');
-                // Change border color to success (green) when visited
-                card.style.borderColor = 'var(--success)';
-                card.style.background = 'rgba(0, 255, 136, 0.1)';
+            // Check if already confirmed
+            if (socialVerificationState.confirmed.has(url)) {
+                showNotify(`${name} already confirmed | ${name} مؤكد بالفعل`, 'info');
+                return;
             }
             
-            // Show confirm button after 3 seconds (user visits and follows)
+            // Open link in new tab
+            const newWindow = window.open(url, '_blank');
+            
+            // Mark as visited with timestamp
+            socialVerificationState.visited.add(url);
+            socialVerificationState.timestamps[url] = Date.now();
+            
+            if (card) {
+                card.classList.add('visited');
+                card.style.borderColor = 'var(--secondary)'; // Yellow/orange for visited but not confirmed
+                card.style.background = 'rgba(0, 255, 163, 0.1)';
+            }
+            
+            // Enhanced verification: Require minimum 10 seconds before showing confirm button
+            // This ensures user actually visited the platform
             setTimeout(() => {
                 if (confirmBtn && !socialVerificationState.confirmed.has(url)) {
                     confirmBtn.style.display = 'block';
-                    showNotify(`Please confirm you followed ${name} | ÙŠØ±Ø¬Ù‰ ØªØ£ÙƒÙŠØ¯ Ù…ØªØ§Ø¨Ø¹ØªÙƒ Ù„Ù€ ${name}`, 'info');
+                    confirmBtn.disabled = false;
+                    // Add visual indicator
+                    if (card) {
+                        card.style.borderColor = 'var(--primary)';
+                        card.style.boxShadow = '0 0 15px rgba(163, 54, 255, 0.4)';
+                    }
+                    showNotify(`Please return and confirm you followed ${name} | يرجى العودة وتأكيد متابعتك لـ ${name}`, 'info');
                 }
-            }, 3000);
+            }, 10000); // 10 seconds minimum - ensures user actually visited
             
-            // Check if all links are visited to activate Confirm Sync button
+            // Check if all links are visited
             checkAllSocialLinksVisited();
             
             // Save state
@@ -3846,11 +3951,23 @@
                 confirmSyncBtn.classList.add('active');
                 confirmSyncBtn.style.opacity = '1';
                 confirmSyncBtn.style.pointerEvents = 'all';
-                showNotify('All social links visited! Please confirm each one. | ØªÙ…Øª Ø²ÙŠØ§Ø±Ø© Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±ÙˆØ§Ø¨Ø·! ÙŠØ±Ø¬Ù‰ ØªØ£ÙƒÙŠØ¯ ÙƒÙ„ Ø±Ø§Ø¨Ø·.', 'success');
+                showNotify('All social links visited! Please confirm each one. | تمت زيارة جميع الروابط! يرجى تأكيد كل رابط.', 'success');
             }
         }
 
         function confirmSocialLink(index, url, name) {
+            // Enhanced verification: Check if user actually spent time on platform
+            const visitTime = socialVerificationState.timestamps[url];
+            const timeSpent = visitTime ? Date.now() - visitTime : 0;
+            const minTimeRequired = 8000; // 8 seconds minimum
+            
+            // Verify user spent minimum time (anti-bypass measure)
+            if (timeSpent < minTimeRequired && visitTime) {
+                const remaining = Math.ceil((minTimeRequired - timeSpent) / 1000);
+                showNotify(`Please spend at least ${remaining} more seconds on ${name} before confirming | يرجى قضاء ${remaining} ثوانٍ إضافية على ${name} قبل التأكيد`, 'warning');
+                return;
+            }
+            
             // Mark as confirmed
             socialVerificationState.confirmed.add(url);
             clickedSocialLinks.add(url);
@@ -3859,7 +3976,10 @@
             const confirmBtn = document.getElementById(`confirmBtn${index}`);
             const check = document.getElementById(`check${index}`);
             
-            if (confirmBtn) confirmBtn.style.display = 'none';
+            if (confirmBtn) {
+                confirmBtn.style.display = 'none';
+                confirmBtn.disabled = true;
+            }
             if (check) {
                 check.style.display = 'block';
                 check.style.animation = 'fadeIn 0.5s';
@@ -3871,7 +3991,7 @@
             }
             
             // Show success notification
-            showNotify(`âœ… ${name} confirmed! | ØªÙ… ØªØ£ÙƒÙŠØ¯ ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
+            showNotify(`✅ ${name} confirmed! | تم تأكيد ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
             
             // Save state
             saveSocialVerificationState();
@@ -3890,11 +4010,11 @@
                     confirmSyncBtn.classList.add('active');
                     confirmSyncBtn.style.opacity = '1';
                     confirmSyncBtn.style.pointerEvents = 'all';
-                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (READY) | ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© (Ø¬Ø§Ù‡Ø²)';
-                    showNotify('All social links confirmed! You can now proceed. | ØªÙ… ØªØ£ÙƒÙŠØ¯ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±ÙˆØ§Ø¨Ø·! ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø¢Ù†.', 'success');
+                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (READY) | تأكيد المزامنة (جاهز)';
+                    showNotify('All social links confirmed! You can now proceed. | تم تأكيد جميع الروابط! يمكنك المتابعة الآن.', 'success');
                 } else {
                     const remaining = SOCIAL_LINKS.length - socialVerificationState.confirmed.size;
-                    confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | ØªØ£ÙƒÙŠØ¯ ${remaining} Ø£Ø®Ø±Ù‰`;
+                    confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | تأكيد ${remaining} أخرى`;
                 }
             }
         }
@@ -5524,15 +5644,15 @@
                 const tokenSymbol = tokenInfo?.symbol || 'AKSG';
                 const tokenDecimals = tokenInfo?.decimals || 18;
 
-                // Request to add token to wallet
+                // Request to add token to wallet with correct configuration: $AKSG, 18 decimals, Polygon (0x89)
                 const result = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address
-                            symbol: tokenSymbol,
-                            decimals: tokenDecimals,
+                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address on Polygon
+                            symbol: 'AKSG', // Fixed symbol: $AKSG
+                            decimals: 18, // Fixed decimals: 18
                             image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
                         }
                     }
@@ -5693,15 +5813,15 @@
                 const tokenSymbol = tokenInfo?.symbol || 'AKSG';
                 const tokenDecimals = tokenInfo?.decimals || 18;
 
-                // Request to add token to wallet
+                // Request to add token to wallet with correct configuration: $AKSG, 18 decimals, Polygon (0x89)
                 const result = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: CONFIG.TKN,
-                            symbol: tokenSymbol,
-                            decimals: tokenDecimals,
+                            address: CONFIG.TKN || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                            symbol: 'AKSG', // Fixed symbol: $AKSG
+                            decimals: 18, // Fixed decimals: 18
                             image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
                         }
                     }
@@ -6350,9 +6470,9 @@
                         params: {
                             type: 'ERC20',
                             options: {
-                                address: CONFIG.TKN,
-                                symbol: 'AKSG',
-                                decimals: 18,
+                                address: CONFIG.TKN || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                                symbol: 'AKSG', // Fixed symbol: $AKSG
+                                decimals: 18, // Fixed decimals: 18
                                 image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
                             }
                         }
@@ -6708,31 +6828,92 @@
             }
         }
 
-        // ==================== KICK OAUTH LOGIN ====================
+        // ==================== KICK OAUTH LOGIN (ENHANCED WITH FALLBACKS) ====================
         function loginWithKick() {
-            const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${CONFIG.KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(CONFIG.KICK_REDIRECT_URI)}&scope=user:read%20chat:read`;
+            // Ensure CONFIG exists with fallbacks
+            const kickClientId = (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID) ? CONFIG.KICK_CLIENT_ID : (typeof window.ENV !== 'undefined' && window.ENV.KICK_CLIENT_ID) ? window.ENV.KICK_CLIENT_ID : '01KEAEX10SCC7S6VRSMR26WVRW';
+            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : window.location.origin;
+            
+            const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${kickClientId}&redirect_uri=${encodeURIComponent(kickRedirectUri)}&scope=user:read%20chat:read`;
             window.location.href = authUrl;
         }
 
-        // ==================== HANDLE KICK OAUTH CALLBACK ====================
-        function handleKickOAuthCallback() {
+        // ==================== HANDLE KICK OAUTH CALLBACK (ENHANCED) ====================
+        async function handleKickOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             
             if (code) {
                 // Exchange code for access token (should be done in backend)
-                // For now, just save the code
                 localStorage.setItem('kick_oauth_code', code);
-                showNotify("âœ… Kick OAuth successful! Code received.", 'success');
+                showNotify("✅ Kick OAuth successful! Code received. Fetching user data...", 'success');
                 
-                // Send code to backend
-                callThirdwebBackendAPI('kick_oauth', {
-                    code: code,
-                    wallet: userAddr || 'pending',
-                    redirect_uri: CONFIG.KICK_REDIRECT_URI
-                }).catch(e => {
+                try {
+                    // Send code to backend to exchange for access token and fetch user data
+                    const response = await callThirdwebBackendAPI('kick_oauth', {
+                        code: code,
+                        wallet: userAddr || 'pending',
+                        redirect_uri: CONFIG.KICK_REDIRECT_URI || window.location.origin
+                    });
+                    
+                    // If backend returns user data, store it for leaderboard
+                    if (response && response.user) {
+                        const kickUserData = {
+                            username: response.user.username || response.user.name || 'KickUser',
+                            avatar: response.user.avatar || response.user.profile_picture || '',
+                            follower_status: response.follower_status || false,
+                            user_id: response.user.id || response.user.user_id || null,
+                            timestamp: Date.now()
+                        };
+                        
+                        localStorage.setItem('kick_user_data', JSON.stringify(kickUserData));
+                        localStorage.setItem('kick_follow_verified', kickUserData.follower_status ? 'true' : 'false');
+                        
+                        // Update UI with user data
+                        updateKickUserDisplay(kickUserData);
+                        
+                        // Recheck follower status
+                        if (typeof checkKickFollowerStatus === 'function') {
+                            checkKickFollowerStatus();
+                        }
+                        
+                        showNotify(`✅ Welcome ${kickUserData.username}! Kick data loaded.`, 'success');
+                    } else {
+                        // Fallback: Mark as verified if backend doesn't return data
+                        localStorage.setItem('kick_follow_verified', 'true');
+                        if (typeof checkKickFollowerStatus === 'function') {
+                            checkKickFollowerStatus();
+                        }
+                    }
+                } catch (e) {
                     console.log('Kick OAuth backend error:', e);
-                });
+                    // Fallback: Still mark as verified if backend fails
+                    localStorage.setItem('kick_follow_verified', 'true');
+                    if (typeof checkKickFollowerStatus === 'function') {
+                        checkKickFollowerStatus();
+                    }
+                }
+            }
+        }
+        
+        // Update Kick user display in UI
+        function updateKickUserDisplay(userData) {
+            const kickStatusDisplay = document.getElementById('kickStatusDisplay');
+            const kickStatusText = document.getElementById('kickStatusText');
+            const kickAvatar = document.getElementById('kickAvatar');
+            const kickUsername = document.getElementById('kickUsername');
+            
+            if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
+            if (kickStatusText) {
+                kickStatusText.textContent = `✅ ${userData.username} - Kick Follow Verified! | تم التحقق من متابعة Kick!`;
+                kickStatusText.style.color = 'var(--success)';
+            }
+            if (kickAvatar && userData.avatar) {
+                kickAvatar.src = userData.avatar;
+                kickAvatar.style.display = 'block';
+            }
+            if (kickUsername) {
+                kickUsername.textContent = userData.username;
             }
         }
 

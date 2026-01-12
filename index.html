@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Load Configuration from external file - Must load before main script -->
-    <script src="config.js"></script>
+    <script src="config.js" onerror="console.warn('⚠️ config.js not found, using fallback values');"></script>
     
     <style>
         /* ØªØ£ÙƒØ¯ Ø£Ù† Ù‡Ø°Ø§ Ø§Ù„Ù‚Ø³Ù… ÙÙŠ Ø£Ø¹Ù„Ù‰ Ø§Ù„Ù€ CSS */
@@ -2227,6 +2227,13 @@
         // ==================== CONFIGURATION (Loaded from config.js) ====================
         // âš ï¸ NOTE: Configuration is now loaded from config.js file
         // If config.js is not loaded, use fallback values
+        // Fallback CONFIG - يتم استخدامه في حالة فشل تحميل config.js
+        // Fallback CONFIG - Used if config.js fails to load
+        if (typeof window.CONFIG === 'undefined') {
+            console.warn('⚠️ [CONFIG] config.js not loaded, using fallback values');
+            window.CONFIG = {};
+        }
+        
         const CONFIG = window.CONFIG || {
             CID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
             PID: "prj_cmk2xz9h214g2fw0kc2gan3o0",
@@ -2352,21 +2359,7 @@
             
             // ==================== CONTEXT MENU AND KEYBOARD PROTECTION REMOVED ====================
             // Removed for better user experience - users can now use right-click and keyboard shortcuts normally
-                
-                if (widthThreshold || heightThreshold) {
-                    if (!devtools.open) {
-                        devtools.open = true;
-                        document.body.innerHTML = '';
-                        document.write('<!DOCTYPE html><html><head><title>Security Alert</title><meta charset="UTF-8"></head><body style="background:#000;color:#ff4444;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Orbitron,Arial;font-size:2rem;text-align:center;"><div><h1>âš ï¸ Security Alert</h1><p>Developer Tools Detected</p><p style="font-size:1rem;color:#888;">Access Denied</p></div></body></html>');
-                        setTimeout(function() {
-                            window.location.href = 'about:blank';
-                        }, 2000);
-                        clearInterval(checkDevTools);
-                    }
-                } else {
-                    devtools.open = false;
-                }
-            }, 500);
+            // Removed broken code - variables not defined in this scope
 
             // Console disabling removed for better user experience
 
@@ -3139,6 +3132,7 @@
                 event.stopPropagation();
             }
             
+            console.log('Button Clicked!'); // تأكيد استجابة الزر
             console.log("closeWelcomeModalAndStart called");
             
             // التأكد من وجود config.js
@@ -3188,6 +3182,26 @@
                     welcomeLayer.style.display = 'none';
                 }, 500);
             }
+            
+            // دالة موحدة لإخفاء جميع طبقات الترحيب - للتأكد من إخفاء جميع الطبقات
+            // Unified function to hide all welcome layers - ensures all layers are hidden
+            function hideAllWelcomeLayers() {
+                const layers = ['welcomeModal', 'welcome-overlay', 'welcome-layer'];
+                layers.forEach(layerId => {
+                    const layer = document.getElementById(layerId);
+                    if (layer) {
+                        layer.style.opacity = '0';
+                        layer.style.transition = 'opacity 0.5s ease-in-out';
+                        setTimeout(() => {
+                            layer.style.display = 'none';
+                        }, 500);
+                    }
+                });
+            }
+            
+            // استدعاء الدالة الموحدة للتأكد من إخفاء جميع الطبقات
+            // Call unified function to ensure all layers are hidden
+            hideAllWelcomeLayers();
             
             // Start Stage 1: Social Tasks after animation
             setTimeout(() => {
@@ -6936,10 +6950,14 @@
         window.addEventListener('load', function() {
             // Ù†Ø¶Ù…Ù† Ø£Ù† ÙƒÙ„ Ø´ÙŠØ¡ Ù…Ø­Ù…Ù„ Ù‚Ø¨Ù„ ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø¶ØºØ·
             const welcomeLayer = document.getElementById('welcome-layer'); 
-            const mainApp = document.querySelector('.container'); // Ø£Ùˆ Ø§Ø³Ù… Ø§Ù„ÙƒÙ„Ø§Ø³ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ Ø¹Ù†Ø¯Ùƒ
+            const mainApp = document.querySelector('.container'); // Container الرئيسي للتطبيق | Main application container
 
             // Initialize Stage 0 (Welcome Overlay) - This handles the click event
-            initStage0();
+            if (typeof initStage0 === 'function') {
+                initStage0();
+            } else {
+                console.warn('⚠️ [WARNING] initStage0 function not found');
+            }
             
             // Handle welcome-layer click (if exists) for compatibility - Now merged with welcome-overlay
             // welcome-layer is now hidden and merged with welcome-overlay

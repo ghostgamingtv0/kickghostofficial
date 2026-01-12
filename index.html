@@ -3146,6 +3146,9 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
+            // Load stage completion status from localStorage
+            loadStageCompletion();
+            
             // Check if user has seen welcome message
             const welcomeSeen = localStorage.getItem('welcome_seen');
             const welcomeModal = document.getElementById('welcomeModal');
@@ -3358,6 +3361,9 @@
                 showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first`, 'warning');
                 return;
             }
+            
+            // Mark SOCIAL_VERIFY stage as completed
+            markStageCompleted('SOCIAL_VERIFY');
             
             // Save verification state
             localStorage.setItem('social_verification_complete', 'true');
@@ -4504,11 +4510,14 @@
                 // Security Guards: Check for duplicate (async - await)
                 const duplicateCheck = await preventDuplicateWallet(userAddr);
                 if (!duplicateCheck) {
-                    state = 'VERIFY';
+                    state = 'SOCIAL_VERIFY';
                     updateUIState();
                     if (btn) btn.disabled = false;
                     return;
                 }
+
+                // Mark WALLET stage as completed
+                markStageCompleted('WALLET');
 
                 // Move to WALLET_CONFIRM stage (طلب تأكيد المحفظة)
                 state = 'WALLET_CONFIRM';
@@ -4676,13 +4685,21 @@
             }
         }
 
-        // ==================== STEP 3: X402 PROTOCOL + OFF-CHAIN VERIFICATION ====================
+        // Stage 7: X402 Protocol + Off-chain Verification
         async function initiateX402Protocol() {
             const btn = document.getElementById('masterBtn');
+            if (!btn) return;
+            
             btn.disabled = true;
             btn.innerHTML = `<div class="loading-spinner"></div> <span>X402 Protocol: Requesting Digital Signature...</span>`;
 
             try {
+                if (!userAddr) {
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    btn.disabled = false;
+                    return;
+                }
+                
                 // Step 1: Digital Signature for X402
                 const message = `KICKGHOST $AKSG Verification\n\nWallet: ${userAddr}\nContract: ${CONFIG.TKN}\nTimestamp: ${Date.now()}\n\nSign to verify ownership and link to Kick/Discord.`;
                 const signature = await window.ethereum.request({
@@ -4694,21 +4711,25 @@
                     // Step 2: Off-chain Verification - Link wallet to Kick/Discord
                     await performOffChainVerification(userAddr, signature);
                     
-                    state = 'CONTRACT';
+                    // Mark as completed
+                    x402Signed = true;
+                    markStageCompleted('X402');
+                    
+                    // Move to CLAIM_CODE stage
+                    state = 'CLAIM_CODE';
                     updateUIState();
-                    showNotify("✅ X402 Protocol: Digital Signature Verified & Off-chain linked", 'success');
+                    
+                    showNotify("✅ X402 Protocol Complete | تم توقيع الرسالة", 'success');
                     addActivityLog('X402 Protocol', 'Digital signature verified successfully');
                 }
             } catch (e) {
                 console.error('X402 Protocol Error:', e);
                 if (e.code === 4001) {
-                    showNotify("Signature rejected. Please sign to continue.", 'warning');
-                    btn.disabled = false;
-                    return;
+                    showNotify("⚠️ Signature rejected. Please sign to continue | تم رفض التوقيع", 'warning');
+                } else {
+                    showNotify("Failed to sign message. Please try again.", 'error');
                 }
-                // Continue anyway for user experience
-                state = 'CONTRACT';
-                updateUIState();
+                btn.disabled = false;
             }
         }
 
@@ -6117,6 +6138,56 @@
     </div>
     
     <script>
+        // ==================== STAGE COMPLETION TRACKING (If not already defined) ====================
+        // تتبع إتمام كل مرحلة - لا يمكن المرور للمرحلة التالية إلا بعد تأكيد المرحلة الحالية
+        if (typeof stageCompletion === 'undefined') {
+            window.stageCompletion = {
+                HUMAN_VERIFY: false,      // Stage 1: Human Verification
+                SOCIAL_VERIFY: false,     // Stage 2: Social Verification
+                WALLET: false,            // Stage 3: Wallet Selection
+                WALLET_CONFIRM: false,    // Stage 4: Wallet Confirmation
+                ADD_TOKEN: false,         // Stage 5: Add Token
+                REQUEST_CONTRACT: false,  // Stage 6: Request Contract
+                X402: false,              // Stage 7: X402 Protocol
+                CLAIM_CODE: false,        // Stage 8: Claim Code
+                EMPIRE: false             // Stage 9: Ghost Empire
+            };
+        }
+        
+        // ==================== STAGE VERIFICATION FUNCTIONS (If not already defined) ====================
+        if (typeof isStageCompleted === 'undefined') {
+            window.isStageCompleted = function(stageName) {
+                return (window.stageCompletion || stageCompletion)[stageName] === true;
+            };
+            
+            window.markStageCompleted = function(stageName) {
+                const sc = window.stageCompletion || stageCompletion;
+                sc[stageName] = true;
+                localStorage.setItem(`stage_${stageName}_completed`, 'true');
+                console.log(`✅ Stage ${stageName} completed`);
+            };
+            
+            window.canProceedToNextStage = function(currentStage) {
+                if (!window.isStageCompleted(currentStage)) {
+                    if (typeof showNotify === 'function') {
+                        showNotify(`⚠️ Please complete ${currentStage} stage first | يرجى إتمام مرحلة ${currentStage} أولاً`, 'warning');
+                    }
+                    return false;
+                }
+                return true;
+            };
+            
+            window.loadStageCompletion = function() {
+                const sc = window.stageCompletion || stageCompletion;
+                Object.keys(sc).forEach(stage => {
+                    const completed = localStorage.getItem(`stage_${stage}_completed`);
+                    if (completed === 'true') {
+                        sc[stage] = true;
+                    }
+                });
+            };
+        }
+        
         // ==================== ENHANCED SMART CONTRACT FUNCTIONS ====================
         // Complete Smart Contract integration with ethers.js
         
@@ -6128,40 +6199,65 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="loading-spinner"></div> <span>Processing...</span>';
                 
-                // Check current state and execute appropriate action
+                // Check current state and execute appropriate action with strict verification
                 if (state === 'HUMAN_VERIFY') {
-                    // Stage 1: Human Verification - Already handled by welcome screen
-                    state = 'SOCIAL_VERIFY';
-                    updateUIState();
+                    // Stage 1: Human Verification - Confirm and mark as completed
+                    await confirmHumanVerification();
                 } else if (state === 'SOCIAL_VERIFY') {
                     // Stage 2: Social Verification - Check if all links confirmed
-                    if (socialVerificationState.confirmed.size >= SOCIAL_LINKS.length) {
-                        state = 'WALLET';
-                        updateUIState();
-                        openWalletModal();
-                    } else {
-                        showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first`, 'warning');
+                    if (!canProceedToNextStage('HUMAN_VERIFY')) {
+                        btn.disabled = false;
+                        return;
                     }
+                    await confirmSocialVerification();
                 } else if (state === 'WALLET') {
-                    // Stage 3: Wallet Selection
+                    // Stage 3: Wallet Selection - Check if social verification completed
+                    if (!canProceedToNextStage('SOCIAL_VERIFY')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     openWalletModal();
                 } else if (state === 'WALLET_CONFIRM') {
-                    // Stage 4: Confirm Wallet Connection
+                    // Stage 4: Confirm Wallet Connection - Check if wallet selected
+                    if (!canProceedToNextStage('WALLET')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     await confirmWallet();
                 } else if (state === 'ADD_TOKEN') {
-                    // Stage 5: Add AKSG Token
+                    // Stage 5: Add AKSG Token - Check if wallet confirmed
+                    if (!canProceedToNextStage('WALLET_CONFIRM')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     await addTokenToWallet();
                 } else if (state === 'REQUEST_CONTRACT') {
-                    // Stage 6: Request Contract & Save to Thirdweb
+                    // Stage 6: Request Contract - Check if token added
+                    if (!canProceedToNextStage('ADD_TOKEN')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     await requestContractAndSave();
                 } else if (state === 'X402') {
-                    // Stage 7: X402 Protocol - Message Signing
+                    // Stage 7: X402 Protocol - Check if contract requested
+                    if (!canProceedToNextStage('REQUEST_CONTRACT')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     await initiateX402Protocol();
                 } else if (state === 'CLAIM_CODE') {
-                    // Stage 8: Generate Claim Code (Secure Generator)
+                    // Stage 8: Generate Claim Code - Check if X402 signed
+                    if (!canProceedToNextStage('X402')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     await generateClaimCode();
                 } else if (state === 'EMPIRE') {
-                    // Stage 9: Show Ghost Empire
+                    // Stage 9: Show Ghost Empire - Check if claim code generated
+                    if (!canProceedToNextStage('CLAIM_CODE')) {
+                        btn.disabled = false;
+                        return;
+                    }
                     showGhostEmpire();
                 }
             } catch (e) {
@@ -6170,6 +6266,43 @@
             } finally {
                 if (btn) btn.disabled = false;
             }
+        }
+        
+        // ==================== STAGE CONFIRMATION FUNCTIONS ====================
+        
+        // Stage 1: Confirm Human Verification
+        async function confirmHumanVerification() {
+            // Mark as completed (user clicked welcome screen)
+            markStageCompleted('HUMAN_VERIFY');
+            
+            // Move to next stage
+            state = 'SOCIAL_VERIFY';
+            updateUIState();
+            
+            showNotify("✅ Human Verification Complete | تم التأكد الحيوي", 'success');
+        }
+        
+        // Stage 2: Confirm Social Verification
+        async function confirmSocialVerification() {
+            // Check if all social links confirmed
+            if (socialVerificationState.confirmed.size < SOCIAL_LINKS.length) {
+                showNotify(`⚠️ Please visit and confirm all ${SOCIAL_LINKS.length} social links first | يرجى زيارة وتأكيد جميع الروابط الاجتماعية`, 'warning');
+                return;
+            }
+            
+            // Mark as completed
+            markStageCompleted('SOCIAL_VERIFY');
+            
+            // Move to next stage
+            state = 'WALLET';
+            updateUIState();
+            
+            // Auto-open wallet modal
+            setTimeout(() => {
+                openWalletModal();
+            }, 500);
+            
+            showNotify("✅ Social Verification Complete | تمت المتابعة الاجتماعية", 'success');
         }
         
         // Enhanced refreshTransactions function
@@ -6280,6 +6413,9 @@
                     sessionStorage.setItem('aksg_first_wallet_session', firstWalletAddress);
                 }
                 
+                // Mark WALLET stage as completed
+                markStageCompleted('WALLET');
+                
                 // Move to WALLET_CONFIRM stage
                 state = 'WALLET_CONFIRM';
                 updateUIState();
@@ -6297,33 +6433,40 @@
             }
         }
         
-        // Confirm wallet connection
+        // Stage 4: Confirm wallet connection
         async function confirmWallet() {
             try {
                 if (!userAddr) {
-                    showNotify("Please connect your wallet first", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
                 // Save wallet data to Thirdweb (via backend)
                 await saveWalletToThirdweb(userAddr, connectedWallet);
                 
+                // Mark wallet selection as completed
+                markStageCompleted('WALLET');
+                
+                // Mark wallet confirmation as completed
+                walletConfirmed = true;
+                markStageCompleted('WALLET_CONFIRM');
+                
                 // Move to ADD_TOKEN stage
                 state = 'ADD_TOKEN';
                 updateUIState();
                 
-                showNotify("✅ Wallet confirmed! Now add AKSG token to your wallet.", 'success');
+                showNotify("✅ Wallet Confirmed | تم تأكيد المحفظة", 'success');
             } catch (e) {
                 console.error('Confirm wallet error:', e);
                 showNotify("Failed to confirm wallet", 'error');
             }
         }
         
-        // Add token to wallet
+        // Stage 5: Add token to wallet
         async function addTokenToWallet() {
             try {
                 if (!window.ethereum) {
-                    showNotify("Please connect your wallet first", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
@@ -6340,24 +6483,30 @@
                     }
                 });
                 
+                // Mark as completed
                 tokenAdded = true;
+                markStageCompleted('ADD_TOKEN');
                 
                 // Move to REQUEST_CONTRACT stage
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 
-                showNotify("✅ AKSG token added to wallet! Now request contract.", 'success');
+                showNotify("✅ Token Added | تمت إضافة العملة", 'success');
             } catch (e) {
                 console.error('Add token error:', e);
-                showNotify("Failed to add token. Please try again.", 'error');
+                if (e.code === 4001) {
+                    showNotify("Token addition rejected by user", 'warning');
+                } else {
+                    showNotify("Failed to add token. Please try again.", 'error');
+                }
             }
         }
         
-        // Request contract and save to Thirdweb
+        // Stage 6: Request contract and save to Thirdweb
         async function requestContractAndSave() {
             try {
                 if (!userAddr) {
-                    showNotify("Please connect your wallet first", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
@@ -6376,13 +6525,15 @@
                     timestamp: new Date().toISOString()
                 });
                 
+                // Mark as completed
                 contractRequested = true;
+                markStageCompleted('REQUEST_CONTRACT');
                 
                 // Move to X402 stage (message signing)
                 state = 'X402';
                 updateUIState();
                 
-                showNotify("✅ Contract data saved! Now sign message for verification.", 'success');
+                showNotify("✅ Contract Saved | تم حفظ العقد", 'success');
             } catch (e) {
                 console.error('Request contract error:', e);
                 showNotify("Failed to save contract data", 'error');
@@ -6398,20 +6549,28 @@
         // Verify all tasks completed before generating code
         function verifyAllTasksCompleted() {
             const checks = {
-                humanVerify: state !== 'HUMAN_VERIFY', // Stage 1 completed
-                socialVerify: socialVerificationState.confirmed.size >= SOCIAL_LINKS.length, // Stage 2 completed
-                walletConnected: !!userAddr && !!connectedWallet, // Stage 3 completed
-                walletConfirmed: walletConfirmed, // Stage 4 completed
-                tokenAdded: tokenAdded, // Stage 5 completed
-                contractRequested: contractRequested, // Stage 6 completed
-                x402Signed: state === 'CLAIM_CODE' || state === 'EMPIRE' // Stage 7 completed
+                humanVerify: isStageCompleted('HUMAN_VERIFY'), // Stage 1 completed
+                socialVerify: isStageCompleted('SOCIAL_VERIFY'), // Stage 2 completed
+                walletSelected: isStageCompleted('WALLET'), // Stage 3 completed
+                walletConfirmed: isStageCompleted('WALLET_CONFIRM'), // Stage 4 completed
+                tokenAdded: isStageCompleted('ADD_TOKEN'), // Stage 5 completed
+                contractRequested: isStageCompleted('REQUEST_CONTRACT'), // Stage 6 completed
+                x402Signed: isStageCompleted('X402') // Stage 7 completed
             };
             
             // Log verification status
             console.log('Task Verification:', checks);
+            console.log('Stage Completion Status:', stageCompletion);
             
             // All checks must pass
-            return Object.values(checks).every(check => check === true);
+            const allCompleted = Object.values(checks).every(check => check === true);
+            
+            if (!allCompleted) {
+                const incompleteStages = Object.keys(checks).filter(key => !checks[key]);
+                console.warn('Incomplete stages:', incompleteStages);
+            }
+            
+            return allCompleted;
         }
         
         // Generate unique 6-digit code with security checks
@@ -6499,27 +6658,30 @@
             return code;
         }
         
-        // Generate claim code (6 digits) - Enhanced with security
+        // Stage 8: Generate claim code (6 digits) - Enhanced with security
         async function generateClaimCode() {
             try {
                 // Security Check: Verify wallet is connected
                 if (!userAddr) {
-                    showNotify("⚠️ Please connect your wallet first", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
-                // Security Check: Verify all tasks completed
+                // Security Check: Verify all previous stages completed
                 if (!verifyAllTasksCompleted()) {
-                    showNotify("⚠️ Security Check Failed: Please complete all tasks first", 'error');
+                    showNotify("⚠️ Security Check Failed: Please complete all previous stages first | فشل التحقق: يرجى إتمام جميع المراحل السابقة", 'error');
                     return;
                 }
                 
                 // Check if wallet already has a code
                 const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
                 if (existingCode) {
-                    showNotify("✅ You already have a claim code!", 'info');
+                    showNotify("✅ You already have a claim code! | لديك كود بالفعل", 'info');
                     userClaimCode = existingCode;
                     displayClaimCode(existingCode);
+                    
+                    // Mark as completed and move to EMPIRE
+                    markStageCompleted('CLAIM_CODE');
                     state = 'EMPIRE';
                     updateUIState();
                     return;
@@ -6533,6 +6695,9 @@
                 }
                 
                 userClaimCode = code;
+                
+                // Mark as completed
+                markStageCompleted('CLAIM_CODE');
                 
                 // Save to backend (via API)
                 try {
@@ -6563,7 +6728,7 @@
                     });
                 }
                 
-                showNotify(`✅ Secure Claim Code Generated: ${code} | كود آمن تم إنشاؤه`, 'success');
+                showNotify(`✅ Claim Code Generated: ${code} | تم إنشاء الكود: ${code}`, 'success');
                 
             } catch (e) {
                 console.error('Generate claim code error:', e);
@@ -9747,6 +9912,9 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
+            // Load stage completion status from localStorage
+            loadStageCompletion();
+            
             // Check if user has seen welcome message
             const welcomeSeen = localStorage.getItem('welcome_seen');
             const welcomeModal = document.getElementById('welcomeModal');
@@ -9959,6 +10127,9 @@
                 showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first`, 'warning');
                 return;
             }
+            
+            // Mark SOCIAL_VERIFY stage as completed
+            markStageCompleted('SOCIAL_VERIFY');
             
             // Save verification state
             localStorage.setItem('social_verification_complete', 'true');
@@ -11105,11 +11276,14 @@
                 // Security Guards: Check for duplicate (async - await)
                 const duplicateCheck = await preventDuplicateWallet(userAddr);
                 if (!duplicateCheck) {
-                    state = 'VERIFY';
+                    state = 'SOCIAL_VERIFY';
                     updateUIState();
                     if (btn) btn.disabled = false;
                     return;
                 }
+
+                // Mark WALLET stage as completed
+                markStageCompleted('WALLET');
 
                 // Move to WALLET_CONFIRM stage (طلب تأكيد المحفظة)
                 state = 'WALLET_CONFIRM';
@@ -11277,13 +11451,21 @@
             }
         }
 
-        // ==================== STEP 3: X402 PROTOCOL + OFF-CHAIN VERIFICATION ====================
+        // Stage 7: X402 Protocol + Off-chain Verification
         async function initiateX402Protocol() {
             const btn = document.getElementById('masterBtn');
+            if (!btn) return;
+            
             btn.disabled = true;
             btn.innerHTML = `<div class="loading-spinner"></div> <span>X402 Protocol: Requesting Digital Signature...</span>`;
 
             try {
+                if (!userAddr) {
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    btn.disabled = false;
+                    return;
+                }
+                
                 // Step 1: Digital Signature for X402
                 const message = `KICKGHOST $AKSG Verification\n\nWallet: ${userAddr}\nContract: ${CONFIG.TKN}\nTimestamp: ${Date.now()}\n\nSign to verify ownership and link to Kick/Discord.`;
                 const signature = await window.ethereum.request({
@@ -11295,21 +11477,25 @@
                     // Step 2: Off-chain Verification - Link wallet to Kick/Discord
                     await performOffChainVerification(userAddr, signature);
                     
-                    state = 'CONTRACT';
+                    // Mark as completed
+                    x402Signed = true;
+                    markStageCompleted('X402');
+                    
+                    // Move to CLAIM_CODE stage
+                    state = 'CLAIM_CODE';
                     updateUIState();
-                    showNotify("✅ X402 Protocol: Digital Signature Verified & Off-chain linked", 'success');
+                    
+                    showNotify("✅ X402 Protocol Complete | تم توقيع الرسالة", 'success');
                     addActivityLog('X402 Protocol', 'Digital signature verified successfully');
                 }
             } catch (e) {
                 console.error('X402 Protocol Error:', e);
                 if (e.code === 4001) {
-                    showNotify("Signature rejected. Please sign to continue.", 'warning');
-                    btn.disabled = false;
-                    return;
+                    showNotify("⚠️ Signature rejected. Please sign to continue | تم رفض التوقيع", 'warning');
+                } else {
+                    showNotify("Failed to sign message. Please try again.", 'error');
                 }
-                // Continue anyway for user experience
-                state = 'CONTRACT';
-                updateUIState();
+                btn.disabled = false;
             }
         }
 
@@ -12884,9 +13070,12 @@
             // حفظ في localStorage أن المستخدم رأى الرسالة
             localStorage.setItem('welcome_seen', 'true');
             
+            // Mark HUMAN_VERIFY stage as completed (user clicked welcome screen)
+            markStageCompleted('HUMAN_VERIFY');
+            
             // تحديث الحالة وبدء المرحلة الأولى
             if (typeof state !== 'undefined') {
-                state = 'HUMAN_VERIFY';
+                state = 'SOCIAL_VERIFY';
             }
             
             if (typeof updateUIState === 'function') {
@@ -12897,11 +13086,13 @@
                 initializeStages();
             }
             
-            console.log("Welcome screen closed - App started");
+            console.log("Welcome screen closed - App started | Stage 1 (HUMAN_VERIFY) completed");
         }
         
         // دالة بسيطة لإخفاء شاشة الترحيب (بدون فحص البوت)
         function closeWelcomeScreen() {
+            // Mark HUMAN_VERIFY stage as completed
+            markStageCompleted('HUMAN_VERIFY');
             initApp(null);
         }
         

@@ -6,16 +6,19 @@
     <title>KICKGHOST ($AKSG) - Ultimate Web3 Gaming Platform 2026</title>
     
     <!-- External Libraries -->
+    <!-- Google Fonts - Moved from @import to <link> for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <!-- Thirdweb SDK - Use npm CDN or jsDelivr for better reliability -->
+    <!-- Thirdweb SDK v5 - Compatible with vanilla JS -->
     <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js" 
             onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js'"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap');
         
         :root {
             --primary: #a336ff;
@@ -54,10 +57,19 @@
             -ms-user-select: none;
         }
 
-        /* Re-enable text selection for inputs */
-        input, textarea, .contract-addr, .transaction-hash {
+        /* Re-enable text selection for inputs and copyable elements - Accessibility improvement */
+        input, 
+        textarea, 
+        .contract-addr, 
+        .transaction-hash,
+        .copyable-addr,
+        .wallet-addr,
+        code,
+        pre {
             user-select: text;
             -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
         }
 
         /* Mobile Support (Enhanced) */
@@ -80,19 +92,33 @@
             .social-verification-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
         }
 
-        /* Tablet Support */
+        /* Tablet Support - Improved selector specificity */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .main-dashboard { grid-template-columns: 1fr 380px !important; }
-            .project-title { font-size: 3.5rem !important; }
-            .social-verification-grid { grid-template-columns: repeat(3, 1fr) !important; }
+            body .main-dashboard { 
+                grid-template-columns: 1fr 380px; 
+            }
+            body .project-title { 
+                font-size: 3.5rem; 
+            }
+            body .social-verification-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+            }
         }
 
-        /* Touch Device Support */
+        /* Touch Device Support - Improved selector specificity */
         @media (hover: none) and (pointer: coarse) {
-            .btn-mega:active { transform: scale(0.95) !important; }
-            .wallet-option:active { transform: scale(0.98) !important; }
-            .social-link-card:active { transform: scale(0.98) !important; }
-            .user-item:active { transform: translateX(-3px) !important; }
+            body .btn-mega:active { 
+                transform: scale(0.95); 
+            }
+            body .wallet-option:active { 
+                transform: scale(0.98); 
+            }
+            body .social-link-card:active { 
+                transform: scale(0.98); 
+            }
+            body .user-item:active { 
+                transform: translateX(-3px); 
+            }
         }
 
         /* Animated Background Particles */
@@ -945,10 +971,26 @@
             padding: 40px 20px;
             background: radial-gradient(circle at center, rgba(163, 54, 255, 0.1), rgba(0, 0, 0, 0.9));
             animation: fadeIn 1s;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
         .ghost-empire-stage.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Smooth transition for container */
+        .container {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .container.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
         }
 
         .empire-header {
@@ -1501,12 +1543,12 @@
             </div>
             
             <div class="master-control-box">
-                <h2 id="statusTitle" style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 2rem;">Verify Your Social Activity</h2>
-                <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">To prevent bots, please visit our Kick and Social links first. Security Guards are monitoring.</p>
+                <h2 id="statusTitle" style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 2rem;">مرحباً بك في KICKGHOST</h2>
+                <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">انضم إلى مجتمعنا واحصل على 5000 AKSG Token | Join our community and get 5000 AKSG Token</p>
                 
-                <button id="masterBtn" class="btn-mega" onclick="handleMainAction()">
-                    <i class="fas fa-unlock-alt"></i>
-                    <span>START VERIFICATION</span>
+                <button id="masterBtn" class="btn-mega" onclick="startSubscriptionFlow()">
+                    <i class="fas fa-rocket"></i>
+                    <span>اضغط للاشتراك | Click to Subscribe</span>
                 </button>
             </div>
         </section>
@@ -2343,18 +2385,104 @@
 
         })();
 
+        // ==================== STAGE MANAGEMENT ====================
+        let currentStage = 1; // Stage 1: Initial Dashboard, Stage 2: Social Verification
+        
+        // Initialize Stage 1 (Hide Ghost Empire, Show Dashboard)
+        function initializeStages() {
+            const container = document.querySelector('.container');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            
+            if (container) {
+                container.style.display = 'block';
+                container.classList.remove('hidden');
+            }
+            
+            if (ghostEmpire) {
+                ghostEmpire.classList.remove('active');
+                ghostEmpire.style.display = 'none';
+            }
+            
+            currentStage = 1;
+        }
+        
+        // Start Subscription Flow - Transition from Stage 1 to Stage 2
+        function startSubscriptionFlow() {
+            const container = document.querySelector('.container');
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            const masterBtn = document.getElementById('masterBtn');
+            
+            if (!ghostEmpire || !container) return;
+            
+            // Disable button during transition
+            if (masterBtn) {
+                masterBtn.disabled = true;
+                masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>جاري الانتقال... | Loading...</span>';
+            }
+            
+            // Smooth transition: Hide container, Show Ghost Empire
+            container.classList.add('hidden');
+            
+            setTimeout(() => {
+                container.style.display = 'none';
+                ghostEmpire.style.display = 'block';
+                
+                // Trigger reflow for animation
+                ghostEmpire.offsetHeight;
+                
+                // Add active class for smooth fade-in
+                setTimeout(() => {
+                    ghostEmpire.classList.add('active');
+                    currentStage = 2;
+                    
+                    // Re-enable button
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
+                    }
+                    
+                    // Initialize social verification grid if not already done
+                    const grid = document.getElementById('socialVerificationGrid');
+                    if (grid && (!grid.innerHTML || grid.innerHTML.includes('Populated by JS'))) {
+                        initGhostEmpire();
+                    }
+                }, 100);
+            }, 500);
+        }
+
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
+            // Check if user has seen welcome message
+            const welcomeSeen = localStorage.getItem('welcome_seen');
+            const welcomeModal = document.getElementById('welcomeModal');
+            const container = document.querySelector('.container');
+            
+            if (!welcomeSeen && welcomeModal) {
+                // Show welcome modal
+                welcomeModal.style.display = 'flex';
+                if (container) container.style.display = 'none';
+            } else {
+                // Hide welcome modal, show container
+                if (welcomeModal) welcomeModal.style.display = 'none';
+                if (container) container.style.display = 'block';
+            }
+            
+            // Initialize stages (Stage 1: Dashboard visible, Stage 2: Hidden)
+            initializeStages();
+            
             initParticles();
             initGhostEmpire();
             loadLeaderboard();
             initLiveUsers();
             initKickStatus();
+            updateKickStats(); // Initialize Kick Stats
             initTokenChartWithRealData();
             checkSecurityGuards();
             updateUIState();
             initThirdwebSDK();
             initializeX402Facilitator(); // Initialize X402 Protocol
+            
+            // Update Kick Stats every 2 minutes
+            setInterval(updateKickStats, 120000);
             
             // Check if already claimed
             checkWalletStatus();
@@ -2399,19 +2527,37 @@
             
             if (card) {
                 card.classList.add('visited');
-                card.style.borderColor = 'var(--secondary)';
+                // Change border color to success (green) when visited
+                card.style.borderColor = 'var(--success)';
+                card.style.background = 'rgba(0, 255, 136, 0.1)';
             }
             
             // Show confirm button after 3 seconds (user visits and follows)
             setTimeout(() => {
                 if (confirmBtn && !socialVerificationState.confirmed.has(url)) {
                     confirmBtn.style.display = 'block';
-                    showNotify(`Please confirm you followed ${name}`, 'info');
+                    showNotify(`Please confirm you followed ${name} | يرجى تأكيد متابعتك لـ ${name}`, 'info');
                 }
             }, 3000);
             
+            // Check if all links are visited to activate Confirm Sync button
+            checkAllSocialLinksVisited();
+            
             // Save state
             saveSocialVerificationState();
+        }
+        
+        // Check if all social links are visited
+        function checkAllSocialLinksVisited() {
+            const allVisited = socialVerificationState.visited.size >= SOCIAL_LINKS.length;
+            const confirmSyncBtn = document.getElementById('confirmSyncBtn');
+            
+            if (confirmSyncBtn && allVisited) {
+                confirmSyncBtn.classList.add('active');
+                confirmSyncBtn.style.opacity = '1';
+                confirmSyncBtn.style.pointerEvents = 'all';
+                showNotify('All social links visited! Please confirm each one. | تمت زيارة جميع الروابط! يرجى تأكيد كل رابط.', 'success');
+            }
         }
 
         function confirmSocialLink(index, url, name) {
@@ -2424,31 +2570,45 @@
             const check = document.getElementById(`check${index}`);
             
             if (confirmBtn) confirmBtn.style.display = 'none';
-            if (check) check.style.display = 'block';
+            if (check) {
+                check.style.display = 'block';
+                check.style.animation = 'fadeIn 0.5s';
+            }
             if (card) {
                 card.style.borderColor = 'var(--success)';
-                card.style.background = 'rgba(0, 255, 136, 0.15)';
+                card.style.background = 'rgba(0, 255, 136, 0.2)';
+                card.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
             }
+            
+            // Show success notification
+            showNotify(`✅ ${name} confirmed! | تم تأكيد ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
             
             // Save state
             saveSocialVerificationState();
             
             // Check if all confirmed
             checkAllSocialLinksConfirmed();
-            
-            showNotify(`✅ ${name} confirmed! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
         }
-
+        
+        // Check if all social links are confirmed
         function checkAllSocialLinksConfirmed() {
-            if (socialVerificationState.confirmed.size >= SOCIAL_LINKS.length) {
-                const btn = document.getElementById('confirmSyncBtn');
-                if (btn) {
-                    btn.classList.add('active');
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (ALL VERIFIED)';
-                    showNotify("✅ All social links confirmed! Click CONFIRM SYNC to proceed.", 'success');
+            const allConfirmed = socialVerificationState.confirmed.size >= SOCIAL_LINKS.length;
+            const confirmSyncBtn = document.getElementById('confirmSyncBtn');
+            
+            if (confirmSyncBtn) {
+                if (allConfirmed) {
+                    confirmSyncBtn.classList.add('active');
+                    confirmSyncBtn.style.opacity = '1';
+                    confirmSyncBtn.style.pointerEvents = 'all';
+                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (READY) | تأكيد المزامنة (جاهز)';
+                    showNotify('All social links confirmed! You can now proceed. | تم تأكيد جميع الروابط! يمكنك المتابعة الآن.', 'success');
+                } else {
+                    const remaining = SOCIAL_LINKS.length - socialVerificationState.confirmed.size;
+                    confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | تأكيد ${remaining} أخرى`;
                 }
             }
         }
+
 
         function confirmSyncAndProceed() {
             // Check if all social links confirmed

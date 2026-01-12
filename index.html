@@ -990,6 +990,137 @@
         }
 
         /* Ghost Empire Stage */
+        /* Stage 0: Welcome Overlay */
+        .stage0-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            animation: fadeIn 0.5s ease-in-out;
+            cursor: pointer;
+        }
+
+        .stage0-card {
+            max-width: 500px;
+            text-align: center;
+            padding: 50px 40px;
+            cursor: default;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .stage0-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px rgba(163, 54, 255, 0.4);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stage 1: Social Tasks */
+        .stage1-social-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 40px 20px;
+        }
+
+        .social-icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            width: 100%;
+            margin: 40px 0;
+        }
+
+        .social-icon-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .social-icon-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(163, 54, 255, 0.3);
+        }
+
+        .social-icon-card.clicked {
+            border-color: var(--success);
+            background: rgba(0, 255, 163, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 163, 0.5);
+        }
+
+        .social-icon-card.clicked::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--success);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .social-icon-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .social-icon-card.clicked i {
+            color: var(--success);
+        }
+
+        .stage1-continue-btn {
+            margin-top: 40px;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            background: linear-gradient(45deg, #6200ea, #a336ff);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .stage1-continue-btn.enabled {
+            opacity: 1;
+            pointer-events: all;
+            box-shadow: 0 10px 40px rgba(163, 54, 255, 0.5);
+        }
+
+        .stage1-continue-btn.enabled:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(163, 54, 255, 0.7);
+        }
+
         .ghost-empire-stage {
             display: none; /* Strictly hidden by default */
             min-height: 100vh;
@@ -1456,7 +1587,23 @@
     </div>
 
     <!-- Welcome Modal (Bilingual) -->
-    <div id="welcomeModal" class="modal-overlay" style="display: flex;">
+    <!-- Stage 0: Welcome Overlay -->
+    <div id="stage0Welcome" class="stage0-overlay" style="display: flex;">
+        <div class="glass-card stage0-card">
+            <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
+                Welcome to KICKGHOST Empire
+            </h2>
+            <p style="color: var(--secondary); font-size: 1.2rem; line-height: 1.8;">
+                The future of Web3 Gaming starts here.
+            </p>
+            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic;">
+                Click anywhere to continue
+            </p>
+        </div>
+    </div>
+
+    <!-- Old Welcome Modal (Keep for compatibility) -->
+    <div id="welcomeModal" class="modal-overlay" style="display: none;">
         <div class="modal-content" style="max-width: 600px; text-align: center; padding: 50px 40px;">
             <div style="margin-bottom: 30px;">
                 <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="AKSG Logo" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 30px var(--primary); margin-bottom: 20px;">
@@ -2434,7 +2581,259 @@
             currentStage = 1;
         }
         
-        // ==================== WELCOME MODAL CLOSE AND START ====================
+        // ==================== STAGE 0: WELCOME OVERLAY ====================
+        function initStage0() {
+            const stage0Overlay = document.getElementById('stage0Welcome');
+            
+            if (stage0Overlay) {
+                // Click anywhere on overlay to close
+                stage0Overlay.addEventListener('click', function(e) {
+                    // Don't close if clicking on the card itself
+                    if (e.target.closest('.stage0-card')) {
+                        return;
+                    }
+                    closeStage0();
+                });
+            }
+        }
+
+        function closeStage0() {
+            const stage0Overlay = document.getElementById('stage0Welcome');
+            if (stage0Overlay) {
+                stage0Overlay.style.opacity = '0';
+                stage0Overlay.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    stage0Overlay.style.display = 'none';
+                    // Start Stage 1: Social Tasks
+                    showStage1();
+                }, 500);
+            }
+        }
+
+        // ==================== STAGE 1: SOCIAL TASKS ====================
+        let socialClickedState = {
+            twitter: false,
+            telegram: false,
+            discord: false
+        };
+
+        function showStage1() {
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div class="stage1-social-container">
+                        <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
+                            <i class="fas fa-share-alt"></i> Social Verification
+                        </h1>
+                        <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
+                            Click on each social media icon to verify your accounts
+                        </p>
+                        
+                        <div class="social-icons-grid">
+                            <div class="social-icon-card" id="social-twitter" onclick="clickSocialIcon('twitter')">
+                                <i class="fab fa-x-twitter"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Twitter</p>
+                            </div>
+                            <div class="social-icon-card" id="social-telegram" onclick="clickSocialIcon('telegram')">
+                                <i class="fab fa-telegram"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Telegram</p>
+                            </div>
+                            <div class="social-icon-card" id="social-discord" onclick="clickSocialIcon('discord')">
+                                <i class="fab fa-discord"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Discord</p>
+                            </div>
+                        </div>
+                        
+                        <button id="stage1ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage2()" disabled>
+                            Continue to Wallet Connection
+                        </button>
+                    </div>
+                `;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function clickSocialIcon(platform) {
+            const iconCard = document.getElementById(`social-${platform}`);
+            if (iconCard && !socialClickedState[platform]) {
+                socialClickedState[platform] = true;
+                iconCard.classList.add('clicked');
+                
+                // Open social link in new tab
+                const links = {
+                    twitter: 'https://x.com/tv_ghostgaming',
+                    telegram: 'https://t.me/ghost_gamingtv',
+                    discord: 'https://discord.gg/NMrnjQ7E'
+                };
+                window.open(links[platform], '_blank');
+                
+                checkAllSocialClicked();
+            }
+        }
+
+        function checkAllSocialClicked() {
+            const allClicked = socialClickedState.twitter && 
+                              socialClickedState.telegram && 
+                              socialClickedState.discord;
+            
+            const continueBtn = document.getElementById('stage1ContinueBtn');
+            if (continueBtn) {
+                if (allClicked) {
+                    continueBtn.classList.add('enabled');
+                    continueBtn.disabled = false;
+                } else {
+                    continueBtn.classList.remove('enabled');
+                    continueBtn.disabled = true;
+                }
+            }
+        }
+
+        function proceedToStage2() {
+            // Hide Stage 1, Show Stage 2
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.display = 'none';
+                showStage2();
+            }
+        }
+
+        // ==================== STAGE 2: WALLET & ASSET INJECTION ====================
+        function showStage2() {
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div style="min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
+                        <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
+                            <i class="fas fa-wallet"></i> Connect Your Wallet
+                        </h1>
+                        <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 40px;">
+                            Choose your wallet to connect to the KICKGHOST Empire
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; margin-bottom: 40px;">
+                            <div class="wallet-option" onclick="connectWallet('metamask')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="80" style="margin-bottom: 20px;">
+                                <h3 style="font-family: 'Orbitron'; color: var(--primary);">MetaMask</h3>
+                            </div>
+                            <div class="wallet-option" onclick="connectWallet('trust')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                                <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="80" style="margin-bottom: 20px;">
+                                <h3 style="font-family: 'Orbitron'; color: var(--primary);">Trust Wallet</h3>
+                            </div>
+                            <div class="wallet-option" onclick="connectWallet('phantom')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                                <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; border-radius: 50%;">
+                                <h3 style="font-family: 'Orbitron'; color: var(--primary);">Phantom</h3>
+                            </div>
+                        </div>
+                        
+                        <div id="addTokenSection" style="display: none; margin-top: 40px;">
+                            <button id="addTokenBtn" class="btn-mega" onclick="addAKSGTokenToWallet()" style="padding: 20px 50px; font-size: 1.2rem;">
+                                <i class="fas fa-plus-circle"></i> Add $AKSG to Wallet
+                            </button>
+                            <p style="color: #888; font-size: 0.9rem; text-align: center; margin-top: 15px;">
+                                You must add the token before proceeding
+                            </p>
+                        </div>
+                        
+                        <button id="stage2ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage3()" disabled style="margin-top: 40px; display: none;">
+                            Continue to Empire Dashboard
+                        </button>
+                    </div>
+                `;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        let walletConnected = false;
+        let tokenAddedStage2 = false;
+
+        async function connectWallet(type) {
+            if (!window.ethereum) {
+                alert('Please install a Web3 wallet (MetaMask, Trust Wallet, or Phantom)');
+                return;
+            }
+
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const walletAddress = accounts[0];
+                
+                // Check for duplicate wallet
+                const existingWallets = JSON.parse(localStorage.getItem('registeredWallets') || '[]');
+                if (existingWallets.includes(walletAddress.toLowerCase())) {
+                    alert('This wallet is already registered!');
+                    return;
+                }
+                
+                walletConnected = true;
+                localStorage.setItem('connectedWallet', walletAddress);
+                
+                // Show "Add Token" button
+                const addTokenSection = document.getElementById('addTokenSection');
+                if (addTokenSection) {
+                    addTokenSection.style.display = 'block';
+                }
+                
+                showNotify('Wallet connected successfully!', 'success');
+            } catch (error) {
+                showNotify('Wallet connection failed', 'error');
+            }
+        }
+
+        async function addAKSGTokenToWallet() {
+            if (!window.ethereum) return;
+            
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                            symbol: 'AKSG',
+                            decimals: 18,
+                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                        }
+                    }
+                });
+                
+                tokenAddedStage2 = true;
+                const continueBtn = document.getElementById('stage2ContinueBtn');
+                if (continueBtn) {
+                    continueBtn.style.display = 'block';
+                    continueBtn.disabled = false;
+                    continueBtn.classList.add('enabled');
+                }
+                
+                showNotify('Token added successfully!', 'success');
+            } catch (error) {
+                showNotify('Failed to add token', 'error');
+            }
+        }
+
+        function proceedToStage3() {
+            if (!tokenAddedStage2) {
+                alert('Please add $AKSG token to your wallet first');
+                return;
+            }
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.display = 'none';
+            }
+            showStage3();
+        }
+
+        // ==================== STAGE 3: EMPIRE DASHBOARD ====================
+        function showStage3() {
+            const ghostEmpire = document.getElementById('ghostEmpireStage');
+            if (ghostEmpire) {
+                ghostEmpire.style.display = 'block';
+                ghostEmpire.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // ==================== WELCOME MODAL CLOSE AND START (Legacy) ====================
         function closeWelcomeModalAndStart() {
             // بسيط: إخفاء Welcome Modal وإظهار Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
@@ -4293,7 +4692,7 @@
                     }
                 });
 
-                tokenAdded = true;
+                tokenAddedStage2 = true;
                 localStorage.setItem(`token_added_${userAddr.toLowerCase()}`, 'true');
                 
                 // Move to REQUEST_CONTRACT stage (طلب العقد)
@@ -4311,7 +4710,7 @@
                     showNotify("Token add failed. Continuing anyway...", 'warning');
                 }
                 // Continue anyway
-                tokenAdded = true;
+                tokenAddedStage2 = true;
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 btn.disabled = false;

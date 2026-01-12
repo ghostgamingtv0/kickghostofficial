@@ -1867,9 +1867,33 @@
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 40px var(--primary); margin-bottom: 20px;">
             <h1 class="empire-title" style="font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); text-shadow: 0 0 30px var(--primary); margin-bottom: 30px;">GHOST EMPIRE</h1>
             
+            <!-- Kick Follow Verification Section -->
+            <div id="kickVerificationSection" style="background: rgba(5, 255, 5, 0.1); border-radius: 20px; padding: 30px; margin-bottom: 30px; border: 2px solid var(--kick); max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                    <i class="fa-brands fa-kickstarter-k"></i> المرحلة الثالثة: التحقق من متابعة Kick | Stage 3: Kick Follow Verification
+                </h3>
+                <p style="color: #aaa; text-align: center; margin-bottom: 25px; line-height: 1.8;">
+                    يجب عليك متابعة حساب المشروع على منصة Kick لفتح قفل المكافأة | You must follow the project account on Kick platform to unlock the reward
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                    <a href="https://kick.com/ghost_gamingtv" target="_blank" class="btn-mega" style="padding: 15px 40px; font-size: 1.1rem; text-decoration: none; display: inline-block;">
+                        <i class="fa-brands fa-kickstarter-k"></i> Visit Kick Profile | زيارة صفحة Kick
+                    </a>
+                    <button id="kickOAuthBtn" class="btn-mega" onclick="loginWithKick()" style="padding: 15px 40px; font-size: 1.1rem; background: var(--kick);">
+                        <i class="fas fa-sign-in-alt"></i> Login with Kick | تسجيل الدخول عبر Kick
+                    </button>
+                    <button id="verifyKickFollowBtn" onclick="verifyKickFollow()" class="btn-mega" style="padding: 15px 40px; font-size: 1.1rem; background: var(--secondary);">
+                        <i class="fas fa-check-circle"></i> Verify Follow | التحقق من المتابعة
+                    </button>
+                </div>
+                <div id="kickStatusDisplay" style="margin-top: 20px; text-align: center; display: none;">
+                    <p id="kickStatusText" style="color: var(--success); font-weight: 600;"></p>
+                </div>
+            </div>
+            
             <!-- Claim Button (Disabled until Kick follower verified) -->
             <button id="empireClaimBtn" class="btn-mega" onclick="claimCode()" disabled style="padding: 25px 60px; font-size: 1.5rem; margin-bottom: 30px;">
-                <i class="fas fa-lock"></i> Follow on Kick to unlock your code
+                <i class="fas fa-lock"></i> Follow on Kick to unlock your code | متابعة Kick لفتح الكود
             </button>
         </div>
         
@@ -1923,6 +1947,25 @@
                             <i class="fas fa-share-alt"></i> مشاركة | Share
                         </button>
                     </div>
+                </div>
+                
+                <!-- Transaction History Section -->
+                <div id="transactionHistorySection" style="margin-top: 40px; padding: 25px; background: rgba(163, 54, 255, 0.1); border-radius: 20px; border: 2px solid var(--primary);">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-history"></i> سجل العمليات | Transaction History
+                    </h3>
+                    <p style="color: #aaa; text-align: center; margin-bottom: 20px;">
+                        آخر التحويلات والعمليات التي تمت على الشبكة | Latest transfers and operations on the network
+                    </p>
+                    <div id="transactionHistoryList" style="max-height: 400px; overflow-y: auto;">
+                        <div style="text-align: center; padding: 40px; color: #888;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                            <p>جارٍ تحميل سجل العمليات... | Loading transaction history...</p>
+                        </div>
+                    </div>
+                    <button onclick="refreshTransactionHistory()" class="btn-mega" style="margin-top: 20px; padding: 12px 30px; font-size: 0.9rem; width: 100%;">
+                        <i class="fas fa-sync-alt"></i> تحديث السجل | Refresh History
+                    </button>
                 </div>
             </div>
         </div>
@@ -2357,18 +2400,126 @@
         (function() {
             'use strict';
             
-            // ==================== CONTEXT MENU AND KEYBOARD PROTECTION REMOVED ====================
-            // Removed for better user experience - users can now use right-click and keyboard shortcuts normally
-            // Removed broken code - variables not defined in this scope
-
-            // Console disabling removed for better user experience
-
+            // Disable right-click context menu (except for necessary titles)
+            document.addEventListener('contextmenu', function(e) {
+                const target = e.target;
+                // Allow right-click on input, textarea, and elements with class 'copyable-addr', 'wallet-addr', 'contract-addr'
+                if (target.tagName === 'INPUT' || 
+                    target.tagName === 'TEXTAREA' || 
+                    target.classList.contains('copyable-addr') ||
+                    target.classList.contains('wallet-addr') ||
+                    target.classList.contains('contract-addr') ||
+                    target.classList.contains('transaction-hash')) {
+                    return true;
+                }
+                e.preventDefault();
+                return false;
+            }, false);
+            
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    return false;
+                }
+            }, false);
+            
+            // Disable console access
+            const noop = function() {};
+            Object.defineProperty(window, 'console', {
+                get: function() {
+                    return {
+                        log: noop,
+                        debug: noop,
+                        info: noop,
+                        warn: noop,
+                        error: noop,
+                        clear: noop,
+                        trace: noop,
+                        dir: noop,
+                        dirxml: noop,
+                        group: noop,
+                        groupEnd: noop,
+                        time: noop,
+                        timeEnd: noop,
+                        assert: noop,
+                        profile: noop,
+                        profileEnd: noop
+                    };
+                },
+                set: function() {}
+            });
+            
+            // Disable DevTools detection
+            let devtools = {open: false};
+            const checkDevTools = setInterval(function() {
+                if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+                    if (!devtools.open) {
+                        devtools.open = true;
+                        // Redirect or show warning
+                        document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial; color: white; background: #000;"><h1>Developer Tools Detected. Please close DevTools to continue.</h1></div>';
+                        clearInterval(checkDevTools);
+                    }
+                } else {
+                    devtools.open = false;
+                }
+            }, 500);
+            
             // Disable iframe embedding
             if (window.self !== window.top) {
                 window.top.location = window.self.location;
             }
-
-            // Print Screen restriction removed
+            
+            // Disable text selection (except for necessary elements)
+            document.addEventListener('selectstart', function(e) {
+                const target = e.target;
+                if (target.tagName === 'INPUT' || 
+                    target.tagName === 'TEXTAREA' || 
+                    target.classList.contains('copyable-addr') ||
+                    target.classList.contains('wallet-addr') ||
+                    target.classList.contains('contract-addr') ||
+                    target.classList.contains('transaction-hash')) {
+                    return true;
+                }
+                e.preventDefault();
+                return false;
+            }, false);
+            
+            // Disable copy (except for necessary elements)
+            document.addEventListener('copy', function(e) {
+                const target = e.target;
+                if (target.tagName === 'INPUT' || 
+                    target.tagName === 'TEXTAREA' || 
+                    target.classList.contains('copyable-addr') ||
+                    target.classList.contains('wallet-addr') ||
+                    target.classList.contains('contract-addr') ||
+                    target.classList.contains('transaction-hash')) {
+                    return true;
+                }
+                e.preventDefault();
+                return false;
+            }, false);
 
         })();
 
@@ -2590,6 +2741,17 @@
                         <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
                             <i class="fas fa-share-alt"></i> المرحلة الأولى: التحقق الاجتماعي | Stage 1: Social Verification
                         </h1>
+                        <div style="background: rgba(163, 54, 255, 0.15); border-radius: 15px; padding: 25px; margin-bottom: 30px; border: 2px solid var(--primary); max-width: 900px; margin-left: auto; margin-right: auto;">
+                            <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 15px; font-size: 1.3rem; text-align: center;">
+                                <i class="fas fa-crown"></i> إمبراطورية KICKGHOST | KICKGHOST Empire
+                            </h3>
+                            <p style="color: #ccc; line-height: 1.8; text-align: center; margin-bottom: 15px; direction: rtl;">
+                                <strong>منصة KICKGHOST</strong> هي الثورة القادمة في عالم الـ Web3، حيث تجتمع متعة الألعاب (Gaming) مع قوة التواصل الاجتماعي (Social Media) في نظام بيئي واحد يُعرف بـ "إمبراطورية الشبح" (Ghost Empire). نحن لا نبني منصة ألعاب فحسب، بل نصنع فضاءً رقمياً يُكافئ الجميع على مساهماتهم وتفاعلهم باستخدام عملة $AKSG.
+                            </p>
+                            <p style="color: #aaa; line-height: 1.8; text-align: center; font-size: 0.95rem;">
+                                <strong>KICKGHOST Platform</strong> is the next revolution in the Web3 world, where gaming fun meets the power of social media in a unified ecosystem known as the "Ghost Empire". We're not just building a gaming platform, but creating a digital space that rewards everyone for their contributions and interactions using the $AKSG token.
+                            </p>
+                        </div>
                         <p style="color: #888; font-size: 1.1rem; text-align: center; margin-bottom: 20px;">
                             اضغط على كل أيقونة للانتقال إلى منصة التواصل الاجتماعي ومتابعة الحساب | Click on each social media icon to visit the platform and follow the account
                         </p>
@@ -2624,9 +2786,12 @@
                             </div>
                         </div>
                         
-                        <button id="stage1ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage2()" disabled>
-                            <i class="fas fa-arrow-right"></i> المتابعة لربط المحفظة | Continue to Wallet Connection
+                        <button id="confirmSyncBtn" class="stage1-continue-btn" onclick="confirmSyncAndProceed()" disabled style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; opacity: 0.5; pointer-events: none;">
+                            <i class="fas fa-check-circle"></i> CONFIRM SYNC | تأكيد المزامنة
                         </button>
+                        <p id="syncStatusText" style="color: #888; font-size: 0.9rem; text-align: center; margin-top: 15px;">
+                            يرجى زيارة جميع الروابط الاجتماعية أولاً | Please visit all social links first
+                        </p>
                     </div>
                 `;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2635,9 +2800,12 @@
 
         function clickSocialIcon(platform) {
             const iconCard = document.getElementById(`social-${platform}`);
-            if (iconCard && !socialClickedState[platform]) {
+            if (iconCard) {
+                // Mark as visited
                 socialClickedState[platform] = true;
                 iconCard.classList.add('clicked');
+                iconCard.style.borderColor = 'var(--success)';
+                iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
                 
                 // Open social link in new tab
                 const links = {
@@ -2651,6 +2819,12 @@
                 
                 if (links[platform]) {
                     window.open(links[platform], '_blank');
+                    // Track visit in localStorage
+                    const visitedLinks = JSON.parse(localStorage.getItem('social_visited_links') || '[]');
+                    if (!visitedLinks.includes(platform)) {
+                        visitedLinks.push(platform);
+                        localStorage.setItem('social_visited_links', JSON.stringify(visitedLinks));
+                    }
                 }
                 
                 checkAllSocialClicked();
@@ -2665,27 +2839,68 @@
                               socialClickedState.tiktok &&
                               socialClickedState.discord;
             
-            const continueBtn = document.getElementById('stage1ContinueBtn');
-            if (continueBtn) {
+            const confirmSyncBtn = document.getElementById('confirmSyncBtn');
+            const syncStatusText = document.getElementById('syncStatusText');
+            
+            if (confirmSyncBtn) {
                 if (allClicked) {
-                    continueBtn.classList.add('enabled');
-                    continueBtn.disabled = false;
+                    confirmSyncBtn.classList.add('enabled');
+                    confirmSyncBtn.disabled = false;
+                    confirmSyncBtn.style.opacity = '1';
+                    confirmSyncBtn.style.pointerEvents = 'all';
+                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC | تأكيد المزامنة';
+                    if (syncStatusText) {
+                        syncStatusText.textContent = 'جميع الروابط تمت زيارتها! اضغط على تأكيد المزامنة للمتابعة | All links visited! Click CONFIRM SYNC to proceed';
+                        syncStatusText.style.color = 'var(--success)';
+                    }
                 } else {
                     const remaining = 6 - Object.values(socialClickedState).filter(v => v).length;
-                    continueBtn.classList.remove('enabled');
-                    continueBtn.disabled = true;
-                    // Optional: Update button text to show remaining
-                    if (remaining > 0) {
-                        continueBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${remaining} more social links | أكمل ${remaining} روابط أخرى`;
+                    confirmSyncBtn.classList.remove('enabled');
+                    confirmSyncBtn.disabled = true;
+                    confirmSyncBtn.style.opacity = '0.5';
+                    confirmSyncBtn.style.pointerEvents = 'none';
+                    confirmSyncBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${remaining} more social links | أكمل ${remaining} روابط أخرى`;
+                    if (syncStatusText) {
+                        syncStatusText.textContent = `يرجى زيارة ${remaining} روابط أخرى | Please visit ${remaining} more links`;
+                        syncStatusText.style.color = '#888';
                     }
                 }
             }
+        }
+        
+        function confirmSyncAndProceed() {
+            // Verify all links are visited
+            const allClicked = socialClickedState.kick && 
+                              socialClickedState.twitter && 
+                              socialClickedState.telegram && 
+                              socialClickedState.instagram &&
+                              socialClickedState.tiktok &&
+                              socialClickedState.discord;
+            
+            if (!allClicked) {
+                if (typeof showNotify === 'function') {
+                    showNotify('Please visit all social links first | يرجى زيارة جميع الروابط الاجتماعية أولاً', 'warning');
+                }
+                return;
+            }
+            
+            // Mark social verification as complete
+            localStorage.setItem('social_verification_complete', 'true');
+            localStorage.setItem('social_visited_links', JSON.stringify(Object.keys(socialClickedState).filter(k => socialClickedState[k])));
+            
+            // Proceed to Stage 2
+            proceedToStage2();
         }
 
         function proceedToStage2() {
             // Mark Stage 1 (SOCIAL_VERIFY) as completed
             if (typeof markStageCompleted === 'function') {
                 markStageCompleted('SOCIAL_VERIFY');
+            }
+            
+            // Show success notification
+            if (typeof showNotify === 'function') {
+                showNotify('✅ Social verification complete! Proceeding to wallet connection. | تم إكمال التحقق الاجتماعي! الانتقال لربط المحفظة.', 'success');
             }
             
             // Hide Stage 1, Show Stage 2
@@ -2790,12 +3005,46 @@
                 // Check for duplicate wallet
                 const existingWallets = JSON.parse(localStorage.getItem('registeredWallets') || '[]');
                 if (existingWallets.includes(walletAddress.toLowerCase())) {
-                    alert('This wallet is already registered!');
+                    showNotify('⚠️ This wallet is already registered! | هذه المحفظة مسجلة بالفعل!', 'warning');
                     return;
+                }
+                
+                // Check and switch to Polygon network
+                const polygonChainId = '0x89'; // Polygon Mainnet
+                const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                
+                if (currentChainId !== polygonChainId) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: polygonChainId }],
+                        });
+                    } catch (switchError) {
+                        // If chain doesn't exist, add it
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: polygonChainId,
+                                    chainName: 'Polygon Mainnet',
+                                    nativeCurrency: {
+                                        name: 'MATIC',
+                                        symbol: 'MATIC',
+                                        decimals: 18
+                                    },
+                                    rpcUrls: ['https://polygon-rpc.com/'],
+                                    blockExplorerUrls: ['https://polygonscan.com/']
+                                }],
+                            });
+                        } else {
+                            throw switchError;
+                        }
+                    }
                 }
                 
                 walletConnected = true;
                 localStorage.setItem('connectedWallet', walletAddress);
+                localStorage.setItem('walletNetwork', 'polygon');
                 
                 // Show "Add Token" button
                 const addTokenSection = document.getElementById('addTokenSection');
@@ -2810,7 +3059,24 @@
         }
 
         async function addAKSGTokenToWallet() {
-            if (!window.ethereum) return;
+            if (!window.ethereum) {
+                showNotify('⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً', 'warning');
+                return;
+            }
+            
+            // Verify Polygon network
+            try {
+                const polygonChainId = '0x89';
+                const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                
+                if (currentChainId !== polygonChainId) {
+                    showNotify('⚠️ Please switch to Polygon network first | يرجى التبديل إلى شبكة Polygon أولاً', 'warning');
+                    return;
+                }
+            } catch (error) {
+                showNotify('⚠️ Network check failed | فشل التحقق من الشبكة', 'error');
+                return;
+            }
             
             try {
                 await window.ethereum.request({
@@ -2829,6 +3095,8 @@
                 tokenAddedStage2 = true;
                 // Save to localStorage
                 localStorage.setItem('token_added', 'true');
+                localStorage.setItem('token_symbol', 'AKSG');
+                localStorage.setItem('token_decimals', '18');
                 
                 const continueBtn = document.getElementById('stage2ContinueBtn');
                 if (continueBtn) {
@@ -2838,11 +3106,11 @@
                 }
                 
                 if (typeof showNotify === 'function') {
-                    showNotify('Token added successfully! | ØªÙ… Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…Ù„Ø© Ø¨Ù†Ø¬Ø§Ø­!', 'success');
+                    showNotify('✅ $AKSG token added successfully! | تم إضافة عملة $AKSG بنجاح!', 'success');
                 }
             } catch (error) {
                 if (typeof showNotify === 'function') {
-                    showNotify('Failed to add token | ÙØ´Ù„ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…Ù„Ø©', 'error');
+                    showNotify('❌ Failed to add token. Please try again. | فشل إضافة العملة. يرجى المحاولة مرة أخرى.', 'error');
                 }
             }
         }
@@ -2936,6 +3204,12 @@
                 if (typeof loadLeaderboardData === 'function') {
                     loadLeaderboardData();
                 }
+                // Load transaction history after a delay
+                setTimeout(() => {
+                    if (typeof loadTransactionHistory === 'function') {
+                        loadTransactionHistory();
+                    }
+                }, 1500);
             }
         }
 
@@ -2943,29 +3217,159 @@
             // Update claim button based on Kick follower status
             updateClaimButton();
         }
+        
+        async function loadTransactionHistory() {
+            const transactionList = document.getElementById('transactionHistoryList');
+            if (!transactionList) return;
+            
+            const walletAddress = localStorage.getItem('connectedWallet');
+            if (!walletAddress) {
+                transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>يرجى ربط المحفظة أولاً | Please connect wallet first</p></div>';
+                return;
+            }
+            
+            try {
+                // Try to fetch transactions from PolygonScan API
+                const contractAddress = '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D';
+                const apiUrl = `https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=${contractAddress}&address=${walletAddress}&page=1&offset=10&sort=desc`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.status === '1' && data.result && data.result.length > 0) {
+                    const transactions = data.result.slice(0, 10); // Last 10 transactions
+                    
+                    transactionList.innerHTML = transactions.map(tx => {
+                        const isIncoming = tx.to.toLowerCase() === walletAddress.toLowerCase();
+                        const amount = (parseFloat(tx.value) / Math.pow(10, parseInt(tx.tokenDecimal || 18))).toFixed(2);
+                        const date = new Date(parseInt(tx.timeStamp) * 1000).toLocaleString();
+                        
+                        return `
+                            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 4px solid ${isIncoming ? 'var(--success)' : 'var(--danger)'};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <p style="color: ${isIncoming ? 'var(--success)' : 'var(--danger)'}; font-weight: 600; margin-bottom: 5px;">
+                                            <i class="fas fa-arrow-${isIncoming ? 'down' : 'up'}"></i> 
+                                            ${isIncoming ? 'Received' : 'Sent'} | ${isIncoming ? 'مستلم' : 'مرسل'}
+                                        </p>
+                                        <p style="color: #aaa; font-size: 0.9rem;">${amount} AKSG</p>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <p style="color: #888; font-size: 0.85rem;">${date}</p>
+                                        <a href="https://polygonscan.com/tx/${tx.hash}" target="_blank" style="color: var(--primary); font-size: 0.8rem; text-decoration: none;">
+                                            <i class="fas fa-external-link-alt"></i> View | عرض
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>لا توجد معاملات | No transactions found</p></div>';
+                }
+            } catch (error) {
+                // Fallback: Show activity log from localStorage
+                const activityLog = JSON.parse(localStorage.getItem('activity_log') || '[]');
+                if (activityLog.length > 0) {
+                    transactionList.innerHTML = activityLog.slice(-10).reverse().map(log => `
+                        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 4px solid var(--primary);">
+                            <p style="color: var(--text-main); font-weight: 600; margin-bottom: 5px;">${log.action}</p>
+                            <p style="color: #aaa; font-size: 0.9rem;">${log.details}</p>
+                            <p style="color: #888; font-size: 0.85rem; margin-top: 5px;">${new Date(log.timestamp).toISOString().replace('T', ' ').substring(0, 19)}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>لا توجد معاملات | No transactions found</p></div>';
+                }
+            }
+        }
+        
+        function refreshTransactionHistory() {
+            const transactionList = document.getElementById('transactionHistoryList');
+            if (transactionList) {
+                transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i><p>جارٍ تحديث السجل... | Refreshing history...</p></div>';
+            }
+            loadTransactionHistory();
+            if (typeof showNotify === 'function') {
+                showNotify('Transaction history refreshed | تم تحديث سجل العمليات', 'success');
+            }
+        }
 
         async function checkKickFollowerStatus() {
-            // Simulated API check - In production, this would call Kick.com API
-            // For now, we'll simulate a check
-            try {
-                // Placeholder: In production, use Kick API to verify follower status
-                // const response = await fetch('https://kick.com/api/v2/channels/ghost_gamingtv/followers');
-                // kickFollowerStatus = response.data.includes(userKickUsername);
+            // Check if Kick follow is verified
+            const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            const kickOAuthCompleted = localStorage.getItem('kick_oauth_code') !== null;
+            
+            // Check if all previous stages are completed
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            
+            // Enable claim if all stages completed AND Kick follow verified
+            kickFollowerStatus = socialComplete && walletConnected && tokenAdded && kickFollowVerified;
+            
+            // Update UI
+            const kickStatusDisplay = document.getElementById('kickStatusDisplay');
+            const kickStatusText = document.getElementById('kickStatusText');
+            
+            if (kickFollowVerified) {
+                if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
+                if (kickStatusText) {
+                    kickStatusText.textContent = '✅ Kick Follow Verified! | تم التحقق من متابعة Kick!';
+                    kickStatusText.style.color = 'var(--success)';
+                }
+            } else {
+                if (kickStatusDisplay) kickStatusDisplay.style.display = 'none';
+            }
+            
+            updateClaimButton();
+        }
+        
+        function loginWithKick() {
+            // Check if CONFIG has Kick OAuth settings
+            if (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID && CONFIG.KICK_REDIRECT_URI) {
+                const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${CONFIG.KICK_CLIENT_ID}&redirect_uri=${encodeURIComponent(CONFIG.KICK_REDIRECT_URI)}&scope=user:read%20chat:read`;
+                window.open(authUrl, '_blank');
+                showNotify('Opening Kick OAuth login... | فتح تسجيل الدخول عبر Kick...', 'info');
+            } else {
+                // Fallback: Direct link to Kick profile
+                window.open('https://kick.com/ghost_gamingtv', '_blank');
+                showNotify('Please follow the Kick profile and return to verify | يرجى متابعة صفحة Kick والعودة للتحقق', 'info');
+            }
+        }
+        
+        async function verifyKickFollow() {
+            // Check if user has visited Kick
+            const kickVisited = localStorage.getItem('kick_visited') === 'true' || 
+                               localStorage.getItem('social_visited_links')?.includes('kick');
+            
+            if (!kickVisited) {
+                showNotify('⚠️ Please visit Kick profile first | يرجى زيارة صفحة Kick أولاً', 'warning');
+                window.open('https://kick.com/ghost_gamingtv', '_blank');
+                return;
+            }
+            
+            // In production, this would verify via Kick API
+            // For now, we'll mark as verified if user confirms
+            const confirmed = confirm('Have you followed the Kick account? | هل قمت بمتابعة حساب Kick؟');
+            
+            if (confirmed) {
+                localStorage.setItem('kick_follow_verified', 'true');
+                localStorage.setItem('kick_visited', 'true');
                 
-                // For testing: Allow user to claim code after completing all stages
-                // Check if all previous stages are completed
-                const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
-                const walletConnected = localStorage.getItem('connectedWallet') !== null;
-                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                const kickStatusDisplay = document.getElementById('kickStatusDisplay');
+                const kickStatusText = document.getElementById('kickStatusText');
                 
-                // Enable claim if all stages completed
-                kickFollowerStatus = socialComplete && walletConnected && tokenAdded;
+                if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
+                if (kickStatusText) {
+                    kickStatusText.textContent = '✅ Kick Follow Verified! | تم التحقق من متابعة Kick!';
+                    kickStatusText.style.color = 'var(--success)';
+                }
                 
-                updateClaimButton();
-            } catch (error) {
-                console.error('Kick API check failed:', error);
-                kickFollowerStatus = false;
-                updateClaimButton();
+                showNotify('✅ Kick follow verified! | تم التحقق من متابعة Kick!', 'success');
+                
+                // Recheck status
+                checkKickFollowerStatus();
             }
         }
 
@@ -2975,12 +3379,12 @@
             
             if (!kickFollowerStatus) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code';
+                claimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code | متابعة Kick لفتح الكود';
                 claimBtn.style.opacity = '0.5';
                 claimBtn.style.cursor = 'not-allowed';
             } else {
                 claimBtn.disabled = false;
-                claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code';
+                claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | المطالبة بالكود';
                 claimBtn.style.opacity = '1';
                 claimBtn.style.cursor = 'pointer';
             }

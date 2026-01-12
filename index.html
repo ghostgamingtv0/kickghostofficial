@@ -2436,40 +2436,56 @@
         
         // ==================== WELCOME MODAL CLOSE AND START ====================
         function closeWelcomeModalAndStart() {
+            console.log('closeWelcomeModalAndStart called'); // Debug
+            
             const welcomeModal = document.getElementById('welcomeModal');
             const container = document.querySelector('.container');
             
             // Save to localStorage that user has seen welcome message
             localStorage.setItem('welcome_seen', 'true');
             
-            // Close welcome modal with fade-out animation
-            if (welcomeModal) {
-                welcomeModal.style.opacity = '0';
-                welcomeModal.style.transition = 'opacity 0.5s ease-in-out';
-                
-                setTimeout(() => {
-                    welcomeModal.style.display = 'none';
-                    
-                    // Show container with fade-in animation
-                    if (container) {
-                        container.style.display = 'block';
-                        container.style.opacity = '0';
-                        container.style.transition = 'opacity 0.5s ease-in-out';
-                        
-                        // Trigger reflow for animation
-                        container.offsetHeight;
-                        
-                        setTimeout(() => {
-                            container.style.opacity = '1';
-                        }, 50);
-                    }
-                }, 500);
-            } else {
-                // Fallback if modal not found
-                if (container) {
-                    container.style.display = 'block';
-                }
+            // Check if elements exist
+            if (!welcomeModal) {
+                console.error('Welcome modal not found!');
+                return;
             }
+            
+            if (!container) {
+                console.error('Container not found!');
+                return;
+            }
+            
+            // Close welcome modal with fade-out animation
+            welcomeModal.style.opacity = '0';
+            welcomeModal.style.transition = 'opacity 0.3s ease-in-out';
+            
+            setTimeout(() => {
+                // Hide welcome modal completely
+                welcomeModal.style.display = 'none';
+                welcomeModal.style.opacity = '1'; // Reset for next time
+                
+                // Show container immediately
+                container.style.display = 'block';
+                container.style.opacity = '0';
+                container.style.transition = 'opacity 0.5s ease-in-out';
+                
+                // Trigger reflow for animation
+                void container.offsetHeight;
+                
+                // Fade in container
+                setTimeout(() => {
+                    container.style.opacity = '1';
+                    
+                    // Scroll to top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Initialize stages after showing container
+                    initializeStages();
+                }, 50);
+            }, 300);
         }
         
         // Start Tasks Flow - Transition from Stage 1 to Stage 2
@@ -2539,15 +2555,26 @@
             if (!welcomeSeen && welcomeModal) {
                 // Show welcome modal
                 welcomeModal.style.display = 'flex';
-                if (container) container.style.display = 'none';
+                welcomeModal.style.opacity = '1';
+                if (container) {
+                    container.style.display = 'none';
+                    container.style.opacity = '0';
+                }
             } else {
                 // Hide welcome modal, show container
-                if (welcomeModal) welcomeModal.style.display = 'none';
-                if (container) container.style.display = 'block';
+                if (welcomeModal) {
+                    welcomeModal.style.display = 'none';
+                    welcomeModal.style.opacity = '1'; // Reset
+                }
+                if (container) {
+                    container.style.display = 'block';
+                    container.style.opacity = '1';
+                }
+                // Initialize stages only if welcome was already seen
+                initializeStages();
             }
             
-            // Initialize stages (Stage 1: Dashboard visible, Stage 2: Hidden)
-            initializeStages();
+            // Note: initializeStages() will be called after welcome modal closes if not already done
             
             // ==================== START TASKS BUTTON CLICK HANDLER ====================
             const startBtn = document.getElementById('startTasksBtn');

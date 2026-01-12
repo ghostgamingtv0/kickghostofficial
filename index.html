@@ -1072,9 +1072,9 @@
 
         .social-icons-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 30px;
-            max-width: 800px;
+            max-width: 1000px;
             width: 100%;
             margin: 40px 0;
         }
@@ -2424,8 +2424,20 @@
             if (welcomeOverlay) {
                 // Click ANYWHERE on overlay to close (including the card)
                 welcomeOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     closeStage0();
-                });
+                }, true);
+                
+                // Also add click to the card itself
+                const card = welcomeOverlay.querySelector('.stage0-card');
+                if (card) {
+                    card.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeStage0();
+                    }, true);
+                }
             }
         }
 
@@ -2477,8 +2489,11 @@
 
         // ==================== STAGE 1: SOCIAL TASKS ====================
         let socialClickedState = {
+            kick: false,
             twitter: false,
             telegram: false,
+            instagram: false,
+            tiktok: false,
             discord: false
         };
 
@@ -2517,6 +2532,10 @@
                         </p>
                         
                         <div class="social-icons-grid">
+                            <div class="social-icon-card" id="social-kick" onclick="clickSocialIcon('kick')">
+                                <i class="fa-brands fa-kickstarter-k"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Kick</p>
+                            </div>
                             <div class="social-icon-card" id="social-twitter" onclick="clickSocialIcon('twitter')">
                                 <i class="fab fa-x-twitter"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Twitter</p>
@@ -2524,6 +2543,14 @@
                             <div class="social-icon-card" id="social-telegram" onclick="clickSocialIcon('telegram')">
                                 <i class="fab fa-telegram"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Telegram</p>
+                            </div>
+                            <div class="social-icon-card" id="social-instagram" onclick="clickSocialIcon('instagram')">
+                                <i class="fab fa-instagram"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">Instagram</p>
+                            </div>
+                            <div class="social-icon-card" id="social-tiktok" onclick="clickSocialIcon('tiktok')">
+                                <i class="fab fa-tiktok"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main);">TikTok</p>
                             </div>
                             <div class="social-icon-card" id="social-discord" onclick="clickSocialIcon('discord')">
                                 <i class="fab fa-discord"></i>
@@ -2548,19 +2575,28 @@
                 
                 // Open social link in new tab
                 const links = {
+                    kick: 'https://kick.com/ghost_gamingtv',
                     twitter: 'https://twitter.com/tv_ghostgaming',
                     telegram: 'https://t.me/ghost_gamingtv',
+                    instagram: 'https://www.instagram.com/ghost.gamingtv/',
+                    tiktok: 'https://www.tiktok.com/@ghost.gamingtv',
                     discord: 'https://discord.gg/NMrnjQ7E'
                 };
-                window.open(links[platform], '_blank');
+                
+                if (links[platform]) {
+                    window.open(links[platform], '_blank');
+                }
                 
                 checkAllSocialClicked();
             }
         }
 
         function checkAllSocialClicked() {
-            const allClicked = socialClickedState.twitter && 
+            const allClicked = socialClickedState.kick && 
+                              socialClickedState.twitter && 
                               socialClickedState.telegram && 
+                              socialClickedState.instagram &&
+                              socialClickedState.tiktok &&
                               socialClickedState.discord;
             
             const continueBtn = document.getElementById('stage1ContinueBtn');
@@ -2569,8 +2605,13 @@
                     continueBtn.classList.add('enabled');
                     continueBtn.disabled = false;
                 } else {
+                    const remaining = 6 - Object.values(socialClickedState).filter(v => v).length;
                     continueBtn.classList.remove('enabled');
                     continueBtn.disabled = true;
+                    // Optional: Update button text to show remaining
+                    if (remaining > 0) {
+                        continueBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${remaining} more social links | أكمل ${remaining} روابط أخرى`;
+                    }
                 }
             }
         }
@@ -3560,20 +3601,22 @@
                 // Fallback to direct webhook (without X402)
                 try {
                     // âš ï¸ NOTE: Webhook removed - use backend API instead
-                    return null; // await fetch('YOUR_BACKEND_API_URL', {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            action: action,
-                            wallet: userAddr || data.wallet,
-                            ...data,
-                            timestamp: new Date().toISOString(),
-                            x402_fallback: true
-                        })
-                    });
+                    // Backend API call disabled - use backend when ready
+                    // await fetch('YOUR_BACKEND_API_URL', {
+                    //     method: 'POST',
+                    //     mode: 'no-cors',
+                    //     headers: {
+                    //         'Content-Type': 'application/json'
+                    //     },
+                    //     body: JSON.stringify({
+                    //         action: action,
+                    //         wallet: userAddr || data.wallet,
+                    //         ...data,
+                    //         timestamp: new Date().toISOString(),
+                    //         x402_fallback: true
+                    //     })
+                    // });
+                    return null;
                 } catch (fallbackError) {
                     console.error('Fallback webhook error:', fallbackError);
                     throw e;
@@ -4616,13 +4659,13 @@
                 // Save to webhook (data collection only)
                 // âš ï¸ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(walletData)
-                });
+                //     method: "POST",
+                //     mode: "no-cors",
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(walletData)
+                // });
                 
                 // Also save locally
                 localStorage.setItem(`wallet_data_${address.toLowerCase()}`, JSON.stringify(walletData));
@@ -4828,16 +4871,16 @@
                 // Also save to webhook
                 // âš ï¸ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: JSON.stringify({
-                        action: 'offchain_verification',
-                        platform: platform,
-                        username: username,
-                        wallet: wallet,
-                        signature: signature
-                    })
-                });
+                //     method: "POST",
+                //     mode: "no-cors",
+                //     body: JSON.stringify({
+                //         action: 'offchain_verification',
+                //         platform: platform,
+                //         username: username,
+                //         wallet: wallet,
+                //         signature: signature
+                //     })
+                // });
             } catch (e) {
                 console.error('Verify platform link error:', e);
             }
@@ -5039,17 +5082,17 @@
                 // Also save to webhook with claim code
                 // âš ï¸ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'contract_request',
-                        claim_code: userClaimCode,
-                        ...contractData
-                    })
-                });
+                //     method: "POST",
+                //     mode: "no-cors",
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({
+                //         action: 'contract_request',
+                //         claim_code: userClaimCode,
+                //         ...contractData
+                //     })
+                // });
 
                 // Store claim code locally
                 localStorage.setItem(`claim_code_${userAddr.toLowerCase()}`, userClaimCode);
@@ -5172,13 +5215,13 @@
                 // Save to webhook (data collection only)
                 // âš ï¸ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(saveData)
-                });
+                //     method: "POST",
+                //     mode: "no-cors",
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(saveData)
+                // });
                 
                 // Also save locally
                 localStorage.setItem(`contract_data_${contractData.wallet?.toLowerCase() || 'unknown'}`, JSON.stringify(saveData));
@@ -5225,20 +5268,20 @@
                 // Send to webhook (fallback and tracking)
                 // âš ï¸ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-payment': JSON.stringify({
-                            resourceUrl: CONFIG.SITE_URL,
-                            method: 'POST',
-                            paymentData: 'x402_claim',
-                            price: '1000 AKSG',
-                            wallet: userAddr
-                        })
-                    },
-                    body: JSON.stringify(claimData)
-                });
+                //     method: "POST",
+                //     mode: "no-cors",
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'x-payment': JSON.stringify({
+                //             resourceUrl: CONFIG.SITE_URL,
+                //             method: 'POST',
+                //             paymentData: 'x402_claim',
+                //             price: '1000 AKSG',
+                //             wallet: userAddr
+                //         })
+                //     },
+                //     body: JSON.stringify(claimData)
+                // });
 
                 // Mark as claimed (both on-chain and local)
                 localStorage.setItem(`claimed_${userAddr.toLowerCase()}`, "true");
@@ -6781,20 +6824,28 @@
             const welcomeLayer = document.getElementById('welcome-layer'); 
             const mainApp = document.querySelector('.container'); // Ø£Ùˆ Ø§Ø³Ù… Ø§Ù„ÙƒÙ„Ø§Ø³ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ Ø¹Ù†Ø¯Ùƒ
 
-            document.body.addEventListener('click', function() {
-                if (welcomeLayer) {
-                    welcomeLayer.style.display = 'none'; // Ø¥Ø®ÙØ§Ø¡ Ø·Ø¨Ù‚Ø© Ø§Ù„ØªØ±Ø­ÙŠØ¨
+            // Initialize Stage 0 (Welcome Overlay) - This handles the click event
+            initStage0();
+            
+            // Handle welcome-layer click (if exists) for compatibility
+            if (welcomeLayer) {
+                welcomeLayer.addEventListener('click', function() {
+                    welcomeLayer.style.display = 'none';
                     if (mainApp) {
-                        mainApp.classList.add('app-active'); // Ø¥Ø¸Ù‡Ø§Ø± Ø§Ù„ÙƒÙˆØ¯ Ø§Ù„Ù€ 5500 Ø³Ø·Ø±
+                        mainApp.classList.add('app-active');
                         mainApp.style.display = 'block';
                     }
-                    console.log("Empire Started...");
-                    // Ù‡Ù†Ø§ ØªØ¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø­Ù„Ø© 1 ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹
+                    console.log("Empire Started from welcome-layer...");
                     if(typeof startStage1 === "function") startStage1();
-                    // Ø¥Ø°Ø§ Ù„Ù… ØªÙƒÙ† Ø§Ù„Ø¯Ø§Ù„Ø© Ù…ÙˆØ¬ÙˆØ¯Ø©ØŒ Ø§Ø³ØªØ®Ø¯Ù… showStage1
                     if(typeof showStage1 === "function") showStage1();
-                }
-            }, { once: true });
+                }, { once: true });
+            }
+            
+            // Ensure welcome-overlay is ready
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            if (welcomeOverlay) {
+                console.log("Welcome overlay initialized - click anywhere to continue to Stage 1");
+            }
         });
     </script>
 </body>

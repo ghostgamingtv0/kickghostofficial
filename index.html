@@ -1509,8 +1509,8 @@
                 <img src="https://i.ibb.co/TD4bgczv/geckoterminal-icon.png" alt="GeckoTerminal" style="width: 50px; height: 50px; border-radius: 10px;">
             </div>
             
-            <button onclick="closeWelcomeModal()" class="btn-mega" style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; width: 100%;">
-                <i class="fas fa-rocket"></i> ابدأ الرحلة | Start Journey
+            <button id="joinBtn" onclick="closeWelcomeModalAndStart()" class="btn-mega" style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> للانضمام | Join
             </button>
         </div>
     </div>
@@ -2432,6 +2432,44 @@
             }
             
             currentStage = 1;
+        }
+        
+        // ==================== WELCOME MODAL CLOSE AND START ====================
+        function closeWelcomeModalAndStart() {
+            const welcomeModal = document.getElementById('welcomeModal');
+            const container = document.querySelector('.container');
+            
+            // Save to localStorage that user has seen welcome message
+            localStorage.setItem('welcome_seen', 'true');
+            
+            // Close welcome modal with fade-out animation
+            if (welcomeModal) {
+                welcomeModal.style.opacity = '0';
+                welcomeModal.style.transition = 'opacity 0.5s ease-in-out';
+                
+                setTimeout(() => {
+                    welcomeModal.style.display = 'none';
+                    
+                    // Show container with fade-in animation
+                    if (container) {
+                        container.style.display = 'block';
+                        container.style.opacity = '0';
+                        container.style.transition = 'opacity 0.5s ease-in-out';
+                        
+                        // Trigger reflow for animation
+                        container.offsetHeight;
+                        
+                        setTimeout(() => {
+                            container.style.opacity = '1';
+                        }, 50);
+                    }
+                }, 500);
+            } else {
+                // Fallback if modal not found
+                if (container) {
+                    container.style.display = 'block';
+                }
+            }
         }
         
         // Start Tasks Flow - Transition from Stage 1 to Stage 2

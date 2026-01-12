@@ -528,6 +528,31 @@
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 60px rgba(163, 54, 255, 0.7);
         }
+        
+        /* Special hover effect for start tasks button */
+        .btn-start-tasks:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 
+                0 30px 70px rgba(163, 54, 255, 0.8),
+                0 0 40px rgba(0, 255, 163, 0.6),
+                inset 0 0 30px rgba(163, 54, 255, 0.3);
+            animation: neon-pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes neon-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 30px 70px rgba(163, 54, 255, 0.8),
+                    0 0 40px rgba(0, 255, 163, 0.6),
+                    inset 0 0 30px rgba(163, 54, 255, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 35px 80px rgba(163, 54, 255, 1),
+                    0 0 60px rgba(0, 255, 163, 0.9),
+                    inset 0 0 40px rgba(163, 54, 255, 0.5);
+            }
+        }
 
         .btn-mega:active {
             transform: translateY(-3px) scale(0.98);
@@ -966,7 +991,7 @@
 
         /* Ghost Empire Stage */
         .ghost-empire-stage {
-            display: none;
+            display: none; /* Strictly hidden initially */
             min-height: 100vh;
             padding: 40px 20px;
             background: radial-gradient(circle at center, rgba(163, 54, 255, 0.1), rgba(0, 0, 0, 0.9));
@@ -977,7 +1002,7 @@
         }
 
         .ghost-empire-stage.active {
-            display: block;
+            display: block !important; /* Force display when active */
             opacity: 1;
             transform: translateY(0);
         }
@@ -1546,9 +1571,9 @@
                 <h2 id="statusTitle" style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 2rem;">مرحباً بك في KICKGHOST</h2>
                 <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">انضم إلى مجتمعنا واحصل على 5000 AKSG Token | Join our community and get 5000 AKSG Token</p>
                 
-                <button id="masterBtn" class="btn-mega" onclick="startSubscriptionFlow()">
-                    <i class="fas fa-rocket"></i>
-                    <span>اضغط للاشتراك | Click to Subscribe</span>
+                <button id="masterBtn" class="btn-mega btn-start-tasks" onclick="startTasksFlow()">
+                    <i class="fas fa-tasks"></i>
+                    <span>اضغط هنا لإتمام المهام | Click Here to Complete Tasks</span>
                 </button>
             </div>
         </section>
@@ -2395,24 +2420,31 @@
             
             if (container) {
                 container.style.display = 'block';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
                 container.classList.remove('hidden');
             }
             
             if (ghostEmpire) {
+                // Strictly hide Ghost Empire Stage initially (display: none)
                 ghostEmpire.classList.remove('active');
                 ghostEmpire.style.display = 'none';
+                ghostEmpire.style.opacity = '0';
             }
             
             currentStage = 1;
         }
         
-        // Start Subscription Flow - Transition from Stage 1 to Stage 2
-        function startSubscriptionFlow() {
+        // Start Tasks Flow - Transition from Stage 1 to Stage 2
+        function startTasksFlow() {
             const container = document.querySelector('.container');
             const ghostEmpire = document.getElementById('ghostEmpireStage');
             const masterBtn = document.getElementById('masterBtn');
             
-            if (!ghostEmpire || !container) return;
+            if (!ghostEmpire || !container) {
+                console.error('Missing elements: container or ghostEmpireStage');
+                return;
+            }
             
             // Disable button during transition
             if (masterBtn) {
@@ -2420,12 +2452,23 @@
                 masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>جاري الانتقال... | Loading...</span>';
             }
             
-            // Smooth transition: Hide container, Show Ghost Empire
-            container.classList.add('hidden');
+            // Smooth transition: Hide container completely
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(-20px)';
+            container.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
             
             setTimeout(() => {
+                // Hide Main Dashboard completely (display: none)
                 container.style.display = 'none';
+                
+                // Show Ghost Empire Stage (display: block)
                 ghostEmpire.style.display = 'block';
+                
+                // Scroll to top immediately
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
                 
                 // Trigger reflow for animation
                 ghostEmpire.offsetHeight;
@@ -2435,15 +2478,15 @@
                     ghostEmpire.classList.add('active');
                     currentStage = 2;
                     
-                    // Re-enable button
-                    if (masterBtn) {
-                        masterBtn.disabled = false;
-                    }
-                    
                     // Initialize social verification grid if not already done
                     const grid = document.getElementById('socialVerificationGrid');
                     if (grid && (!grid.innerHTML || grid.innerHTML.includes('Populated by JS'))) {
                         initGhostEmpire();
+                    }
+                    
+                    // Re-enable button (if needed)
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
                     }
                 }, 100);
             }, 500);

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -22,6 +22,7 @@
     
     <style>
         /* ØªØ£ÙƒØ¯ Ø£Ù† Ù‡Ø°Ø§ Ø§Ù„Ù‚Ø³Ù… ÙÙŠ Ø£Ø¹Ù„Ù‰ Ø§Ù„Ù€ CSS */
+        /* welcome-layer merged with welcome-overlay - keeping for compatibility */
         #welcome-layer {
             position: fixed; 
             top: 0; 
@@ -29,7 +30,7 @@
             width: 100%; 
             height: 100%;
             background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
-            display: flex; 
+            display: none; /* Hidden - merged with welcome-overlay */
             justify-content: center; 
             align-items: center;
             z-index: 999999; /* Ø£Ø¹Ù„Ù‰ Ù…Ù† ÙƒÙ„ Ø´ÙŠØ¡ */
@@ -1024,9 +1025,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10001;
+            z-index: 9999;
             animation: fadeIn 0.5s ease-in-out;
             cursor: pointer;
+        }
+        
+        /* Welcome Overlay ID - Unified */
+        #welcome-overlay {
+            z-index: 9999 !important;
+        }
+        
+        /* Start Button - Must be above overlay */
+        #start-button, #joinBtn {
+            z-index: 10000 !important;
+            position: relative !important;
+            cursor: pointer !important;
         }
 
         .stage0-card {
@@ -1567,9 +1580,9 @@
     </div>
 
     <!-- Welcome Modal (Bilingual) -->
-    <!-- Stage 0: Welcome Overlay -->
-    <div id="welcome-overlay" class="stage0-overlay" style="display: flex;">
-        <div class="glass-card stage0-card">
+    <!-- Stage 0: Welcome Overlay - Unified (merged welcome-overlay and welcome-layer) -->
+    <div id="welcome-overlay" class="stage0-overlay" style="display: flex; z-index: 9999;">
+        <div class="glass-card stage0-card" onclick="event.stopPropagation();">
             <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
                 مرحباً بك في إمبراطورية KICKGHOST | Welcome to KICKGHOST Empire
             </h2>
@@ -1579,9 +1592,13 @@
             <p style="color: #aaa; font-size: 1rem; line-height: 1.8; margin-bottom: 20px;">
                 مشروع يجمع بين Social-to-Earn و Web3 | A project combining Social-to-Earn with Web3
             </p>
-            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic;">
-                اضغط في أي مكان للمتابعة | Click anywhere to continue
+            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic; margin-bottom: 20px;">
+                اضغط على الزر للبدء | Click the button to start
             </p>
+            <!-- Start Button - Unified with id="start-button" -->
+            <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 20px; padding: 20px 50px; font-size: 1.2rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
+                <i class="fas fa-sign-in-alt"></i> للانضمام - ابدأ المرحلة الأولى | Join - Start Stage 1
+            </button>
         </div>
     </div>
 
@@ -1654,7 +1671,7 @@
                 <img src="https://i.ibb.co/TD4bgczv/geckoterminal-icon.png" alt="GeckoTerminal" style="width: 50px; height: 50px; border-radius: 10px;">
             </div>
             
-            <button id="joinBtn" onclick="closeWelcomeModalAndStart()" class="btn-mega" style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; width: 100%; cursor: pointer;">
+            <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
                 <i class="fas fa-sign-in-alt"></i> للانضمام - ابدأ المرحلة الأولى | Join - Start Stage 1
             </button>
         </div>
@@ -2225,6 +2242,27 @@
             BACKEND_API_URL: (window.ENV && window.ENV.BACKEND_API_URL) || 'YOUR_BACKEND_API_URL_HERE',
             // âš ï¸ NOTE: Secret keys and webhook URLs should be handled in backend only
         };
+        
+        // التحقق من وجود جميع متغيرات CONFIG المطلوبة
+        // Check for all required CONFIG variables
+        (function checkConfig() {
+            const requiredConfig = ['CID', 'PID', 'KICK_CID', 'TKN', 'POLYGON_CHAIN_ID', 'POLYGON_RPC', 'THIRDWEB_CLIENT_ID', 'SITE_URL'];
+            const missing = [];
+            
+            requiredConfig.forEach(key => {
+                if (!CONFIG[key] || CONFIG[key] === 'YOUR_BACKEND_API_URL_HERE') {
+                    missing.push(key);
+                }
+            });
+            
+            if (missing.length > 0) {
+                console.warn('⚠️ [CONFIG WARNING] Missing or incomplete configuration variables:', missing);
+                console.warn('⚠️ [CONFIG WARNING] المتغيرات الناقصة في الإعدادات:', missing);
+                console.warn('⚠️ Please check config.js file or ensure window.CONFIG is properly loaded');
+            } else {
+                console.log('✅ [CONFIG] All required configuration variables are loaded');
+            }
+        })();
 
         // Social Links with Logos - Updated with correct URLs
         const SOCIAL_LINKS = [
@@ -2747,7 +2785,8 @@
 
         async function connectWallet(type) {
             if (!window.ethereum) {
-                alert('Please install a Web3 wallet (MetaMask, Trust Wallet, or Phantom)');
+                showNotify('⚠️ يرجى تثبيت محفظة Web3 (MetaMask, Trust Wallet, أو Phantom) | Please install a Web3 wallet (MetaMask, Trust Wallet, or Phantom)', 'warning');
+                console.warn('⚠️ [WALLET ERROR] window.ethereum not found. User needs to install a Web3 wallet.');
                 return;
             }
 
@@ -3092,8 +3131,23 @@
         }
 
         // ==================== WELCOME MODAL CLOSE AND START (Legacy) ====================
-        function closeWelcomeModalAndStart() {
+        function closeWelcomeModalAndStart(event) {
+            // منع تداخل الأحداث - مهم جداً
+            // Prevent event bubbling - Very important
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
             console.log("closeWelcomeModalAndStart called");
+            
+            // التأكد من وجود config.js
+            // Ensure config.js is loaded
+            if (typeof CONFIG === 'undefined' || !CONFIG) {
+                console.error('⚠️ [ERROR] CONFIG not found! Please ensure config.js is loaded.');
+                alert('⚠️ خطأ في التحميل: يرجى التأكد من وجود ملف config.js\n⚠️ Loading Error: Please ensure config.js file exists');
+                return;
+            }
             // Ø¨Ø³ÙŠØ·: Ø¥Ø®ÙØ§Ø¡ Welcome Modal ÙˆØ¥Ø¸Ù‡Ø§Ø± Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
             const welcomeOverlay = document.getElementById('welcome-overlay');
@@ -3140,13 +3194,16 @@
                 if (typeof showStage1 === 'function') {
                     showStage1();
                 } else {
-                    // Fallback: Ø¥Ø¸Ù‡Ø§Ø± Dashboard
+                    // Fallback: إظهار Dashboard
+                    // Fallback: Show Dashboard
                     if (container) {
                         container.style.display = 'block';
                         container.style.opacity = '1';
-                        // Scroll Ø¥Ù„Ù‰ Ø§Ù„Ø£Ø¹Ù„Ù‰
+                        // Scroll إلى الأعلى
+                        // Scroll to top
                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                        // ØªÙ‡ÙŠØ¦Ø© Ø§Ù„Ù…Ø±Ø§Ø­Ù„
+                        // تهيئة المراحل
+                        // Initialize stages
                         if (typeof initializeStages === 'function') {
                             initializeStages();
                         }
@@ -3705,7 +3762,10 @@
         }
 
         async function getContractProvider() {
-            if (!window.ethereum) return null;
+            if (!window.ethereum) {
+                console.warn('⚠️ [WALLET ERROR] window.ethereum not found');
+                return null;
+            }
             try {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 return provider;
@@ -6269,19 +6329,9 @@
         <meta http-equiv="refresh" content="0; url=about:blank">
     </noscript>
     
-    <!-- Welcome Layer -->
-    <div id="welcome-layer">
-        <div class="glass-card" style="text-align: center; padding: 50px 40px; max-width: 500px; cursor: pointer;">
-            <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
-                Welcome to KICKGHOST Empire
-            </h2>
-            <p style="color: var(--secondary); font-size: 1.2rem; line-height: 1.8;">
-                The future of Web3 Gaming starts here.
-            </p>
-            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic;">
-                Click anywhere to continue
-            </p>
-        </div>
+    <!-- Welcome Layer - Merged with welcome-overlay, kept for compatibility but hidden -->
+    <div id="welcome-layer" style="display: none !important;">
+        <!-- Content merged into welcome-overlay above -->
     </div>
     
     <script>
@@ -6891,18 +6941,10 @@
             // Initialize Stage 0 (Welcome Overlay) - This handles the click event
             initStage0();
             
-            // Handle welcome-layer click (if exists) for compatibility
+            // Handle welcome-layer click (if exists) for compatibility - Now merged with welcome-overlay
+            // welcome-layer is now hidden and merged with welcome-overlay
             if (welcomeLayer) {
-                welcomeLayer.addEventListener('click', function() {
-                    welcomeLayer.style.display = 'none';
-                    if (mainApp) {
-                        mainApp.classList.add('app-active');
-                        mainApp.style.display = 'block';
-                    }
-                    console.log("Empire Started from welcome-layer...");
-                    if(typeof startStage1 === "function") startStage1();
-                    if(typeof showStage1 === "function") showStage1();
-                }, { once: true });
+                welcomeLayer.style.display = 'none'; // Ensure it's hidden
             }
             
             // Ensure welcome-overlay is ready

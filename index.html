@@ -991,11 +991,10 @@
 
         /* Ghost Empire Stage */
         .ghost-empire-stage {
-            display: none; /* Strictly hidden initially */
+            display: none; /* Strictly hidden by default */
             min-height: 100vh;
             padding: 40px 20px;
             background: radial-gradient(circle at center, rgba(163, 54, 255, 0.1), rgba(0, 0, 0, 0.9));
-            animation: fadeIn 1s;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
@@ -1571,8 +1570,8 @@
                 <h2 id="statusTitle" style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 2rem;">مرحباً بك في KICKGHOST</h2>
                 <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">انضم إلى مجتمعنا واحصل على 5000 AKSG Token | Join our community and get 5000 AKSG Token</p>
                 
-                <button id="masterBtn" class="btn-mega btn-start-tasks" onclick="startTasksFlow()">
-                    <i class="fas fa-tasks"></i>
+                <button id="startTasksBtn" class="btn-mega btn-start-tasks">
+                    <i class="fas fa-rocket"></i>
                     <span>اضغط هنا لإتمام المهام | Click Here to Complete Tasks</span>
                 </button>
             </div>
@@ -2511,6 +2510,42 @@
             
             // Initialize stages (Stage 1: Dashboard visible, Stage 2: Hidden)
             initializeStages();
+            
+            // ==================== START TASKS BUTTON CLICK HANDLER ====================
+            const startBtn = document.getElementById('startTasksBtn');
+            const mainContainer = document.querySelector('.container');
+            const stage2 = document.querySelector('.ghost-empire-stage');
+
+            if (startBtn && mainContainer && stage2) {
+                startBtn.addEventListener('click', () => {
+                    // 1. إضافة انيميشن الاختفاء للمرحلة الأولى
+                    mainContainer.classList.add('hidden');
+                    
+                    // 2. إظهار المرحلة الثانية بعد وقت قصير (Smooth transition)
+                    setTimeout(() => {
+                        mainContainer.style.display = 'none'; // قفل التبويب/المرحلة الأولى
+                        stage2.style.display = 'block'; // إظهار المرحلة الثانية
+                        stage2.classList.add('active'); // تفعيل المرحلة الثانية
+                        
+                        // إضافة انيميشن الدخول
+                        stage2.style.opacity = '1';
+                        stage2.style.transform = 'translateY(0)';
+                        
+                        // الصعود لأعلى الصفحة
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
+                        // تحديث النقط في المراحل (Progress dots)
+                        const dot2 = document.getElementById('dot2');
+                        if (dot2) dot2.classList.add('active');
+                        
+                        // Initialize social verification grid if not already done
+                        const grid = document.getElementById('socialVerificationGrid');
+                        if (grid && (!grid.innerHTML || grid.innerHTML.includes('Populated by JS'))) {
+                            initGhostEmpire();
+                        }
+                    }, 500);
+                });
+            }
             
             initParticles();
             initGhostEmpire();

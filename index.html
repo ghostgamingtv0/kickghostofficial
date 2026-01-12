@@ -22,14 +22,14 @@
         /* تأكد أن هذا القسم في أعلى الـ CSS */
         #welcome-layer {
             position: fixed !important;
-            inset: 0 !important;
+            inset: 0 !important; /* تغطي كامل الشاشة من كل الجهات */
             width: 100% !important;
             height: 100% !important;
             background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
             display: flex !important;
             justify-content: center;
             align-items: center;
-            z-index: 9999 !important;
+            z-index: 99999 !important; /* فوق كل العناصر الأخرى - حماية من البوتات */
             cursor: pointer !important;
         }
         
@@ -6108,334 +6108,64 @@
     </div>
     
     <script>
-        // ==================== INITIALIZATION FUNCTION ====================
-        const initApp = function(event) {
-            // Stop event propagation and prevent default behavior
-            event.stopPropagation();
-            event.preventDefault();
-            
-            const welcomeLayer = document.getElementById('welcome-layer');
-            const container = document.querySelector('.container');
-            
-            // Hide welcome layer
-            if (welcomeLayer) {
-                welcomeLayer.style.display = 'none';
-            }
-            
-            // Force container to display
-            if (container) {
-                container.style.setProperty('display', 'block', 'important');
-            }
-            
-            // Set initial state
-            state = 'VERIFY';
-            
-            // Initialize Audio Context to unlock sound
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                // Create a silent buffer to unlock audio
-                const buffer = audioContext.createBuffer(1, 1, 22050);
-                const source = audioContext.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioContext.destination);
-                source.start(0);
-            } catch (e) {
-                console.warn('AudioContext initialization failed:', e);
-            }
-            
-            // Update UI state and show stage 1
-            if (typeof updateUIState === 'function') {
-                updateUIState();
-            }
-            
-            if (typeof showStage1 === 'function') {
-                showStage1();
-            }
-            
-            console.log("Empire Started... State:", state);
+        // ==================== ANTI-BOT PROTECTION SYSTEM ====================
+        let pageLoadTime = Date.now();
+        let mouseMovementData = {
+            movements: [],
+            lastX: null,
+            lastY: null,
+            totalDistance: 0,
+            hasMovement: false
+        };
+        let touchData = {
+            touches: [],
+            hasTouch: false
         };
         
-        // Attach initialization listener to welcome layer
-        window.addEventListener('load', function() {
-            const welcomeLayer = document.getElementById('welcome-layer');
-            if (welcomeLayer) {
-                welcomeLayer.addEventListener('click', initApp, { once: true, capture: true });
+        // تتبع حركة الماوس قبل الضغطة
+        document.addEventListener('mousemove', function(e) {
+            if (mouseMovementData.lastX !== null && mouseMovementData.lastY !== null) {
+                const distance = Math.sqrt(
+                    Math.pow(e.clientX - mouseMovementData.lastX, 2) + 
+                    Math.pow(e.clientY - mouseMovementData.lastY, 2)
+                );
+                mouseMovementData.totalDistance += distance;
+                mouseMovementData.hasMovement = true;
             }
-        });
-    </script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            mouseMovementData.lastX = e.clientX;
+            mouseMovementData.lastY = e.clientY;
+            mouseMovementData.movements.push({
+                x: e.clientX,
+                y: e.clientY,
+                time: Date.now()
+            });
+            // الاحتفاظ بآخر 50 حركة فقط
+            if (mouseMovementData.movements.length > 50) {
+                mouseMovementData.movements.shift();
+            }
+        }, { passive: true });
+        
+        // تتبع اللمسات للموبايل
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                touchData.touches.push({
+                    x: touch.clientX,
+                    y: touch.clientY,
+                    radiusX: touch.radiusX || 0,
+                    radiusY: touch.radiusY || 0,
+                    time: Date.now()
+                });
+                touchData.hasTouch = true;
+            }
+        }, { passive: true });
+        
+        // دالة فحص البوت
+        function detectBot(event) {
+            const clickTime = Date.now();
+            const timeSinceLoad = clickTime - pageLoadTime;
+            
+            // 1. فحص سرعة الضغطة (البوتات تضغط بسرعة غير بشرية)
+            // إذا ضغط المستخدم في أقل من 500ms بعد تحميل الصفحة = مشبوه
+            if (timeSinceLoad < 500) {
+                console.warn('Bot Detection: Click too fast after page loa

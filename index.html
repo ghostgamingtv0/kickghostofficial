@@ -2070,6 +2070,67 @@
                 </button>
             </div>
             
+            <!-- Code Generator Section (Final Stage) - Under Social Media Links -->
+            <div id="codeGeneratorSection" class="empire-card" style="display: none; margin-top: 30px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-key"></i> Claim Code Generator | مولد كود المطالبة
+                </h2>
+                <p style="color: #aaa; text-align: center; margin-bottom: 30px; line-height: 1.8;">
+                    بعد إكمال جميع المراحل، اضغط الزر أدناه لإنشاء كود المطالبة الخاص بك | After completing all stages, click the button below to generate your claim code
+                </p>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button id="generateCodeBtn" class="btn-mega" onclick="generateClaimCodeFinal()" style="padding: 20px 50px; font-size: 1.3rem; background: linear-gradient(45deg, var(--primary), var(--secondary));">
+                        <i class="fas fa-magic"></i> Generate Code | إنشاء الكود
+                    </button>
+                </div>
+                <!-- Generated Code Display -->
+                <div id="finalCodeDisplay" style="display: none; margin-top: 30px; padding: 30px; background: rgba(0, 255, 163, 0.15); border-radius: 20px; border: 3px solid var(--secondary); text-align: center;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 15px; font-size: 1.5rem;">
+                        <i class="fas fa-gift"></i> Your Claim Code | كود المطالبة الخاص بك
+                    </h3>
+                    <div style="font-size: 4rem; font-weight: 900; color: var(--secondary); font-family: 'Orbitron'; letter-spacing: 15px; margin: 30px 0; text-shadow: 0 0 30px var(--secondary); padding: 20px; background: rgba(0, 0, 0, 0.3); border-radius: 15px;" id="finalGeneratedCode">
+                        ------
+                    </div>
+                    <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 20px;">
+                        احفظ هذا الكود وأرسله على مواقع التواصل الاجتماعي للحصول على عملة AKSG | Save this code and share it on social media to receive AKSG tokens
+                    </p>
+                    <div style="margin-top: 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="copyFinalCode()" class="btn-mega" style="padding: 15px 35px; font-size: 1rem;">
+                            <i class="fas fa-copy"></i> Copy Code | نسخ الكود
+                        </button>
+                        <button onclick="shareFinalCode()" class="btn-mega" style="padding: 15px 35px; font-size: 1rem; background: var(--primary);">
+                            <i class="fas fa-share-alt"></i> Share | مشاركة
+                        </button>
+                    </div>
+                </div>
+                <!-- Warning Message if tasks not completed -->
+                <div id="incompleteTasksWarning" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255, 68, 68, 0.15); border-radius: 15px; border: 2px solid var(--danger); text-align: center;">
+                    <p style="color: var(--danger); font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">
+                        <i class="fas fa-exclamation-triangle"></i> Warning | تحذير
+                    </p>
+                    <p style="color: #ccc; line-height: 1.8;">
+                        يرجى إكمال جميع المراحل أولاً لتفعيل مولد الكود | Please complete all stages first to activate the code generator
+                    </p>
+                </div>
+            </div>
+            
+            <!-- GeckoTerminal Chat Ads Integration -->
+            <div class="empire-card" style="margin-top: 30px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-comments"></i> GeckoTerminal Community | مجتمع GeckoTerminal
+                </h2>
+                <div id="geckoChatWidget" style="width: 100%; min-height: 400px; border-radius: 20px; background: rgba(0, 0, 0, 0.3); border: 2px solid var(--primary); padding: 20px;">
+                    <iframe 
+                        src="https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&info=1&swaps=1&chat=1" 
+                        style="width: 100%; height: 450px; border: none; border-radius: 15px;"
+                        title="GeckoTerminal Chart and Chat">
+                    </iframe>
+                    <p style="text-align: center; color: #888; margin-top: 15px; font-size: 0.9rem;">
+                        انضم إلى مجتمع GeckoTerminal لمتابعة الأخبار والمناقشات | Join GeckoTerminal community for updates and discussions
+                    </p>
+                </div>
+            </div>
+            
             <!-- Live Statistics Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px;">
@@ -6310,11 +6371,15 @@
 
                 case 'EMPIRE':
                     document.getElementById('dot4')?.classList.add('active');
-                    title.innerText = "âœ… Welcome to Ghost Empire";
-                    desc.innerText = "All verifications complete! You have successfully completed all steps. Welcome to Ghost Empire!";
-                    btn.innerHTML = `<i class="fas fa-crown"></i> <span>GHOST EMPIRE</span>`;
+                    title.innerText = "✅ Welcome to Ghost Empire | مرحباً بك في إمبراطورية الأشباح";
+                    desc.innerText = "All verifications complete! You have successfully completed all steps. Welcome to Ghost Empire! | تم إكمال جميع التحققات! مرحباً بك في إمبراطورية الأشباح!";
+                    btn.innerHTML = `<i class="fas fa-crown"></i> <span>GHOST EMPIRE | إمبراطورية الأشباح</span>`;
                     btn.className = "btn-mega btn-success-state";
                     btn.disabled = false;
+                    // Update code generator visibility
+                    if (typeof updateCodeGeneratorVisibility === 'function') {
+                        updateCodeGeneratorVisibility();
+                    }
                     // Show Ghost Empire automatically
                     setTimeout(() => {
                         showGhostEmpire();
@@ -6734,6 +6799,13 @@
                         if (claimCodeDisplay) claimCodeDisplay.style.display = 'block';
                     }
                 }
+                
+                // Update code generator visibility when Ghost Empire is shown
+                if (typeof updateCodeGeneratorVisibility === 'function') {
+                    setTimeout(() => {
+                        updateCodeGeneratorVisibility();
+                    }, 500);
+                }
             }
         }
 
@@ -6903,6 +6975,237 @@
         if (window.location.search.includes('code=')) {
             handleKickOAuthCallback();
         }
+
+        // ==================== FINAL CODE GENERATOR (UNDER SOCIAL MEDIA LINKS) ====================
+        // Enhanced function to generate claim code in final stage (under social media links)
+        async function generateClaimCodeFinal() {
+            const generateBtn = document.getElementById('generateCodeBtn');
+            const finalCodeDisplay = document.getElementById('finalCodeDisplay');
+            const incompleteWarning = document.getElementById('incompleteTasksWarning');
+            const finalCodeEl = document.getElementById('finalGeneratedCode');
+            
+            if (generateBtn) generateBtn.disabled = true;
+            
+            try {
+                // Check if all stages are completed
+                if (!verifyAllTasksCompleted()) {
+                    // Show warning message
+                    if (incompleteWarning) {
+                        incompleteWarning.style.display = 'block';
+                        if (finalCodeDisplay) finalCodeDisplay.style.display = 'none';
+                    }
+                    showNotify("⚠️ Please complete all stages first | يرجى إكمال جميع المراحل أولاً", 'warning');
+                    if (generateBtn) generateBtn.disabled = false;
+                    return;
+                }
+                
+                // Hide warning if all tasks completed
+                if (incompleteWarning) incompleteWarning.style.display = 'none';
+                
+                // Check if wallet is connected
+                if (!userAddr) {
+                    showNotify("⚠️ Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    if (generateBtn) generateBtn.disabled = false;
+                    return;
+                }
+                
+                // Check if code already exists
+                const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
+                if (existingCode) {
+                    if (finalCodeEl) finalCodeEl.textContent = existingCode;
+                    if (finalCodeDisplay) finalCodeDisplay.style.display = 'block';
+                    showNotify("✅ Your claim code | كود المطالبة الخاص بك", 'success');
+                    if (generateBtn) generateBtn.disabled = false;
+                    return;
+                }
+                
+                // Generate new code
+                const code = generateSecureClaimCode();
+                if (!code) {
+                    showNotify("⚠️ Failed to generate code. Please try again. | فشل إنشاء الكود. يرجى المحاولة مرة أخرى.", 'error');
+                    if (generateBtn) generateBtn.disabled = false;
+                    return;
+                }
+                
+                // Display code
+                if (finalCodeEl) finalCodeEl.textContent = code;
+                if (finalCodeDisplay) {
+                    finalCodeDisplay.style.display = 'block';
+                    // Scroll to code display
+                    finalCodeDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                // Mark stage as completed
+                markStageCompleted('CLAIM_CODE');
+                
+                // Show success notification with confetti
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 500,
+                        spread: 120,
+                        origin: { y: 0.6 },
+                        colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
+                    });
+                }
+                
+                showNotify(`✅ Code Generated Successfully: ${code} | تم إنشاء الكود بنجاح: ${code}`, 'success');
+                
+                // Update button state
+                if (generateBtn) {
+                    generateBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Generated | تم إنشاء الكود';
+                    generateBtn.style.background = 'var(--success)';
+                }
+                
+            } catch (e) {
+                console.error('Generate final code error:', e);
+                showNotify("❌ Error generating code. Please try again. | خطأ في إنشاء الكود. يرجى المحاولة مرة أخرى.", 'error');
+                if (generateBtn) generateBtn.disabled = false;
+            }
+        }
+
+        // Copy final generated code
+        function copyFinalCode() {
+            const finalCodeEl = document.getElementById('finalGeneratedCode');
+            if (!finalCodeEl) return;
+            
+            const code = finalCodeEl.textContent.trim();
+            if (!code || code === '------') {
+                showNotify("⚠️ No code available | لا يوجد كود متاح", 'warning');
+                return;
+            }
+            
+            navigator.clipboard.writeText(code).then(() => {
+                showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
+            }).catch(() => {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotify("✅ Code copied | تم نسخ الكود", 'success');
+            });
+        }
+
+        // Share final generated code
+        function shareFinalCode() {
+            const finalCodeEl = document.getElementById('finalGeneratedCode');
+            if (!finalCodeEl) return;
+            
+            const code = finalCodeEl.textContent.trim();
+            if (!code || code === '------') {
+                showNotify("⚠️ No code available | لا يوجد كود متاح", 'warning');
+                return;
+            }
+            
+            const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
+            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${code}\nClaim Code: ${code}\n\nJoin the Ghost Empire: ${siteUrl}\n\nانضم إلى إمبراطورية الأشباح: ${siteUrl}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'KICKGHOST $AKSG Claim Code | كود المطالبة',
+                    text: shareText,
+                    url: siteUrl
+                }).catch(() => {
+                    copyFinalCode();
+                });
+            } else {
+                copyFinalCode();
+            }
+        }
+
+        // ==================== SHOW/HIDE CODE GENERATOR BASED ON TASK COMPLETION ====================
+        function updateCodeGeneratorVisibility() {
+            const codeGeneratorSection = document.getElementById('codeGeneratorSection');
+            const incompleteWarning = document.getElementById('incompleteTasksWarning');
+            const finalCodeDisplay = document.getElementById('finalCodeDisplay');
+            
+            if (!codeGeneratorSection) return;
+            
+            // Check if all tasks are completed
+            const allCompleted = verifyAllTasksCompleted();
+            
+            // Show code generator section in final stage (EMPIRE stage)
+            if (state === 'EMPIRE' || state === 'CLAIM_CODE') {
+                codeGeneratorSection.style.display = 'block';
+                
+                if (allCompleted) {
+                    // All tasks completed - show generate button, hide warning
+                    if (incompleteWarning) incompleteWarning.style.display = 'none';
+                    
+                    // Check if code already generated
+                    if (userAddr) {
+                        const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
+                        if (existingCode && finalCodeDisplay) {
+                            const finalCodeEl = document.getElementById('finalGeneratedCode');
+                            if (finalCodeEl) finalCodeEl.textContent = existingCode;
+                            finalCodeDisplay.style.display = 'block';
+                        }
+                    }
+                } else {
+                    // Tasks not completed - show warning, hide code display
+                    if (incompleteWarning) incompleteWarning.style.display = 'block';
+                    if (finalCodeDisplay) finalCodeDisplay.style.display = 'none';
+                }
+            } else {
+                // Hide code generator in other stages
+                codeGeneratorSection.style.display = 'none';
+            }
+        }
+
+        // ==================== ENHANCED KICK USER DATA SAVING ====================
+        async function saveKickUserDataEnhanced(userData) {
+            try {
+                // Enhanced user data structure
+                const enhancedKickData = {
+                    username: userData.username || userData.name || 'KickUser',
+                    avatar: userData.avatar || userData.profile_picture || userData.avatar_url || '',
+                    user_id: userData.id || userData.user_id || null,
+                    follower_count: userData.follower_count || userData.followers || 0,
+                    following_count: userData.following_count || userData.following || 0,
+                    is_follower: userData.is_follower || userData.follower_status || false,
+                    chat_points: userData.chat_points || 0,
+                    loyalty_points: userData.loyalty_points || 0,
+                    wallet_address: userAddr || 'pending',
+                    oauth_code: localStorage.getItem('kick_oauth_code') || null,
+                    timestamp: Date.now(),
+                    saved_at: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('kick_user_data', JSON.stringify(enhancedKickData));
+                localStorage.setItem('kick_user_username', enhancedKickData.username);
+                localStorage.setItem('kick_follow_verified', enhancedKickData.is_follower ? 'true' : 'false');
+                
+                // Save to backend (via API)
+                try {
+                    await callThirdwebBackendAPI('save_kick_user_data', {
+                        wallet: userAddr || 'pending',
+                        kick_data: enhancedKickData
+                    });
+                } catch (e) {
+                    console.log('Backend save error (non-critical):', e);
+                }
+                
+                // Update UI
+                updateKickUserDisplay(enhancedKickData);
+                
+                console.log('✅ Enhanced Kick user data saved:', enhancedKickData.username);
+                return enhancedKickData;
+            } catch (e) {
+                console.error('Save Kick user data error:', e);
+                return null;
+            }
+        }
+
+        // Override updateKickUserDisplay to use enhanced data
+        const originalUpdateKickUserDisplay = window.updateKickUserDisplay || function() {};
+        window.updateKickUserDisplay = function(userData) {
+            originalUpdateKickUserDisplay(userData);
+            // Also update code generator visibility when Kick data is loaded
+            updateCodeGeneratorVisibility();
+        };
     </script>
     
     <!-- Additional Protection Layer -->

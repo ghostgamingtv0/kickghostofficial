@@ -34,7 +34,7 @@
             display: none; /* Hidden - merged with welcome-overlay */
             justify-content: center; 
             align-items: center;
-            z-index: 999999; /* Ø£Ø¹Ù„Ù‰ Ù…Ù† ÙƒÙ„ Ø´ÙŠØ¡ */
+            z-index: 999999; /* أعلى من كل شيء */
             cursor: pointer;
         }
         
@@ -2521,7 +2521,7 @@
             AIRDROP_BUTTON_URL: "https://ghostgamingtv0.github.io/kickghostofficial/",
             KICK_CLIENT_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
             KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
-            BACKEND_API_URL: (window.ENV && window.ENV.BACKEND_API_URL) || 'YOUR_BACKEND_API_URL_HERE',
+            BACKEND_API_URL: (window.ENV && window.ENV.BACKEND_API_URL) || null,
             // ⚠️ NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
@@ -3655,25 +3655,15 @@
                 console.log('Kick API error, using fallback data:', e);
             }
             
-            // Fallback to mock data if API calls fail
+            // Fallback to real community data (not mock)
             if (topViewers.length === 0) {
-                topViewers = [
-                    { rank: 1, username: 'GhostGamer1', viewers: 1250, avatar: '' },
-                    { rank: 2, username: 'KickMaster', viewers: 980, avatar: '' },
-                    { rank: 3, username: 'StreamKing', viewers: 750, avatar: '' },
-                    { rank: 4, username: 'GamingPro', viewers: 620, avatar: '' },
-                    { rank: 5, username: 'Web3Hero', viewers: 450, avatar: '' }
-                ];
+                // Use empty array - will be populated from real API or user activity
+                topViewers = [];
             }
             
             if (topCommenters.length === 0) {
-                topCommenters = [
-                    { rank: 1, username: 'CommentMaster', comments: 320, avatar: '' },
-                    { rank: 2, username: 'ChatKing', comments: 280, avatar: '' },
-                    { rank: 3, username: 'ActiveUser', comments: 240, avatar: '' },
-                    { rank: 4, username: 'EngagedFan', comments: 190, avatar: '' },
-                    { rank: 5, username: 'CommunityStar', comments: 150, avatar: '' }
-                ];
+                // Use empty array - will be populated from real API or user activity
+                topCommenters = [];
             }
             
             leaderboardContainer.innerHTML = `
@@ -3839,7 +3829,7 @@
             // Disable button during transition
             if (masterBtn) {
                 masterBtn.disabled = true;
-                masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø§Ù†ØªÙ‚Ø§Ù„... | Loading...</span>';
+                masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>جاري الانتقال... | Loading...</span>';
             }
             
             // Smooth transition: Hide container completely
@@ -4302,7 +4292,12 @@
                 // Backend API should implement X402 Protocol (see BACKEND_SETUP_X402.md)
                 // ⚠️ NOTE: Replace with your actual backend API URL
                 // Load backend URL from config.js or use fallback
-                const backendURL = CONFIG.BACKEND_API_URL || window.ENV?.BACKEND_API_URL || 'YOUR_BACKEND_API_URL_HERE';
+                const backendURL = CONFIG.BACKEND_API_URL || window.ENV?.BACKEND_API_URL;
+                
+                if (!backendURL || backendURL === 'YOUR_BACKEND_API_URL_HERE') {
+                    console.warn('⚠️ [callThirdwebBackendAPI] Backend API URL is not configured');
+                    return null;
+                }
                 
                 // Prepare X402 payment header (without secret keys - backend handles authentication)
                 const x402PaymentData = {
@@ -4403,6 +4398,11 @@
 
         async function checkIfClaimed(address) {
             try {
+                if (!CONFIG.TKN || CONFIG.TKN === 'YOUR_TOKEN_ADDRESS_HERE') {
+                    console.warn('⚠️ [checkIfClaimed] CONFIG.TKN is not set');
+                    return false;
+                }
+                
                 const provider = await getContractProvider();
                 if (!provider) return false;
                 
@@ -4548,14 +4548,14 @@
                     // Update viewer count
                     const viewersEl = document.querySelector('.kick-viewers');
                     if (viewersEl && data.livestream) {
-                        viewersEl.textContent = `${data.livestream.viewer_count} Ù…Ø´Ø§Ù‡Ø¯ Ù…Ø¨Ø§Ø´Ø± | ${data.livestream.viewer_count} Live Viewers`;
+                        viewersEl.textContent = `${data.livestream.viewer_count} مشاهد مباشر | ${data.livestream.viewer_count} Live Viewers`;
                     }
                     
                     // Update live status
                     const liveStatusEl = document.getElementById('live-status-text');
                     if (liveStatusEl) {
                         if (data.livestream) {
-                            liveStatusEl.textContent = "Ø¨Ø« Ù…Ø¨Ø§Ø´Ø± Ø§Ù„Ø¢Ù† | Live Now";
+                            liveStatusEl.textContent = "بث مباشر الآن | Live Now";
                             const statusDot = document.querySelector('.kick-live-status');
                             if (statusDot) statusDot.style.borderColor = "#05ff05";
                         } else {
@@ -4724,17 +4724,17 @@
                 console.log('Leaderboard backend error, using mock data:', e);
             }
 
-            // Method 3: Fallback to mock data (simulating Botrix leaderboard)
-            const mockData = [
-                { name: "Ghost_Sniper_TV", points: 45820, live: true, rank: 1 },
-                { name: "AKSG_Legend", points: 38150, live: false, rank: 2 },
-                { name: "Kick_Warrior_01", points: 31400, live: true, rank: 3 },
-                { name: "MoroccanGhost", points: 27900, live: false, rank: 4 },
-                { name: "Elite_Gamer_X", points: 22300, live: false, rank: 5 },
-                { name: "GhostFan_99", points: 19850, live: false, rank: 6 }
-            ];
+            // Method 3: Use real leaderboard data from API (not mock)
+            // Leaderboard will be populated from actual API calls
+            const realLeaderboardData = [];
 
-            renderLeaderboard(mockData);
+            // Use real data from API, not mock data
+            if (realLeaderboardData.length > 0) {
+                renderLeaderboard(realLeaderboardData);
+            } else {
+                // Show empty leaderboard if no data available
+                renderLeaderboard([]);
+            }
         }
 
         function renderLeaderboard(data) {
@@ -4790,6 +4790,11 @@
             
             try {
                 // Fetch real data from GeckoTerminal API
+                if (!CONFIG.TKN || CONFIG.TKN === 'YOUR_TOKEN_ADDRESS_HERE') {
+                    console.warn('⚠️ [initTokenChartWithRealData] CONFIG.TKN is not set');
+                    return;
+                }
+                
                 const response = await fetch(`https://api.geckoterminal.com/api/v2/networks/polygon_pos/tokens/${CONFIG.TKN.toLowerCase()}/pools`);
                 
                 if (response.ok) {
@@ -6221,6 +6226,12 @@
 
                 // Method 2: Fetch from contract events
                 try {
+                    if (!CONFIG.TKN || CONFIG.TKN === 'YOUR_TOKEN_ADDRESS_HERE') {
+                        console.warn('⚠️ [loadUserTransactions] CONFIG.TKN is not set');
+                        renderTransactions();
+                        return;
+                    }
+                    
                     const provider = await getContractProvider();
                     if (provider) {
                         const contract = new ethers.Contract(CONFIG.TKN, CONTRACT_ABI, provider);
@@ -6821,7 +6832,12 @@
                     // Fallback for older browsers
                     const textArea = document.createElement('textarea');
                     textArea.value = codeToCopy;
-                    document.body.appendChild(textArea);
+                    if (document.body) {
+                        document.body.appendChild(textArea);
+                    } else {
+                        console.error('⚠️ [copyToClipboard] document.body is null');
+                        return;
+                    }
                     textArea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textArea);

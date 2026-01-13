@@ -1799,20 +1799,20 @@
         <!-- Master Control Section -->
         <section class="glass-card" style="margin-bottom: 40px;">
             <div class="step-indicator">
-                <div class="step-dot active" id="dot1" title="1. Human Verification | Ø§Ù„ØªØ£ÙƒØ¯ Ø§Ù„Ø­ÙŠÙˆÙŠ"></div>
-                <div class="step-dot" id="dot2" title="2. Social Verification | Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©"></div>
+                <div class="step-dot active" id="dot1" title="1. Human Verification | التأكد الحيوي"></div>
+                <div class="step-dot" id="dot2" title="2. Social Verification | المتابعة الاجتماعية"></div>
                 <div class="step-dot" id="dot3" title="3. Select Wallet | Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ù…Ø­ÙØ¸Ø©"></div>
                 <div class="step-dot" id="dot4" title="4. Confirm Wallet | ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù…Ø­ÙØ¸Ø©"></div>
                 <div class="step-dot" id="dot5" title="5. Add Token | Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…Ù„Ø©"></div>
-                <div class="step-dot" id="dot6" title="6. Request Contract | Ø·Ù„Ø¨ Ø§Ù„Ø¹Ù‚Ø¯"></div>
-                <div class="step-dot" id="dot7" title="7. X402 Protocol | Ø¨Ø±ÙˆØªÙˆÙƒÙˆÙ„ X402"></div>
-                <div class="step-dot" id="dot8" title="8. Claim Code | Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„ÙƒÙˆØ¯"></div>
-                <div class="step-dot" id="dot9" title="9. Ghost Empire | Ø¥Ù…Ø¨Ø±Ø§Ø·ÙˆØ±ÙŠØ© Ø§Ù„Ø£Ø´Ø¨Ø§Ø­"></div>
+                <div class="step-dot" id="dot6" title="6. Request Contract | طلب العقد"></div>
+                <div class="step-dot" id="dot7" title="7. X402 Protocol | بروتوكول X402"></div>
+                <div class="step-dot" id="dot8" title="8. Claim Code | الحصول على الكود"></div>
+                <div class="step-dot" id="dot9" title="9. Ghost Empire | إمبراطورية الأشباح"></div>
             </div>
             
             <div class="master-control-box">
                 <h2 id="statusTitle" style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 2rem;">Ù…Ø±Ø­Ø¨Ø§Ù‹ Ø¨Ùƒ ÙÙŠ KICKGHOST</h2>
-                <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">Ø§Ù†Ø¶Ù… Ø¥Ù„Ù‰ Ù…Ø¬ØªÙ…Ø¹Ù†Ø§ ÙˆØ§Ø­ØµÙ„ Ø¹Ù„Ù‰ ÙƒÙˆØ¯ Ø§Ù„Ù…Ø·Ø§Ù„Ø¨Ø© | Join our community and get your claim code</p>
+                <p id="statusDesc" style="color: #888; margin-bottom: 35px; font-size: 1.1rem;">انضم إلى مجتمعنا واحصل على كود المطالبة | Join our community and get your claim code</p>
                 
                 <button id="startTasksBtn" class="btn-mega btn-start-tasks">
                     <i class="fas fa-shield-alt"></i>
@@ -2134,7 +2134,7 @@
             <!-- Social Verification Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px;">
-                    <i class="fas fa-share-alt"></i> Social Verification | Ø§Ù„ØªØ­Ù‚Ù‚ Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠ
+                    <i class="fas fa-share-alt"></i> Social Verification | التحقق الاجتماعي
                 </h2>
                 <p style="color: #888; margin-bottom: 20px;">Visit all social links to unlock the claim system | زر جميع الروابط الاجتماعية لفتح نظام المطالبة</p>
                 <div class="social-verification-grid" id="socialVerificationGrid">
@@ -2540,7 +2540,6 @@
             if (missing.length > 0) {
                 console.warn('⚠️ [CONFIG WARNING] Missing or incomplete configuration variables:', missing);
                 console.warn('⚠️ [CONFIG WARNING] المتغيرات الناقصة في الإعدادات:', missing);
-                console.warn('⚠️ Please check config.js file or ensure window.CONFIG is properly loaded');
             } else {
                 console.log('✅ [CONFIG] All required configuration variables are loaded');
             }
@@ -2614,7 +2613,7 @@
         ];
 
         // ==================== GLOBAL STATE ====================
-        // STEP 1: HUMAN_VERIFY (ØªØ£ÙƒØ¯ Ø­ÙŠÙˆÙŠ) -> STEP 2: SOCIAL_VERIFY (Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©) -> STEP 3: ADD_TOKEN_WALLET (Ø¥Ø¯Ø±Ø§Ø¬ Ø¹Ù…Ù„Ø© + Ù…Ø­ÙØ¸Ø©) -> STEP 4: CLAIM_CODE (Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ ÙƒÙˆØ¯ 6 Ø£Ø±Ù‚Ø§Ù…)
+        // STEP 1: HUMAN_VERIFY (تأكيد حيوي) -> STEP 2: SOCIAL_VERIFY (متابعة اجتماعية) -> STEP 3: ADD_TOKEN_WALLET (Ø¥Ø¯Ø±Ø§Ø¬ Ø¹Ù…Ù„Ø© + Ù…Ø­ÙØ¸Ø©) -> STEP 4: CLAIM_CODE (الحصول على كود 6 أرقام)
         let state = 'HUMAN_VERIFY'; // VERIFY -> WALLET -> WALLET_CONFIRM -> ADD_TOKEN -> REQUEST_CONTRACT -> EMPIRE -> DONE
         let userAddr = "";
         let connectedWallet = "";
@@ -2665,24 +2664,33 @@
         // ==================== STAGE 0: WELCOME OVERLAY ====================
         function initStage0() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
+            const startButton = document.getElementById('start-button');
             
             if (welcomeOverlay) {
-                // Click ANYWHERE on overlay to close (including the card)
-                welcomeOverlay.addEventListener('click', function(e) {
+                // Ensure overlay is visible
+                welcomeOverlay.style.display = 'flex';
+                welcomeOverlay.style.opacity = '1';
+            }
+            
+            // Fix button click handler - works immediately in all browsers (Brave/Chrome/Edge)
+            if (startButton) {
+                // Remove any existing handlers
+                const newButton = startButton.cloneNode(true);
+                startButton.parentNode.replaceChild(newButton, startButton);
+                
+                // Add click handler
+                newButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    closeStage0();
-                }, true);
+                    closeWelcomeModalAndStart(e);
+                }, false);
                 
-                // Also add click to the card itself
-                const card = welcomeOverlay.querySelector('.stage0-card');
-                if (card) {
-                    card.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        closeStage0();
-                    }, true);
-                }
+                // Add touch handler for mobile
+                newButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWelcomeModalAndStart(e);
+                }, false);
             }
         }
 
@@ -3000,7 +3008,7 @@
                         </div>
                         
                         <button id="stage2ContinueBtn" class="stage1-continue-btn" onclick="proceedToStage3()" disabled style="margin-top: 40px; display: none;">
-                            <i class="fas fa-arrow-right"></i> Continue to Empire Dashboard | Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø¥Ù„Ù‰ Ù„ÙˆØ­Ø© Ø§Ù„Ø¥Ù…Ø¨Ø±Ø§Ø·ÙˆØ±ÙŠØ©
+                            <i class="fas fa-arrow-right"></i> Continue to Empire Dashboard | المتابعة إلى لوحة الإمبراطورية
                         </button>
                     </div>
                 `;
@@ -3571,7 +3579,7 @@
             
             // Show success notification
             if (typeof showNotify === 'function') {
-                showNotify('✅… Claim code generated successfully! | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ ÙƒÙˆØ¯ Ø§Ù„Ù…Ø·Ø§Ù„Ø¨Ø© Ø¨Ù†Ø¬Ø§Ø­!', 'success');
+                showNotify('✅… Claim code generated successfully! | تم إنشاء كود المطالبة بنجاح!', 'success');
             }
             
             // Mark CLAIM_CODE stage as completed
@@ -3583,7 +3591,7 @@
             const claimBtn = document.getElementById('empireClaimBtn');
             if (claimBtn) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | ØªÙ… Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ø§Ù„ÙƒÙˆØ¯';
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | ØªÙ… الحصول على الكود';
             }
         }
 
@@ -3713,23 +3721,16 @@
 
         // ==================== WELCOME MODAL CLOSE AND START (Legacy) ====================
         function closeWelcomeModalAndStart(event) {
-            // منع تداخل الأحداث - مهم جداً
             // Prevent event bubbling - Very important
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
             
-            console.log('Button Clicked!'); // تأكيد استجابة الزر
-            console.log("closeWelcomeModalAndStart called");
+            console.log('✅ Button Clicked - Starting Stage 1');
             
-            // التأكد من وجود config.js
-            // Ensure config.js is loaded
-            if (typeof CONFIG === 'undefined' || !CONFIG) {
-                console.error('⚠️ [ERROR] CONFIG not found! Please ensure config.js is loaded.');
-                alert('⚠️ خطأ في التحميل: يرجى التأكد من وجود ملف config.js\n⚠️ Loading Error: Please ensure config.js file exists');
-                return;
-            }
+            // CONFIG is already defined in the script (merged from config.js)
+            // No need to check - it's always available
             // Ø¨Ø³ÙŠØ·: Ø¥Ø®ÙØ§Ø¡ Welcome Modal ÙˆØ¥Ø¸Ù‡Ø§Ø± Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
             const welcomeOverlay = document.getElementById('welcome-overlay');
@@ -5517,7 +5518,7 @@
                     state = 'CLAIM_CODE';
                     updateUIState();
                     
-                    showNotify("✅… X402 Protocol Complete | ØªÙ… ØªÙˆÙ‚ÙŠØ¹ Ø§Ù„Ø±Ø³Ø§Ù„Ø©", 'success');
+                    showNotify("✅… X402 Protocol Complete | تم توقيع الرسالة", 'success');
                     addActivityLog('X402 Protocol', 'Digital signature verified successfully');
                 }
             } catch (e) {
@@ -5699,7 +5700,7 @@
                 walletConfirmed = true;
                 localStorage.setItem(`wallet_confirmed_${userAddr.toLowerCase()}`, 'true');
                 
-                // Move to ADD_TOKEN stage (Ø·Ù„Ø¨ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„Ø¹Ù…Ù„Ø©)
+                // Move to ADD_TOKEN stage (طلب إدخال العملة)
                 state = 'ADD_TOKEN';
                 updateUIState();
                 
@@ -5748,7 +5749,7 @@
                 tokenAddedStage2 = true;
                 localStorage.setItem(`token_added_${userAddr.toLowerCase()}`, 'true');
                 
-                // Move to REQUEST_CONTRACT stage (Ø·Ù„Ø¨ Ø§Ù„Ø¹Ù‚Ø¯)
+                // Move to REQUEST_CONTRACT stage (طلب العقد)
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 
@@ -6400,7 +6401,7 @@
                     desc.innerHTML = `
                         <div style="text-align: center; margin-bottom: 15px;">
                             <p style="margin-bottom: 10px;"><strong>English:</strong> Choose your wallet (MetaMask, Trust Wallet, or Phantom). Only these wallets are supported.</p>
-                            <p style="margin-bottom: 10px;"><strong>Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©:</strong> Ø§Ø®ØªØ± Ù…Ø­ÙØ¸ØªÙƒ (MetaMask, Trust Wallet, Ø£Ùˆ Phantom). Ù‡Ø°Ù‡ Ø§Ù„Ù…Ø­Ø§ÙØ¸ ÙÙ‚Ø· Ù…Ø¯Ø¹ÙˆÙ…Ø©.</p>
+                            <p style="margin-bottom: 10px;"><strong>العربية:</strong> Ø§Ø®ØªØ± Ù…Ø­ÙØ¸ØªÙƒ (MetaMask, Trust Wallet, Ø£Ùˆ Phantom). Ù‡Ø°Ù‡ Ø§Ù„Ù…Ø­Ø§ÙØ¸ ÙÙ‚Ø· Ù…Ø¯Ø¹ÙˆÙ…Ø©.</p>
                             <p style="margin-top: 15px; color: var(--secondary); font-weight: 600;">
                                 <i class="fas fa-info-circle"></i> Ø¨Ø¹Ø¯ Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ù…Ø­ÙØ¸Ø©ØŒ Ø³ÙŠØªÙ… Ø¥Ø¯Ø±Ø§Ø¬ Ø¹Ù…Ù„Ø© AKSG ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹ | After selecting wallet, AKSG token will be added automatically
                             </p>
@@ -6814,7 +6815,7 @@
             if (codeToCopy && codeToCopy !== '------') {
                 navigator.clipboard.writeText(codeToCopy).then(() => {
                     if (typeof showNotify === 'function') {
-                        showNotify("✅… Code copied to clipboard | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
+                        showNotify("✅… Code copied to clipboard | تم نسخ الكود", 'success');
                     }
                 }).catch(() => {
                     // Fallback for older browsers
@@ -6825,12 +6826,12 @@
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
                     if (typeof showNotify === 'function') {
-                        showNotify("✅… Code copied | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
+                        showNotify("✅ Code copied | تم نسخ الكود", 'success');
                     }
                 });
             } else {
                 if (typeof showNotify === 'function') {
-                    showNotify("⚠️ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
                 }
             }
         }
@@ -6849,13 +6850,13 @@
             
             if (!codeToShare || codeToShare === '------') {
                 if (typeof showNotify === 'function') {
-                    showNotify("⚠️ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
+                    showNotify("⚠️ No claim code available | لا يوجد كود مطالبة", 'warning');
                 }
                 return;
             }
             
             const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
-            const shareText = `ðŸŽ® KICKGHOST $AKSG Claim Code\n\nÙƒÙˆØ¯ Ø§Ù„Ù…Ø·Ø§Ù„Ø¨Ø©: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
+            const shareText = `ðŸŽ® KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
             
             if (navigator.share) {
                 navigator.share({
@@ -6979,7 +6980,7 @@
     
     <script>
         // ==================== STAGE COMPLETION TRACKING (If not already defined) ====================
-        // ØªØªØ¨Ø¹ Ø¥ØªÙ…Ø§Ù… ÙƒÙ„ Ù…Ø±Ø­Ù„Ø© - Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø§Ù„Ù…Ø±ÙˆØ± Ù„Ù„Ù…Ø±Ø­Ù„Ø© Ø§Ù„ØªØ§Ù„ÙŠØ© Ø¥Ù„Ø§ Ø¨Ø¹Ø¯ ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù…Ø±Ø­Ù„Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ©
+        // تتبع إتمام كل مرحلة - لا يمكن المرور للمرحلة التالية إلا بعد تأكيد المرحلة الحالية
         if (typeof stageCompletion === 'undefined') {
             window.stageCompletion = {
                 HUMAN_VERIFY: false,      // Stage 1: Human Verification
@@ -7010,7 +7011,7 @@
             window.canProceedToNextStage = function(currentStage) {
                 if (!window.isStageCompleted(currentStage)) {
                     if (typeof showNotify === 'function') {
-                        showNotify(`⚠️ Please complete ${currentStage} stage first | ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ù…Ø±Ø­Ù„Ø© ${currentStage} Ø£ÙˆÙ„Ø§Ù‹`, 'warning');
+                        showNotify(`⚠️ Please complete ${currentStage} stage first | يرجى إتمام مرحلة ${currentStage} Ø£ÙˆÙ„Ø§Ù‹`, 'warning');
                     }
                     return false;
                 }
@@ -7119,14 +7120,14 @@
             state = 'SOCIAL_VERIFY';
             updateUIState();
             
-            showNotify("✅… Human Verification Complete | ØªÙ… Ø§Ù„ØªØ£ÙƒØ¯ Ø§Ù„Ø­ÙŠÙˆÙŠ", 'success');
+            showNotify("✅… Human Verification Complete | تم التأكد الحيوي", 'success');
         }
         
         // Stage 2: Confirm Social Verification
         async function confirmSocialVerification() {
             // Check if all social links confirmed
             if (socialVerificationState.confirmed.size < SOCIAL_LINKS.length) {
-                showNotify(`⚠️ Please visit and confirm all ${SOCIAL_LINKS.length} social links first | ÙŠØ±Ø¬Ù‰ Ø²ÙŠØ§Ø±Ø© ÙˆØªØ£ÙƒÙŠØ¯ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±ÙˆØ§Ø¨Ø· Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©`, 'warning');
+                showNotify(`⚠️ Please visit and confirm all ${SOCIAL_LINKS.length} social links first | يرجى زيارة وتأكيد جميع الروابط الاجتماعية`, 'warning');
                 return;
             }
             
@@ -7142,7 +7143,7 @@
                 openWalletModal();
             }, 500);
             
-            showNotify("✅… Social Verification Complete | ØªÙ…Øª Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©", 'success');
+            showNotify("✅… Social Verification Complete | ØªÙ…Øª المتابعة الاجتماعية", 'success');
         }
         
         // Enhanced refreshTransactions function
@@ -7568,7 +7569,7 @@
                     });
                 }
                 
-                showNotify(`✅… Claim Code Generated: ${code} | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ÙƒÙˆØ¯: ${code}`, 'success');
+                showNotify(`✅… Claim Code Generated: ${code} | تم إنشاء الكود: ${code}`, 'success');
                 
             } catch (e) {
                 console.error('Generate claim code error:', e);

@@ -19,8 +19,7 @@
             onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js'"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- Load Configuration from external file - Must load before main script -->
-    <script src="config.js" onerror="console.warn('⚠️ config.js not found, using fallback values');"></script>
+    <!-- Configuration merged directly into HTML - No external config.js needed -->
     
     <style>
         /* ØªØ£ÙƒØ¯ Ø£Ù† Ù‡Ø°Ø§ Ø§Ù„Ù‚Ø³Ù… ÙÙŠ Ø£Ø¹Ù„Ù‰ Ø§Ù„Ù€ CSS */
@@ -1118,7 +1117,7 @@
         }
 
         .social-icon-card.clicked::after {
-            content: 'âœ“';
+            content: '✅“';
             position: absolute;
             top: 10px;
             right: 10px;
@@ -1542,7 +1541,7 @@
                     if (!devtools.open) {
                         devtools.open = true;
                         document.body.innerHTML = '';
-                        document.write('<!DOCTYPE html><html><head><title>Access Denied</title><meta charset="UTF-8"></head><body style="background:#000;color:#ff4444;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Orbitron,Arial;font-size:2rem;text-align:center;"><div><h1>âš ï¸ Security Alert</h1><p>Developer Tools Detected</p><p style="font-size:1rem;color:#888;">Access Denied</p></div></body></html>');
+                        document.write('<!DOCTYPE html><html><head><title>Access Denied</title><meta charset="UTF-8"></head><body style="background:#000;color:#ff4444;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Orbitron,Arial;font-size:2rem;text-align:center;"><div><h1>⚠️ Security Alert</h1><p>Developer Tools Detected</p><p style="font-size:1rem;color:#888;">Access Denied</p></div></body></html>');
                         setTimeout(function() {
                             window.location.href = 'about:blank';
                         }, 2000);
@@ -1584,22 +1583,98 @@
     <!-- Welcome Modal (Bilingual) -->
     <!-- Stage 0: Welcome Overlay - Unified (merged welcome-overlay and welcome-layer) -->
     <div id="welcome-overlay" class="stage0-overlay" style="display: flex; z-index: 9999;">
-        <div class="glass-card stage0-card" onclick="event.stopPropagation();">
-            <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 20px var(--primary);">
-                مرحباً بك في إمبراطورية KICKGHOST | Welcome to KICKGHOST Empire
-            </h2>
-            <p style="color: var(--secondary); font-size: 1.2rem; line-height: 1.8; margin-bottom: 10px;">
-                مستقبل الألعاب على الويب 3.0 يبدأ هنا | The future of Web3 Gaming starts here.
-            </p>
-            <p style="color: #aaa; font-size: 1rem; line-height: 1.8; margin-bottom: 20px;">
-                مشروع يجمع بين Social-to-Earn و Web3 | A project combining Social-to-Earn with Web3
-            </p>
-            <p style="color: #888; font-size: 0.9rem; margin-top: 20px; font-style: italic; margin-bottom: 20px;">
-                اضغط على الزر للبدء | Click the button to start
-            </p>
-            <!-- Start Button - Unified with id="start-button" -->
-            <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 20px; padding: 20px 50px; font-size: 1.2rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
-                <i class="fas fa-sign-in-alt"></i> للانضمام - ابدأ المرحلة الأولى | Join - Start Stage 1
+        <div class="glass-card stage0-card" onclick="event.stopPropagation();" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <!-- Logo and Title -->
+            <div style="text-align: center; margin-bottom: 25px;">
+                <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" alt="AKSG Logo" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 25px var(--primary); margin-bottom: 15px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 20px var(--primary);">
+                    مرحباً بك في KICKGHOST | Welcome to KICKGHOST
+                </h2>
+                <p style="color: var(--secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 10px;">
+                    مستقبل الألعاب على الويب 3.0 يبدأ هنا | The future of Web3 Gaming starts here.
+                </p>
+            </div>
+            
+            <!-- Project Explanation -->
+            <div style="background: rgba(163, 54, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 2px solid var(--primary);">
+                <h4 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 15px; font-size: 1.2rem; text-align: center;">
+                    <i class="fas fa-info-circle"></i> عن المشروع | About the Project
+                </h4>
+                <p style="color: #ccc; line-height: 1.8; text-align: center; margin-bottom: 10px; direction: rtl;">
+                    <strong>KICKGHOST</strong> هو مشروع يجمع بين نظام <strong>Social-to-Earn</strong> وتقنية <strong>Web3</strong>. 
+                    اربح عملات $AKSG من خلال متابعة ومشاركة المحتوى على منصات التواصل الاجتماعي.
+                </p>
+                <p style="color: #aaa; line-height: 1.8; text-align: center; font-size: 0.95rem;">
+                    <strong>KICKGHOST</strong> combines <strong>Social-to-Earn</strong> with <strong>Web3</strong> technology. 
+                    Earn $AKSG tokens by following and sharing content on social media platforms.
+                </p>
+            </div>
+            
+            <!-- Stages Explanation -->
+            <div style="background: rgba(163, 54, 255, 0.08); border-radius: 20px; padding: 25px; margin-bottom: 25px; border: 2px solid var(--primary);">
+                <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                    <i class="fas fa-gift"></i> المراحل | Stages
+                </h3>
+                
+                <div style="text-align: right; direction: rtl;">
+                    <!-- Stage 1 -->
+                    <div style="margin-bottom: 15px; padding: 15px; background: rgba(0, 255, 163, 0.08); border-radius: 10px; border-right: 4px solid var(--secondary);">
+                        <p style="color: #ccc; line-height: 1.8; margin-bottom: 5px;">
+                            <strong style="color: var(--secondary);">المرحلة الأولى:</strong> متابعة واشتراك على مواقع التواصل الاجتماعي
+                        </p>
+                        <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 5px;">
+                            (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
+                        </p>
+                        <p style="color: #888; font-size: 0.85rem;">
+                            <strong>Stage 1:</strong> Follow and subscribe on social media platforms (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
+                        </p>
+                    </div>
+                    
+                    <!-- Stage 2 -->
+                    <div style="margin-bottom: 15px; padding: 15px; background: rgba(163, 54, 255, 0.08); border-radius: 10px; border-right: 4px solid var(--primary);">
+                        <p style="color: #ccc; line-height: 1.8; margin-bottom: 5px;">
+                            <strong style="color: var(--primary);">المرحلة الثانية:</strong> إدراج عملة AKSG وربط المحفظة الرقمية
+                        </p>
+                        <p style="color: #888; font-size: 0.85rem;">
+                            <strong>Stage 2:</strong> Add AKSG token to your wallet and connect your Web3 wallet
+                        </p>
+                    </div>
+                    
+                    <!-- Stage 3 -->
+                    <div style="margin-bottom: 15px; padding: 15px; background: rgba(5, 255, 5, 0.08); border-radius: 10px; border-right: 4px solid var(--kick);">
+                        <p style="color: #ccc; line-height: 1.8; margin-bottom: 5px;">
+                            <strong style="color: var(--kick);">المرحلة الثالثة:</strong> تأكيد المحفظة وإتمام المهام
+                        </p>
+                        <p style="color: #888; font-size: 0.85rem;">
+                            <strong>Stage 3:</strong> Confirm wallet and complete all tasks
+                        </p>
+                    </div>
+                    
+                    <!-- Stage 4 -->
+                    <div style="padding: 15px; background: rgba(255, 68, 68, 0.08); border-radius: 10px; border-right: 4px solid var(--danger);">
+                        <p style="color: #ccc; line-height: 1.8; margin-bottom: 5px;">
+                            <strong style="color: var(--danger);">المرحلة الرابعة:</strong> الحصول على كود من 6 أرقام وإرساله على منصة تواصل اجتماعي
+                        </p>
+                        <p style="color: #888; font-size: 0.85rem;">
+                            <strong>Stage 4:</strong> Get 6-digit claim code and share it on a social media platform
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reward Info -->
+            <div style="background: rgba(0, 255, 163, 0.15); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 2px solid var(--secondary);">
+                <p style="font-size: 1.3rem; color: var(--secondary); font-weight: 700; margin-bottom: 10px; text-align: center;">
+                    <i class="fas fa-coins"></i> المكافأة: 5000 AKSG Token | Reward: 5000 AKSG Token
+                </p>
+                <p style="font-size: 1rem; color: #ccc; text-align: center;">
+                    اكمل جميع المراحل للحصول على المكافأة | Complete all stages to receive the reward
+                </p>
+            </div>
+            
+            <!-- Confirm Button -->
+            <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 10px; padding: 20px 50px; font-size: 1.3rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
+                <i class="fas fa-check-circle"></i> تأكيد - ابدأ المرحلة الأولى | Confirm - Start Stage 1
             </button>
         </div>
     </div>
@@ -2158,7 +2233,7 @@
 
     <script>
         /*
-         * âš ï¸ IMPORTANT BACKEND SETUP FOR X402 PROTOCOL:
+         * ⚠️ IMPORTANT BACKEND SETUP FOR X402 PROTOCOL:
          * 
          * This frontend code calls backend APIs which should implement X402 Protocol.
          * 
@@ -2425,7 +2500,7 @@
         };
 
         // ==================== CONFIGURATION (Loaded from config.js) ====================
-        // âš ï¸ NOTE: Configuration is now loaded from config.js file
+        // ⚠️ NOTE: Configuration is now loaded from config.js file
         // If config.js is not loaded, use fallback values
         // Fallback CONFIG - يتم استخدامه في حالة فشل تحميل config.js
         // Fallback CONFIG - Used if config.js fails to load
@@ -2447,7 +2522,7 @@
             KICK_CLIENT_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
             KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
             BACKEND_API_URL: (window.ENV && window.ENV.BACKEND_API_URL) || 'YOUR_BACKEND_API_URL_HERE',
-            // âš ï¸ NOTE: Secret keys and webhook URLs should be handled in backend only
+            // ⚠️ NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
         // التحقق من وجود جميع متغيرات CONFIG المطلوبة
@@ -2557,192 +2632,10 @@
         let userClaimCode = null; // 6-digit claim code
         let usedCodes = new Set(); // Track used codes to prevent duplicates
 
-        // ==================== ADVANCED SECURITY: Disable Right Click & Developer Tools ====================
-        (function() {
-            'use strict';
-            
-            // Disable right-click context menu (except for necessary titles)
-            document.addEventListener('contextmenu', function(e) {
-                const target = e.target;
-                // Allow right-click on input, textarea, and elements with class 'copyable-addr', 'wallet-addr', 'contract-addr'
-                if (target.tagName === 'INPUT' || 
-                    target.tagName === 'TEXTAREA' || 
-                    target.classList.contains('copyable-addr') ||
-                    target.classList.contains('wallet-addr') ||
-                    target.classList.contains('contract-addr') ||
-                    target.classList.contains('transaction-hash')) {
-                    return true;
-                }
-                e.preventDefault();
-                return false;
-            }, false);
-            
-            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-            document.addEventListener('keydown', function(e) {
-                // F12
-                if (e.keyCode === 123) {
-                    e.preventDefault();
-                    return false;
-                }
-                // Ctrl+Shift+I (DevTools)
-                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-                    e.preventDefault();
-                    return false;
-                }
-                // Ctrl+Shift+J (Console)
-                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-                    e.preventDefault();
-                    return false;
-                }
-                // Ctrl+U (View Source)
-                if (e.ctrlKey && e.keyCode === 85) {
-                    e.preventDefault();
-                    return false;
-                }
-                // Ctrl+Shift+C (Inspect Element)
-                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-                    e.preventDefault();
-                    return false;
-                }
-            }, false);
-            
-            // Note: Console disabling removed - weak protection that can be easily bypassed
-            // Better security should be implemented server-side
-            
-            // Disable DevTools detection
-            let devtools = {open: false};
-            const checkDevTools = setInterval(function() {
-                if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-                    if (!devtools.open) {
-                        devtools.open = true;
-                        // Redirect or show warning
-                        document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial; color: white; background: #000;"><h1>Developer Tools Detected. Please close DevTools to continue.</h1></div>';
-                        clearInterval(checkDevTools);
-                    }
-                } else {
-                    devtools.open = false;
-                }
-            }, 500);
-            
-            // Disable iframe embedding
-            if (window.self !== window.top) {
-                window.top.location = window.self.location;
-            }
-            
-            // Disable text selection (except for necessary elements)
-            document.addEventListener('selectstart', function(e) {
-                const target = e.target;
-                if (target.tagName === 'INPUT' || 
-                    target.tagName === 'TEXTAREA' || 
-                    target.classList.contains('copyable-addr') ||
-                    target.classList.contains('wallet-addr') ||
-                    target.classList.contains('contract-addr') ||
-                    target.classList.contains('transaction-hash')) {
-                    return true;
-                }
-                e.preventDefault();
-                return false;
-            }, false);
-            
-            // Disable copy (except for necessary elements)
-            document.addEventListener('copy', function(e) {
-                const target = e.target;
-                if (target.tagName === 'INPUT' || 
-                    target.tagName === 'TEXTAREA' || 
-                    target.classList.contains('copyable-addr') ||
-                    target.classList.contains('wallet-addr') ||
-                    target.classList.contains('contract-addr') ||
-                    target.classList.contains('transaction-hash')) {
-                    return true;
-                }
-                e.preventDefault();
-                return false;
-            }, false);
-
-        })();
-
-        // ==================== CODE PROTECTION & OBFUSCATION ====================
-        (function() {
-            'use strict';
-            
-            // Disable console methods completely
-            try {
-                Object.defineProperty(window, 'console', {
-                    get: function() { 
-                        return {
-                            log: function() {},
-                            debug: function() {},
-                            info: function() {},
-                            warn: function() {},
-                            error: function() {},
-                            clear: function() {}
-                        };
-                    },
-                    set: function() {}
-                });
-            } catch(e) {}
-
-            // Disable debugger
-            window.debugger = function() {};
-
-            // Obfuscate sensitive variable names
-            const _0x = {
-                'a': 'CONFIG',
-                'b': 'TKN',
-                'c': 'KICK_SEC',
-                'd': 'THIRDWEB_SECRET_KEY',
-                'e': 'userAddr',
-                'f': 'contractInstance'
-            };
-
-            // Anti-tampering: Remove contenteditable
-            setInterval(function() {
-                try {
-                    const all = document.querySelectorAll('*');
-                    for (let i = 0; i < all.length; i++) {
-                        const el = all[i];
-                        if (el.getAttribute('contenteditable') === 'true' && 
-                            el.tagName !== 'INPUT' && 
-                            el.tagName !== 'TEXTAREA') {
-                            el.removeAttribute('contenteditable');
-                        }
-                    }
-                } catch(e) {}
-            }, 1000);
-
-            // Disable view-source protocol
-            if (window.location.protocol === 'view-source:') {
-                window.location.href = window.location.href.replace('view-source:', '');
-            }
-
-            // Protect against code injection
-            const originalInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-            if (originalInnerHTML) {
-                Object.defineProperty(Element.prototype, 'innerHTML', {
-                    set: function(value) {
-                        if (value && typeof value === 'string' && value.includes('<script')) {
-                            console.warn('Script injection attempt blocked');
-                            return;
-                        }
-                        originalInnerHTML.set.call(this, value);
-                    },
-                    get: originalInnerHTML.get
-                });
-            }
-
-            // Disable document.write after page load
-            let writeCount = 0;
-            const originalWrite = document.write;
-            document.write = function() {
-                writeCount++;
-                if (writeCount > 10) {
-                    console.warn('Excessive document.write calls detected');
-                    return;
-                }
-                originalWrite.apply(document, arguments);
-            };
-
-        })();
+        // ==================== SECURITY: Removed aggressive protections ====================
+        // All aggressive protections removed to avoid browser Phishing warnings
+        // Bot protection is handled only on critical buttons (Contract & Claim Code buttons)
+        // Simple F12 and right-click protection is in the head section
 
         // ==================== STAGE MANAGEMENT ====================
         let currentStage = 1; // Stage 1: Initial Dashboard, Stage 2: Social Verification
@@ -3678,7 +3571,7 @@
             
             // Show success notification
             if (typeof showNotify === 'function') {
-                showNotify('âœ… Claim code generated successfully! | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ ÙƒÙˆØ¯ Ø§Ù„Ù…Ø·Ø§Ù„Ø¨Ø© Ø¨Ù†Ø¬Ø§Ø­!', 'success');
+                showNotify('✅… Claim code generated successfully! | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ ÙƒÙˆØ¯ Ø§Ù„Ù…Ø·Ø§Ù„Ø¨Ø© Ø¨Ù†Ø¬Ø§Ø­!', 'success');
             }
             
             // Mark CLAIM_CODE stage as completed
@@ -4275,7 +4168,7 @@
                 }
             }
             
-            showNotify("âœ… Social verification complete! Now select and connect your wallet.", 'success');
+            showNotify("✅… Social verification complete! Now select and connect your wallet.", 'success');
             
             // Send verification to backend
             if (typeof sendSocialVerificationToBackend === 'function') {
@@ -4376,7 +4269,7 @@
         // ==================== THIRDWEB X402 PROTOCOL INTEGRATION ====================
         async function initializeX402Facilitator() {
             try {
-                // âš ï¸ IMPORTANT: X402 Facilitator should be initialized in BACKEND
+                // ⚠️ IMPORTANT: X402 Facilitator should be initialized in BACKEND
                 // Frontend should call backend API which uses X402
                 
                 // For demonstration, we prepare the request to backend
@@ -4402,11 +4295,11 @@
         async function callThirdwebBackendAPI(action, data) {
             try {
                 // Get encrypted secret keys (decrypted at runtime only)
-                // âš ï¸ NOTE: Secret keys removed - backend should handle authentication
+                // ⚠️ NOTE: Secret keys removed - backend should handle authentication
                 
-                // âš ï¸ IMPORTANT: Replace CONFIG.WEBHOOK with your actual backend API URL
+                // ⚠️ IMPORTANT: Replace CONFIG.WEBHOOK with your actual backend API URL
                 // Backend API should implement X402 Protocol (see BACKEND_SETUP_X402.md)
-                // âš ï¸ NOTE: Replace with your actual backend API URL
+                // ⚠️ NOTE: Replace with your actual backend API URL
                 // Load backend URL from config.js or use fallback
                 const backendURL = CONFIG.BACKEND_API_URL || window.ENV?.BACKEND_API_URL || 'YOUR_BACKEND_API_URL_HERE';
                 
@@ -4453,7 +4346,7 @@
                 console.error('Thirdweb Backend API error:', e);
                 // Fallback to direct webhook (without X402)
                 try {
-                    // âš ï¸ NOTE: Webhook removed - use backend API instead
+                    // ⚠️ NOTE: Webhook removed - use backend API instead
                     // Backend API call disabled - use backend when ready
                     // await fetch('YOUR_BACKEND_API_URL', {
                     //     method: 'POST',
@@ -4608,7 +4501,7 @@
                     // Transaction successful
                     const balance = await getTokenBalance(userAddr);
                     addTransaction('Claim', receipt.transactionHash, `1000 AKSG (Balance: ${parseFloat(balance).toFixed(2)})`);
-                    showNotify("âœ… Claim successful on-chain! Tokens transferred to your wallet.", 'success');
+                    showNotify("✅… Claim successful on-chain! Tokens transferred to your wallet.", 'success');
                     return true;
                 } else {
                     throw new Error('Transaction failed on-chain');
@@ -4703,7 +4596,7 @@
                     const empireStatusEl = document.getElementById('empireKickStatus');
                     
                     if (liveStatusEl) {
-                        liveStatusEl.textContent = isLive ? 'â— LIVE NOW' : 'Offline';
+                        liveStatusEl.textContent = isLive ? '● LIVE NOW' : 'Offline';
                         liveStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
                     }
                     
@@ -4713,7 +4606,7 @@
                     }
                     
                     if (empireStatusEl) {
-                        empireStatusEl.textContent = isLive ? 'â— LIVE NOW' : 'Offline';
+                        empireStatusEl.textContent = isLive ? '● LIVE NOW' : 'Offline';
                         empireStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
                     }
 
@@ -4743,7 +4636,7 @@
             
             // Method 2: Fallback - Check via Botrix/Kick Developer API
             try {
-                // âš ï¸ Note: In production, call this from your backend with KICK_SEC
+                // ⚠️ Note: In production, call this from your backend with KICK_SEC
                 // For now, using public API
                 const fallbackResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`);
                 if (fallbackResponse.ok) {
@@ -4769,7 +4662,7 @@
             const empireStatusEl = document.getElementById('empireKickStatus');
             
             if (liveStatusEl) {
-                liveStatusEl.textContent = isLive ? 'â— LIVE NOW' : 'Offline';
+                liveStatusEl.textContent = isLive ? '● LIVE NOW' : 'Offline';
                 liveStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
             }
             
@@ -4779,7 +4672,7 @@
             }
             
             if (empireStatusEl) {
-                empireStatusEl.textContent = isLive ? 'â— LIVE NOW' : 'Offline';
+                empireStatusEl.textContent = isLive ? '● LIVE NOW' : 'Offline';
                 empireStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
             }
         }
@@ -4804,7 +4697,7 @@
                     // Extract followers/loyalty data if available
                     const followers = data.followers_count || 0;
                     
-                    // âš ï¸ Note: Botrix API requires backend call with KICK_CID and KICK_SEC
+                    // ⚠️ Note: Botrix API requires backend call with KICK_CID and KICK_SEC
                     // For now, using mock data that simulates real Botrix leaderboard
                 }
             } catch (e) {
@@ -4812,7 +4705,7 @@
             }
 
             // Method 2: Use Botrix Leaderboard (requires backend)
-            // âš ï¸ In production, call your backend API with KICK_CID and KICK_SEC
+            // ⚠️ In production, call your backend API with KICK_CID and KICK_SEC
             // Example: POST to your backend with KICK developer credentials
             
             try {
@@ -4857,7 +4750,7 @@
                         <tr>
                             <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
                             <td class="user-name">${user.name}</td>
-                            <td>${user.live ? '<span style="color: var(--kick)">â— Live</span>' : 'Offline'}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">● Live</span>' : 'Offline'}</td>
                             <td class="points-val">${user.points.toLocaleString()}</td>
                         </tr>
                     `;
@@ -4877,7 +4770,7 @@
                         <tr>
                             <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
                             <td class="user-name">${user.name}</td>
-                            <td>${user.live ? '<span style="color: var(--kick)">â— Live</span>' : 'Offline'}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">● Live</span>' : 'Offline'}</td>
                             <td class="points-val">${user.points.toLocaleString()}</td>
                         </tr>
                     `;
@@ -5118,7 +5011,7 @@
                 // Security Guard 1: Check Smart Contract for claimed status (ON-CHAIN)
                 const hasClaimedOnChain = await checkIfClaimed(addrLower);
                 if (hasClaimedOnChain) {
-                    showNotify("âš ï¸ SECURITY GUARDS: This wallet has already registered on-chain. System locked.", 'error');
+                    showNotify("⚠️ SECURITY GUARDS: This wallet has already registered on-chain. System locked.", 'error');
                     lockSystem();
                     return false;
                 }
@@ -5131,7 +5024,7 @@
                     });
                     
                     if (backendCheck && backendCheck.registered) {
-                        showNotify("âš ï¸ SECURITY GUARDS: This wallet is already registered in our database.", 'error');
+                        showNotify("⚠️ SECURITY GUARDS: This wallet is already registered in our database.", 'error');
                         lockSystem();
                         return false;
                     }
@@ -5142,7 +5035,7 @@
                 
                 // Security Guard 3: Lock to first wallet connected in this session (Session-based)
                 if (firstWalletAddress && firstWalletAddress.toLowerCase() !== addrLower) {
-                    showNotify("âš ï¸ SECURITY GUARDS: Wallet switching detected! System locked to first wallet.", 'error');
+                    showNotify("⚠️ SECURITY GUARDS: Wallet switching detected! System locked to first wallet.", 'error');
                     lockSystem();
                     return false;
                 }
@@ -5406,7 +5299,7 @@
                 if (btn) btn.disabled = false;
                 addUserToList(getShortAddress(userAddr));
                 
-                showNotify(`âœ… ${walletName} Connected: ${getShortAddress(userAddr)}. Please confirm wallet connection.`, 'success');
+                showNotify(`✅… ${walletName} Connected: ${getShortAddress(userAddr)}. Please confirm wallet connection.`, 'success');
                 
             } catch (e) {
                 console.error('Wallet connection error:', e);
@@ -5476,7 +5369,7 @@
                 updateUIState();
                 addUserToList(getShortAddress(userAddr));
                 loadUserTransactions();
-                showNotify(`âœ… Thirdweb Connected: ${getShortAddress(userAddr)}`, 'success');
+                showNotify(`✅… Thirdweb Connected: ${getShortAddress(userAddr)}`, 'success');
             } catch (e) {
                 console.error('Thirdweb connection error:', e);
                 let errorMessage = "Thirdweb connection failed. Please try another wallet.";
@@ -5499,7 +5392,7 @@
         async function saveWalletToThirdweb(address, walletType, signature = null) {
             try {
                 // DATA SAVE ONLY - NO TOKEN TRANSFER
-                // âš ï¸ This function only saves wallet data, does NOT send tokens
+                // ⚠️ This function only saves wallet data, does NOT send tokens
                 const walletData = {
                     action: 'wallet_connected', // Data save action only
                     wallet: address,
@@ -5513,7 +5406,7 @@
                 };
 
                 // Save to webhook (data collection only)
-                // âš ï¸ NOTE: Webhook removed - use backend API instead
+                // ⚠️ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -5543,7 +5436,7 @@
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: CONFIG.POLYGON_CHAIN_ID }]
                     });
-                    showNotify("âœ… Switched to Polygon network", 'success');
+                    showNotify("✅… Switched to Polygon network", 'success');
                     return true;
                 } catch (switchError) {
                     // Network not added (error code 4902)
@@ -5563,7 +5456,7 @@
                                     blockExplorerUrls: ['https://polygonscan.com']
                                 }]
                             });
-                            showNotify("âœ… Polygon network added successfully", 'success');
+                            showNotify("✅… Polygon network added successfully", 'success');
                             return true;
                         } catch (addError) {
                             if (addError.code === 4001) {
@@ -5600,7 +5493,7 @@
 
             try {
                 if (!userAddr) {
-                    showNotify("âš ï¸ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
                     btn.disabled = false;
                     return;
                 }
@@ -5624,13 +5517,13 @@
                     state = 'CLAIM_CODE';
                     updateUIState();
                     
-                    showNotify("âœ… X402 Protocol Complete | ØªÙ… ØªÙˆÙ‚ÙŠØ¹ Ø§Ù„Ø±Ø³Ø§Ù„Ø©", 'success');
+                    showNotify("✅… X402 Protocol Complete | ØªÙ… ØªÙˆÙ‚ÙŠØ¹ Ø§Ù„Ø±Ø³Ø§Ù„Ø©", 'success');
                     addActivityLog('X402 Protocol', 'Digital signature verified successfully');
                 }
             } catch (e) {
                 console.error('X402 Protocol Error:', e);
                 if (e.code === 4001) {
-                    showNotify("âš ï¸ Signature rejected. Please sign to continue | ØªÙ… Ø±ÙØ¶ Ø§Ù„ØªÙˆÙ‚ÙŠØ¹", 'warning');
+                    showNotify("⚠️ Signature rejected. Please sign to continue | ØªÙ… Ø±ÙØ¶ Ø§Ù„ØªÙˆÙ‚ÙŠØ¹", 'warning');
                 } else {
                     showNotify("Failed to sign message. Please try again.", 'error');
                 }
@@ -5679,7 +5572,7 @@
                 // Send to backend for verification
                 await verifyPlatformLink(platform, username, walletAddress, signature);
 
-                showNotify(`âœ… Wallet linked to ${platform}: ${username}`, 'success');
+                showNotify(`✅… Wallet linked to ${platform}: ${username}`, 'success');
                 return verificationData;
             } catch (e) {
                 console.error('Off-chain verification error:', e);
@@ -5725,7 +5618,7 @@
                 });
 
                 // Also save to webhook
-                // âš ï¸ NOTE: Webhook removed - use backend API instead
+                // ⚠️ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -5811,7 +5704,7 @@
                 updateUIState();
                 
                 btn.disabled = false;
-                showNotify("âœ… Wallet confirmed with signature! Now add AKSG token to your wallet.", 'success');
+                showNotify("✅… Wallet confirmed with signature! Now add AKSG token to your wallet.", 'success');
                 
             } catch (e) {
                 console.error('Confirm wallet error:', e);
@@ -5860,7 +5753,7 @@
                 updateUIState();
                 
                 btn.disabled = false;
-                showNotify("âœ… Token added successfully! Now request contract data.", 'success');
+                showNotify("✅… Token added successfully! Now request contract data.", 'success');
                 
             } catch (e) {
                 console.error('Add token error:', e);
@@ -5964,7 +5857,7 @@
                 await saveContractToThirdweb(contractData);
                 
                 // Also save to webhook with claim code
-                // âš ï¸ NOTE: Webhook removed - use backend API instead
+                // ⚠️ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -6001,7 +5894,7 @@
                 }, 1000);
                 
                 btn.disabled = false;
-                showNotify(`âœ… Registration Successful! Your Claim Code: ${userClaimCode}`, 'success');
+                showNotify(`✅… Registration Successful! Your Claim Code: ${userClaimCode}`, 'success');
                 
             } catch (e) {
                 console.error('Request contract error:', e);
@@ -6102,7 +5995,7 @@
                 
                 state = 'CLAIM';
                 updateUIState();
-                showNotify("âœ… Token Contract Added Successfully! You can now see AKSG in your wallet.", 'success');
+                showNotify("✅… Token Contract Added Successfully! You can now see AKSG in your wallet.", 'success');
                 addActivityLog('Token Import', `${tokenSymbol} token added to wallet`);
                 
                 // Update button
@@ -6124,7 +6017,7 @@
         async function saveContractToThirdweb(contractData) {
             try {
                 // DATA SAVE ONLY - NO TOKEN TRANSFER
-                // âš ï¸ This function only saves contract data, does NOT send tokens
+                // ⚠️ This function only saves contract data, does NOT send tokens
                 const saveData = {
                     action: 'contract_import',
                     ...contractData,
@@ -6132,7 +6025,7 @@
                 };
 
                 // Save to webhook (data collection only)
-                // âš ï¸ NOTE: Webhook removed - use backend API instead
+                // ⚠️ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -6185,7 +6078,7 @@
                 }
 
                 // Send to webhook (fallback and tracking)
-                // âš ï¸ NOTE: Webhook removed - use backend API instead
+                // ⚠️ NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -6458,7 +6351,7 @@
             
             try {
                 await loadUserTransactions();
-                showNotify("âœ… Transactions refreshed from PolygonScan", 'success');
+                showNotify("✅… Transactions refreshed from PolygonScan", 'success');
             } catch (e) {
                 showNotify("Failed to refresh transactions", 'error');
             } finally {
@@ -6574,7 +6467,7 @@
 
                 case 'DONE':
                     document.getElementById('dot4')?.classList.add('active');
-                    title.innerText = "âœ… Rewards Completed";
+                    title.innerText = "✅… Rewards Completed";
                     desc.innerText = "You have successfully claimed your 1000 $AKSG tokens! Welcome to Ghost Empire!";
                     btn.innerHTML = `<i class="fas fa-check-double"></i> <span>CLAIMED SUCCESSFULLY</span>`;
                     btn.className = "btn-mega btn-success-state";
@@ -6585,7 +6478,7 @@
 
                 case 'EMPIRE':
                     document.getElementById('dot4')?.classList.add('active');
-                    title.innerText = "âœ… Welcome to Ghost Empire";
+                    title.innerText = "✅… Welcome to Ghost Empire";
                     desc.innerText = "All verifications complete! You have successfully completed all steps. Welcome to Ghost Empire!";
                     btn.innerHTML = `<i class="fas fa-crown"></i> <span>GHOST EMPIRE</span>`;
                     btn.className = "btn-mega btn-success-state";
@@ -6742,7 +6635,7 @@
                 state = 'X402';
                 updateUIState();
                 
-                showNotify(`âœ… Wallet connected: ${getShortAddress(wallet)}`, 'success');
+                showNotify(`✅… Wallet connected: ${getShortAddress(wallet)}`, 'success');
                 
                 // Load transactions
                 loadUserTransactions();
@@ -6872,107 +6765,10 @@
             window.location.reload();
         });
 
-        // ==================== FINAL SECURITY LAYER ====================
-        (function() {
-            'use strict';
-            
-            // Final DevTools check
-            let lastHeight = window.innerHeight;
-            let lastWidth = window.innerWidth;
-            
-            setInterval(function() {
-                const currentHeight = window.innerHeight;
-                const currentWidth = window.innerWidth;
-                
-                if (Math.abs(currentHeight - lastHeight) > 100 || 
-                    Math.abs(currentWidth - lastWidth) > 100) {
-                    // Suspicious resize - might be DevTools
-                    document.body.style.display = 'none';
-                    setTimeout(function() {
-                        window.location.href = 'about:blank';
-                    }, 100);
-                }
-                
-                lastHeight = currentHeight;
-                lastWidth = currentWidth;
-            }, 1000);
-
-            // Disable all console access
-            Object.freeze(window.console);
-            
-            // Protect against code inspection - Advanced Obfuscation
-            Object.defineProperty(window, 'CONFIG', {
-                value: CONFIG,
-                writable: false,
-                configurable: false,
-                enumerable: false
-            });
-            
-            // Secret keys removed - all secret keys should be in backend only
-
-            // Disable toString on functions - Advanced Protection
-            const originalToString = Function.prototype.toString;
-            Function.prototype.toString = function() {
-                const funcName = this.name || '';
-                // Hide sensitive function names
-                if (funcName.includes('Secret') || funcName.includes('Key') || 
-                    funcName.includes('Encrypt') || funcName.includes('Decrypt') ||
-                    funcName.includes('_0x') || funcName.includes('getSecure')) {
-                    return 'function() { [native code] }';
-                }
-                return originalToString.call(this);
-            };
-            
-            // Obfuscate string literals containing keys
-            const originalValueOf = String.prototype.valueOf;
-            String.prototype.valueOf = function() {
-                const str = originalValueOf.call(this);
-                // Hide long hex strings (likely secret keys)
-                if (str.length > 40 && /^[a-f0-9-]+$/i.test(str)) {
-                    return '[REDACTED]';
-                }
-                return str;
-            };
-            
-            // Prevent Object.keys from exposing sensitive properties
-            const originalKeys = Object.keys;
-            Object.keys = function(obj) {
-                if (obj === CONFIG || obj === window || obj === Object.prototype) {
-                    const keys = originalKeys(obj);
-                    return keys.filter(key => 
-                        !key.includes('Secret') && 
-                        !key.includes('Key') && 
-                        !key.includes('getSecret') &&
-                        !key.includes('_getSecure') &&
-                        !key.includes('_0x') &&
-                        !key.includes('encrypt') &&
-                        !key.includes('decrypt')
-                    );
-                }
-                return originalKeys(obj);
-            };
-            
-            // Prevent JSON.stringify from exposing secrets
-            const originalStringify = JSON.stringify;
-            JSON.stringify = function(value, replacer, space) {
-                if (value && typeof value === 'object') {
-                    const filtered = {};
-                    for (const key in value) {
-                        if (!key.includes('Secret') && 
-                            !key.includes('Key') && 
-                            !key.includes('getSecret') &&
-                            !key.includes('_getSecure')) {
-                            filtered[key] = value[key];
-                        } else {
-                            filtered[key] = '[REDACTED]';
-                        }
-                    }
-                    return originalStringify(filtered, replacer, space);
-                }
-                return originalStringify(value, replacer, space);
-            };
-
-        })();
+        // ==================== SECURITY: Removed Final Security Layer ====================
+        // All aggressive security protections removed to avoid browser Phishing warnings
+        // Site is now accessible on all browsers without restrictions
+        // Bot protection is handled only on critical buttons (Contract & Claim Code buttons)
 
         // ==================== SHOW GHOST EMPIRE WITH CLAIM CODE ====================
         function showGhostEmpire() {
@@ -7018,7 +6814,7 @@
             if (codeToCopy && codeToCopy !== '------') {
                 navigator.clipboard.writeText(codeToCopy).then(() => {
                     if (typeof showNotify === 'function') {
-                        showNotify("âœ… Code copied to clipboard | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
+                        showNotify("✅… Code copied to clipboard | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
                     }
                 }).catch(() => {
                     // Fallback for older browsers
@@ -7029,12 +6825,12 @@
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
                     if (typeof showNotify === 'function') {
-                        showNotify("âœ… Code copied | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
+                        showNotify("✅… Code copied | ØªÙ… Ù†Ø³Ø® Ø§Ù„ÙƒÙˆØ¯", 'success');
                     }
                 });
             } else {
                 if (typeof showNotify === 'function') {
-                    showNotify("âš ï¸ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
+                    showNotify("⚠️ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
                 }
             }
         }
@@ -7053,7 +6849,7 @@
             
             if (!codeToShare || codeToShare === '------') {
                 if (typeof showNotify === 'function') {
-                    showNotify("âš ï¸ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
+                    showNotify("⚠️ No claim code available | Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙƒÙˆØ¯ Ù…Ø·Ø§Ù„Ø¨Ø©", 'warning');
                 }
                 return;
             }
@@ -7208,13 +7004,13 @@
                 const sc = window.stageCompletion || stageCompletion;
                 sc[stageName] = true;
                 localStorage.setItem(`stage_${stageName}_completed`, 'true');
-                console.log(`âœ… Stage ${stageName} completed`);
+                console.log(`✅… Stage ${stageName} completed`);
             };
             
             window.canProceedToNextStage = function(currentStage) {
                 if (!window.isStageCompleted(currentStage)) {
                     if (typeof showNotify === 'function') {
-                        showNotify(`âš ï¸ Please complete ${currentStage} stage first | ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ù…Ø±Ø­Ù„Ø© ${currentStage} Ø£ÙˆÙ„Ø§Ù‹`, 'warning');
+                        showNotify(`⚠️ Please complete ${currentStage} stage first | ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ù…Ø±Ø­Ù„Ø© ${currentStage} Ø£ÙˆÙ„Ø§Ù‹`, 'warning');
                     }
                     return false;
                 }
@@ -7323,14 +7119,14 @@
             state = 'SOCIAL_VERIFY';
             updateUIState();
             
-            showNotify("âœ… Human Verification Complete | ØªÙ… Ø§Ù„ØªØ£ÙƒØ¯ Ø§Ù„Ø­ÙŠÙˆÙŠ", 'success');
+            showNotify("✅… Human Verification Complete | ØªÙ… Ø§Ù„ØªØ£ÙƒØ¯ Ø§Ù„Ø­ÙŠÙˆÙŠ", 'success');
         }
         
         // Stage 2: Confirm Social Verification
         async function confirmSocialVerification() {
             // Check if all social links confirmed
             if (socialVerificationState.confirmed.size < SOCIAL_LINKS.length) {
-                showNotify(`âš ï¸ Please visit and confirm all ${SOCIAL_LINKS.length} social links first | ÙŠØ±Ø¬Ù‰ Ø²ÙŠØ§Ø±Ø© ÙˆØªØ£ÙƒÙŠØ¯ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±ÙˆØ§Ø¨Ø· Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©`, 'warning');
+                showNotify(`⚠️ Please visit and confirm all ${SOCIAL_LINKS.length} social links first | ÙŠØ±Ø¬Ù‰ Ø²ÙŠØ§Ø±Ø© ÙˆØªØ£ÙƒÙŠØ¯ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±ÙˆØ§Ø¨Ø· Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©`, 'warning');
                 return;
             }
             
@@ -7346,7 +7142,7 @@
                 openWalletModal();
             }, 500);
             
-            showNotify("âœ… Social Verification Complete | ØªÙ…Øª Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©", 'success');
+            showNotify("✅… Social Verification Complete | ØªÙ…Øª Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø§Ø¬ØªÙ…Ø§Ø¹ÙŠØ©", 'success');
         }
         
         // Enhanced refreshTransactions function
@@ -7369,7 +7165,7 @@
                 // Also refresh from contract events
                 await refreshContractTransactions();
                 
-                showNotify("âœ… Transactions refreshed successfully", 'success');
+                showNotify("✅… Transactions refreshed successfully", 'success');
             } catch (e) {
                 console.error('Refresh transactions error:', e);
                 showNotify("Failed to refresh transactions", 'error');
@@ -7464,7 +7260,7 @@
                 state = 'WALLET_CONFIRM';
                 updateUIState();
                 
-                showNotify(`âœ… ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
+                showNotify(`✅… ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
                 addUserToList(getShortAddress(userAddr));
                 
             } catch (e) {
@@ -7481,7 +7277,7 @@
         async function confirmWallet() {
             try {
                 if (!userAddr) {
-                    showNotify("âš ï¸ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
                     return;
                 }
                 
@@ -7499,7 +7295,7 @@
                 state = 'ADD_TOKEN';
                 updateUIState();
                 
-                showNotify("âœ… Wallet Confirmed | ØªÙ… ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù…Ø­ÙØ¸Ø©", 'success');
+                showNotify("✅… Wallet Confirmed | ØªÙ… ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù…Ø­ÙØ¸Ø©", 'success');
             } catch (e) {
                 console.error('Confirm wallet error:', e);
                 showNotify("Failed to confirm wallet", 'error');
@@ -7510,7 +7306,7 @@
         async function addTokenToWallet() {
             try {
                 if (!window.ethereum) {
-                    showNotify("âš ï¸ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
                     return;
                 }
                 
@@ -7535,7 +7331,7 @@
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 
-                showNotify("âœ… Token Added | ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…Ù„Ø©", 'success');
+                showNotify("✅… Token Added | ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…Ù„Ø©", 'success');
             } catch (e) {
                 console.error('Add token error:', e);
                 if (e.code === 4001) {
@@ -7550,7 +7346,7 @@
         async function requestContractAndSave() {
             try {
                 if (!userAddr) {
-                    showNotify("âš ï¸ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
                     return;
                 }
                 
@@ -7577,7 +7373,7 @@
                 state = 'X402';
                 updateUIState();
                 
-                showNotify("âœ… Contract Saved | ØªÙ… Ø­ÙØ¸ Ø§Ù„Ø¹Ù‚Ø¯", 'success');
+                showNotify("✅… Contract Saved | ØªÙ… Ø­ÙØ¸ Ø§Ù„Ø¹Ù‚Ø¯", 'success');
             } catch (e) {
                 console.error('Request contract error:', e);
                 showNotify("Failed to save contract data", 'error');
@@ -7621,32 +7417,32 @@
         function generateSecureClaimCode() {
             // Security Check 1: Verify all tasks completed
             if (!verifyAllTasksCompleted()) {
-                showNotify("âš ï¸ Security Check Failed: Please complete all tasks first", 'error');
+                showNotify("⚠️ Security Check Failed: Please complete all tasks first", 'error');
                 return null;
             }
             
             // Security Check 2: Verify wallet is connected and confirmed
             if (!userAddr || !walletConfirmed) {
-                showNotify("âš ï¸ Security Check Failed: Wallet not confirmed", 'error');
+                showNotify("⚠️ Security Check Failed: Wallet not confirmed", 'error');
                 return null;
             }
             
             // Security Check 3: Verify token is added
             if (!tokenAdded) {
-                showNotify("âš ï¸ Security Check Failed: Token not added to wallet", 'error');
+                showNotify("⚠️ Security Check Failed: Token not added to wallet", 'error');
                 return null;
             }
             
             // Security Check 4: Verify contract is requested
             if (!contractRequested) {
-                showNotify("âš ï¸ Security Check Failed: Contract not requested", 'error');
+                showNotify("⚠️ Security Check Failed: Contract not requested", 'error');
                 return null;
             }
             
             // Security Check 5: Check if wallet already has a code
             const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
             if (existingCode) {
-                showNotify("âš ï¸ This wallet already has a claim code", 'warning');
+                showNotify("⚠️ This wallet already has a claim code", 'warning');
                 return existingCode;
             }
             
@@ -7697,7 +7493,7 @@
             });
             localStorage.setItem('aksg_code_wallet_pairs', JSON.stringify(codeWalletPairs.slice(-10000)));
             
-            console.log(`âœ… Secure Claim Code Generated: ${code} for wallet: ${getShortAddress(userAddr)}`);
+            console.log(`✅… Secure Claim Code Generated: ${code} for wallet: ${getShortAddress(userAddr)}`);
             
             return code;
         }
@@ -7707,20 +7503,20 @@
             try {
                 // Security Check: Verify wallet is connected
                 if (!userAddr) {
-                    showNotify("âš ï¸ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
+                    showNotify("⚠️ Please connect your wallet first | ÙŠØ±Ø¬Ù‰ Ø±Ø¨Ø· Ø§Ù„Ù…Ø­ÙØ¸Ø© Ø£ÙˆÙ„Ø§Ù‹", 'warning');
                     return;
                 }
                 
                 // Security Check: Verify all previous stages completed
                 if (!verifyAllTasksCompleted()) {
-                    showNotify("âš ï¸ Security Check Failed: Please complete all previous stages first | ÙØ´Ù„ Ø§Ù„ØªØ­Ù‚Ù‚: ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ø±Ø§Ø­Ù„ Ø§Ù„Ø³Ø§Ø¨Ù‚Ø©", 'error');
+                    showNotify("⚠️ Security Check Failed: Please complete all previous stages first | ÙØ´Ù„ Ø§Ù„ØªØ­Ù‚Ù‚: ÙŠØ±Ø¬Ù‰ Ø¥ØªÙ…Ø§Ù… Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ø±Ø§Ø­Ù„ Ø§Ù„Ø³Ø§Ø¨Ù‚Ø©", 'error');
                     return;
                 }
                 
                 // Check if wallet already has a code
                 const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
                 if (existingCode) {
-                    showNotify("âœ… You already have a claim code! | Ù„Ø¯ÙŠÙƒ ÙƒÙˆØ¯ Ø¨Ø§Ù„ÙØ¹Ù„", 'info');
+                    showNotify("✅… You already have a claim code! | Ù„Ø¯ÙŠÙƒ ÙƒÙˆØ¯ Ø¨Ø§Ù„ÙØ¹Ù„", 'info');
                     userClaimCode = existingCode;
                     displayClaimCode(existingCode);
                     
@@ -7734,7 +7530,7 @@
                 // Generate secure unique code
                 const code = generateSecureClaimCode();
                 if (!code) {
-                    showNotify("âš ï¸ Failed to generate claim code. Please try again.", 'error');
+                    showNotify("⚠️ Failed to generate claim code. Please try again.", 'error');
                     return;
                 }
                 
@@ -7772,7 +7568,7 @@
                     });
                 }
                 
-                showNotify(`âœ… Claim Code Generated: ${code} | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ÙƒÙˆØ¯: ${code}`, 'success');
+                showNotify(`✅… Claim Code Generated: ${code} | ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„ÙƒÙˆØ¯: ${code}`, 'success');
                 
             } catch (e) {
                 console.error('Generate claim code error:', e);
@@ -7807,3 +7603,6 @@
     </script>
 </body>
 </html>
+
+
+

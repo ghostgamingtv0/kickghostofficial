@@ -21,28 +21,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <!-- Thirdweb SDK v5 - Compatible with vanilla JS -->
-    <!-- Load thirdweb library (new SDK v5) -->
-    <script>
-        // Helper to check if thirdweb is loaded
-        window.thirdwebLoaded = false;
-        function checkThirdwebLoaded() {
-            if (typeof thirdweb !== 'undefined' || typeof window.thirdweb !== 'undefined') {
-                window.thirdwebLoaded = true;
-                console.log('✅ Thirdweb library detected');
-            } else if (typeof createThirdwebClient !== 'undefined' || typeof window.createThirdwebClient !== 'undefined') {
-                window.thirdwebLoaded = true;
-                console.log('✅ Thirdweb createThirdwebClient detected');
-            }
-        }
-    </script>
-    <script src="https://unpkg.com/thirdweb@latest/dist/thirdweb.umd.js" 
-            onload="checkThirdwebLoaded(); console.log('✅ Thirdweb UMD loaded');"
-            onerror="console.warn('⚠️ Thirdweb UMD failed, trying alternative...'); this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/thirdweb@latest/dist/thirdweb.umd.js';"></script>
-    <!-- Fallback: Old SDK format -->
-    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js" 
-            onload="checkThirdwebLoaded();"
-            onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js';"></script>
+    <!-- Thirdweb SDK v5 - Stable CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/thirdweb/5.0.0/thirdweb.js" 
+            onerror="console.warn('⚠️ Thirdweb CDN failed, using fallback...'); this.onerror=null; this.src='https://unpkg.com/thirdweb@5.0.0/dist/thirdweb.umd.js';"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Polyfills for browser compatibility -->
@@ -2314,18 +2295,35 @@
         // For this project, secret keys should be stored and used only in backend APIs
         // Frontend should call backend APIs which handle authentication securely
 
-        // ==================== BOT PROTECTION SYSTEM (Anti-Bot Protection for Claim & Contract Buttons) ====================
+        // ==================== BOT PROTECTION SYSTEM (Light Security - Starts from Stage 2) ====================
+        // Security is relaxed for Stage 1, activated from Stage 2 (Wallet + Token)
         const BotProtection = {
-            // ???? ???? ??????
+            // Track mouse movements
             mouseMovements: [],
             mouseClicks: [],
             startTime: null,
+            securityActive: false, // Security starts from Stage 2
             
-            // ????? ???? ???????
+            // Initialize (light mode)
             init: function() {
                 this.startTime = Date.now();
-                this.trackMouseMovement();
-                this.trackClicks();
+                // Only track if Stage 2 is reached
+                const walletConnected = localStorage.getItem('connectedWallet') !== null;
+                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                if (walletConnected || tokenAdded) {
+                    this.securityActive = true;
+                    this.trackMouseMovement();
+                    this.trackClicks();
+                }
+            },
+            
+            // Activate security from Stage 2
+            activateSecurity: function() {
+                if (!this.securityActive) {
+                    this.securityActive = true;
+                    this.trackMouseMovement();
+                    this.trackClicks();
+                }
             },
             
             // ???? ???? ??????
@@ -2424,36 +2422,37 @@
                 return parseInt(userAnswer) === correctAnswer;
             },
             
-            // ??? ???? ?? ???????
+            // Verify human (light mode - only from Stage 2)
             verifyHuman: function() {
-                // ??? 1: ????? ???? ???? ????????
-                if (!this.isHuman()) {
+                // Security only active from Stage 2
+                if (!this.securityActive) {
                     return {
-                        success: false,
-                        message: 'Please spend more time on the page and move your mouse | ???? ???? ??? ???? ??? ?????? ?????? ??????'
+                        success: true,
+                        message: 'Security not active yet | الأمان غير مفعّل بعد'
                     };
                 }
                 
-                // ??? 2: ??? User Agent (??????? ???? ?? ????? ??? user agent ?????)
+                // Light verification - less strict
+                const timeSpent = Date.now() - this.startTime;
+                if (timeSpent < 1000) { // Reduced from 3000ms to 1000ms
+                    return {
+                        success: false,
+                        message: 'Please wait a moment | يرجى الانتظار قليلاً'
+                    };
+                }
+                
+                // Basic User Agent check
                 const userAgent = navigator.userAgent || '';
-                if (!userAgent || userAgent.length < 10) {
+                if (!userAgent || userAgent.length < 5) { // Reduced from 10 to 5
                     return {
                         success: false,
-                        message: 'Invalid browser detected | ?? ?????? ????? ??? ????'
-                    };
-                }
-                
-                // ??? 3: ??? ??? ??? ??????? ???? JavaScript ???? ????
-                if (typeof window === 'undefined' || typeof document === 'undefined') {
-                    return {
-                        success: false,
-                        message: 'JavaScript not fully supported | JavaScript ??? ????? ???????'
+                        message: 'Invalid browser detected | تم اكتشاف متصفح غير صالح'
                     };
                 }
                 
                 return {
                     success: true,
-                    message: 'Human verified | ?? ?????? ?? ??? ???'
+                    message: 'Human verified | تم التحقق من الإنسان'
                 };
             }
         };
@@ -2550,9 +2549,10 @@
             // ??� NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
-        // Add new Thirdweb V5 configuration fields
+        // Add new Thirdweb V5 configuration fields (Official Keys)
         CONFIG.CLIENT_ID = "a8d2fbfbbe9dcaa11cc48f3d2634e3fd";
         CONFIG.PROJECT_ID = "prj_cmk2xz9h214g2fw0kc2gan3o0";
+        CONFIG.SECRET_KEY = "K53oI-uZKCEi1wTHW2hbAQLuoD8jFTaw5vF4ommKD9yhaxN2vy1V-IaDzWmRb0GK1jfqy0gQddzgFfu3Z60aag"; // Server-side only
         CONFIG.FACILITATOR_WALLET = "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9";
         CONFIG.SOCIAL = {
             KICK: "https://kick.com/ghost_gamingtv",
@@ -2637,16 +2637,20 @@
             }
         }
         
-        // Start initialization attempts
-        tryInitializeThirdweb();
-        
-        // Also try after DOM is ready
+        // Initialize Thirdweb ONLY after DOM is fully loaded (prevents appendChild errors)
+        // This ensures all DOM elements are ready before any script manipulation
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
-                if (!thirdwebClient && initAttempts < maxAttempts) {
+                // Wait a bit for thirdweb library to load
+                setTimeout(function() {
                     tryInitializeThirdweb();
-                }
+                }, 500);
             });
+        } else {
+            // DOM already loaded, wait for thirdweb library
+            setTimeout(function() {
+                tryInitializeThirdweb();
+            }, 500);
         }
         
         // Secure credentials helper (obfuscated for frontend - should ideally be in backend)
@@ -3629,46 +3633,47 @@
         }
 
         async function claimCode() {
-            // ==================== BOT PROTECTION: Claim Code Button ====================
-            // ??? ?? ??????? ??? ????????
-            const humanCheck = BotProtection.verifyHuman();
-            if (!humanCheck.success) {
-                if (typeof showNotify === 'function') {
-                    showNotify(humanCheck.message, 'warning');
-                } else {
-                    alert(humanCheck.message);
-                }
-                return;
-            }
-            
-            // CAPTCHA ???? (????? ??????)
-            const captcha = BotProtection.generateCaptcha();
-            const userAnswer = prompt(
-                `?? Anti-Bot Verification | ?????? ?? ??????? ?? ???????\n\n` +
-                `Please solve this simple math problem | ???? ?? ??? ??????? ???????:\n\n` +
-                `${captcha.question}\n\n` +
-                `Enter your answer | ???? ??????:`
-            );
-            
-            if (userAnswer === null) {
-                // ???????? ????
-                return;
-            }
-            
-            if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
-                if (typeof showNotify === 'function') {
-                    showNotify('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????', 'error');
-                } else {
-                    alert('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????');
-                }
-                return;
-            }
-            
+            // ==================== BOT PROTECTION: Claim Code Button (Light Security from Stage 2) ====================
             // Check if ALL stages are completed (Stage 1: Social, Stage 2: Wallet, Stage 3: Kick Follow, Stage 4: Token Added)
             const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
             const walletConnected = localStorage.getItem('connectedWallet') !== null;
             const tokenAdded = localStorage.getItem('token_added') === 'true';
             const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            
+            // Light security - only basic check if Stage 2 is reached
+            if (walletConnected || tokenAdded) {
+                // Stage 2+ - Light verification (no blocking, just warning)
+                const humanCheck = BotProtection.verifyHuman();
+                if (!humanCheck.success) {
+                    if (typeof showNotify === 'function') {
+                        showNotify(humanCheck.message, 'warning');
+                    }
+                    // Don't block, just warn - allow user to continue
+                }
+                
+                // Simple CAPTCHA (only if security is active)
+                const captcha = BotProtection.generateCaptcha();
+                const userAnswer = prompt(
+                    `🔒 Anti-Bot Verification | التحقق من البوتات\n\n` +
+                    `Please solve this simple math problem | يرجى حل هذه المسألة البسيطة:\n\n` +
+                    `${captcha.question}\n\n` +
+                    `Enter your answer | أدخل إجابتك:`
+                );
+                
+                if (userAnswer === null) {
+                    // User cancelled
+                    return;
+                }
+                
+                if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
+                    if (typeof showNotify === 'function') {
+                        showNotify('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى', 'error');
+                    } else {
+                        alert('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى');
+                    }
+                    return;
+                }
+            }
             
             // Ensure all 4 stages are completed before generating 6-digit code
             if (!socialComplete || !walletConnected || !tokenAdded || !kickFollowVerified) {
@@ -5318,16 +5323,33 @@
         }
 
 
-        // ==================== SECURITY GUARDS (ENHANCED) ====================
+        // ==================== SECURITY GUARDS (Light Mode - Starts from Stage 2) ====================
         function checkSecurityGuards() {
             const badge = document.getElementById('securityBadge');
-            badge.classList.add('active');
-            badge.innerHTML = '<i class="fas fa-shield-alt"></i> Security Guards: ACTIVE';
+            if (!badge) return;
             
-            // Initialize first wallet tracking
-            const storedFirst = localStorage.getItem('aksg_first_wallet');
-            if (storedFirst) {
-                firstWalletAddress = storedFirst;
+            // Check if Stage 2 is reached (Wallet + Token)
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            
+            if (walletConnected || tokenAdded) {
+                // Activate security from Stage 2
+                badge.classList.add('active');
+                badge.innerHTML = '<i class="fas fa-shield-alt"></i> Security Guards: ACTIVE (Stage 2+)';
+                if (typeof BotProtection !== 'undefined' && BotProtection.activateSecurity) {
+                    BotProtection.activateSecurity();
+                }
+            } else {
+                // Stage 1 - Security inactive
+                badge.innerHTML = '<i class="fas fa-shield-alt"></i> Security: Inactive (Stage 1)';
+            }
+            
+            // Initialize first wallet tracking (only from Stage 2)
+            if (walletConnected) {
+                const storedFirst = sessionStorage.getItem('aksg_first_wallet_session');
+                if (storedFirst) {
+                    firstWalletAddress = storedFirst;
+                }
             }
         }
 

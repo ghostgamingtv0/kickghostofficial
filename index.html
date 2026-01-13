@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        NOTE: Browser warnings about eval() and unload events are expected:
+        - eval() warnings come from external libraries (Thirdweb SDK, Chart.js) for optimization
+        - unload event warnings come from external libraries (library.cb87358....js)
+        These are non-critical warnings and do not affect functionality.
+        CSP is not enforced to allow external libraries to work properly.
+    -->
     <title>KICKGHOST ($AKSG) - Ultimate Web3 Gaming Platform 2026</title>
     <!-- IMPORTANT: This file must be saved with UTF-8 encoding to display Arabic text correctly -->
     
@@ -4240,22 +4247,22 @@
         // ==================== THIRDWEB SDK INITIALIZATION (FIXED) ====================
         async function initThirdwebSDK() {
             try {
-                // Check if Thirdweb SDK is loaded
-                if (typeof ThirdwebSDK === 'undefined' && typeof window.ThirdwebSDK === 'undefined') {
+                // Check if Thirdweb SDK v5 is loaded (createThirdwebClient)
+                if (typeof createThirdwebClient === 'undefined' && typeof window.createThirdwebClient === 'undefined') {
                     // SDK not loaded - continue without it (data save only, no SDK needed)
                     console.log('Thirdweb SDK not available - using data save mode only');
                     return;
                 }
                 
-                // Try to initialize SDK (optional - only for wallet connections)
-                const SDK = window.ThirdwebSDK || ThirdwebSDK;
-                if (SDK && SDK.ThirdwebSDK) {
+                // Try to initialize SDK v5 using createThirdwebClient
+                const createClient = window.createThirdwebClient || createThirdwebClient;
+                if (createClient && typeof createClient === 'function') {
                     try {
                         // Initialize with Client ID only (no secret key in frontend)
-                        thirdwebSDK = new SDK.ThirdwebSDK({
-                            clientId: CONFIG.THIRDWEB_CLIENT_ID
+                        thirdwebSDK = createClient({
+                            clientId: CONFIG.THIRDWEB_CLIENT_ID || CONFIG.CID
                         });
-                        console.log('Thirdweb SDK initialized (Client ID only)');
+                        console.log('✅ Thirdweb SDK v5 initialized successfully');
                     } catch (e) {
                         // SDK initialization failed - continue without it
                         console.log('Thirdweb SDK initialization skipped (data save mode only):', e.message || e);
@@ -4549,14 +4556,28 @@
                 
                 // Check if address has claimed (on-chain check)
                 try {
-                    const hasClaimed = await contract.claimed(address);
-                    return hasClaimed;
+                    // Try to call claimed function if it exists in the contract
+                    if (contract.claimed && typeof contract.claimed === 'function') {
+                        const hasClaimed = await contract.claimed(address);
+                        return hasClaimed;
+                    } else {
+                        // Fallback: check balance or localStorage if claimed function doesn't exist
+                        console.log('Claimed function not available, using fallback');
+                        const balance = await contract.balanceOf(address);
+                        const hasBalance = balance.gt(0);
+                        return hasBalance || localStorage.getItem(`claimed_${address.toLowerCase()}`) !== null;
+                    }
                 } catch (e) {
                     console.log('Claimed function not available, using fallback');
                     // Fallback: check balance or localStorage
-                    const balance = await contract.balanceOf(address);
-                    const hasBalance = balance.gt(0);
-                    return hasBalance || localStorage.getItem(`claimed_${address.toLowerCase()}`) !== null;
+                    try {
+                        const balance = await contract.balanceOf(address);
+                        const hasBalance = balance.gt(0);
+                        return hasBalance || localStorage.getItem(`claimed_${address.toLowerCase()}`) !== null;
+                    } catch (balanceError) {
+                        // Last resort: check localStorage only
+                        return localStorage.getItem(`claimed_${address.toLowerCase()}`) !== null;
+                    }
                 }
             } catch (e) {
                 console.error('Check claimed error:', e);

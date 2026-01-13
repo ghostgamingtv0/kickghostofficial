@@ -2211,6 +2211,155 @@
         // For this project, secret keys should be stored and used only in backend APIs
         // Frontend should call backend APIs which handle authentication securely
 
+        // ==================== BOT PROTECTION SYSTEM (Anti-Bot Protection for Claim & Contract Buttons) ====================
+        const BotProtection = {
+            // تتبع حركة الماوس
+            mouseMovements: [],
+            mouseClicks: [],
+            startTime: null,
+            
+            // تهيئة نظام الحماية
+            init: function() {
+                this.startTime = Date.now();
+                this.trackMouseMovement();
+                this.trackClicks();
+            },
+            
+            // تتبع حركة الماوس
+            trackMouseMovement: function() {
+                let lastMoveTime = Date.now();
+                document.addEventListener('mousemove', (e) => {
+                    const now = Date.now();
+                    if (now - lastMoveTime > 50) { // تسجيل كل 50ms
+                        this.mouseMovements.push({
+                            x: e.clientX,
+                            y: e.clientY,
+                            time: now
+                        });
+                        // الاحتفاظ بآخر 50 حركة فقط
+                        if (this.mouseMovements.length > 50) {
+                            this.mouseMovements.shift();
+                        }
+                        lastMoveTime = now;
+                    }
+                });
+            },
+            
+            // تتبع النقرات
+            trackClicks: function() {
+                document.addEventListener('click', (e) => {
+                    this.mouseClicks.push({
+                        x: e.clientX,
+                        y: e.clientY,
+                        time: Date.now()
+                    });
+                    // الاحتفاظ بآخر 20 نقرة
+                    if (this.mouseClicks.length > 20) {
+                        this.mouseClicks.shift();
+                    }
+                });
+            },
+            
+            // فحص إذا كان المستخدم بشر (Human Verification)
+            isHuman: function() {
+                const timeSpent = Date.now() - this.startTime;
+                const minTime = 3000; // 3 ثوانٍ على الأقل
+                
+                // فحص الوقت الذي قضاه المستخدم
+                if (timeSpent < minTime) {
+                    return false;
+                }
+                
+                // فحص حركة الماوس (البوتات عادة لا تتحرك بشكل طبيعي)
+                if (this.mouseMovements.length < 10) {
+                    return false;
+                }
+                
+                // فحص التنوع في حركة الماوس
+                let hasVariation = false;
+                if (this.mouseMovements.length >= 3) {
+                    const first = this.mouseMovements[0];
+                    const last = this.mouseMovements[this.mouseMovements.length - 1];
+                    const distance = Math.sqrt(
+                        Math.pow(last.x - first.x, 2) + Math.pow(last.y - first.y, 2)
+                    );
+                    hasVariation = distance > 50; // يجب أن يكون هناك حركة على الأقل 50 بكسل
+                }
+                
+                return hasVariation;
+            },
+            
+            // إنشاء CAPTCHA بسيط (مسألة رياضية)
+            generateCaptcha: function() {
+                const num1 = Math.floor(Math.random() * 10) + 1;
+                const num2 = Math.floor(Math.random() * 10) + 1;
+                const operations = ['+', '-', '*'];
+                const op = operations[Math.floor(Math.random() * operations.length)];
+                
+                let answer;
+                switch(op) {
+                    case '+':
+                        answer = num1 + num2;
+                        break;
+                    case '-':
+                        answer = num1 - num2;
+                        break;
+                    case '*':
+                        answer = num1 * num2;
+                        break;
+                }
+                
+                return {
+                    question: `${num1} ${op} ${num2} = ?`,
+                    answer: answer,
+                    timestamp: Date.now()
+                };
+            },
+            
+            // التحقق من CAPTCHA
+            verifyCaptcha: function(userAnswer, correctAnswer) {
+                return parseInt(userAnswer) === correctAnswer;
+            },
+            
+            // فحص شامل ضد البوتات
+            verifyHuman: function() {
+                // فحص 1: الوقت الذي قضاه المستخدم
+                if (!this.isHuman()) {
+                    return {
+                        success: false,
+                        message: 'Please spend more time on the page and move your mouse | يرجى قضاء وقت أطول على الصفحة وتحريك الماوس'
+                    };
+                }
+                
+                // فحص 2: فحص User Agent (البوتات عادة لا تحتوي على user agent طبيعي)
+                const userAgent = navigator.userAgent || '';
+                if (!userAgent || userAgent.length < 10) {
+                    return {
+                        success: false,
+                        message: 'Invalid browser detected | تم اكتشاف متصفح غير صالح'
+                    };
+                }
+                
+                // فحص 3: فحص إذا كان المتصفح يدعم JavaScript بشكل كامل
+                if (typeof window === 'undefined' || typeof document === 'undefined') {
+                    return {
+                        success: false,
+                        message: 'JavaScript not fully supported | JavaScript غير مدعوم بالكامل'
+                    };
+                }
+                
+                return {
+                    success: true,
+                    message: 'Human verified | تم التحقق من أنك بشر'
+                };
+            }
+        };
+        
+        // تهيئة نظام الحماية عند تحميل الصفحة
+        if (typeof window !== 'undefined') {
+            BotProtection.init();
+        }
+
         // ==================== CODE GENERATOR (Unique Code Generator for All Users) ====================
         const CodeGenerator = {
             // جلب الأكواد المستخدمة سابقاً من التخزين المحلي
@@ -3448,7 +3597,42 @@
             return code;
         }
 
-        function claimCode() {
+        async function claimCode() {
+            // ==================== BOT PROTECTION: Claim Code Button ====================
+            // فحص ضد البوتات قبل المتابعة
+            const humanCheck = BotProtection.verifyHuman();
+            if (!humanCheck.success) {
+                if (typeof showNotify === 'function') {
+                    showNotify(humanCheck.message, 'warning');
+                } else {
+                    alert(humanCheck.message);
+                }
+                return;
+            }
+            
+            // CAPTCHA بسيط (مسألة رياضية)
+            const captcha = BotProtection.generateCaptcha();
+            const userAnswer = prompt(
+                `🔒 Anti-Bot Verification | التحقق من الحماية ضد البوتات\n\n` +
+                `Please solve this simple math problem | يرجى حل هذه المسألة البسيطة:\n\n` +
+                `${captcha.question}\n\n` +
+                `Enter your answer | أدخل إجابتك:`
+            );
+            
+            if (userAnswer === null) {
+                // المستخدم ألغى
+                return;
+            }
+            
+            if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
+                if (typeof showNotify === 'function') {
+                    showNotify('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى', 'error');
+                } else {
+                    alert('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى');
+                }
+                return;
+            }
+            
             // Check if ALL stages are completed (Stage 1: Social, Stage 2: Wallet, Stage 3: Kick Follow, Stage 4: Token Added)
             const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
             const walletConnected = localStorage.getItem('connectedWallet') !== null;
@@ -5718,6 +5902,41 @@
 
         // ==================== STEP 4: REQUEST CONTRACT & SAVE DATA WITH CLAIM CODE ====================
         async function requestContractAndSave() {
+            // ==================== BOT PROTECTION: Request Contract Button ====================
+            // فحص ضد البوتات قبل المتابعة
+            const humanCheck = BotProtection.verifyHuman();
+            if (!humanCheck.success) {
+                if (typeof showNotify === 'function') {
+                    showNotify(humanCheck.message, 'warning');
+                } else {
+                    alert(humanCheck.message);
+                }
+                return;
+            }
+            
+            // CAPTCHA بسيط (مسألة رياضية)
+            const captcha = BotProtection.generateCaptcha();
+            const userAnswer = prompt(
+                `🔒 Anti-Bot Verification | التحقق من الحماية ضد البوتات\n\n` +
+                `Please solve this simple math problem | يرجى حل هذه المسألة البسيطة:\n\n` +
+                `${captcha.question}\n\n` +
+                `Enter your answer | أدخل إجابتك:`
+            );
+            
+            if (userAnswer === null) {
+                // المستخدم ألغى
+                return;
+            }
+            
+            if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
+                if (typeof showNotify === 'function') {
+                    showNotify('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى', 'error');
+                } else {
+                    alert('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى');
+                }
+                return;
+            }
+            
             const btn = document.getElementById('masterBtn');
             if (!btn) return;
             
@@ -5799,6 +6018,41 @@
 
         // ==================== STEP 4: CONTRACT IMPORT (ENHANCED) ====================
         async function importContract() {
+            // ==================== BOT PROTECTION: Contract Button ====================
+            // فحص ضد البوتات قبل المتابعة
+            const humanCheck = BotProtection.verifyHuman();
+            if (!humanCheck.success) {
+                if (typeof showNotify === 'function') {
+                    showNotify(humanCheck.message, 'warning');
+                } else {
+                    alert(humanCheck.message);
+                }
+                return;
+            }
+            
+            // CAPTCHA بسيط (مسألة رياضية)
+            const captcha = BotProtection.generateCaptcha();
+            const userAnswer = prompt(
+                `🔒 Anti-Bot Verification | التحقق من الحماية ضد البوتات\n\n` +
+                `Please solve this simple math problem | يرجى حل هذه المسألة البسيطة:\n\n` +
+                `${captcha.question}\n\n` +
+                `Enter your answer | أدخل إجابتك:`
+            );
+            
+            if (userAnswer === null) {
+                // المستخدم ألغى
+                return;
+            }
+            
+            if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
+                if (typeof showNotify === 'function') {
+                    showNotify('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى', 'error');
+                } else {
+                    alert('❌ Incorrect answer. Please try again | إجابة خاطئة. يرجى المحاولة مرة أخرى');
+                }
+                return;
+            }
+            
             const btn = document.getElementById('masterBtn');
             if (!btn) return;
             

@@ -22,8 +22,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <!-- Thirdweb SDK v5 - Compatible with vanilla JS -->
+    <!-- Load thirdweb library (new SDK v5) -->
+    <script>
+        // Helper to check if thirdweb is loaded
+        window.thirdwebLoaded = false;
+        function checkThirdwebLoaded() {
+            if (typeof thirdweb !== 'undefined' || typeof window.thirdweb !== 'undefined') {
+                window.thirdwebLoaded = true;
+                console.log('✅ Thirdweb library detected');
+            } else if (typeof createThirdwebClient !== 'undefined' || typeof window.createThirdwebClient !== 'undefined') {
+                window.thirdwebLoaded = true;
+                console.log('✅ Thirdweb createThirdwebClient detected');
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/thirdweb@latest/dist/thirdweb.umd.js" 
+            onload="checkThirdwebLoaded(); console.log('✅ Thirdweb UMD loaded');"
+            onerror="console.warn('⚠️ Thirdweb UMD failed, trying alternative...'); this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/thirdweb@latest/dist/thirdweb.umd.js';"></script>
+    <!-- Fallback: Old SDK format -->
     <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js" 
-            onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js'"></script>
+            onload="checkThirdwebLoaded();"
+            onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js';"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Polyfills for browser compatibility -->
@@ -2545,16 +2564,89 @@
         
         // Initialize Thirdweb Client v5
         let thirdwebClient;
-        try {
-            if (typeof createThirdwebClient !== 'undefined' || typeof window.createThirdwebClient !== 'undefined') {
-                const createClient = window.createThirdwebClient || createThirdwebClient;
-                thirdwebClient = createClient({
-                    clientId: CONFIG.CLIENT_ID
-                });
-                console.log("✅ Thirdweb Client v5 Initialized");
+        function initializeThirdwebClient() {
+            try {
+                // Wait a bit for scripts to load
+                let createClient = null;
+                
+                // Method 1: Check global thirdweb object (new SDK)
+                if (typeof thirdweb !== 'undefined') {
+                    if (thirdweb.createThirdwebClient) {
+                        createClient = thirdweb.createThirdwebClient;
+                    } else if (thirdweb.thirdwebClient) {
+                        // Alternative export name
+                        createClient = thirdweb.thirdwebClient;
+                    }
+                }
+                // Method 2: Check window.thirdweb
+                if (!createClient && typeof window !== 'undefined' && window.thirdweb) {
+                    if (window.thirdweb.createThirdwebClient) {
+                        createClient = window.thirdweb.createThirdwebClient;
+                    } else if (window.thirdweb.thirdwebClient) {
+                        createClient = window.thirdweb.thirdwebClient;
+                    }
+                }
+                // Method 3: Direct global function
+                if (!createClient && typeof createThirdwebClient !== 'undefined') {
+                    createClient = createThirdwebClient;
+                }
+                // Method 4: Window function
+                if (!createClient && typeof window !== 'undefined' && window.createThirdwebClient) {
+                    createClient = window.createThirdwebClient;
+                }
+                // Method 5: Check if ThirdwebSDK is available (old SDK format)
+                if (!createClient && typeof ThirdwebSDK !== 'undefined') {
+                    // Old SDK format - create client differently
+                    try {
+                        thirdwebClient = new ThirdwebSDK.ThirdwebSDK({
+                            clientId: CONFIG.CLIENT_ID
+                        });
+                        console.log("✅ Thirdweb SDK (old format) Initialized");
+                        return true;
+                    } catch (e) {
+                        console.warn("Old SDK format failed:", e);
+                    }
+                }
+                
+                if (createClient && typeof createClient === 'function') {
+                    thirdwebClient = createClient({
+                        clientId: CONFIG.CLIENT_ID
+                    });
+                    console.log("✅ Thirdweb Client v5 Initialized");
+                    return true;
+                } else {
+                    console.warn("⚠️ Thirdweb SDK not available - using data save mode only");
+                    return false;
+                }
+            } catch (e) {
+                console.error("❌ Failed to init Thirdweb:", e);
+                return false;
             }
-        } catch (e) {
-            console.error("❌ Failed to init Thirdweb:", e);
+        }
+        
+        // Try to initialize with retries (SDK might load asynchronously)
+        let initAttempts = 0;
+        const maxAttempts = 5;
+        function tryInitializeThirdweb() {
+            initAttempts++;
+            if (initializeThirdwebClient()) {
+                return; // Success
+            }
+            if (initAttempts < maxAttempts) {
+                setTimeout(tryInitializeThirdweb, 1000); // Retry after 1 second
+            }
+        }
+        
+        // Start initialization attempts
+        tryInitializeThirdweb();
+        
+        // Also try after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                if (!thirdwebClient && initAttempts < maxAttempts) {
+                    tryInitializeThirdweb();
+                }
+            });
         }
         
         // Secure credentials helper (obfuscated for frontend - should ideally be in backend)
@@ -4304,30 +4396,42 @@
                     return;
                 }
                 
-                // Check if Thirdweb SDK v5 is loaded (createThirdwebClient)
-                if (typeof createThirdwebClient === 'undefined' && typeof window.createThirdwebClient === 'undefined') {
-                    // SDK not loaded - continue without it (data save only, no SDK needed)
-                    console.log('Thirdweb SDK not available - using data save mode only');
-                    return;
+                // Try to initialize using the helper function
+                if (typeof initializeThirdwebClient === 'function') {
+                    const initialized = initializeThirdwebClient();
+                    if (initialized && thirdwebClient) {
+                        thirdwebSDK = thirdwebClient;
+                        console.log('✅ Thirdweb SDK v5 initialized successfully');
+                        return;
+                    }
                 }
                 
-                // Try to initialize SDK v5 using createThirdwebClient
-                const createClient = window.createThirdwebClient || createThirdwebClient;
+                // Fallback: Try direct initialization
+                let createClient = null;
+                if (typeof thirdweb !== 'undefined' && thirdweb.createThirdwebClient) {
+                    createClient = thirdweb.createThirdwebClient;
+                } else if (typeof window !== 'undefined' && window.thirdweb && window.thirdweb.createThirdwebClient) {
+                    createClient = window.thirdweb.createThirdwebClient;
+                } else if (typeof createThirdwebClient !== 'undefined') {
+                    createClient = createThirdwebClient;
+                } else if (typeof window !== 'undefined' && window.createThirdwebClient) {
+                    createClient = window.createThirdwebClient;
+                }
+                
                 if (createClient && typeof createClient === 'function') {
                     try {
-                        // Initialize with Client ID from CONFIG
                         thirdwebSDK = createClient({
                             clientId: CONFIG.CLIENT_ID || CONFIG.THIRDWEB_CLIENT_ID || CONFIG.CID
                         });
-                        thirdwebClient = thirdwebSDK; // Store globally
+                        thirdwebClient = thirdwebSDK;
                         console.log('✅ Thirdweb SDK v5 initialized successfully');
                     } catch (e) {
-                        // SDK initialization failed - continue without it
                         console.log('Thirdweb SDK initialization skipped (data save mode only):', e.message || e);
                     }
+                } else {
+                    console.log('Thirdweb SDK not available - using data save mode only');
                 }
             } catch (e) {
-                // Continue without SDK - data save only mode
                 console.log('Thirdweb SDK initialization error (non-critical):', e.message || e);
             }
         }

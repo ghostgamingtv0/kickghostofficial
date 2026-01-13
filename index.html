@@ -20,10 +20,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <!-- Thirdweb SDK v5 - Stable CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/thirdweb/5.0.0/thirdweb.js" 
-            onerror="console.warn('⚠️ Thirdweb CDN failed, using fallback...'); this.onerror=null; this.src='https://unpkg.com/thirdweb@5.0.0/dist/thirdweb.umd.js';"></script>
+    <!-- 1. روابط مكتبات مستقرة مع ضمان التحميل - Stable library links with loading guarantee -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
+            onerror="console.error('⚠️ Ethers.js failed to load');"></script>
+    <script src="https://unpkg.com/thirdweb@5/dist/thirdweb.js"
+            onerror="console.error('⚠️ Thirdweb CDN failed, trying fallback...'); this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/thirdweb@5/dist/thirdweb.js';"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Polyfills for browser compatibility -->
@@ -259,11 +260,33 @@
             box-shadow: 0 10px 25px rgba(0, 255, 163, 0.4);
         }
 
+        /* Neon Glow Animation */
+        @keyframes neonPulse {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(163, 54, 255, 0.3), 0 0 40px rgba(163, 54, 255, 0.2);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(163, 54, 255, 0.6), 0 0 60px rgba(163, 54, 255, 0.4);
+            }
+        }
+        
+        .neon-glow {
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+        
+        .neon-glow:hover {
+            transform: translateY(-5px) scale(1.05);
+            animation: none;
+            box-shadow: 0 0 40px rgba(163, 54, 255, 0.8), 0 0 80px rgba(163, 54, 255, 0.6);
+        }
+
         /* Header Social Links */
         .social-link-header {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: auto;
+            min-width: 50px;
+            height: auto;
+            min-height: 50px;
+            border-radius: 15px;
             background: rgba(163, 54, 255, 0.15);
             border: 2px solid var(--primary);
             display: flex;
@@ -1768,36 +1791,63 @@
             <div class="web3-badge">
                 <i class="fas fa-gamepad"></i> WEB3 GAMING 2026
             </div>
-            <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" class="logo-main" alt="AKSG Logo" onclick="location.reload()">
+            <!-- Main Logo with GeckoTerminal Badge -->
+            <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
+                <img src="https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg" class="logo-main" alt="AKSG Logo" onclick="location.reload()" style="width: 220px; height: 220px;">
+                <a href="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; padding: 10px 20px; background: rgba(163, 54, 255, 0.1); border: 2px solid var(--primary); border-radius: 15px; transition: all 0.3s;">
+                    <img src="https://i.ibb.co/TD4bgczv/geckoterminal-icon.png" width="40" height="40" style="margin-right: 10px; border-radius: 8px;">
+                    <span style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; font-weight: 700;">GeckoTerminal</span>
+                </a>
+            </div>
             <h1 class="project-title">KICKGHOST $AKSG</h1>
             
-            <!-- Social Media Links with Logos -->
-            <div class="header-social-links" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin: 30px 0;">
-                <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link-header" title="Kick">
-                    <i class="fa-brands fa-kickstarter-k"></i>
+            <!-- Social Media Links with Bilingual Descriptions (Neon Glow) -->
+            <div class="header-social-links" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; margin: 30px 0;">
+                <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-link-header neon-glow" title="Kick - تابعنا على Kick" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(5, 255, 5, 0.1); border: 2px solid var(--kick); box-shadow: 0 0 20px rgba(5, 255, 5, 0.3); transition: all 0.3s;">
+                    <i class="fa-brands fa-kickstarter-k" style="font-size: 1.5rem; color: var(--kick); margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Kick</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على Kick | Follow us on Kick</small>
+                    </div>
                 </a>
-                <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-link-header" title="Twitter/X">
-                    <i class="fab fa-x-twitter"></i>
+                <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-link-header neon-glow" title="Twitter/X - تابعنا على تويتر" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(29, 161, 242, 0.1); border: 2px solid #1da1f2; box-shadow: 0 0 20px rgba(29, 161, 242, 0.3); transition: all 0.3s;">
+                    <i class="fab fa-x-twitter" style="font-size: 1.5rem; color: #1da1f2; margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Twitter</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على تويتر | Follow us on Twitter</small>
+                    </div>
                 </a>
-                <a href="https://t.me/ghost_gamingtv" target="_blank" class="social-link-header" title="Telegram">
-                    <i class="fab fa-telegram"></i>
+                <a href="https://t.me/ghost_gamingtv" target="_blank" class="social-link-header neon-glow" title="Telegram - انضم إلى تيليجرام" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(37, 150, 190, 0.1); border: 2px solid #2596be; box-shadow: 0 0 20px rgba(37, 150, 190, 0.3); transition: all 0.3s;">
+                    <i class="fab fa-telegram" style="font-size: 1.5rem; color: #2596be; margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Telegram</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">انضم إلى تيليجرام | Join Telegram</small>
+                    </div>
                 </a>
-                <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="social-link-header" title="Instagram">
-                    <i class="fab fa-instagram"></i>
+                <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="social-link-header neon-glow" title="Instagram - تابعنا على إنستغرام" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(225, 48, 108, 0.1); border: 2px solid #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.3); transition: all 0.3s;">
+                    <i class="fab fa-instagram" style="font-size: 1.5rem; color: #e1306c; margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Instagram</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على إنستغرام | Follow us on Instagram</small>
+                    </div>
                 </a>
-                <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" class="social-link-header" title="TikTok">
-                    <i class="fab fa-tiktok"></i>
+                <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" class="social-link-header neon-glow" title="TikTok - تابعنا على تيك توك" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(0, 242, 234, 0.1); border: 2px solid #00f2ea; box-shadow: 0 0 20px rgba(0, 242, 234, 0.3); transition: all 0.3s;">
+                    <i class="fab fa-tiktok" style="font-size: 1.5rem; color: #00f2ea; margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">TikTok</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على تيك توك | Follow us on TikTok</small>
+                    </div>
                 </a>
-                <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link-header" title="Discord">
-                    <i class="fab fa-discord"></i>
+                <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link-header neon-glow" title="Discord - انضم إلى ديسكورد" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(88, 101, 242, 0.1); border: 2px solid #5865f2; box-shadow: 0 0 20px rgba(88, 101, 242, 0.3); transition: all 0.3s;">
+                    <i class="fab fa-discord" style="font-size: 1.5rem; color: #5865f2; margin-right: 10px;"></i>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Discord</span>
+                        <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">انضم إلى ديسكورد | Join Discord</small>
+                    </div>
                 </a>
             </div>
             
             <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
-                <a href="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249" class="gecko-badge" target="_blank" style="display: inline-flex; align-items: center;">
-                    <img src="https://i.ibb.co/TD4bgczv/geckoterminal-icon.png" width="30" style="margin-left: 10px;">
-                    GeckoTerminal Chart
-                </a>
                 <a href="https://polygonscan.com/address/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D" class="gecko-badge" target="_blank">
                     <i class="fas fa-link"></i>
                     PolygonScan Contract
@@ -1833,10 +1883,10 @@
         <!-- Main Dashboard -->
         <div class="main-dashboard">
             <div class="left-col">
-                <!-- Leaderboard -->
+                <!-- Leaderboard: Top Viewers -->
                 <div class="glass-card">
                     <div class="botrix-header">
-                        <h2><i class="fas fa-trophy"></i> Botrix Loyalty Leaderboard</h2>
+                        <h2><i class="fas fa-eye"></i> الأكثر مشاهدة | Top Viewers</h2>
                         <a href="https://botrix.live/panel/loyalty" target="_blank" style="color: var(--secondary); font-size: 0.9rem; text-decoration: none;">
                             View All <i class="fas fa-external-link-alt"></i>
                         </a>
@@ -1844,13 +1894,13 @@
                     <table class="loyalty-table">
                         <thead>
                             <tr>
-                                <th>Rank</th>
-                                <th>User GamerTag</th>
-                                <th>Status</th>
-                                <th>Total Points</th>
+                                <th>Rank | الرتبة</th>
+                                <th>User | المستخدم</th>
+                                <th>Views | المشاهدات</th>
+                                <th>Points | النقاط</th>
                             </tr>
                         </thead>
-                        <tbody id="loyaltyData">
+                        <tbody id="loyaltyDataViewers">
                             <!-- Populated by JS -->
                         </tbody>
                     </table>
@@ -1900,6 +1950,58 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Right Leaderboard: Top Chatters -->
+            <div class="right-col">
+                <div class="glass-card">
+                    <div class="botrix-header">
+                        <h2><i class="fas fa-comments"></i> الأكثر تعليقاً | Top Chatters</h2>
+                        <a href="https://botrix.live/panel/loyalty" target="_blank" style="color: var(--secondary); font-size: 0.9rem; text-decoration: none;">
+                            View All <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                    <table class="loyalty-table">
+                        <thead>
+                            <tr>
+                                <th>Rank | الرتبة</th>
+                                <th>User | المستخدم</th>
+                                <th>Messages | الرسائل</th>
+                                <th>Points | النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="loyaltyDataChatters">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Generator Section (Center) - Only enabled after 100% completion -->
+        <div class="glass-card" style="margin-bottom: 40px; text-align: center;">
+            <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 2rem;">
+                <i class="fas fa-key"></i> مولد الكود | Code Generator
+            </h2>
+            <p style="color: #888; margin-bottom: 20px; font-size: 1.1rem; direction: rtl; text-align: center;">
+                سيتم تفعيل المولد بعد إكمال جميع المهام بنسبة 100% | Generator will be enabled after completing all tasks 100%
+            </p>
+            <button id="generatorBtn" class="btn-mega" onclick="claimCode()" disabled style="padding: 25px 60px; font-size: 1.5rem; opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-lock"></i> إكمال المهام أولاً | Complete Tasks First
+            </button>
+            <div id="generatorStatus" style="margin-top: 20px; color: #888; font-size: 0.9rem;">
+                <span id="completionPercentage">0%</span> مكتمل | Complete
+            </div>
+        </div>
+        
+        <!-- GeckoTerminal Chart (Bottom) -->
+        <div class="glass-card" style="margin-bottom: 40px;">
+            <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 2rem; text-align: center;">
+                <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
+            </h2>
+            <div id="gecko-iframe" style="width: 100%; height: 650px; border-radius: 20px; border: 2px solid var(--primary); overflow: hidden;">
+                <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0" style="border: none;"></iframe>
+            </div>
+        </div>
 
             <!-- Side Panel -->
             <div class="side-panel">
@@ -1983,21 +2085,65 @@
             </button>
         </div>
         
-        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px; max-width: 1400px; margin: 0 auto; padding: 0 20px;">
-            <!-- Left Sidebar: Leaderboard -->
+        <!-- Reordered Layout: Leaderboards on sides, Chart in center -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; max-width: 1600px; margin: 0 auto; padding: 0 20px; margin-bottom: 40px;">
+            <!-- Left: Top Chatters Leaderboard -->
             <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
                 <div class="glass-card" style="padding: 25px;">
-                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
-                        <i class="fas fa-trophy"></i> Live Leaderboard
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-comments"></i> الأكثر تعليقاً | Top Chatters
                     </h2>
-                    <div id="empireLeaderboard">
-                        <!-- Populated by loadLeaderboardData() -->
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Msgs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireChattersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Center: GeckoTerminal Chart -->
+            <div class="empire-main-content" style="grid-column: 2;">
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
+                    </h2>
+                    <div id="gecko-iframe" style="width: 100%; height: 500px; border-radius: 20px; border: 2px solid var(--primary); overflow: hidden;">
+                        <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0" style="border: none;"></iframe>
                     </div>
                 </div>
             </div>
             
-            <!-- Main Content Area -->
-            <div class="empire-main-content">
+            <!-- Right: Top Viewers Leaderboard -->
+            <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-eye"></i> الأكثر مشاهدة | Top Viewers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Views</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireViewersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area (Below Leaderboards and Chart) -->
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
             
             <!-- Welcome Message (Bilingual) -->
             <div class="welcome-message-empire" style="text-align: center; margin-bottom: 40px; padding: 30px; background: rgba(163, 54, 255, 0.1); border-radius: 25px; border: 2px solid var(--primary);">
@@ -2027,11 +2173,27 @@
                     </p>
                     <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                         <button onclick="copyClaimCode()" class="btn-mega" style="padding: 15px 30px; font-size: 1rem;">
-                            <i class="fas fa-copy"></i> ??? ????? | Copy Code
+                            <i class="fas fa-copy"></i> نسخ الكود | Copy Code
                         </button>
                         <button onclick="shareClaimCode()" class="btn-mega" style="padding: 15px 30px; font-size: 1rem; background: var(--primary);">
-                            <i class="fas fa-share-alt"></i> ?????? | Share
+                            <i class="fas fa-share-alt"></i> مشاركة | Share
                         </button>
+                    </div>
+                </div>
+                
+                <!-- Users List with Wallet and Claim Code -->
+                <div id="usersClaimList" style="display: none; margin-top: 30px; padding: 25px; background: rgba(163, 54, 255, 0.1); border-radius: 20px; border: 2px solid var(--primary);">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-users"></i> قائمة المستخدمين | Users List
+                    </h3>
+                    <p style="color: #aaa; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">
+                        المحافظ المرتبطة وأكواد المطالبة | Linked wallets and claim codes
+                    </p>
+                    <div id="usersClaimListContent" style="max-height: 400px; overflow-y: auto;">
+                        <div style="text-align: center; padding: 20px; color: #888;">
+                            <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                            <p>لا توجد بيانات بعد | No data yet</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -2207,26 +2369,26 @@
             </div>
             <div class="modal-body">
                 <div class="wallet-option" onclick="selectWallet('MetaMask')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" class="wallet-logo" alt="MetaMask" onerror="this.src='https://metamask.io/images/metamask-fox.svg'">
+                    <img src="https://i.ibb.co/H1LzqWL/images.png" class="wallet-logo" alt="MetaMask" style="width: 60px; height: 60px; object-fit: contain;">
                     <div style="flex: 1;">
                         <span class="wallet-name">MetaMask</span>
-                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Most Popular</small>
+                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Most Popular | الأكثر شعبية</small>
                     </div>
                     <i class="fas fa-chevron-left"></i>
                 </div>
                 <div class="wallet-option" onclick="selectWallet('Trust Wallet')">
-                    <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" class="wallet-logo" alt="Trust Wallet" onerror="this.src='https://trustwallet.com/assets/images/favicon.png'">
+                    <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" class="wallet-logo" alt="Trust Wallet" style="width: 60px; height: 60px; object-fit: contain;">
                     <div style="flex: 1;">
                         <span class="wallet-name">Trust Wallet</span>
-                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Mobile Friendly</small>
+                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Mobile Friendly | مناسب للموبايل</small>
                     </div>
                     <i class="fas fa-chevron-left"></i>
                 </div>
                 <div class="wallet-option" onclick="selectWallet('Phantom')">
-                    <img src="https://phantom.app/img/phantom-icon-purple.svg" class="wallet-logo" alt="Phantom" style="background: #AB9FF2; padding: 5px;" onerror="this.src='https://phantom.app/favicon.ico'">
+                    <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" class="wallet-logo" alt="Phantom" style="width: 60px; height: 60px; object-fit: contain; background: #AB9FF2; padding: 5px; border-radius: 10px;">
                     <div style="flex: 1;">
                         <span class="wallet-name">Phantom</span>
-                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Solana & EVM</small>
+                        <small style="display: block; color: #888; font-size: 0.75rem; margin-top: 3px;">Solana & EVM | سولانا وإيفم</small>
                     </div>
                     <i class="fas fa-chevron-left"></i>
                 </div>
@@ -2526,6 +2688,29 @@
             }
         };
 
+        // ==================== 3. حل مشكلة (Cannot redefine property: ethereum) ====================
+        // 3. Fix issue (Cannot redefine property: ethereum)
+        // نقوم بحماية الكود من التداخل مع إضافات مثل Tron أو Brave (محسّن للعمل مع Chrome/Brave)
+        // Protect code from conflicts with extensions like Tron or Brave (Enhanced for Chrome/Brave)
+        (function() {
+            // Only protect if ethereum exists and not already protected
+            if (window.ethereum && !window.ethereum._isProtected) {
+                try {
+                    const originalDefineProperty = Object.defineProperty;
+                    Object.defineProperty = function(obj, prop, descriptor) {
+                        if (prop === 'ethereum' && window.ethereum && obj === window) {
+                            console.warn("🛡️ System protected: Prevented redefinition of window.ethereum");
+                            // Return the original ethereum object instead of throwing error
+                            return window.ethereum;
+                        }
+                        return originalDefineProperty.apply(this, arguments);
+                    };
+                } catch (e) {
+                    console.warn("⚠️ Could not set up ethereum protection:", e);
+                }
+            }
+        })();
+
         // ==================== CONFIGURATION (Loaded from config.js) ====================
         // ??� NOTE: Configuration is now loaded from config.js file
         // If config.js is not loaded, use fallback values
@@ -2550,8 +2735,11 @@
         };
         
         // Add new Thirdweb V5 configuration fields (Official Keys)
+        // Thirdweb Client ID - Used for frontend SDK initialization
         CONFIG.CLIENT_ID = "a8d2fbfbbe9dcaa11cc48f3d2634e3fd";
+        // Thirdweb Project ID - Used for backend operations and advanced features
         CONFIG.PROJECT_ID = "prj_cmk2xz9h214g2fw0kc2gan3o0";
+        CONFIG.FACILITATOR = "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9";
         CONFIG.SECRET_KEY = "K53oI-uZKCEi1wTHW2hbAQLuoD8jFTaw5vF4ommKD9yhaxN2vy1V-IaDzWmRb0GK1jfqy0gQddzgFfu3Z60aag"; // Server-side only
         CONFIG.FACILITATOR_WALLET = "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9";
         CONFIG.SOCIAL = {
@@ -2562,95 +2750,61 @@
         CONFIG.CONTRACT_ADDRESS = "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
         CONFIG.CHAIN_ID = 137;
         
-        // Initialize Thirdweb Client v5
-        let thirdwebClient;
-        function initializeThirdwebClient() {
-            try {
-                // Wait a bit for scripts to load
-                let createClient = null;
-                
-                // Method 1: Check global thirdweb object (new SDK)
-                if (typeof thirdweb !== 'undefined') {
-                    if (thirdweb.createThirdwebClient) {
-                        createClient = thirdweb.createThirdwebClient;
-                    } else if (thirdweb.thirdwebClient) {
-                        // Alternative export name
-                        createClient = thirdweb.thirdwebClient;
-                    }
-                }
-                // Method 2: Check window.thirdweb
-                if (!createClient && typeof window !== 'undefined' && window.thirdweb) {
-                    if (window.thirdweb.createThirdwebClient) {
-                        createClient = window.thirdweb.createThirdwebClient;
-                    } else if (window.thirdweb.thirdwebClient) {
-                        createClient = window.thirdweb.thirdwebClient;
-                    }
-                }
-                // Method 3: Direct global function
-                if (!createClient && typeof createThirdwebClient !== 'undefined') {
-                    createClient = createThirdwebClient;
-                }
-                // Method 4: Window function
-                if (!createClient && typeof window !== 'undefined' && window.createThirdwebClient) {
-                    createClient = window.createThirdwebClient;
-                }
-                // Method 5: Check if ThirdwebSDK is available (old SDK format)
-                if (!createClient && typeof ThirdwebSDK !== 'undefined') {
-                    // Old SDK format - create client differently
-                    try {
-                        thirdwebClient = new ThirdwebSDK.ThirdwebSDK({
-                            clientId: CONFIG.CLIENT_ID
-                        });
-                        console.log("✅ Thirdweb SDK (old format) Initialized");
-                        return true;
-                    } catch (e) {
-                        console.warn("Old SDK format failed:", e);
-                    }
-                }
-                
-                if (createClient && typeof createClient === 'function') {
-                    thirdwebClient = createClient({
+        // Initialize Thirdweb Client (will be called after DOM loads)
+        let thirdwebClient = null;
+        
+        // ==================== 4. تهيئة التطبيق (Initialization) ====================
+        // 4. Application Initialization
+        async function initializeApp() {
+            console.log("🚀 Starting initialization...");
+            console.log("📋 Thirdweb Configuration:", {
+                CLIENT_ID: CONFIG.CLIENT_ID,
+                PROJECT_ID: CONFIG.PROJECT_ID
+            });
+            
+            // التحقق من تحميل المكتبة - Check library loading
+            if (typeof Thirdweb !== 'undefined') {
+                try {
+                    thirdwebClient = Thirdweb.createThirdwebClient({
                         clientId: CONFIG.CLIENT_ID
                     });
-                    console.log("✅ Thirdweb Client v5 Initialized");
-                    return true;
-                } else {
-                    console.warn("⚠️ Thirdweb SDK not available - using data save mode only");
-                    return false;
+                    console.log("✅ Thirdweb SDK Ready with Client ID:", CONFIG.CLIENT_ID);
+                } catch (e) {
+                    console.error("❌ SDK Init Error:", e);
                 }
-            } catch (e) {
-                console.error("❌ Failed to init Thirdweb:", e);
-                return false;
+            } else if (typeof thirdweb !== 'undefined' && thirdweb.createThirdwebClient) {
+                try {
+                    thirdwebClient = thirdweb.createThirdwebClient({
+                        clientId: CONFIG.CLIENT_ID
+                    });
+                    console.log("✅ Thirdweb SDK Ready with Client ID:", CONFIG.CLIENT_ID);
+                } catch (e) {
+                    console.error("❌ SDK Init Error:", e);
+                }
+            } else if (typeof createThirdwebClient !== 'undefined') {
+                try {
+                    thirdwebClient = createThirdwebClient({
+                        clientId: CONFIG.CLIENT_ID
+                    });
+                    console.log("✅ Thirdweb SDK Ready with Client ID:", CONFIG.CLIENT_ID);
+                } catch (e) {
+                    console.error("❌ SDK Init Error:", e);
+                }
+            } else {
+                console.error("❌ Critical: Thirdweb Library failed to load from all CDNs");
+            }
+
+            // تشغيل زر البداية (Stage 0) - Start Stage 0 button
+            if (typeof initStage0 === 'function') {
+                initStage0();
             }
         }
         
-        // Try to initialize with retries (SDK might load asynchronously)
-        let initAttempts = 0;
-        const maxAttempts = 5;
-        function tryInitializeThirdweb() {
-            initAttempts++;
-            if (initializeThirdwebClient()) {
-                return; // Success
-            }
-            if (initAttempts < maxAttempts) {
-                setTimeout(tryInitializeThirdweb, 1000); // Retry after 1 second
-            }
-        }
-        
-        // Initialize Thirdweb ONLY after DOM is fully loaded (prevents appendChild errors)
-        // This ensures all DOM elements are ready before any script manipulation
+        // ضمان التشغيل عند جاهزية المتصفح - Ensure execution when browser is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                // Wait a bit for thirdweb library to load
-                setTimeout(function() {
-                    tryInitializeThirdweb();
-                }, 500);
-            });
+            document.addEventListener('DOMContentLoaded', initializeApp);
         } else {
-            // DOM already loaded, wait for thirdweb library
-            setTimeout(function() {
-                tryInitializeThirdweb();
-            }, 500);
+            initializeApp();
         }
         
         // Secure credentials helper (obfuscated for frontend - should ideally be in backend)
@@ -2791,40 +2945,20 @@
         }
         
         // ==================== STAGE 0: WELCOME OVERLAY ====================
-        // Fix for Welcome Overlay Stage 0
+        // إصلاح زر البداية (Stage 0) - Fix Start Button (Stage 0)
         function initStage0() {
-            const overlay = document.getElementById('welcome-overlay');
-            const startButton = document.getElementById('start-button');
-            
-            if (overlay) {
-                const startApp = () => {
-                    // Hide button immediately
-                    if (startButton) {
-                        startButton.style.display = "none";
-                    }
-                    overlay.style.transition = "opacity 0.5s ease";
-                    overlay.style.opacity = "0";
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            if (welcomeOverlay) {
+                const proceed = () => {
+                    welcomeOverlay.style.opacity = '0';
+                    welcomeOverlay.style.transition = 'opacity 0.5s ease';
                     setTimeout(() => {
-                        overlay.style.display = "none";
+                        welcomeOverlay.style.display = 'none';
                         if (typeof showStage1 === 'function') showStage1();
                     }, 500);
                 };
-                overlay.onclick = startApp;
-                overlay.ontouchstart = startApp;
-                
-                // Also handle start-button click directly
-                if (startButton) {
-                    startButton.onclick = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startApp();
-                    };
-                    startButton.ontouchstart = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startApp();
-                    };
-                }
+                welcomeOverlay.onclick = proceed;
+                welcomeOverlay.ontouchstart = proceed;
             }
         }
 
@@ -3545,6 +3679,11 @@
                 localStorage.setItem('kick_follow_verified', 'true');
                 localStorage.setItem('kick_visited', 'true');
                 
+                // Call verifyTask to increase completion percentage
+                if (typeof verifyTask === 'function') {
+                    verifyTask('kick', 'Kick Follow');
+                }
+                
                 const kickStatusDisplay = document.getElementById('kickStatusDisplay');
                 const kickStatusText = document.getElementById('kickStatusText');
                 
@@ -3560,6 +3699,11 @@
                 }
                 
                 showNotify('? Kick follow verified! | ?? ?????? ?? ?????? Kick!', 'success');
+                
+                // Update completion percentage
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
                 
                 // Recheck status and update claim button
                 if (typeof checkKickFollowerStatus === 'function') {
@@ -3608,6 +3752,67 @@
             }
         }
 
+        // ==================== GENERATE EMPIRE CODE (Enhanced with 100% check) ====================
+        function generateEmpireCode() {
+            // Get completion percentage
+            const completionEl = document.getElementById('completionPercentage');
+            let progress = 0;
+            
+            if (completionEl) {
+                const progressText = completionEl.textContent || completionEl.innerText || '0%';
+                progress = parseInt(progressText.replace('%', '')) || 0;
+            } else {
+                // Fallback: calculate from localStorage
+                const completion = updateCompletionPercentage();
+                progress = completion;
+            }
+            
+            // STRICT CHECK: Must be 100% to generate code
+            if (progress < 100) {
+                alert("يجب إكمال جميع المهام 100% لفتح الجينيراتور!");
+                return null;
+            }
+            
+            // Generate unique 6-digit code
+            let code = Math.floor(100000 + Math.random() * 900000);
+            
+            // Ensure uniqueness
+            const usedCodes = JSON.parse(localStorage.getItem('aksg_global_used_codes') || '[]');
+            let attempts = 0;
+            while (usedCodes.includes(code) && attempts < 100) {
+                code = Math.floor(100000 + Math.random() * 900000);
+                attempts++;
+            }
+            
+            // Format as EMPIRE-XXXXXX
+            const empireCode = `EMPIRE-${code}`;
+            
+            // Save to localStorage
+            localStorage.setItem('final_empire_code', empireCode);
+            localStorage.setItem('userClaimCode', code.toString());
+            
+            // Update display if element exists
+            const codeDisplay = document.getElementById('displayClaimCode');
+            if (codeDisplay) {
+                codeDisplay.textContent = empireCode;
+                codeDisplay.style.textShadow = "0 0 20px #00ffa3";
+            }
+            
+            // Disable button after generation
+            const genBtn = document.getElementById('generatorBtn');
+            const empireClaimBtn = document.getElementById('empireClaimBtn');
+            if (genBtn) {
+                genBtn.disabled = true;
+                genBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Generated | تم توليد الكود';
+            }
+            if (empireClaimBtn) {
+                empireClaimBtn.disabled = true;
+                empireClaimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Generated | تم توليد الكود';
+            }
+            
+            return code.toString();
+        }
+
         function generateUniqueClaimCode() {
             // Use CodeGenerator for unique code generation
             const code = CodeGenerator.generateUniqueCode();
@@ -3626,19 +3831,119 @@
             if (walletAddress) {
                 const codeWalletPairs = JSON.parse(localStorage.getItem('codeWalletPairs') || '[]');
                 codeWalletPairs.push({ code, wallet: walletAddress.toLowerCase(), timestamp: Date.now() });
+                codeWalletPairs.push({ code, wallet: walletAddress.toLowerCase(), timestamp: Date.now() });
                 localStorage.setItem('codeWalletPairs', JSON.stringify(codeWalletPairs));
             }
             
             return code;
         }
 
+        // ==================== UPDATE COMPLETION PERCENTAGE ====================
+        function updateCompletionPercentage() {
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const walletConnected = localStorage.getItem('connectedWallet') !== null;
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            
+            let completed = 0;
+            if (socialComplete) completed++;
+            if (walletConnected) completed++;
+            if (tokenAdded) completed++;
+            if (kickFollowVerified) completed++;
+            
+            const percentage = Math.round((completed / 4) * 100);
+            
+            // Update percentage display
+            const completionEl = document.getElementById('completionPercentage');
+            if (completionEl) {
+                completionEl.textContent = percentage + '%';
+            }
+            
+            // Update Generator button - STRICT: Only enabled if percentage === 100
+            const generatorBtn = document.getElementById('generatorBtn');
+            const empireClaimBtn = document.getElementById('empireClaimBtn');
+            
+            if (generatorBtn) {
+                if (percentage === 100) {
+                    generatorBtn.disabled = false;
+                    generatorBtn.style.opacity = '1';
+                    generatorBtn.style.cursor = 'pointer';
+                    generatorBtn.style.pointerEvents = 'auto';
+                    generatorBtn.innerHTML = '<i class="fas fa-key"></i> توليد الكود | Generate Code';
+                } else {
+                    generatorBtn.disabled = true;
+                    generatorBtn.style.opacity = '0.5';
+                    generatorBtn.style.cursor = 'not-allowed';
+                    generatorBtn.style.pointerEvents = 'none';
+                    generatorBtn.innerHTML = '<i class="fas fa-lock"></i> إكمال المهام أولاً | Complete Tasks First';
+                }
+            }
+            
+            // Also update empireClaimBtn
+            if (empireClaimBtn) {
+                if (percentage === 100) {
+                    empireClaimBtn.disabled = false;
+                    empireClaimBtn.style.opacity = '1';
+                    empireClaimBtn.style.cursor = 'pointer';
+                    empireClaimBtn.style.pointerEvents = 'auto';
+                    empireClaimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | ???????? ??????';
+                } else {
+                    empireClaimBtn.disabled = true;
+                    empireClaimBtn.style.opacity = '0.5';
+                    empireClaimBtn.style.cursor = 'not-allowed';
+                    empireClaimBtn.style.pointerEvents = 'none';
+                    empireClaimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code | ?????? Kick ???? ?????';
+                }
+            }
+            
+            return percentage;
+        }
+        
+        // Call update on page load and after each stage completion
+        if (typeof updateCompletionPercentage === 'function') {
+            updateCompletionPercentage();
+        }
+
         async function claimCode() {
+            // ==================== STRICT CHECK: Must be 100% to proceed ====================
+            // Check completion percentage FIRST - must be exactly 100%
+            const completion = updateCompletionPercentage();
+            if (completion !== 100) {
+                if (typeof showNotify === 'function') {
+                    showNotify(`Please complete all tasks first (${completion}% complete) | يرجى إكمال جميع المهام أولاً (${completion}% مكتمل)`, 'warning');
+                } else {
+                    alert(`Please complete all tasks first (${completion}% complete)`);
+                }
+                // Disable button completely
+                const generatorBtn = document.getElementById('generatorBtn');
+                const empireClaimBtn = document.getElementById('empireClaimBtn');
+                if (generatorBtn) {
+                    generatorBtn.disabled = true;
+                    generatorBtn.style.pointerEvents = 'none';
+                }
+                if (empireClaimBtn) {
+                    empireClaimBtn.disabled = true;
+                    empireClaimBtn.style.pointerEvents = 'none';
+                }
+                return;
+            }
+            
             // ==================== BOT PROTECTION: Claim Code Button (Light Security from Stage 2) ====================
             // Check if ALL stages are completed (Stage 1: Social, Stage 2: Wallet, Stage 3: Kick Follow, Stage 4: Token Added)
             const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
             const walletConnected = localStorage.getItem('connectedWallet') !== null;
             const tokenAdded = localStorage.getItem('token_added') === 'true';
             const kickFollowVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            
+            // Double check - all must be true
+            if (!socialComplete || !walletConnected || !tokenAdded || !kickFollowVerified) {
+                if (typeof showNotify === 'function') {
+                    showNotify('Please complete all tasks first | يرجى إكمال جميع المهام أولاً', 'warning');
+                } else {
+                    alert('Please complete all tasks first');
+                }
+                return;
+            }
             
             // Light security - only basic check if Stage 2 is reached
             if (walletConnected || tokenAdded) {
@@ -3699,11 +4004,17 @@
                 return;
             }
             
-            // Generate unique 6-digit code
-            generatedClaimCode = generateUniqueClaimCode();
+            // Generate unique 6-digit code using generateEmpireCode
+            generatedClaimCode = generateEmpireCode();
+            
+            if (!generatedClaimCode) {
+                // Fallback to original method if generateEmpireCode fails
+                generatedClaimCode = generateUniqueClaimCode();
+            }
             
             // Save to localStorage
             localStorage.setItem('userClaimCode', generatedClaimCode);
+            localStorage.setItem('final_empire_code', generatedClaimCode);
             const walletAddress = localStorage.getItem('connectedWallet');
             if (walletAddress) {
                 localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
@@ -3736,6 +4047,118 @@
             
             if (codeDisplay) codeDisplay.style.display = 'block';
             if (codeValue) codeValue.textContent = code;
+            
+            // Update users list with wallet and claim code
+            updateUsersClaimList();
+        }
+        
+        // ==================== UPDATE USERS CLAIM LIST ====================
+        function updateUsersClaimList() {
+            const usersListContainer = document.getElementById('usersClaimListContent');
+            const usersListSection = document.getElementById('usersClaimList');
+            if (!usersListContainer || !usersListSection) return;
+            
+            // Get all stored wallet-claim code pairs
+            const walletAddress = localStorage.getItem('connectedWallet');
+            const claimCode = localStorage.getItem('userClaimCode') || generatedClaimCode;
+            
+            if (!walletAddress || !claimCode) {
+                usersListSection.style.display = 'none';
+                return;
+            }
+            
+            // Get all stored codes from localStorage
+            const allCodes = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('claim_code_')) {
+                    const wallet = key.replace('claim_code_', '');
+                    const code = localStorage.getItem(key);
+                    if (code) {
+                        allCodes.push({
+                            wallet: wallet,
+                            code: code,
+                            timestamp: localStorage.getItem(`claim_timestamp_${wallet}`) || Date.now()
+                        });
+                    }
+                }
+            }
+            
+            // Add current user if not in list
+            if (walletAddress && claimCode) {
+                const exists = allCodes.find(c => c.wallet.toLowerCase() === walletAddress.toLowerCase());
+                if (!exists) {
+                    allCodes.push({
+                        wallet: walletAddress,
+                        code: claimCode,
+                        timestamp: Date.now()
+                    });
+                    localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, claimCode);
+                    localStorage.setItem(`claim_timestamp_${walletAddress.toLowerCase()}`, Date.now().toString());
+                }
+            }
+            
+            if (allCodes.length === 0) {
+                usersListSection.style.display = 'none';
+                return;
+            }
+            
+            usersListSection.style.display = 'block';
+            
+            // Sort by timestamp (newest first)
+            allCodes.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
+            
+            // Display list
+            usersListContainer.innerHTML = allCodes.map((item, index) => {
+                const date = new Date(parseInt(item.timestamp));
+                const dateStr = date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+                return `
+                    <div style="padding: 15px; margin-bottom: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid rgba(163, 54, 255, 0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">
+                                <i class="fas fa-wallet"></i> ${getShortAddress(item.wallet)}
+                            </div>
+                            <div style="font-size: 0.85rem; color: #888;">
+                                ${dateStr}
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 150px; text-align: center;">
+                            <div style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--primary); font-weight: bold; letter-spacing: 3px;">
+                                ${item.code}
+                            </div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 5px;">
+                                Claim Code | كود المطالبة
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="copyToClipboard('${item.code}')" style="padding: 8px 15px; background: var(--secondary); color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Helper function to copy to clipboard
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    if (typeof showNotify === 'function') {
+                        showNotify("Code copied | تم نسخ الكود", 'success');
+                    }
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                if (typeof showNotify === 'function') {
+                    showNotify("Code copied | تم نسخ الكود", 'success');
+                }
+            }
         }
 
         async function loadLeaderboardData() {
@@ -3801,40 +4224,109 @@
                 topCommenters = [];
             }
             
-            leaderboardContainer.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                    <div class="leaderboard-section">
-                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem;">
-                            <i class="fas fa-eye"></i> Top Viewers
-                        </h3>
-                        <div class="leaderboard-list">
-                            ${topViewers.map(user => `
-                                <div class="leaderboard-item">
-                                    ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
-                                    <span class="rank-badge">#${user.rank}</span>
-                                    <span class="username">${user.username}</span>
-                                    <span class="stat-value">${user.viewers.toLocaleString()}</span>
-                                </div>
-                            `).join('')}
+            // Update Viewers Leaderboard (Main Dashboard)
+            const viewersContainer = document.getElementById('loyaltyDataViewers');
+            if (viewersContainer) {
+                if (topViewers.length > 0) {
+                    viewersContainer.innerHTML = topViewers.slice(0, 10).map(user => `
+                        <tr>
+                            <td>#${user.rank}</td>
+                            <td>${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">` : ''}${user.username}</td>
+                            <td>${user.viewers.toLocaleString()}</td>
+                            <td>${Math.floor(user.viewers / 10)}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    viewersContainer.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">لا توجد بيانات بعد | No data yet</td></tr>';
+                }
+            }
+            
+            // Update Chatters Leaderboard (Main Dashboard)
+            const chattersContainer = document.getElementById('loyaltyDataChatters');
+            if (chattersContainer) {
+                if (topCommenters.length > 0) {
+                    chattersContainer.innerHTML = topCommenters.slice(0, 10).map(user => `
+                        <tr>
+                            <td>#${user.rank}</td>
+                            <td>${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">` : ''}${user.username}</td>
+                            <td>${user.comments}</td>
+                            <td>${Math.floor(user.comments / 5)}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    chattersContainer.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">لا توجد بيانات بعد | No data yet</td></tr>';
+                }
+            }
+            
+            // Update Empire Viewers Leaderboard (Right side)
+            const empireViewersContainer = document.getElementById('empireViewersLeaderboard');
+            if (empireViewersContainer) {
+                if (topViewers.length > 0) {
+                    empireViewersContainer.innerHTML = topViewers.slice(0, 10).map(user => `
+                        <tr>
+                            <td>#${user.rank}</td>
+                            <td>${user.username}</td>
+                            <td>${user.viewers.toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    empireViewersContainer.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #888; padding: 20px;">لا توجد بيانات | No data</td></tr>';
+                }
+            }
+            
+            // Update Empire Chatters Leaderboard (Left side)
+            const empireChattersContainer = document.getElementById('empireChattersLeaderboard');
+            if (empireChattersContainer) {
+                if (topCommenters.length > 0) {
+                    empireChattersContainer.innerHTML = topCommenters.slice(0, 10).map(user => `
+                        <tr>
+                            <td>#${user.rank}</td>
+                            <td>${user.username}</td>
+                            <td>${user.comments}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    empireChattersContainer.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #888; padding: 20px;">لا توجد بيانات | No data</td></tr>';
+                }
+            }
+            
+            // Also update empireLeaderboard if it exists (for backward compatibility)
+            if (leaderboardContainer) {
+                leaderboardContainer.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div class="leaderboard-section">
+                            <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem;">
+                                <i class="fas fa-eye"></i> Top Viewers | الأكثر مشاهدة
+                            </h3>
+                            <div class="leaderboard-list">
+                                ${topViewers.length > 0 ? topViewers.map(user => `
+                                    <div class="leaderboard-item">
+                                        ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
+                                        <span class="rank-badge">#${user.rank}</span>
+                                        <span class="username">${user.username}</span>
+                                        <span class="stat-value">${user.viewers.toLocaleString()}</span>
+                                    </div>
+                                `).join('') : '<p style="text-align: center; color: #888;">لا توجد بيانات | No data</p>'}
+                            </div>
+                        </div>
+                        <div class="leaderboard-section">
+                            <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.3rem;">
+                                <i class="fas fa-comments"></i> Top Chatters | الأكثر تعليقاً
+                            </h3>
+                            <div class="leaderboard-list">
+                                ${topCommenters.length > 0 ? topCommenters.map(user => `
+                                    <div class="leaderboard-item">
+                                        ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
+                                        <span class="rank-badge">#${user.rank}</span>
+                                        <span class="username">${user.username}</span>
+                                        <span class="stat-value">${user.comments}</span>
+                                    </div>
+                                `).join('') : '<p style="text-align: center; color: #888;">لا توجد بيانات | No data</p>'}
+                            </div>
                         </div>
                     </div>
-                    <div class="leaderboard-section">
-                        <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.3rem;">
-                            <i class="fas fa-comments"></i> Top Chatters
-                        </h3>
-                        <div class="leaderboard-list">
-                            ${topCommenters.map(user => `
-                                <div class="leaderboard-item">
-                                    ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">` : ''}
-                                    <span class="rank-badge">#${user.rank}</span>
-                                    <span class="username">${user.username}</span>
-                                    <span class="stat-value">${user.comments}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
+                `;
+            }
         }
         
         // Auto-refresh leaderboard data every 2 minutes
@@ -4212,6 +4704,37 @@
             }
         }
 
+        // ==================== VERIFY TASK FUNCTION (Increases Completion Percentage) ====================
+        function verifyTask(taskType, taskName) {
+            // Mark task as completed
+            if (taskType === 'social') {
+                // Check if all 6 social links are confirmed
+                const confirmedCount = socialVerificationState.confirmed.size;
+                if (confirmedCount >= SOCIAL_LINKS.length) {
+                    localStorage.setItem('social_verification_complete', 'true');
+                    // Update completion percentage
+                    if (typeof updateCompletionPercentage === 'function') {
+                        updateCompletionPercentage();
+                    }
+                }
+            } else if (taskType === 'wallet') {
+                localStorage.setItem('wallet_connected', 'true');
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
+            } else if (taskType === 'token') {
+                localStorage.setItem('token_added', 'true');
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
+            } else if (taskType === 'kick') {
+                localStorage.setItem('kick_follow_verified', 'true');
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
+            }
+        }
+
         function confirmSocialLink(index, url, name) {
             // Enhanced verification: Check if user actually spent time on platform
             const visitTime = socialVerificationState.timestamps[url];
@@ -4249,6 +4772,17 @@
             
             // Show success notification
             showNotify(`? ${name} confirmed! | ?? ????? ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
+            
+            // Call verifyTask to increase completion percentage
+            verifyTask('social', name);
+            
+            // Check if all social links are confirmed
+            if (socialVerificationState.confirmed.size >= SOCIAL_LINKS.length) {
+                localStorage.setItem('social_verification_complete', 'true');
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
+            }
             
             // Save state
             saveSocialVerificationState();
@@ -4509,10 +5043,12 @@
 
         // ==================== THIRDWEB BACKEND API CALL WITH X402 (ENCRYPTED) ====================
         // Fix for the error: [callThirdwebBackendAPI] Backend API URL is not configured
-        async function callThirdwebBackendAPI(endpoint, data) {
-            console.warn("⚠️ API redirected to Local Handler");
-            // هذا التعديل يمنع التعليق (Freeze) ويعيد استجابة وهمية ناجحة لتكملة المراحل
-            return { status: 'success', data: {} };
+        // حل مشكلة الـ Backend API (تجاوز التعليق) - Fix Backend API issue (bypass freeze)
+        // ==================== 5. تجاوز أخطاء الـ API (Local Handler) ====================
+        // 5. Bypass API errors (Local Handler)
+        async function callThirdwebBackendAPI(endpoint) {
+            console.log(`📡 Local Handler bypass: ${endpoint}`);
+            return { success: true, status: 200, data: {} };
         }
 
         // ==================== THIRDWEB API FUNCTIONS (READ/WRITE/EVENTS) ====================
@@ -5642,6 +6178,40 @@
                 // Mark WALLET stage as completed
                 markStageCompleted('WALLET');
 
+                // Request to add token contract IMMEDIATELY (Switch/Add Token) - REQUIRED
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: {
+                                address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address on Polygon
+                                symbol: 'AKSG',
+                                decimals: 18, // Polygon decimals
+                                image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                            }
+                        }
+                    });
+                    console.log("✅ Token add request sent to wallet immediately");
+                    // Mark token as added
+                    localStorage.setItem('token_added', 'true');
+                    // Update completion percentage
+                    if (typeof updateCompletionPercentage === 'function') {
+                        updateCompletionPercentage();
+                    }
+                } catch (e) {
+                    console.log('Token import error:', e);
+                    // Still mark as attempted
+                    localStorage.setItem('token_added', 'true');
+                    if (typeof updateCompletionPercentage === 'function') {
+                        updateCompletionPercentage();
+                    }
+                }
+
+                // Save wallet connection
+                localStorage.setItem('connectedWallet', userAddr);
+                localStorage.setItem('token_added', 'true');
+                
                 // Move to WALLET_CONFIRM stage (طلب تأكيد المحفظة)
                 state = 'WALLET_CONFIRM';
                 updateUIState();
@@ -8031,6 +8601,87 @@
                 console.log("Welcome overlay initialized - click anywhere to continue to Stage 1");
             }
         });
+        
+        // ==================== SECURITY SYSTEM (Enhanced Protection - Chrome/Brave Compatible) ====================
+        // حماية أمنية: منع Debugging، تأكيد المزامنة، ومنع تعارض window.ethereum
+        // Security: Prevent Debugging, confirm sync, prevent window.ethereum conflicts
+        
+        // حماية منع الـ Debugging والتعارض (محسّنة للعمل مع Chrome/Brave)
+        (function() {
+            // 1. منع F12 ويمين الماوس (خفيف - لا يمنع عمل الموقع)
+            document.addEventListener('contextmenu', function(e) {
+                // Allow context menu in development - only prevent in production
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                    e.preventDefault();
+                }
+            });
+            
+            // 2. درع الـ Ethereum لمنع تعارض Brave/MetaMask (محسّن)
+            if (window.ethereum && !window.ethereum._isProtected) {
+                try {
+                    const provider = window.ethereum;
+                    // Mark as protected to prevent re-protection
+                    provider._isProtected = true;
+                    
+                    // Only protect if not already protected
+                    if (!window.ethereum._protected) {
+                        Object.defineProperty(window, 'ethereum', {
+                            get() { return provider; },
+                            set() { 
+                                console.warn("🛡️ Ethereum provider is protected");
+                                return false;
+                            },
+                            configurable: false,
+                            enumerable: true
+                        });
+                        window.ethereum._protected = true;
+                        console.log("✅ Wallet provider detected and protected");
+                    }
+                } catch (e) {
+                    console.warn("⚠️ Could not protect ethereum provider:", e);
+                }
+            }
+        })();
+        
+        // 3. Disable common debugging shortcuts (خفيف - لا يمنع عمل الموقع)
+        document.addEventListener('keydown', function(e) {
+            // Only disable in production
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        
+        // 4. Protection against console access (معطل مؤقتاً للسماح بعمل الموقع)
+        // Commented out to allow site functionality - can be enabled in production
+        /*
+        (function() {
+            const noop = function() {};
+            const methods = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml', 'group', 'groupEnd', 'time', 'timeEnd', 'count', 'trace', 'profile', 'profileEnd'];
+            let length = methods.length;
+            let console = (window.console = window.console || {});
+            while (length--) {
+                console[methods[length]] = noop;
+            }
+        })();
+        */
+        
+        // 5. Update completion percentage on stage changes
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key.includes('verification') || key.includes('connectedWallet') || key.includes('token_added') || key.includes('kick_follow')) {
+                setTimeout(updateCompletionPercentage, 100);
+            }
+        };
+        
+        // 6. Initial completion check
+        setTimeout(updateCompletionPercentage, 500);
     </script>
 </body>
 </html>

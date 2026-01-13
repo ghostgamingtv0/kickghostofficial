@@ -26,6 +26,8 @@
             onerror="this.onerror=null; this.src='https://unpkg.com/@thirdweb-dev/sdk@5/dist/thirdweb-sdk.browser.min.js'"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Polyfills for browser compatibility -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <!-- Configuration merged directly into HTML - No external config.js needed -->
     
     <style>
@@ -3890,9 +3892,32 @@
         }
 
         // ==================== INITIALIZATION ====================
-        document.addEventListener('DOMContentLoaded', () => {
+        // Cross-browser DOM ready function (supports all browsers including IE8+)
+        function domReady(fn) {
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(fn, 1);
+            } else {
+                if (document.addEventListener) {
+                    document.addEventListener('DOMContentLoaded', fn);
+                } else if (document.attachEvent) {
+                    // IE8 and below
+                    document.attachEvent('onreadystatechange', function() {
+                        if (document.readyState === 'complete') {
+                            fn();
+                        }
+                    });
+                } else {
+                    // Fallback for very old browsers
+                    window.onload = fn;
+                }
+            }
+        }
+        
+        domReady(function() {
             // Initialize Stage 0 (Welcome Overlay) first - this handles the click event
-            initStage0();
+            if (typeof initStage0 === 'function') {
+                initStage0();
+            }
             
             // Load stage completion status from localStorage
             loadStageCompletion();
@@ -6890,9 +6915,58 @@
             setTimeout(() => n.style.display = 'none', 6000);
         }
 
+        // Fallback copy function for older browsers
+        function fallbackCopyToClipboard(text) {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                if (document.body) {
+                    document.body.appendChild(textArea);
+                } else {
+                    console.error('⚠️ [fallbackCopyToClipboard] document.body is null');
+                    prompt("Copy this code:", text);
+                    return;
+                }
+                textArea.focus();
+                textArea.select();
+                
+                // Try execCommand for older browsers
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (successful) {
+                    return true;
+                } else {
+                    // Last resort: show code in prompt
+                    prompt("Copy this code:", text);
+                    return false;
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                // Last resort: show code in prompt
+                prompt("Copy this code:", text);
+                return false;
+            }
+        }
+        
         function copyAddr() {
-            navigator.clipboard.writeText(CONFIG.TKN);
-            showNotify("Contract Address Copied to Clipboard!", 'success');
+            // Cross-browser clipboard copy
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(CONFIG.TKN).then(() => {
+                    showNotify("Contract Address Copied to Clipboard!", 'success');
+                }).catch(() => {
+                    if (fallbackCopyToClipboard(CONFIG.TKN)) {
+                        showNotify("Contract Address Copied to Clipboard!", 'success');
+                    }
+                });
+            } else {
+                if (fallbackCopyToClipboard(CONFIG.TKN)) {
+                    showNotify("Contract Address Copied to Clipboard!", 'success');
+                }
+            }
         }
 
         function getShortAddress(addr) {
@@ -7753,7 +7827,28 @@
             }
         }
         
-        window.addEventListener('load', function() {
+        // Cross-browser window load event (supports all browsers including IE8+)
+        function windowLoad(fn) {
+            if (document.readyState === 'complete') {
+                fn();
+            } else {
+                if (window.addEventListener) {
+                    window.addEventListener('load', fn);
+                } else if (window.attachEvent) {
+                    // IE8 and below
+                    window.attachEvent('onload', fn);
+                } else {
+                    // Fallback for very old browsers
+                    var oldOnload = window.onload;
+                    window.onload = function() {
+                        if (oldOnload) oldOnload();
+                        fn();
+                    };
+                }
+            }
+        }
+        
+        windowLoad(function() {
             // نضمن أن كل شيء محمل قبل تفعيل الضغط
             const welcomeLayer = document.getElementById('welcome-layer'); 
             const mainApp = document.querySelector('.container'); // Container ??????? ??????? | Main application container

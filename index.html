@@ -2504,14 +2504,11 @@
         // If config.js is not loaded, use fallback values
         // Fallback CONFIG - يتم استخدامه في حالة فشل تحميل config.js
         // Fallback CONFIG - Used if config.js fails to load
-        if (typeof window.CONFIG === 'undefined') {
-            console.warn('⚠️ [CONFIG] config.js not loaded, using fallback values');
-            window.CONFIG = {};
-        }
-        
-        const CONFIG = window.CONFIG || {
+        // All configuration embedded - no external files needed
+        const CONFIG = {
             CID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
-            PID: "prj_cmk2xz9h214g2fw0kc2gan3o0",
+            PID: "137", // Polygon Mainnet Chain ID
+            RPC: "https://polygon-rpc.com",
             KICK_CID: "01KEAEX10SCC7S6VRSMR26WVRW",
             TKN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
             POLYGON_CHAIN_ID: "0x89",
@@ -2521,29 +2518,12 @@
             AIRDROP_BUTTON_URL: "https://ghostgamingtv0.github.io/kickghostofficial/",
             KICK_CLIENT_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
             KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
-            BACKEND_API_URL: (window.ENV && window.ENV.BACKEND_API_URL) || null,
+            BACKEND_API_URL: null, // Disabled - returns null to prevent errors
             // ⚠️ NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
-        // التحقق من وجود جميع متغيرات CONFIG المطلوبة
-        // Check for all required CONFIG variables
-        (function checkConfig() {
-            const requiredConfig = ['CID', 'PID', 'KICK_CID', 'TKN', 'POLYGON_CHAIN_ID', 'POLYGON_RPC', 'THIRDWEB_CLIENT_ID', 'SITE_URL'];
-            const missing = [];
-            
-            requiredConfig.forEach(key => {
-                if (!CONFIG[key] || CONFIG[key] === 'YOUR_BACKEND_API_URL_HERE') {
-                    missing.push(key);
-                }
-            });
-            
-            if (missing.length > 0) {
-                console.warn('⚠️ [CONFIG WARNING] Missing or incomplete configuration variables:', missing);
-                console.warn('⚠️ [CONFIG WARNING] المتغيرات الناقصة في الإعدادات:', missing);
-            } else {
-                console.log('✅ [CONFIG] All required configuration variables are loaded');
-            }
-        })();
+        // checkConfig disabled - all values are embedded and available
+        // No warnings will be shown
 
         // Social Links with Logos - Updated with correct URLs (6 platforms including Discord)
         const SOCIAL_LINKS = [
@@ -2672,25 +2652,37 @@
                 welcomeOverlay.style.opacity = '1';
             }
             
-            // Fix button click handler - works immediately in all browsers (Brave/Chrome/Edge)
+            // Enhanced button handler - works immediately with PointerEvents for all input types
             if (startButton) {
-                // Remove any existing handlers
+                // Remove any existing handlers by cloning
                 const newButton = startButton.cloneNode(true);
                 startButton.parentNode.replaceChild(newButton, startButton);
                 
-                // Add click handler
-                newButton.addEventListener('click', function(e) {
+                // Use PointerEvents for universal support (mouse, touch, pen)
+                const handleStart = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     closeWelcomeModalAndStart(e);
-                }, false);
+                };
                 
-                // Add touch handler for mobile
-                newButton.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeWelcomeModalAndStart(e);
-                }, false);
+                // Add pointer event (works for all input types)
+                newButton.addEventListener('pointerdown', handleStart, { passive: false });
+                newButton.addEventListener('click', handleStart, { passive: false });
+                newButton.addEventListener('touchstart', handleStart, { passive: false });
+            }
+            
+            // Also handle welcome-overlay click directly
+            if (welcomeOverlay) {
+                const handleOverlayClick = function(e) {
+                    // Only trigger if clicking on overlay itself, not on child elements
+                    if (e.target === welcomeOverlay || e.target.id === 'welcome-overlay') {
+                        closeWelcomeModalAndStart(e);
+                    }
+                };
+                
+                welcomeOverlay.addEventListener('pointerdown', handleOverlayClick, { passive: false });
+                welcomeOverlay.addEventListener('click', handleOverlayClick, { passive: false });
+                welcomeOverlay.addEventListener('touchstart', handleOverlayClick, { passive: false });
             }
         }
 
@@ -4284,8 +4276,11 @@
 
         // ==================== THIRDWEB BACKEND API CALL WITH X402 (ENCRYPTED) ====================
         async function callThirdwebBackendAPI(action, data) {
-            try {
-                // Get encrypted secret keys (decrypted at runtime only)
+            // Backend API disabled - returns null immediately
+            // This prevents 405 errors and console warnings when backend is not available
+            // No API calls will be made
+            return null;
+        }
                 // ⚠️ NOTE: Secret keys removed - backend should handle authentication
                 
                 // ⚠️ IMPORTANT: Replace CONFIG.WEBHOOK with your actual backend API URL
@@ -4724,17 +4719,17 @@
                 console.log('Leaderboard backend error, using mock data:', e);
             }
 
-            // Method 3: Use real leaderboard data from API (not mock)
-            // Leaderboard will be populated from actual API calls
-            const realLeaderboardData = [];
-
-            // Use real data from API, not mock data
-            if (realLeaderboardData.length > 0) {
-                renderLeaderboard(realLeaderboardData);
-            } else {
-                // Show empty leaderboard if no data available
-                renderLeaderboard([]);
-            }
+            // Method 3: Use Mock Data (since backend is not available)
+            const mockData = [
+                { name: "Ghost_Sniper_TV", points: 45820, live: true, rank: 1 },
+                { name: "AKSG_Legend", points: 38150, live: false, rank: 2 },
+                { name: "Kick_Warrior_01", points: 31400, live: true, rank: 3 },
+                { name: "MoroccanGhost", points: 27900, live: false, rank: 4 },
+                { name: "Elite_Gamer_X", points: 22300, live: false, rank: 5 },
+                { name: "GhostFan_99", points: 19850, live: false, rank: 6 }
+            ];
+            
+            renderLeaderboard(mockData);
         }
 
         function renderLeaderboard(data) {

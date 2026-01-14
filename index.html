@@ -48,7 +48,7 @@
             display: none; /* Hidden - merged with welcome-overlay */
             justify-content: center; 
             align-items: center;
-            z-index: 999999; /* ???? ?? ?? ??? */
+            z-index: 999999; /* high z-index for overlay */
             cursor: pointer;
         }
         
@@ -588,9 +588,9 @@
             gap: 20px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            background: linear-gradient(45deg, #6200ea, #a336ff, #00ffa3);
+            background: linear-gradient(45deg, #00b3ff, #00ff88, #7c3aed);
             background-size: 200% 200%;
-            box-shadow: 0 20px 50px rgba(163, 54, 255, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 179, 255, 0.35);
             position: relative;
             overflow: hidden;
             transition: all 0.4s;
@@ -1123,20 +1123,20 @@
         }
 
         .btn-stage {
-            background: linear-gradient(45deg, #00ff88, #00ffa3);
+            background: linear-gradient(45deg, #00b3ff, #7c3aed);
             border: none;
             border-radius: 30px;
             color: #000;
             font-weight: 700;
             padding: 16px 36px;
             font-size: 1.1rem;
-            box-shadow: 0 0 20px rgba(0, 255, 163, 0.25);
+            box-shadow: 0 0 20px rgba(0, 179, 255, 0.25);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-stage:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 255, 163, 0.5);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.45);
         }
 
         .social-verify-btn {
@@ -1722,7 +1722,7 @@
                     if (!devtools.open) {
                         devtools.open = true;
                         document.body.innerHTML = '';
-                        document.write('<!DOCTYPE html><html><head><title>Access Denied</title><meta charset="UTF-8"></head><body style="background:#000;color:#ff4444;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Orbitron,Arial;font-size:2rem;text-align:center;"><div><h1>??� Security Alert</h1><p>Developer Tools Detected</p><p style="font-size:1rem;color:#888;">Access Denied</p></div></body></html>');
+                        document.write('<!DOCTYPE html><html><head><title>Access Denied</title><meta charset="UTF-8"></head><body style="background:#000;color:#ff4444;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Orbitron,Arial;font-size:2rem;text-align:center;"><div><h1>Security Alert | تنبيه أمني</h1><p>Developer Tools Detected</p><p style="font-size:1rem;color:#888;">Access Denied</p></div></body></html>');
                         setTimeout(function() {
                             window.location.href = 'about:blank';
                         }, 2000);
@@ -1845,7 +1845,7 @@
             
             <!-- Confirm Button -->
             <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 10px; padding: 20px 50px; font-size: 1.3rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
-                <i class="fas fa-check-circle"></i> تأكيد - بدء المرحلة الأولى | Confirm - Start Stage 1
+                <i class="fas fa-check-circle"></i> ابدأ التحقق الاجتماعي | Start Social Verification
             </button>
         </div>
     </div>
@@ -1885,7 +1885,7 @@
                     <span>Discord</span>
                 </button>
             </div>
-            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;">
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;" disabled>
                 <i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Wallet
             </button>
         </div>
@@ -1978,7 +1978,7 @@
             </div>
             
             <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 30px; padding: 20px 50px; font-size: 1.2rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
-                <i class="fas fa-sign-in-alt"></i> انضم - بدء المرحلة الأولى | Join - Start Stage 1
+                <i class="fas fa-sign-in-alt"></i> انضم وابدأ التحقق الاجتماعي | Join & Start Social Verification
             </button>
         </div>
     </div>
@@ -2527,19 +2527,19 @@
                 <!-- Transaction History Section -->
                 <div id="transactionHistorySection" style="margin-top: 40px; padding: 25px; background: rgba(163, 54, 255, 0.1); border-radius: 20px; border: 2px solid var(--primary);">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
-                        <i class="fas fa-history"></i> ??? ???????? | Transaction History
+                        <i class="fas fa-history"></i> سجل المعاملات | Transaction History
                     </h3>
                     <p style="color: #aaa; text-align: center; margin-bottom: 20px;">
-                        ??? ????????? ????????? ???? ??? ??? ?????? | Latest transfers and operations on the network
+                        آخر التحويلات والعمليات على الشبكة | Latest transfers and operations on the network
                     </p>
                     <div id="transactionHistoryList" style="max-height: 400px; overflow-y: auto;">
                         <div style="text-align: center; padding: 40px; color: #888;">
                             <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                            <p>???? ????? ??? ????????... | Loading transaction history...</p>
+                            <p>جاري تحميل سجل المعاملات... | Loading transaction history...</p>
                         </div>
                     </div>
                     <button onclick="refreshTransactionHistory()" class="btn-mega" style="margin-top: 20px; padding: 12px 30px; font-size: 0.9rem; width: 100%;">
-                        <i class="fas fa-sync-alt"></i> ????? ????? | Refresh History
+                        <i class="fas fa-sync-alt"></i> تحديث السجل | Refresh History
                     </button>
                 </div>
             </div>
@@ -2549,31 +2549,31 @@
             <!-- Project Explanation Section (Bilingual) -->
             <div class="empire-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
                 <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 30px; font-size: 2rem; text-align: center;">
-                    <i class="fas fa-info-circle"></i> ?? ??????? | About the Project
+                    <i class="fas fa-info-circle"></i> عن المشروع | About the Project
                 </h2>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
                     <!-- Arabic Section -->
                     <div style="text-align: right; direction: rtl;">
                         <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;">
-                            <i class="fas fa-coins"></i> $AKSG - ???? ???????
+                            <i class="fas fa-coins"></i> $AKSG - عملة الإمبراطورية | The Empire Token
                         </h3>
                         <p style="color: #ccc; line-height: 2; font-size: 1.1rem; margin-bottom: 20px;">
-                            $AKSG ?? ???? ????? ????? ??? ???? Polygon? ????? ?????? ?????? ??????? ????? ???????. ??? ???? ??? ?? ????? ?????? ??? ?? ???? ?????? ??????? ?? ???? ???????.
+                            $AKSG هي عملة مبنية على شبكة Polygon لخدمة مجتمع الألعاب والبث. هدفنا مكافأة المتابعين الحقيقيين وتحويل التفاعل إلى قيمة رقمية حقيقية.
                         </p>
                         
                         <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; margin-top: 30px;">
-                            <i class="fas fa-share-alt"></i> Social-to-Earn | ??? ?? ??????? ?????????
+                            <i class="fas fa-share-alt"></i> Social-to-Earn | نظام المكافآت الاجتماعية
                         </h3>
                         <p style="color: #ccc; line-height: 2; font-size: 1.1rem; margin-bottom: 20px;">
-                            ???? Social-to-Earn ?? ???? ?? ????? ???????? ???????. ?? ??????? ?? ??????? ?? ?????? ????? ??? ?????? ??????. ??? ?? ????? ???????? ??????? ?? ?????? ?? ???? ????????????.
+                            نظام Social-to-Earn يحوّل المتابعة والمشاركة إلى نقاط وقيمة فعلية. كل تفاعل يُحسب ويُترجم إلى مكافآت.
                         </p>
                         
                         <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 20px; font-size: 1.5rem; margin-top: 30px;">
-                            <i class="fas fa-globe"></i> Web3 Technology | ????? ????? 3.0
+                            <i class="fas fa-globe"></i> Web3 Technology | تقنيات ويب 3
                         </h3>
                         <p style="color: #ccc; line-height: 2; font-size: 1.1rem;">
-                            ??? ?????? ????? Web3 ????? ?????????? ???????. ??????? ??????? ?????? ?? ?? ???? ???????? ???? ????? ?? ????? ???????.
+                            نستخدم تقنيات Web3 لضمان الشفافية واللامركزية، مع امتلاك المستخدم الكامل لأصوله الرقمية.
                         </p>
                     </div>
                     
@@ -2617,7 +2617,7 @@
             <!-- Large Chart Section -->
             <div class="empire-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
                 <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 30px; font-size: 2rem; text-align: center;">
-                    <i class="fas fa-chart-line"></i> $AKSG Market Chart | ????? ??????? ?????
+                    <i class="fas fa-chart-line"></i> $AKSG Market Chart | شارت سوق AKSG
                 </h2>
                 <div style="background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 20px; min-height: 500px;">
                     <iframe src="https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D?embed=1&info=1&swaps=1" 
@@ -2632,25 +2632,25 @@
             <!-- Social Verification Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px;">
-                    <i class="fas fa-share-alt"></i> Social Verification | ?????? ?????????
+                    <i class="fas fa-share-alt"></i> Social Verification | التحقق الاجتماعي
                 </h2>
-                <p style="color: #888; margin-bottom: 20px;">Visit all social links to unlock the claim system | ?? ???? ??????? ?????????? ???? ???? ????????</p>
+                <p style="color: #888; margin-bottom: 20px;">Visit all social links to unlock the claim system | زر كل روابط التواصل لفتح نظام المطالبة</p>
                 <div class="social-verification-grid" id="socialVerificationGrid">
                     <!-- Populated by JS -->
                 </div>
                 <button id="confirmSyncBtn" class="confirm-sync-btn" onclick="confirmSyncAndProceed()">
-                    <i class="fas fa-check-circle"></i> CONFIRM SYNC | ????? ????????
+                    <i class="fas fa-check-circle"></i> CONFIRM SYNC | تأكيد المزامنة
                 </button>
             </div>
             
             <!-- Live Statistics Card -->
             <div class="empire-card">
                 <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px;">
-                    <i class="fas fa-chart-line"></i> Live Statistics | ????????? ?????
+                    <i class="fas fa-chart-line"></i> Live Statistics | إحصائيات مباشرة
                 </h2>
                 <div style="text-align: center; padding: 40px 0;">
                     <div style="font-size: 3rem; font-weight: 900; color: var(--secondary); margin-bottom: 10px;" id="empireUsersCount">0</div>
-                    <p style="color: #888;">Users Active | ?????????? ???????</p>
+                    <p style="color: #888;">Users Active | المستخدمون النشطون</p>
                     <div style="margin-top: 30px;">
                         <div class="live-indicator-pulse" style="margin: 0 auto 10px;"></div>
                         <p id="empireKickStatus" style="color: var(--kick); font-family: 'Orbitron'; font-size: 1.2rem;">Checking Kick Status...</p>
@@ -2731,55 +2731,15 @@
 
     <script>
         /*
-         * ??� IMPORTANT BACKEND SETUP FOR X402 PROTOCOL:
-         * 
-         * This frontend code calls backend APIs which should implement X402 Protocol.
-         * 
-         * Create a backend API (Node.js/Next.js) with the following structure:
-         * 
-         * ```javascript
-         * import { createThirdwebClient } from "thirdweb";
-         * import { facilitator, settlePayment } from "thirdweb/x402";
-         * import { polygon } from "thirdweb/chains";
-         * 
-         * const client = createThirdwebClient({ 
-         *   secretKey: "197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4" 
-         * });
-         * 
-         * const thirdwebX402Facilitator = facilitator({
-         *   client,
-         *   serverWalletAddress: "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9",
-         * });
-         * 
-         * export async function POST(request) {
-         *   const result = await settlePayment({
-         *     resourceUrl: "https://ghostgamingtv0.github.io/kickghostofficial/",
-         *     method: "POST",
-         *     paymentData: request.headers.get("x-payment"),
-         *     network: polygon,
-         *     price: "1000 AKSG",
-         *     facilitator: thirdwebX402Facilitator,
-         *   });
-         * 
-         *   if (result.status === 200) {
-         *     // Process claim/transaction
-         *     return Response.json({ success: true });
-         *   } else {
-         *     return Response.json(result.responseBody, {
-         *       status: result.status,
-         *       headers: result.responseHeaders,
-         *     });
-         *   }
-         * }
-         * ```
-         * 
-         * Replace CONFIG.WEBHOOK with your backend API URL in production.
+         * IMPORTANT:
+         * X402 must be handled on the backend only.
+         * Do NOT store secret keys in HTML or frontend code.
+         * Use your backend API to perform settlement and return results to the client.
          */
 
         // ==================== SECURITY NOTE ====================
-        // ?? IMPORTANT: Secret keys should NEVER be stored in frontend code
-        // All sensitive operations (like API calls requiring secret keys) should be handled by a backend API
-        // This ensures security and prevents exposure of sensitive credentials
+        // IMPORTANT: Secret keys should NEVER be stored in frontend code.
+        // All sensitive operations must be handled by a backend API.
         // 
         // For this project, secret keys should be stored and used only in backend APIs
         // Frontend should call backend APIs which handle authentication securely
@@ -2815,18 +2775,18 @@
                 }
             },
             
-            // ???? ???? ??????
+            // Track mouse movement
             trackMouseMovement: function() {
                 let lastMoveTime = Date.now();
                 document.addEventListener('mousemove', (e) => {
                     const now = Date.now();
-                    if (now - lastMoveTime > 50) { // ????? ?? 50ms
+                    if (now - lastMoveTime > 50) { // 50ms throttle
                         this.mouseMovements.push({
                             x: e.clientX,
                             y: e.clientY,
                             time: now
                         });
-                        // ???????? ???? 50 ???? ???
+                        // Keep last 50 movements
                         if (this.mouseMovements.length > 50) {
                             this.mouseMovements.shift();
                         }
@@ -2835,7 +2795,7 @@
                 });
             },
             
-            // ???? ???????
+            // Track clicks
             trackClicks: function() {
                 document.addEventListener('click', (e) => {
                     this.mouseClicks.push({
@@ -2843,29 +2803,29 @@
                         y: e.clientY,
                         time: Date.now()
                     });
-                    // ???????? ???? 20 ????
+                    // Keep last 20 clicks
                     if (this.mouseClicks.length > 20) {
                         this.mouseClicks.shift();
                     }
                 });
             },
             
-            // ??? ??? ??? ???????? ??? (Human Verification)
+            // Basic human verification (time + movement)
             isHuman: function() {
                 const timeSpent = Date.now() - this.startTime;
-                const minTime = 3000; // 3 ????? ??? ?????
+                const minTime = 3000; // 3 seconds minimum
                 
-                // ??? ????? ???? ???? ????????
+                // Require minimum time
                 if (timeSpent < minTime) {
                     return false;
                 }
                 
-                // ??? ???? ?????? (??????? ???? ?? ????? ???? ?????)
+                // Require enough movement points
                 if (this.mouseMovements.length < 10) {
                     return false;
                 }
                 
-                // ??? ?????? ?? ???? ??????
+                // Require movement variation
                 let hasVariation = false;
                 if (this.mouseMovements.length >= 3) {
                     const first = this.mouseMovements[0];
@@ -2873,13 +2833,13 @@
                     const distance = Math.sqrt(
                         Math.pow(last.x - first.x, 2) + Math.pow(last.y - first.y, 2)
                     );
-                    hasVariation = distance > 50; // ??? ?? ???? ???? ???? ??? ????? 50 ????
+                    hasVariation = distance > 50; // distance threshold
                 }
                 
                 return hasVariation;
             },
             
-            // ????? CAPTCHA ???? (????? ??????)
+            // Generate a simple CAPTCHA
             generateCaptcha: function() {
                 const num1 = Math.floor(Math.random() * 10) + 1;
                 const num2 = Math.floor(Math.random() * 10) + 1;
@@ -2906,7 +2866,7 @@
                 };
             },
             
-            // ?????? ?? CAPTCHA
+            // Verify CAPTCHA
             verifyCaptcha: function(userAnswer, correctAnswer) {
                 return parseInt(userAnswer) === correctAnswer;
             },
@@ -2946,21 +2906,19 @@
             }
         };
         
-        // ????? ???? ??????? ??? ????? ??????
+        // Initialize bot protection on page load
         if (typeof window !== 'undefined') {
             BotProtection.init();
         }
 
         // ==================== CODE GENERATOR (Unique Code Generator for All Users) ====================
         const CodeGenerator = {
-            // ??? ??????? ????????? ?????? ?? ??????? ??????
             // Get used codes from local storage
             getUsedCodes: function() {
                 const stored = localStorage.getItem('generated_codes_list');
                 return stored ? JSON.parse(stored) : [];
             },
 
-            // ??? ????? ?????? ?? ???????
             // Save new code to the list
             saveCode: function(code) {
                 const usedCodes = this.getUsedCodes();
@@ -2970,15 +2928,15 @@
                 }
             },
 
-            // ????? ????? ??? ?????? ????
+            // Function to generate unique random code
             // Function to generate unique random code
             generateUniqueCode: function() {
                 const usedCodes = this.getUsedCodes();
                 
-                // ?????? ??? ??? ???? ???? ?????????? ?? ???? (???????)
+            // Optional: check if all possible codes have been used
                 // Check if all possible codes have been used (optional)
                 if (usedCodes.length >= 1000000) {
-                    console.error("?? [CODE GENERATOR] All possible codes have been used! | ?? ??????? ???? ??????? ???????!");
+                    console.error("⚠️ [CODE GENERATOR] All possible codes have been used! | تم استخدام جميع الأكواد الممكنة!");
                     return null;
                 }
 
@@ -2987,14 +2945,11 @@
                 let attempts = 0;
                 const maxAttempts = 1000;
 
-                // ??????? ??????? ??? ??? ????? ?? ?????? ?? ???
                 // Continue generating until we find an unused code
                 while (isDuplicate && attempts < maxAttempts) {
-                    // ????? ??? ?????? ??? 100000 ? 999999
                     // Generate random number between 100000 and 999999
                     newCode = Math.floor(100000 + Math.random() * 900000).toString();
                     
-                    // ?????? ?? ?? ????? ??? ????? ?? ????? ??????? ?????????
                     // Ensure code is not in the used codes list
                     if (!usedCodes.includes(newCode)) {
                         isDuplicate = false;
@@ -3004,11 +2959,10 @@
 
                 // Fallback if all attempts failed
                 if (isDuplicate) {
-                    console.warn("?? [CODE GENERATOR] Max attempts reached, using timestamp-based code");
+                    console.warn("⚠️ [CODE GENERATOR] Max attempts reached, using timestamp-based code");
                     newCode = (Date.now() % 900000 + 100000).toString();
                 }
 
-                // ??? ????? ??????
                 // Save the new code
                 this.saveCode(newCode);
                 return newCode;
@@ -3032,9 +2986,9 @@
         })();
 
         // ==================== CONFIGURATION (Loaded from config.js) ====================
-        // ??� NOTE: Configuration is now loaded from config.js file
+        // NOTE: Configuration is now loaded from config.js file
         // If config.js is not loaded, use fallback values
-        // Fallback CONFIG - ??? ???????? ?? ???? ??? ????? config.js
+        // Fallback CONFIG - used if config.js fails to load
         // Fallback CONFIG - Used if config.js fails to load
         // All configuration embedded - no external files needed
         const CONFIG = {
@@ -3055,7 +3009,8 @@
             KICK_CLIENT_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
             KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
             BACKEND_API_URL: "https://your-backend-api.com/api/airdrop", // Backend API for airdrop distribution
-            // ??� NOTE: Secret keys and webhook URLs should be handled in backend only
+            KICK_DEVELOPER_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
+            // NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
         // Add new Thirdweb V5 configuration fields (Official Keys)
@@ -3063,8 +3018,9 @@
         CONFIG.CLIENT_ID = "a8d2fbfbbe9dcaa11cc48f3d2634e3fd";
         // Thirdweb Project ID - Used for backend operations and advanced features
         CONFIG.PROJECT_ID = "prj_cmk2xz9h214g2fw0kc2gan3o0";
+        CONFIG.THIRDWEB_PROJECT_ID = "prj_cmk2xz9h214g2fw0kc2gan3o0";
         CONFIG.FACILITATOR = "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9";
-        CONFIG.SECRET_KEY = "K53oI-uZKCEi1wTHW2hbAQLuoD8jFTaw5vF4ommKD9yhaxN2vy1V-IaDzWmRb0GK1jfqy0gQddzgFfu3Z60aag"; // Server-side only
+        // NOTE: Never store secret keys in HTML. Keep them on backend only.
         CONFIG.FACILITATOR_WALLET = "0x9B6cB754D785667C5f7D3BDdc5d7d11629D907C9";
         // ==================== COMPLETE SOCIAL MEDIA LINKS WITH LOGOS ====================
         CONFIG.SOCIAL = {
@@ -3317,7 +3273,7 @@
         ];
 
         // ==================== GLOBAL STATE ====================
-        // STEP 1: HUMAN_VERIFY (????? ????) -> STEP 2: SOCIAL_VERIFY (?????? ????????) -> STEP 3: ADD_TOKEN_WALLET (إدراج عملة + محفظة) -> STEP 4: CLAIM_CODE (?????? ??? ??? 6 ?????)
+        // STEP 1: HUMAN_VERIFY -> STEP 2: SOCIAL_VERIFY -> STEP 3: ADD_TOKEN_WALLET -> STEP 4: CLAIM_CODE
         let state = 'HUMAN_VERIFY'; // VERIFY -> WALLET -> WALLET_CONFIRM -> ADD_TOKEN -> REQUEST_CONTRACT -> EMPIRE -> DONE
         let userAddr = "";
         let connectedWallet = "";
@@ -3561,6 +3517,7 @@
                 const btn = document.getElementById('confirm-social-advance');
                 if (btn && allDone) {
                     btn.style.visibility = 'visible';
+                    btn.disabled = false;
                     btn.classList.add('enabled');
                 }
             },
@@ -3596,10 +3553,17 @@
                     });
 
                     const signMsg = `KICKGHOST | Verify wallet ${account}`;
-                    const signature = await provider.request({
-                        method: 'personal_sign',
-                        params: [signMsg, account]
-                    });
+                    let signature = null;
+                    if (window.ethers && window.ethers.providers) {
+                        const web3Provider = new window.ethers.providers.Web3Provider(provider);
+                        const signer = web3Provider.getSigner();
+                        signature = await signer.signMessage(signMsg);
+                    } else {
+                        signature = await provider.request({
+                            method: 'personal_sign',
+                            params: [signMsg, account]
+                        });
+                    }
 
                     localStorage.setItem('connectedWallet', account);
                     localStorage.setItem('wallet_signature', signature);
@@ -3617,6 +3581,7 @@
                 if (typeof loadGeckoTerminalChart === 'function') {
                     loadGeckoTerminalChart();
                 }
+                this.updateLocalLeaderboard();
                 const claimBtn = document.getElementById('empireClaimBtn');
                 if (claimBtn) {
                     claimBtn.onclick = () => {
@@ -3624,6 +3589,61 @@
                             generateEmpireCode();
                         }
                     };
+                }
+                if (typeof loadLeaderboardData === 'function') {
+                    loadLeaderboardData();
+                }
+            },
+
+            updateLocalLeaderboard() {
+                const account = localStorage.getItem('connectedWallet');
+                if (!account) return;
+
+                const raw = localStorage.getItem('local_leaderboard');
+                const data = raw ? JSON.parse(raw) : [];
+                const existing = data.find(item => item.wallet === account);
+                const now = new Date().toISOString();
+
+                if (existing) {
+                    existing.points += 10;
+                    existing.views += 1;
+                    existing.comments += 1;
+                    existing.updatedAt = now;
+                } else {
+                    data.push({
+                        wallet: account,
+                        points: 10,
+                        views: 1,
+                        comments: 1,
+                        updatedAt: now
+                    });
+                }
+
+                localStorage.setItem('local_leaderboard', JSON.stringify(data));
+
+                const sortedByViews = [...data].sort((a, b) => b.views - a.views);
+                const sortedByComments = [...data].sort((a, b) => b.comments - a.comments);
+
+                const viewersContainer = document.getElementById('empireViewersLeaderboard');
+                if (viewersContainer) {
+                    viewersContainer.innerHTML = sortedByViews.slice(0, 10).map((u, i) => `
+                        <tr>
+                            <td>#${i + 1}</td>
+                            <td>${u.wallet.slice(0, 6)}...${u.wallet.slice(-4)}</td>
+                            <td>${u.views}</td>
+                        </tr>
+                    `).join('');
+                }
+
+                const chattersContainer = document.getElementById('empireChattersLeaderboard');
+                if (chattersContainer) {
+                    chattersContainer.innerHTML = sortedByComments.slice(0, 10).map((u, i) => `
+                        <tr>
+                            <td>#${i + 1}</td>
+                            <td>${u.wallet.slice(0, 6)}...${u.wallet.slice(-4)}</td>
+                            <td>${u.comments}</td>
+                        </tr>
+                    `).join('');
                 }
             }
         };
@@ -4832,14 +4852,14 @@
                                     <div>
                                         <p style="color: ${isIncoming ? 'var(--success)' : 'var(--danger)'}; font-weight: 600; margin-bottom: 5px;">
                                             <i class="fas fa-arrow-${isIncoming ? 'down' : 'up'}"></i> 
-                                            ${isIncoming ? 'Received' : 'Sent'} | ${isIncoming ? '?????' : '????'}
+                                            ${isIncoming ? 'Received' : 'Sent'} | ${isIncoming ? 'مستلم' : 'مرسل'}
                                         </p>
                                         <p style="color: #aaa; font-size: 0.9rem;">${amount} AKSG</p>
                                     </div>
                                     <div style="text-align: right;">
                                         <p style="color: #888; font-size: 0.85rem;">${date}</p>
                                         <a href="https://polygonscan.com/tx/${tx.hash}" target="_blank" style="color: var(--primary); font-size: 0.8rem; text-decoration: none;">
-                                            <i class="fas fa-external-link-alt"></i> View | ???
+                                            <i class="fas fa-external-link-alt"></i> View | عرض
                                         </a>
                                     </div>
                                 </div>
@@ -4847,7 +4867,7 @@
                         `;
                     }).join('');
                 } else {
-                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>?? ???? ??????? | No transactions found</p></div>';
+                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>لا توجد معاملات | No transactions found</p></div>';
                 }
             } catch (error) {
                 // Fallback: Show activity log from localStorage
@@ -4861,7 +4881,7 @@
                         </div>
                     `).join('');
                 } else {
-                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>?? ???? ??????? | No transactions found</p></div>';
+                    transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><p>لا توجد معاملات | No transactions found</p></div>';
                 }
             }
         }
@@ -4869,11 +4889,11 @@
         function refreshTransactionHistory() {
             const transactionList = document.getElementById('transactionHistoryList');
             if (transactionList) {
-                transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i><p>???? ????? ?????... | Refreshing history...</p></div>';
+                transactionList.innerHTML = '<div style="text-align: center; padding: 40px; color: #888;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i><p>جاري تحديث السجل... | Refreshing history...</p></div>';
             }
             loadTransactionHistory();
             if (typeof showNotify === 'function') {
-                showNotify('Transaction history refreshed | ?? ????? ??? ????????', 'success');
+                showNotify('Transaction history refreshed | تم تحديث سجل المعاملات', 'success');
             }
         }
 
@@ -4897,7 +4917,7 @@
             if (kickFollowVerified) {
                 if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
                 if (kickStatusText) {
-                    kickStatusText.textContent = '? Kick Follow Verified! | ?? ?????? ?? ?????? Kick!';
+                    kickStatusText.textContent = '✅ Kick Follow Verified! | تم تأكيد متابعة Kick!';
                     kickStatusText.style.color = 'var(--success)';
                 }
             } else {
@@ -4915,11 +4935,11 @@
             if (kickClientId && kickRedirectUri) {
                 const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${kickClientId}&redirect_uri=${encodeURIComponent(kickRedirectUri)}&scope=user:read%20chat:read`;
                 window.open(authUrl, '_blank');
-                showNotify('Opening Kick OAuth login... | ??? ????? ?????? ??? Kick...', 'info');
+                showNotify('Opening Kick OAuth login... | جاري فتح تسجيل دخول Kick...', 'info');
             } else {
                 // Fallback: Direct link to Kick profile
                 window.open('https://kick.com/ghost_gamingtv', '_blank');
-                showNotify('Please follow the Kick profile and return to verify | ???? ?????? ???? Kick ??????? ??????', 'info');
+                showNotify('Please follow the Kick profile and return to verify | يرجى متابعة حساب Kick ثم العودة للتحقق', 'info');
             }
         }
         
@@ -4929,35 +4949,35 @@
             
             if (verifyBtn) {
                 verifyBtn.disabled = true;
-                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Kick... | ???? ??? Kick...';
+                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Kick... | جاري فتح Kick...';
             }
             
             // Open Kick profile in new window
             const kickWindow = window.open(kickUrl, '_blank', 'width=1200,height=800');
             
             if (!kickWindow) {
-                showNotify('?? Please allow popups to verify | ???? ?????? ???????? ???????? ??????', 'warning');
+                showNotify('Please allow popups to verify | يرجى السماح بالنوافذ المنبثقة للتحقق', 'warning');
                 if (verifyBtn) {
                     verifyBtn.disabled = false;
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | ?????? ?? ????????';
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | تحقق من المتابعة';
                 }
                 return;
             }
             
-            showNotify('? Please wait 5 seconds after following | ???? ???????? 5 ????? ??? ????????', 'info');
+            showNotify('Please wait 5 seconds after following | يرجى الانتظار 5 ثوان بعد المتابعة', 'info');
             
             // Wait 5 seconds before allowing confirmation
             await new Promise(resolve => setTimeout(resolve, 5000));
             
             if (verifyBtn) {
                 verifyBtn.disabled = false;
-                verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Follow | ????? ????????';
+                verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Follow | تأكيد المتابعة';
             }
             
             // Show professional verification modal
             const confirmed = confirm(
                 'Have you followed the Kick account?\n' +
-                '?? ??? ??????? ???? Kick?\n\n' +
+                'هل قمت بمتابعة حساب Kick?\n\n' +
                 'Please confirm after following the account.'
             );
             
@@ -4975,16 +4995,16 @@
                 
                 if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
                 if (kickStatusText) {
-                    kickStatusText.textContent = '? Kick Follow Verified! | ?? ?????? ?? ?????? Kick!';
+                    kickStatusText.textContent = '✅ Kick Follow Verified! | تم تأكيد متابعة Kick!';
                     kickStatusText.style.color = 'var(--success)';
                 }
                 
                 if (verifyBtn) {
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified! | ?? ??????!';
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified! | تم التأكيد!';
                     verifyBtn.style.background = 'var(--success)';
                 }
                 
-                showNotify('? Kick follow verified! | ?? ?????? ?? ?????? Kick!', 'success');
+                showNotify('Kick follow verified! | تم تأكيد متابعة Kick!', 'success');
                 
                 // Update completion percentage
                 if (typeof updateCompletionPercentage === 'function') {
@@ -5000,7 +5020,7 @@
                 }
             } else {
                 if (verifyBtn) {
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | ?????? ?? ????????';
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | تحقق من المتابعة';
                 }
             }
         }
@@ -5027,12 +5047,12 @@
                 else if (!tokenAdded) missingStage = 'Stage 2: Token Added';
                 else if (!kickFollowVerified) missingStage = 'Stage 3: Kick Follow';
                 
-                claimBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${missingStage} | ???? ${missingStage}`;
+                claimBtn.innerHTML = `<i class="fas fa-lock"></i> Complete ${missingStage} | أكمل ${missingStage}`;
                 claimBtn.style.opacity = '0.5';
                 claimBtn.style.cursor = 'not-allowed';
             } else {
                 claimBtn.disabled = false;
-                claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | ???????? ??????';
+                claimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | احصل على الكود';
                 claimBtn.style.opacity = '1';
                 claimBtn.style.cursor = 'pointer';
             }
@@ -5204,13 +5224,13 @@
                     empireClaimBtn.style.opacity = '1';
                     empireClaimBtn.style.cursor = 'pointer';
                     empireClaimBtn.style.pointerEvents = 'auto';
-                    empireClaimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | ???????? ??????';
+                    empireClaimBtn.innerHTML = '<i class="fas fa-gift"></i> Claim Your Code | احصل على الكود';
                 } else {
                     empireClaimBtn.disabled = true;
                     empireClaimBtn.style.opacity = '0.5';
                     empireClaimBtn.style.cursor = 'not-allowed';
                     empireClaimBtn.style.pointerEvents = 'none';
-                    empireClaimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code | ?????? Kick ???? ?????';
+                    empireClaimBtn.innerHTML = '<i class="fas fa-lock"></i> Follow on Kick to unlock your code | تابع على Kick لفتح الكود';
                 }
             }
             
@@ -5307,7 +5327,7 @@
                 if (!kickFollowVerified) missingStages.push('Stage 3: Kick Follow');
                 
                 if (typeof showNotify === 'function') {
-                    showNotify(`Please complete all stages first: ${missingStages.join(', ')} | ???? ????? ???? ??????? ?????`, 'warning');
+                showNotify(`Please complete all stages first: ${missingStages.join(', ')} | يرجى إكمال جميع المراحل: ${missingStages.join(', ')}`, 'warning');
                 } else {
                     alert(`Please complete all stages first: ${missingStages.join(', ')}`);
                 }
@@ -5343,7 +5363,7 @@
             
             // Show success notification
             if (typeof showNotify === 'function') {
-                showNotify('?� Claim code generated successfully! | ?? ????? ??? ???????? ?????!', 'success');
+                showNotify('Claim code generated successfully! | تم توليد الكود بنجاح!', 'success');
             }
             
             // Mark CLAIM_CODE stage as completed
@@ -5355,7 +5375,7 @@
             const claimBtn = document.getElementById('empireClaimBtn');
             if (claimBtn) {
                 claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | تم ?????? ??? ?????';
+                claimBtn.innerHTML = '<i class="fas fa-check-circle"></i> Code Claimed | تم استلام الكود';
             }
         }
 
@@ -5520,11 +5540,15 @@
                     // Continue to render
                 } else {
                 // Try to fetch real Kick channel data
-                const channelResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`, {
-                    headers: {
+                const kickHeaders = {
                         'Accept': 'application/json',
                         'User-Agent': 'KICKGHOST-Platform/1.0'
+                };
+                if (CONFIG.KICK_DEVELOPER_ID) {
+                    kickHeaders['X-Kick-Client-Id'] = CONFIG.KICK_DEVELOPER_ID;
                     }
+                const channelResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`, {
+                    headers: kickHeaders
                 });
                 
                 if (channelResponse.ok) {
@@ -5557,7 +5581,7 @@
                     } catch (e) {
                         console.log('Backend leaderboard API error, using Kick API data:', e);
                     }
-                }
+                    }
                 }
             } catch (e) {
                 console.log('Kick API error, using fallback data:', e);
@@ -5925,7 +5949,7 @@
             // Disable button during transition
             if (masterBtn) {
                 masterBtn.disabled = true;
-                masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>???? ????????... | Loading...</span>';
+                masterBtn.innerHTML = '<div class="loading-spinner"></div> <span>جارٍ التحميل... | Loading...</span>';
             }
             
             // Smooth transition: Hide container completely
@@ -6197,7 +6221,7 @@
             
             // Check if already confirmed
             if (socialVerificationState.confirmed.has(url)) {
-                showNotify(`${name} already confirmed | ${name} ???? ??????`, 'info');
+                showNotify(`${name} already confirmed | ${name} تم التأكيد مسبقاً`, 'info');
                 return;
             }
             
@@ -6225,7 +6249,7 @@
                         card.style.borderColor = 'var(--primary)';
                         card.style.boxShadow = '0 0 15px rgba(163, 54, 255, 0.4)';
                     }
-                    showNotify(`Please return and confirm you followed ${name} | ???? ?????? ?????? ??????? ?? ${name}`, 'info');
+                    showNotify(`Please return and confirm you followed ${name} | يرجى العودة وتأكيد أنك تابعت ${name}`, 'info');
                 }
             }, 10000); // 10 seconds minimum - ensures user actually visited
             
@@ -6245,7 +6269,7 @@
                 confirmSyncBtn.classList.add('active');
                 confirmSyncBtn.style.opacity = '1';
                 confirmSyncBtn.style.pointerEvents = 'all';
-                showNotify('All social links visited! Please confirm each one. | ??? ????? ???? ???????! ???? ????? ?? ????.', 'success');
+                showNotify('All social links visited! Please confirm each one. | تمت زيارة جميع الروابط! يرجى تأكيد كل رابط.', 'success');
             }
         }
 
@@ -6289,7 +6313,7 @@
             // Verify user spent minimum time (anti-bypass measure)
             if (timeSpent < minTimeRequired && visitTime) {
                 const remaining = Math.ceil((minTimeRequired - timeSpent) / 1000);
-                showNotify(`Please spend at least ${remaining} more seconds on ${name} before confirming | ???? ???? ${remaining} ????? ?????? ??? ${name} ??? ???????`, 'warning');
+                showNotify(`Please spend at least ${remaining} more seconds on ${name} before confirming | يرجى قضاء ${remaining} ثانية إضافية على ${name} قبل التأكيد`, 'warning');
                 return;
             }
             
@@ -6316,7 +6340,7 @@
             }
             
             // Show success notification
-            showNotify(`? ${name} confirmed! | ?? ????? ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
+            showNotify(`✅ ${name} confirmed! | تم تأكيد ${name}! (${socialVerificationState.confirmed.size}/${SOCIAL_LINKS.length})`, 'success');
             
             // Call verifyTask to increase completion percentage
             verifyTask('social', name);
@@ -6346,11 +6370,11 @@
                     confirmSyncBtn.classList.add('active');
                     confirmSyncBtn.style.opacity = '1';
                     confirmSyncBtn.style.pointerEvents = 'all';
-                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (READY) | ????? ???????? (????)';
-                    showNotify('All social links confirmed! You can now proceed. | ?? ????? ???? ???????! ????? ???????? ????.', 'success');
+                    confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC (READY) | تأكيد المزامنة (جاهز)';
+                    showNotify('All social links confirmed! You can now proceed. | تم تأكيد جميع الروابط! يمكنك المتابعة الآن.', 'success');
                 } else {
                     const remaining = SOCIAL_LINKS.length - socialVerificationState.confirmed.size;
-                    confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | ????? ${remaining} ????`;
+                    confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | أكمل ${remaining} ثانية`;
                 }
             }
         }
@@ -6404,7 +6428,7 @@
                 }
             }
             
-            showNotify("?� Social verification complete! Now select and connect your wallet.", 'success');
+            showNotify("✅ Social verification complete! Now select and connect your wallet. | تم اكتمال التحقق الاجتماعي! الآن اختر محفظتك.", 'success');
             
             // Send verification to backend
             if (typeof sendSocialVerificationToBackend === 'function') {
@@ -6526,7 +6550,7 @@
         }
         async function initializeX402Facilitator() {
             try {
-                // ??� IMPORTANT: X402 Facilitator should be initialized in BACKEND
+                // IMPORTANT: X402 Facilitator should be initialized in BACKEND
                 // Frontend should call backend API which uses X402
                 
                 // For demonstration, we prepare the request to backend
@@ -7038,7 +7062,7 @@
                     // Transaction successful
                     const balance = await getTokenBalance(userAddr);
                     addTransaction('Claim', receipt.transactionHash, `1000 AKSG (Balance: ${parseFloat(balance).toFixed(2)})`);
-                    showNotify("?� Claim successful on-chain! Tokens transferred to your wallet.", 'success');
+                    showNotify("✅ Claim successful on-chain! Tokens transferred to your wallet. | تمت المطالبة بنجاح على الشبكة!", 'success');
                     return true;
                 } else {
                     throw new Error('Transaction failed on-chain');
@@ -7078,14 +7102,14 @@
                     // Update viewer count
                     const viewersEl = document.querySelector('.kick-viewers');
                     if (viewersEl && data.livestream) {
-                        viewersEl.textContent = `${data.livestream.viewer_count} ????? ????? | ${data.livestream.viewer_count} Live Viewers`;
+                    viewersEl.textContent = `${data.livestream.viewer_count} مشاهد مباشر | ${data.livestream.viewer_count} Live Viewers`;
                     }
                     
                     // Update live status
                     const liveStatusEl = document.getElementById('live-status-text');
                     if (liveStatusEl) {
                         if (data.livestream) {
-                            liveStatusEl.textContent = "?? ????? ???? | Live Now";
+                            liveStatusEl.textContent = "البث مباشر الآن | Live Now";
                             const statusDot = document.querySelector('.kick-live-status');
                             if (statusDot) statusDot.style.borderColor = "#05ff05";
                         } else {
@@ -7127,7 +7151,7 @@
                     const empireStatusEl = document.getElementById('empireKickStatus');
                     
                     if (liveStatusEl) {
-                        liveStatusEl.textContent = isLive ? '?� LIVE NOW' : 'Offline';
+                        liveStatusEl.textContent = isLive ? '🔴 LIVE NOW' : 'Offline';
                         liveStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
                     }
                     
@@ -7137,7 +7161,7 @@
                     }
                     
                     if (empireStatusEl) {
-                        empireStatusEl.textContent = isLive ? '?� LIVE NOW' : 'Offline';
+                        empireStatusEl.textContent = isLive ? '🔴 LIVE NOW' : 'Offline';
                         empireStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
                     }
 
@@ -7172,7 +7196,7 @@
             
             // Method 2: Fallback - Check via Botrix/Kick Developer API
             try {
-                // ??� Note: In production, call this from your backend with KICK_SEC
+                // Note: In production, call this from your backend with KICK_SEC
                 // For now, using public API
                 const fallbackResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`);
                 if (fallbackResponse.ok) {
@@ -7198,7 +7222,7 @@
             const empireStatusEl = document.getElementById('empireKickStatus');
             
             if (liveStatusEl) {
-                liveStatusEl.textContent = isLive ? '?� LIVE NOW' : 'Offline';
+                liveStatusEl.textContent = isLive ? '🔴 LIVE NOW' : 'Offline';
                 liveStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
             }
             
@@ -7208,7 +7232,7 @@
             }
             
             if (empireStatusEl) {
-                empireStatusEl.textContent = isLive ? '?� LIVE NOW' : 'Offline';
+                empireStatusEl.textContent = isLive ? '🔴 LIVE NOW' : 'Offline';
                 empireStatusEl.style.color = isLive ? 'var(--kick)' : '#888';
             }
         }
@@ -7233,7 +7257,7 @@
                     // Extract followers/loyalty data if available
                     const followers = data.followers_count || 0;
                     
-                    // ??� Note: Botrix API requires backend call with KICK_CID and KICK_SEC
+                    // Note: Botrix API requires backend call with KICK_CID and KICK_SEC
                     // For now, using mock data that simulates real Botrix leaderboard
                 }
             } catch (e) {
@@ -7241,7 +7265,7 @@
             }
 
             // Method 2: Use Botrix Leaderboard (requires backend)
-            // ??� In production, call your backend API with KICK_CID and KICK_SEC
+            // In production, call your backend API with KICK_CID and KICK_SEC
             // Example: POST to your backend with KICK developer credentials
             
             try {
@@ -7286,7 +7310,7 @@
                         <tr>
                             <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
                             <td class="user-name">${user.name}</td>
-                            <td>${user.live ? '<span style="color: var(--kick)">?� Live</span>' : 'Offline'}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">🔴 Live</span>' : 'Offline'}</td>
                             <td class="points-val">${user.points.toLocaleString()}</td>
                         </tr>
                     `;
@@ -7306,7 +7330,7 @@
                         <tr>
                             <td><div class="rank-circle" style="${rankStyle}">${user.rank || i + 1}</div></td>
                             <td class="user-name">${user.name}</td>
-                            <td>${user.live ? '<span style="color: var(--kick)">?� Live</span>' : 'Offline'}</td>
+                            <td>${user.live ? '<span style="color: var(--kick)">🔴 Live</span>' : 'Offline'}</td>
                             <td class="points-val">${user.points.toLocaleString()}</td>
                         </tr>
                     `;
@@ -7702,7 +7726,7 @@
                 // Security Guard 1: Check Smart Contract for claimed status (ON-CHAIN)
                 const hasClaimedOnChain = await checkIfClaimed(addrLower);
                 if (hasClaimedOnChain) {
-                    showNotify("??� SECURITY GUARDS: This wallet has already registered on-chain. System locked.", 'error');
+                showNotify("🔒 SECURITY: This wallet has already registered on-chain. System locked.", 'error');
                     lockSystem();
                     return false;
                 }
@@ -7715,7 +7739,7 @@
                     });
                     
                     if (backendCheck && backendCheck.registered) {
-                        showNotify("??� SECURITY GUARDS: This wallet is already registered in our database.", 'error');
+                        showNotify("🔒 SECURITY: This wallet is already registered in our database.", 'error');
                         lockSystem();
                         return false;
                     }
@@ -7726,7 +7750,7 @@
                 
                 // Security Guard 3: Lock to first wallet connected in this session (Session-based)
                 if (firstWalletAddress && firstWalletAddress.toLowerCase() !== addrLower) {
-                    showNotify("??� SECURITY GUARDS: Wallet switching detected! System locked to first wallet.", 'error');
+                    showNotify("🔒 SECURITY: Wallet switching detected! System locked to first wallet.", 'error');
                     lockSystem();
                     return false;
                 }
@@ -7986,7 +8010,7 @@
                 if (btn) btn.disabled = false;
                 addUserToList(getShortAddress(userAddr));
                 
-                showNotify(`?� ${walletName} Connected: ${getShortAddress(userAddr)}. Please confirm wallet connection.`, 'success');
+                showNotify(`✅ ${walletName} Connected: ${getShortAddress(userAddr)}. Please confirm wallet connection.`, 'success');
                 
             } catch (e) {
                 console.error('Wallet connection error:', e);
@@ -8001,7 +8025,7 @@
                 } else if (e.message && e.message.includes('not installed')) {
                     errorMessage = `Please install ${walletName} wallet extension | يرجى تثبيت إضافة محفظة ${walletName}`;
                 } else if (e.message) {
-                    errorMessage = `Connection error: ${e.message} | ??? ???????: ${e.message}`;
+                    errorMessage = `Connection error: ${e.message} | خطأ الاتصال: ${e.message}`;
                 }
                 
                 showNotify(errorMessage, 'error');
@@ -8056,19 +8080,19 @@
                 updateUIState();
                 addUserToList(getShortAddress(userAddr));
                 loadUserTransactions();
-                showNotify(`?� Thirdweb Connected: ${getShortAddress(userAddr)}`, 'success');
+                showNotify(`✅ Thirdweb Connected: ${getShortAddress(userAddr)}`, 'success');
             } catch (e) {
                 console.error('Thirdweb connection error:', e);
                 let errorMessage = "Thirdweb connection failed. Please try another wallet.";
                 
                 if (e.message && e.message.includes('SDK not loaded')) {
-                    errorMessage = "Thirdweb SDK not loaded. Please refresh the page | ?? ??? ????? Thirdweb SDK. ???? ????? ??????";
+                    errorMessage = "Thirdweb SDK not loaded. Please refresh the page | لم يتم تحميل Thirdweb SDK. يرجى تحديث الصفحة.";
                 } else if (e.message && e.message.includes('not installed')) {
-                    errorMessage = "Please install a Web3 wallet extension | ???? ????? ????? ????? Web3";
+                    errorMessage = "Please install a Web3 wallet extension | يرجى تثبيت محفظة Web3";
                 } else if (e.message && e.message.includes('rejected')) {
-                    errorMessage = "Connection request rejected by user | ?? ??? ??? ??????? ?? ????????";
+                    errorMessage = "Connection request rejected by user | تم رفض طلب الاتصال من المستخدم";
                 } else if (e.message) {
-                    errorMessage = `Connection error: ${e.message} | ??? ???????: ${e.message}`;
+                    errorMessage = `Connection error: ${e.message} | خطأ الاتصال: ${e.message}`;
                 }
                 
                 showNotify(errorMessage, 'error');
@@ -8079,7 +8103,7 @@
         async function saveWalletToThirdweb(address, walletType, signature = null) {
             try {
                 // DATA SAVE ONLY - NO TOKEN TRANSFER
-                // ??� This function only saves wallet data, does NOT send tokens
+                // Note: This function only saves wallet data, does NOT send tokens
                 const walletData = {
                     action: 'wallet_connected', // Data save action only
                     wallet: address,
@@ -8093,7 +8117,7 @@
                 };
 
                 // Save to webhook (data collection only)
-                // ??� NOTE: Webhook removed - use backend API instead
+                // NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -8123,7 +8147,7 @@
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: CONFIG.POLYGON_CHAIN_ID }]
                     });
-                    showNotify("?� Switched to Polygon network", 'success');
+                    showNotify("✅ Switched to Polygon network", 'success');
                     return true;
                 } catch (switchError) {
                     // Network not added (error code 4902)
@@ -8143,7 +8167,7 @@
                                     blockExplorerUrls: ['https://polygonscan.com']
                                 }]
                             });
-                            showNotify("?� Polygon network added successfully", 'success');
+                            showNotify("✅ Polygon network added successfully", 'success');
                             return true;
                         } catch (addError) {
                             if (addError.code === 4001) {
@@ -8180,7 +8204,7 @@
 
             try {
                 if (!userAddr) {
-                    showNotify("??� Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    showNotify("Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     btn.disabled = false;
                     return;
                 }
@@ -8229,13 +8253,13 @@
                     state = 'CLAIM_CODE';
                     updateUIState();
                     
-                    showNotify("?� X402 Protocol Complete | ?? ????? ???????", 'success');
+                    showNotify("✅ X402 Protocol Complete | تم اكتمال بروتوكول X402", 'success');
                     addActivityLog('X402 Protocol', 'Digital signature verified successfully');
                 }
             } catch (e) {
                 console.error('X402 Protocol Error:', e);
                 if (e.code === 4001) {
-                    showNotify("??� Signature rejected. Please sign to continue | تم رفض التوقيع", 'warning');
+                    showNotify("Signature rejected. Please sign to continue | تم رفض التوقيع", 'warning');
                 } else {
                     showNotify("❌ فشل التحقق. يرجى المحاولة مرة أخرى | Verification failed. Please try again", 'error');
                 }
@@ -8284,7 +8308,7 @@
                 // Send to backend for verification
                 await verifyPlatformLink(platform, username, walletAddress, signature);
 
-                showNotify(`?� Wallet linked to ${platform}: ${username}`, 'success');
+                showNotify(`✅ Wallet linked to ${platform}: ${username}`, 'success');
                 return verificationData;
             } catch (e) {
                 console.error('Off-chain verification error:', e);
@@ -8330,7 +8354,7 @@
                 });
 
                 // Also save to webhook
-                // ??� NOTE: Webhook removed - use backend API instead
+                // NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -8411,12 +8435,12 @@
                 walletConfirmed = true;
                 localStorage.setItem(`wallet_confirmed_${userAddr.toLowerCase()}`, 'true');
                 
-                // Move to ADD_TOKEN stage (??? ????? ??????)
+                // Move to ADD_TOKEN stage (Add token)
                 state = 'ADD_TOKEN';
                 updateUIState();
                 
                 btn.disabled = false;
-                showNotify("?� Wallet confirmed with signature! Now add AKSG token to your wallet.", 'success');
+                showNotify("✅ Wallet confirmed with signature! Now add AKSG token to your wallet.", 'success');
                 
             } catch (e) {
                 console.error('Confirm wallet error:', e);
@@ -8460,12 +8484,12 @@
                 tokenAddedStage2 = true;
                 localStorage.setItem(`token_added_${userAddr.toLowerCase()}`, 'true');
                 
-                // Move to REQUEST_CONTRACT stage (??? ?????)
+                // Move to REQUEST_CONTRACT stage
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 
                 btn.disabled = false;
-                showNotify("?� Token added successfully! Now request contract data.", 'success');
+                showNotify("✅ Token added successfully! Now request contract data.", 'success');
                 
             } catch (e) {
                 console.error('Add token error:', e);
@@ -8508,7 +8532,7 @@
         // ==================== STEP 4: REQUEST CONTRACT & SAVE DATA WITH CLAIM CODE ====================
         async function requestContractAndSave() {
             // ==================== BOT PROTECTION: Request Contract Button ====================
-            // ??? ?? ??????? ??? ????????
+            // Bot protection for request contract
             const humanCheck = BotProtection.verifyHuman();
             if (!humanCheck.success) {
                 if (typeof showNotify === 'function') {
@@ -8519,25 +8543,25 @@
                 return;
             }
             
-            // CAPTCHA ???? (????? ??????)
+            // CAPTCHA verification (anti-bot)
             const captcha = BotProtection.generateCaptcha();
             const userAnswer = prompt(
-                `?? Anti-Bot Verification | ?????? ?? ??????? ?? ???????\n\n` +
-                `Please solve this simple math problem | ???? ?? ??? ??????? ???????:\n\n` +
+                `Anti-Bot Verification | التحقق من الروبوتات\n\n` +
+                `Please solve this simple math problem | يرجى حل المسألة البسيطة:\n\n` +
                 `${captcha.question}\n\n` +
-                `Enter your answer | ???? ??????:`
+                `Enter your answer | أدخل إجابتك:`
             );
             
             if (userAnswer === null) {
-                // ???????? ????
+                // User cancelled
                 return;
             }
             
             if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
                 if (typeof showNotify === 'function') {
-                    showNotify('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????', 'error');
+                    showNotify('Incorrect answer. Please try again | إجابة غير صحيحة، حاول مرة أخرى', 'error');
                 } else {
-                    alert('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????');
+                    alert('Incorrect answer. Please try again | إجابة غير صحيحة، حاول مرة أخرى');
                 }
                 return;
             }
@@ -8569,7 +8593,7 @@
                 await saveContractToThirdweb(contractData);
                 
                 // Also save to webhook with claim code
-                // ??� NOTE: Webhook removed - use backend API instead
+                // NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -8608,7 +8632,7 @@
                 }, 1000);
                 
                 btn.disabled = false;
-                showNotify(`?� Registration Successful! Your Claim Code: ${userClaimCode}`, 'success');
+                showNotify(`✅ Registration Successful! Your Claim Code: ${userClaimCode}`, 'success');
                 
             } catch (e) {
                 console.error('Request contract error:', e);
@@ -8626,7 +8650,7 @@
         // ==================== STEP 4: CONTRACT IMPORT (ENHANCED) ====================
         async function importContract() {
             // ==================== BOT PROTECTION: Contract Button ====================
-            // ??? ?? ??????? ??? ????????
+            // Bot protection for contract action
             const humanCheck = BotProtection.verifyHuman();
             if (!humanCheck.success) {
                 if (typeof showNotify === 'function') {
@@ -8637,25 +8661,25 @@
                 return;
             }
             
-            // CAPTCHA ???? (????? ??????)
+                // CAPTCHA verification (anti-bot)
             const captcha = BotProtection.generateCaptcha();
             const userAnswer = prompt(
-                `?? Anti-Bot Verification | ?????? ?? ??????? ?? ???????\n\n` +
-                `Please solve this simple math problem | ???? ?? ??? ??????? ???????:\n\n` +
+                    `Anti-Bot Verification | التحقق من الروبوتات\n\n` +
+                    `Please solve this simple math problem | يرجى حل المسألة البسيطة:\n\n` +
                 `${captcha.question}\n\n` +
-                `Enter your answer | ???? ??????:`
+                    `Enter your answer | أدخل إجابتك:`
             );
             
             if (userAnswer === null) {
-                // ???????? ????
+                    // User cancelled
                 return;
             }
             
             if (!BotProtection.verifyCaptcha(userAnswer, captcha.answer)) {
                 if (typeof showNotify === 'function') {
-                    showNotify('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????', 'error');
+                        showNotify('Incorrect answer. Please try again | إجابة غير صحيحة، حاول مرة أخرى', 'error');
                 } else {
-                    alert('? Incorrect answer. Please try again | ????? ?????. ???? ???????? ??? ????');
+                        alert('Incorrect answer. Please try again | إجابة غير صحيحة، حاول مرة أخرى');
                 }
                 return;
             }
@@ -8709,7 +8733,7 @@
                 
                 state = 'CLAIM';
                 updateUIState();
-                showNotify("?� Token Contract Added Successfully! You can now see AKSG in your wallet.", 'success');
+                showNotify("✅ Token Contract Added Successfully! You can now see AKSG in your wallet.", 'success');
                 addActivityLog('Token Import', `${tokenSymbol} token added to wallet`);
                 
                 // Update button
@@ -8731,7 +8755,7 @@
         async function saveContractToThirdweb(contractData) {
             try {
                 // DATA SAVE ONLY - NO TOKEN TRANSFER
-                // ??� This function only saves contract data, does NOT send tokens
+                // NOTE: This function only saves contract data, does NOT send tokens
                 const saveData = {
                     action: 'contract_import',
                     ...contractData,
@@ -8739,7 +8763,7 @@
                 };
 
                 // Save to webhook (data collection only)
-                // ??� NOTE: Webhook removed - use backend API instead
+                // NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -8793,7 +8817,7 @@
                 }
 
                 // Send to webhook (fallback and tracking)
-                // ??� NOTE: Webhook removed - use backend API instead
+                // NOTE: Webhook removed - use backend API instead
                 // await fetch('YOUR_BACKEND_API_URL', {
                 //     method: "POST",
                 //     mode: "no-cors",
@@ -9075,7 +9099,7 @@
             
             try {
                 await loadUserTransactions();
-                showNotify("?� Transactions refreshed from PolygonScan", 'success');
+                showNotify("✅ Transactions refreshed from PolygonScan", 'success');
             } catch (e) {
                 showNotify("Failed to refresh transactions", 'error');
             } finally {
@@ -9124,7 +9148,7 @@
                     desc.innerHTML = `
                         <div style="text-align: center; margin-bottom: 15px;">
                             <p style="margin-bottom: 10px;"><strong>English:</strong> Choose your wallet (MetaMask, Trust Wallet, or Phantom). Only these wallets are supported.</p>
-                            <p style="margin-bottom: 10px;"><strong>???????:</strong> اختر محفظتك (MetaMask, Trust Wallet, أو Phantom). هذه المحافظ فقط مدعومة.</p>
+                            <p style="margin-bottom: 10px;"><strong>Arabic:</strong> اختر محفظتك (MetaMask, Trust Wallet، أو Phantom). هذه المحافظ فقط مدعومة.</p>
                             <p style="margin-top: 15px; color: var(--secondary); font-weight: 600;">
                                 <i class="fas fa-info-circle"></i> بعد اختيار المحفظة، سيتم إدراج عملة AKSG تلقائياً | After selecting wallet, AKSG token will be added automatically
                             </p>
@@ -9191,7 +9215,7 @@
 
                 case 'DONE':
                     document.getElementById('dot4')?.classList.add('active');
-                    title.innerText = "?� Rewards Completed";
+                    title.innerText = "✅ Rewards Completed";
                     desc.innerText = "You have successfully claimed your 1000 $AKSG tokens! Welcome to Ghost Empire!";
                     btn.innerHTML = `<i class="fas fa-check-double"></i> <span>CLAIMED SUCCESSFULLY</span>`;
                     btn.className = "btn-mega btn-success-state";
@@ -9202,7 +9226,7 @@
 
                 case 'EMPIRE':
                     document.getElementById('dot4')?.classList.add('active');
-                    title.innerText = "?� Welcome to Ghost Empire";
+                    title.innerText = "✅ Welcome to Ghost Empire";
                     desc.innerText = "All verifications complete! You have successfully completed all steps. Welcome to Ghost Empire!";
                     btn.innerHTML = `<i class="fas fa-crown"></i> <span>GHOST EMPIRE</span>`;
                     btn.className = "btn-mega btn-success-state";
@@ -9359,7 +9383,7 @@
                 state = 'X402';
                 updateUIState();
                 
-                showNotify(`?� Wallet connected: ${getShortAddress(wallet)}`, 'success');
+                showNotify(`✅ Wallet connected: ${getShortAddress(wallet)}`, 'success');
                 
                 // Load transactions
                 loadUserTransactions();
@@ -9643,7 +9667,7 @@
             if (codeToCopy && codeToCopy !== '------') {
                 navigator.clipboard.writeText(codeToCopy).then(() => {
                     if (typeof showNotify === 'function') {
-                        showNotify("?� Code copied to clipboard | ?? ??? ?????", 'success');
+                        showNotify("✅ Code copied to clipboard | تم نسخ الكود", 'success');
                     }
                 }).catch(() => {
                     // Fallback for older browsers
@@ -9659,12 +9683,12 @@
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
                     if (typeof showNotify === 'function') {
-                        showNotify("? Code copied | ?? ??? ?????", 'success');
+                        showNotify("✅ Code copied | تم نسخ الكود", 'success');
                     }
                 });
             } else {
                 if (typeof showNotify === 'function') {
-                    showNotify("??� No claim code available | ?? ???? ??? ??????", 'warning');
+                    showNotify("No claim code available | لا يوجد كود متاح", 'warning');
                 }
             }
         }
@@ -9683,13 +9707,13 @@
             
             if (!codeToShare || codeToShare === '------') {
                 if (typeof showNotify === 'function') {
-                    showNotify("??� No claim code available | ?? ???? ??? ??????", 'warning');
+                showNotify("No claim code available | لا يوجد كود متاح", 'warning');
                 }
                 return;
             }
             
             const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
-            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\n??? ????????: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
+            const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
             
             if (navigator.share) {
                 navigator.share({
@@ -9783,7 +9807,7 @@
             
             if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
             if (kickStatusText) {
-                kickStatusText.textContent = `? ${userData.username} - Kick Follow Verified! | ?? ?????? ?? ?????? Kick!`;
+                kickStatusText.textContent = `✅ ${userData.username} - Kick Follow Verified! | تم تأكيد متابعة Kick!`;
                 kickStatusText.style.color = 'var(--success)';
             }
             if (kickAvatar && userData.avatar) {
@@ -9813,7 +9837,7 @@
     
     <script>
         // ==================== STAGE COMPLETION TRACKING (If not already defined) ====================
-        // ???? ????? ?? ????? - ?? ???? ?????? ??????? ??????? ??? ??? ????? ??????? ???????
+        // Save stage completion state and keep UI in sync
         if (typeof stageCompletion === 'undefined') {
             window.stageCompletion = {
                 HUMAN_VERIFY: false,      // Stage 1: Human Verification
@@ -9838,13 +9862,13 @@
                 const sc = window.stageCompletion || stageCompletion;
                 sc[stageName] = true;
                 localStorage.setItem(`stage_${stageName}_completed`, 'true');
-                console.log(`?� Stage ${stageName} completed`);
+                console.log(`✅ Stage ${stageName} completed`);
             };
             
             window.canProceedToNextStage = function(currentStage) {
                 if (!window.isStageCompleted(currentStage)) {
                     if (typeof showNotify === 'function') {
-                        showNotify(`??� Please complete ${currentStage} stage first | ???? ????? ????? ${currentStage} أولاً`, 'warning');
+                        showNotify(`Please complete ${currentStage} stage first | يرجى إكمال مرحلة ${currentStage} أولاً`, 'warning');
                     }
                     return false;
                 }
@@ -9953,14 +9977,14 @@
             state = 'SOCIAL_VERIFY';
             updateUIState();
             
-            showNotify("?� Human Verification Complete | ?? ?????? ??????", 'success');
+            showNotify("✅ Human Verification Complete | تم التحقق البشري", 'success');
         }
         
         // Stage 2: Confirm Social Verification
         async function confirmSocialVerification() {
             // Check if all social links confirmed
             if (socialVerificationState.confirmed.size < SOCIAL_LINKS.length) {
-                showNotify(`??� Please visit and confirm all ${SOCIAL_LINKS.length} social links first | ???? ????? ?????? ???? ??????? ??????????`, 'warning');
+                showNotify(`Please visit and confirm all ${SOCIAL_LINKS.length} social links first | يرجى زيارة وتأكيد جميع روابط التواصل`, 'warning');
                 return;
             }
             
@@ -9976,7 +10000,7 @@
                 openWalletModal();
             }, 500);
             
-            showNotify("?� Social Verification Complete | تمت ???????? ??????????", 'success');
+            showNotify("✅ Social Verification Complete | تم اكتمال التحقق الاجتماعي", 'success');
         }
         
         // Enhanced refreshTransactions function
@@ -9999,7 +10023,7 @@
                 // Also refresh from contract events
                 await refreshContractTransactions();
                 
-                showNotify("?� Transactions refreshed successfully", 'success');
+                showNotify("✅ Transactions refreshed successfully", 'success');
             } catch (e) {
                 console.error('Refresh transactions error:', e);
                 showNotify("Failed to refresh transactions", 'error');
@@ -10094,7 +10118,7 @@
                 state = 'WALLET_CONFIRM';
                 updateUIState();
                 
-                showNotify(`?� ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
+                showNotify(`✅ ${walletName} Connected: ${getShortAddress(userAddr)}`, 'success');
                 addUserToList(getShortAddress(userAddr));
                 
             } catch (e) {
@@ -10111,7 +10135,7 @@
         async function confirmWallet() {
             try {
                 if (!userAddr) {
-                    showNotify("??� Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    showNotify("Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
@@ -10129,7 +10153,7 @@
                 state = 'ADD_TOKEN';
                 updateUIState();
                 
-                showNotify("?� Wallet Confirmed | تم تأكيد المحفظة", 'success');
+                showNotify("✅ Wallet Confirmed | تم تأكيد المحفظة", 'success');
             } catch (e) {
                 console.error('Confirm wallet error:', e);
                 showNotify("Failed to confirm wallet", 'error');
@@ -10140,7 +10164,7 @@
         async function addTokenToWallet() {
             try {
                 if (!window.ethereum) {
-                    showNotify("??� Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    showNotify("Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
@@ -10165,7 +10189,7 @@
                 state = 'REQUEST_CONTRACT';
                 updateUIState();
                 
-                showNotify("?� Token Added | تمت إضافة العملة", 'success');
+                showNotify("✅ Token Added | تمت إضافة العملة", 'success');
             } catch (e) {
                 console.error('Add token error:', e);
                 if (e.code === 4001) {
@@ -10180,7 +10204,7 @@
         async function requestContractAndSave() {
             try {
                 if (!userAddr) {
-                    showNotify("??� Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    showNotify("Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
@@ -10207,7 +10231,7 @@
                 state = 'X402';
                 updateUIState();
                 
-                showNotify("?� Contract Saved | تم حفظ العقد", 'success');
+                showNotify("✅ Contract Saved | تم حفظ العقد", 'success');
             } catch (e) {
                 console.error('Request contract error:', e);
                 showNotify("Failed to save contract data", 'error');
@@ -10251,32 +10275,32 @@
         function generateSecureClaimCode() {
             // Security Check 1: Verify all tasks completed
             if (!verifyAllTasksCompleted()) {
-                showNotify("??� Security Check Failed: Please complete all tasks first", 'error');
+                showNotify("Security Check Failed: Please complete all tasks first", 'error');
                 return null;
             }
             
             // Security Check 2: Verify wallet is connected and confirmed
             if (!userAddr || !walletConfirmed) {
-                showNotify("??� Security Check Failed: Wallet not confirmed", 'error');
+                showNotify("Security Check Failed: Wallet not confirmed", 'error');
                 return null;
             }
             
             // Security Check 3: Verify token is added
             if (!tokenAdded) {
-                showNotify("??� Security Check Failed: Token not added to wallet", 'error');
+                showNotify("Security Check Failed: Token not added to wallet", 'error');
                 return null;
             }
             
             // Security Check 4: Verify contract is requested
             if (!contractRequested) {
-                showNotify("??� Security Check Failed: Contract not requested", 'error');
+                showNotify("Security Check Failed: Contract not requested", 'error');
                 return null;
             }
             
             // Security Check 5: Check if wallet already has a code
             const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
             if (existingCode) {
-                showNotify("??� This wallet already has a claim code", 'warning');
+                showNotify("This wallet already has a claim code", 'warning');
                 return existingCode;
             }
             
@@ -10330,7 +10354,7 @@
             });
             localStorage.setItem('aksg_code_wallet_pairs', JSON.stringify(codeWalletPairs.slice(-10000)));
             
-            console.log(`?� Secure Claim Code Generated: ${code} for wallet: ${getShortAddress(userAddr)}`);
+            console.log(`✅ Secure Claim Code Generated: ${code} for wallet: ${getShortAddress(userAddr)}`);
             
             return code;
         }
@@ -10340,20 +10364,20 @@
             try {
                 // Security Check: Verify wallet is connected
                 if (!userAddr) {
-                    showNotify("??� Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
+                    showNotify("Please connect your wallet first | يرجى ربط المحفظة أولاً", 'warning');
                     return;
                 }
                 
                 // Security Check: Verify all previous stages completed
                 if (!verifyAllTasksCompleted()) {
-                    showNotify("??� Security Check Failed: Please complete all previous stages first | فشل التحقق: يرجى إتمام جميع المراحل السابقة", 'error');
+                    showNotify("Security Check Failed: Please complete all previous stages first | فشل التحقق: يرجى إتمام جميع المراحل السابقة", 'error');
                     return;
                 }
                 
                 // Check if wallet already has a code
                 const existingCode = localStorage.getItem(`claim_code_${userAddr.toLowerCase()}`);
                 if (existingCode) {
-                    showNotify("?� You already have a claim code! | لديك كود بالفعل", 'info');
+                    showNotify("You already have a claim code! | لديك كود بالفعل", 'info');
                     userClaimCode = existingCode;
                     displayClaimCode(existingCode);
                     
@@ -10367,7 +10391,7 @@
                 // Generate secure unique code
                 const code = generateSecureClaimCode();
                 if (!code) {
-                    showNotify("??� Failed to generate claim code. Please try again.", 'error');
+                    showNotify("Failed to generate claim code. Please try again.", 'error');
                     return;
                 }
                 
@@ -10405,7 +10429,7 @@
                     });
                 }
                 
-                showNotify(`?� Claim Code Generated: ${code} | ?? ????? ?????: ${code}`, 'success');
+                showNotify(`✅ Claim Code Generated: ${code} | تم توليد الكود: ${code}`, 'success');
                 
             } catch (e) {
                 console.error('Generate claim code error:', e);
@@ -10437,7 +10461,7 @@
         windowLoad(function() {
             // نضمن أن كل شيء محمل قبل تفعيل الضغط
             const welcomeLayer = document.getElementById('welcome-layer'); 
-            const mainApp = document.querySelector('.container'); // Container ??????? ??????? | Main application container
+            const mainApp = document.querySelector('.container'); // Main application container
 
             // Initialize Stage 0 (Welcome Overlay) - This handles the click event
             if (typeof initStage0 === 'function') {

@@ -2127,7 +2127,7 @@
                 <!-- Token Information from Polygonscan -->
                 <div class="glass-card" id="tokenInfoDisplay" style="margin-top: 20px;">
                     <!-- Populated by fetchTokenInfoFromPolygonscan() -->
-                </div>
+            </div>
 
                 <!-- Top 6 Holders from Polygonscan -->
                 <div class="glass-card" id="topHoldersDisplay" style="margin-top: 20px;">
@@ -2174,8 +2174,8 @@
         </div>
     </div>
 
-    <!-- Ghost Empire Stage -->
-    <div id="ghostEmpireStage" class="ghost-empire-stage">
+    <!-- Ghost Empire Stage (Stage 4) -->
+    <div id="ghostEmpireStage" class="ghost-empire-stage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
         <!-- Empire Logo at Top -->
         <div class="empire-header" style="text-align: center; margin-bottom: 40px;">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 40px var(--primary); margin-bottom: 20px;">
@@ -2437,12 +2437,12 @@
                 
                 <!-- Airdrop Registration Button -->
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://ghostgamingtv0.github.io/kickghostofficial/" 
-                       target="_blank" 
+                    <a href="javascript:void(0);" 
+                       onclick="event.preventDefault(); event.stopPropagation(); closeWelcomeModalAndStart(event);" 
                        class="btn-mega" 
-                       style="display: inline-flex; align-items: center; gap: 15px; text-decoration: none; padding: 20px 50px; font-size: 1.3rem;">
+                       style="display: inline-flex; align-items: center; gap: 15px; text-decoration: none; padding: 20px 50px; font-size: 1.3rem; cursor: pointer;">
                         <i class="fas fa-gift"></i>
-                        <span>??? ????????? | Register for Airdrop</span>
+                        <span>تسجيل للايردروب | Register for Airdrop</span>
                     </a>
                 </div>
             </div>
@@ -3251,20 +3251,64 @@
             }
         }
 
+        // ==================== STAGE MANAGEMENT SYSTEM ====================
+        // نظام إدارة الصفحات - إخفاء جميع الصفحات الأخرى عند فتح صفحة جديدة
+        // Stage Management System - Hide all other pages when opening a new page
+        function hideAllStages() {
+            const welcomeOverlay = document.getElementById('welcome-overlay');
+            const welcomeLayer = document.getElementById('welcome-layer');
+            const container = document.querySelector('.container');
+            const stage1Container = document.querySelector('.stage1-social-container');
+            const socialSection = document.getElementById('social-section');
+            const ghostEmpireStage = document.getElementById('ghostEmpireStage');
+            const ghostEmpireSection = document.getElementById('ghost-empire-section');
+            
+            // Hide all stages
+            if (welcomeOverlay) {
+                welcomeOverlay.style.display = 'none';
+                welcomeOverlay.style.opacity = '0';
+            }
+            if (welcomeLayer) {
+                welcomeLayer.style.display = 'none';
+                welcomeLayer.style.opacity = '0';
+            }
+            if (container) {
+                container.style.display = 'none';
+                container.style.opacity = '0';
+            }
+            if (stage1Container) {
+                stage1Container.style.display = 'none';
+            }
+            if (socialSection) {
+                socialSection.style.display = 'none';
+            }
+            if (ghostEmpireStage) {
+                ghostEmpireStage.style.display = 'none';
+                ghostEmpireStage.classList.remove('active');
+                ghostEmpireStage.style.opacity = '0';
+            }
+            if (ghostEmpireSection) {
+                ghostEmpireSection.style.display = 'none';
+                ghostEmpireSection.style.opacity = '0';
+            }
+            
+            console.log('✅ All stages hidden');
+        }
+
         // ==================== STAGE 0: CLOSE WELCOME AND PROCEED TO STAGE 1 ====================
-        // المرحلة الأولى: الدخول والإغلاق التلقائي
-        // Stage 0: Close Welcome and Auto-proceed to Stage 1
+        // المرحلة الأولى: رسالة ترحيب → تأكيد → إغلاق → فتح صفحة المرحلة 2
+        // Stage 0: Welcome → Confirm → Close → Open Stage 1
         function closeStage0() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
             const welcomeLayer = document.getElementById('welcome-layer');
             
-            // إغلاق فوري بدون انتظار - Close immediately without delay
+            // ✅ إغلاق صفحة الترحيب - Close welcome page
             if (welcomeOverlay) {
                 welcomeOverlay.style.opacity = '0';
                 welcomeOverlay.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeOverlay.style.display = 'none';
-                    // Start Stage 1: Social Tasks IMMEDIATELY
+                    // ✅ فتح صفحة المرحلة 1 - Open Stage 1 page
                     if (typeof showStage1 === 'function') {
                         showStage1();
                     } else {
@@ -3277,7 +3321,7 @@
                             }
                         }
                     }
-                }, 300); // Reduced delay for faster transition
+                }, 300);
             }
             // Also handle welcome-layer
             if (welcomeLayer) {
@@ -3285,7 +3329,7 @@
                 welcomeLayer.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeLayer.style.display = 'none';
-                    // Start Stage 1: Social Tasks IMMEDIATELY
+                    // ✅ فتح صفحة المرحلة 1 - Open Stage 1 page
                     if (typeof showStage1 === 'function') {
                         showStage1();
                     } else {
@@ -3298,7 +3342,7 @@
                             }
                         }
                     }
-                }, 300); // Reduced delay for faster transition
+                }, 300);
             }
         }
 
@@ -3312,22 +3356,20 @@
             discord: false
         };
 
+        // ==================== STAGE 1: SOCIAL VERIFICATION ====================
+        // المرحلة 1: التحقق الاجتماعي
+        // Stage 1: Social Verification
         function showStage1() {
-            // Hide all other stages first
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const welcomeLayer = document.getElementById('welcome-layer');
+            // ✅ إخفاء جميع الصفحات الأخرى - Hide all other pages
+            hideAllStages();
+            
+            // ✅ فتح صفحة المرحلة 1 فقط - Open Stage 1 page only
             const container = document.querySelector('.container');
-            const ghostEmpire = document.getElementById('ghostEmpireStage');
             
-            if (welcomeOverlay) welcomeOverlay.style.display = 'none';
-            if (welcomeLayer) welcomeLayer.style.display = 'none';
-            if (ghostEmpire) {
-                ghostEmpire.style.display = 'none';
-                ghostEmpire.classList.remove('active');
-            }
-            
-            // Show Stage 1 on full screen
             if (container) {
+                // ✅ Clear any existing content first (About Project, header, info cards, etc.)
+                container.innerHTML = '';
+                
                 container.style.display = 'block';
                 container.style.position = 'fixed';
                 container.style.top = '0';
@@ -3415,6 +3457,31 @@
                         </div>
                     </div>
                 `;
+                
+                // ✅ Ensure social icons are visible and properly displayed
+                setTimeout(() => {
+                    const socialSection = document.getElementById('social-section');
+                    if (socialSection) {
+                        socialSection.style.display = 'grid'; // Force display
+                        socialSection.style.visibility = 'visible';
+                        socialSection.style.opacity = '1';
+                        console.log('✅ Social icons section is now visible');
+                    }
+                    
+                    // Ensure all social icon cards are visible
+                    const socialCards = document.querySelectorAll('.social-icon-card, [id^="social-"]');
+                    socialCards.forEach(card => {
+                        if (card) {
+                            card.style.display = 'flex';
+                            card.style.visibility = 'visible';
+                            card.style.opacity = '1';
+                        }
+                    });
+                    
+                    // Check if all social platforms are clicked
+                    checkAllSocialClicked();
+                }, 100);
+                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -3671,7 +3738,7 @@
                 console.error('❌ Error loading GeckoTerminal chart:', e);
             }
         }
-        
+
         function clickSocialIcon(platform) {
             console.log(`🔗 Clicked social icon: ${platform}`);
             const iconCard = document.getElementById(`social-${platform}`);
@@ -3701,7 +3768,8 @@
             // Record visit timestamp
             socialVisitTimestamps[platform] = Date.now();
             
-            // Open link directly in new tab/window
+            // ✅ فتح الرابط في تبويبة جديدة فقط - لا تغيير الصفحة الحالية
+            // Open link in new tab ONLY - do not change current page
             try {
                 const newWindow = window.open(links[platform], '_blank', 'noopener,noreferrer');
                 if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
@@ -3709,14 +3777,15 @@
                     if (typeof showNotify === 'function') {
                         showNotify(`⚠️ Please allow popups to open ${platform} link | يرجى السماح بالنوافذ المنبثقة لفتح رابط ${platform}`, 'warning');
                     }
-                    // Fallback: try to open in same window
-                    window.location.href = links[platform];
+                    // ❌ REMOVED: window.location.href - لا تغيير الصفحة الحالية
+                    // Do NOT change current page - user can manually open the link
+                    console.warn(`⚠️ Popup blocked for ${platform} - user must manually open the link`);
                 } else {
-                    console.log(`✅ Opened ${platform} link: ${links[platform]}`);
+                    console.log(`✅ Opened ${platform} link in new tab: ${links[platform]}`);
                     
                     // Show notification
                     if (typeof showNotify === 'function') {
-                        showNotify(`✅ ${platform} link opened! Please visit and return. | تم فتح رابط ${platform}! يرجى الزيارة والعودة.`, 'success');
+                        showNotify(`✅ ${platform} link opened in new tab! Please visit and return. | تم فتح رابط ${platform} في تبويبة جديدة! يرجى الزيارة والعودة.`, 'success');
                     }
                     
                     // Show confirm button after 10 seconds
@@ -3731,8 +3800,11 @@
                 }
             } catch (e) {
                 console.error(`❌ Error opening ${platform} link:`, e);
-                // Fallback: try to open in same window
-                window.location.href = links[platform];
+                // ❌ REMOVED: window.location.href - لا تغيير الصفحة الحالية
+                // Do NOT change current page - show error notification only
+                if (typeof showNotify === 'function') {
+                    showNotify(`❌ Failed to open ${platform} link. Please try again. | فشل فتح رابط ${platform}. يرجى المحاولة مرة أخرى.`, 'error');
+                }
             }
         }
         
@@ -3764,16 +3836,16 @@
                 return;
             }
             
-            // Mark as visited
+                // Mark as visited
             if (socialClickedState.hasOwnProperty(platform)) {
                 socialClickedState[platform] = true;
             } else {
                 console.warn(`⚠️ Platform ${platform} not in socialClickedState`);
             }
             
-            iconCard.classList.add('clicked');
-            iconCard.style.borderColor = 'var(--success)';
-            iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
+                iconCard.classList.add('clicked');
+                iconCard.style.borderColor = 'var(--success)';
+                iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
             iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
             
             // Hide confirm button
@@ -3783,24 +3855,24 @@
             }
             
             // Track visit in localStorage
-            const visitedLinks = JSON.parse(localStorage.getItem('social_visited_links') || '[]');
-            if (!visitedLinks.includes(platform)) {
-                visitedLinks.push(platform);
-                localStorage.setItem('social_visited_links', JSON.stringify(visitedLinks));
-            }
+                    const visitedLinks = JSON.parse(localStorage.getItem('social_visited_links') || '[]');
+                    if (!visitedLinks.includes(platform)) {
+                        visitedLinks.push(platform);
+                        localStorage.setItem('social_visited_links', JSON.stringify(visitedLinks));
+                    }
             
             // Call verifyTask to update completion percentage
-            if (typeof verifyTask === 'function') {
-                verifyTask(platform);
-            }
+                    if (typeof verifyTask === 'function') {
+                        verifyTask(platform);
+                    }
             
             // Show notification
             if (typeof showNotify === 'function') {
                 showNotify(`✅ ${platform} verified! | تم التحقق من ${platform}!`, 'success');
-            }
-            
+                }
+                
             // Check if all social platforms are clicked
-            checkAllSocialClicked();
+                checkAllSocialClicked();
             
             // Update AppFlow state
             if (typeof AppFlow !== 'undefined' && AppFlow.state.socialsConfirmed.hasOwnProperty(platform)) {
@@ -3863,10 +3935,16 @@
             }
         }
         
+        // ==================== CLOSE CURRENT STAGE AND OPEN NEXT STAGE ====================
+        // إغلاق صفحة المرحلة الحالية وفتح صفحة جديدة للمرحلة التالية
+        // Close current stage page and open new page for next stage
+        // ==================== STAGE 1 → STAGE 2 TRANSITION ====================
+        // المرحلة 1 → المرحلة 2: تأكيد → إغلاق → فتح صفحة المرحلة 2
+        // Stage 1 → Stage 2: Confirm → Close → Open Stage 2 page
         function confirmSyncAndProceed() {
             // Verify all 6 platforms are visited (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
             const clickedCount = Object.values(socialClickedState).filter(v => v).length;
-            const minimumRequired = 6; // Changed from 3 to 6 - all platforms required
+            const minimumRequired = 6; // All platforms required
             const enoughClicked = clickedCount >= minimumRequired;
             
             if (!enoughClicked) {
@@ -3885,13 +3963,33 @@
                 saveUserDataSilent();
             }
             
-            // Also call silentSaveAndProceed if available
-            if (typeof silentSaveAndProceed === 'function') {
-                silentSaveAndProceed();
+            // ✅ إغلاق صفحة المرحلة 1 - Close Stage 1 page
+            const container = document.querySelector('.container');
+            const stage1Container = document.querySelector('.stage1-social-container');
+            const socialSection = document.getElementById('social-section');
+            
+            if (container) {
+                container.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(-20px)';
+            }
+            if (stage1Container) {
+                stage1Container.style.transition = 'opacity 0.5s ease-in-out';
+                stage1Container.style.opacity = '0';
+            }
+            if (socialSection) {
+                socialSection.style.transition = 'opacity 0.5s ease-in-out';
+                socialSection.style.opacity = '0';
             }
             
-            // Proceed to Stage 2
+            // ✅ فتح صفحة المرحلة 2 - Open Stage 2 page
+            setTimeout(() => {
+                // Hide Stage 1 completely
+                hideAllStages();
+                
+                // Proceed to Stage 2 (Wallet Connection)
             proceedToStage2();
+            }, 500);
         }
 
         function proceedToStage2() {
@@ -3977,48 +4075,16 @@
             }, 600);
         }
 
-        // ==================== STAGE 2: WALLET & ASSET INJECTION ====================
+        // ==================== STAGE 2: WALLET CONNECTION ====================
+        // المرحلة 2: ربط المحفظة
+        // Stage 2: Wallet Connection
         function showStage2() {
             console.log('🎯 showStage2() called - Showing Wallet Connection page');
             
-            // CRITICAL: Hide Stage 1 elements FIRST to prevent them from showing
-            const stage1Container = document.querySelector('.stage1-social-container');
-            const socialIconsGrid = document.querySelector('.social-icons-grid');
-            const confirmSyncBtn = document.getElementById('confirmSyncBtn');
+            // ✅ إخفاء جميع الصفحات الأخرى - Hide all other pages
+            hideAllStages();
             
-            if (stage1Container) {
-                stage1Container.style.display = 'none';
-                console.log('✅ Hidden .stage1-social-container');
-            }
-            if (socialIconsGrid) {
-                socialIconsGrid.style.display = 'none';
-                console.log('✅ Hidden .social-icons-grid');
-            }
-            if (confirmSyncBtn) {
-                confirmSyncBtn.style.display = 'none';
-                console.log('✅ Hidden confirmSyncBtn');
-            }
-            
-            // Hide all other stages first
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const welcomeLayer = document.getElementById('welcome-layer');
-            const ghostEmpire = document.getElementById('ghostEmpireStage');
-            
-            if (welcomeOverlay) {
-                welcomeOverlay.style.display = 'none';
-                welcomeOverlay.style.opacity = '0';
-            }
-            if (welcomeLayer) {
-                welcomeLayer.style.display = 'none';
-                welcomeLayer.style.opacity = '0';
-            }
-            if (ghostEmpire) {
-                ghostEmpire.style.display = 'none';
-                ghostEmpire.classList.remove('active');
-                ghostEmpire.style.opacity = '0';
-            }
-            
-            // Show Stage 2 on full screen
+            // ✅ فتح صفحة المرحلة 2 فقط - Open Stage 2 page only
             const container = document.querySelector('.container');
             if (container) {
                 // Clear any existing content first
@@ -4079,14 +4145,22 @@
                     </div>
                 `;
                 
-                // Fade in
+                // ✅ FADE IN ANIMATION FOR NEW PAGE (Stage 2)
                 setTimeout(() => {
-                    container.style.opacity = '1';
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(20px)';
+                    container.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                    
+                    // Fade in after a brief moment
+                    setTimeout(() => {
+                        container.style.opacity = '1';
+                        container.style.transform = 'translateY(0)';
+                    }, 50);
                 }, 50);
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
-                console.log('✅ Stage 2 displayed successfully');
+                console.log('✅ Stage 2 (NEW PAGE) displayed successfully with fade in animation');
             } else {
                 console.error('❌ Container not found!');
             }
@@ -4194,7 +4268,7 @@
                 // Show confetti (from index 11.html) - Fixed: Check if library is loaded
                 if (typeof confetti !== 'undefined' && typeof confetti === 'function') {
                     try {
-                        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+                    confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
                     } catch (e) {
                         console.warn('⚠️ Confetti library not available - skipping animation');
                     }
@@ -4204,42 +4278,74 @@
                 
                 showNotify('✅ Wallet connected and token added successfully! | ✅ تم ربط المحفظة وإضافة العملة بنجاح!', 'success');
                 
-                // AUTO-PROCEED: Transition to Empire Stage (Stage 4) automatically after 1.5 seconds
+                // ==================== STAGE 2 → STAGE 4 (EMPIRE) TRANSITION ====================
+                // المرحلة 2 → المرحلة 4: تأكيد → إغلاق → فتح صفحة الإمبراطورية
+                // Stage 2 → Stage 4: Confirm → Close → Open Empire page
+                
+                // ✅ إغلاق صفحة المرحلة 2 - Close Stage 2 page
+                const container = document.querySelector('.container');
+                const stage2Content = container ? container.querySelector('div') : null;
+                
+                if (container) {
+                    container.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(-20px)';
+                }
+                if (stage2Content) {
+                    stage2Content.style.transition = 'opacity 0.5s ease-in-out';
+                    stage2Content.style.opacity = '0';
+                }
+                
+                // ✅ فتح صفحة الإمبراطورية (المرحلة 4) - Open Empire page (Stage 4)
                 setTimeout(() => {
-                    // Hide Stage 3 (Wallet selection)
-                    const stage3Container = document.querySelector('.stage-3-container');
-                    const container = document.querySelector('.container');
-                    if (stage3Container) {
-                        stage3Container.style.display = 'none';
+                    // Hide Stage 2 completely
+                    hideAllStages();
+                    
+                    // Show Empire Stage (Stage 4) - NEW PAGE with fade in
+                    const ghostEmpireStage = document.getElementById('ghostEmpireStage');
+                    const ghostEmpireSection = document.getElementById('ghost-empire-section');
+                    
+                    if (ghostEmpireStage) {
+                        ghostEmpireStage.style.display = 'block';
+                        ghostEmpireStage.style.opacity = '0';
+                        ghostEmpireStage.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                        ghostEmpireStage.style.transform = 'translateY(20px)';
+                        ghostEmpireStage.style.position = 'fixed';
+                        ghostEmpireStage.style.top = '0';
+                        ghostEmpireStage.style.left = '0';
+                        ghostEmpireStage.style.width = '100%';
+                        ghostEmpireStage.style.height = '100vh';
+                        ghostEmpireStage.style.zIndex = '10000';
+                        ghostEmpireStage.style.overflowY = 'auto';
+                        ghostEmpireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
+                        ghostEmpireStage.classList.add('active');
+                        
+                        setTimeout(() => {
+                            ghostEmpireStage.style.opacity = '1';
+                            ghostEmpireStage.style.transform = 'translateY(0)';
+                        }, 50);
                     }
-                    if (container) {
-                        container.style.display = 'none';
+                    if (ghostEmpireSection) {
+                        ghostEmpireSection.style.display = 'block';
+                        ghostEmpireSection.style.opacity = '0';
+                        ghostEmpireSection.style.transition = 'opacity 0.5s ease-in-out';
+                        setTimeout(() => {
+                            ghostEmpireSection.style.opacity = '1';
+                        }, 50);
                     }
                     
-                    // Show Empire Stage (Stage 4)
-                    if (typeof silentSaveAndProceed === 'function') {
-                        silentSaveAndProceed();
-                    } else if (typeof showGhostEmpire === 'function') {
-                        showGhostEmpire();
-                    } else if (typeof proceedToEmpireStage === 'function') {
-                        proceedToEmpireStage();
-                    } else {
-                        // Fallback: Show ghostEmpireStage directly
-                        const ghostEmpireStage = document.getElementById('ghostEmpireStage');
-                        const ghostEmpireSection = document.getElementById('ghost-empire-section');
-                        if (ghostEmpireStage) {
-                            ghostEmpireStage.style.display = 'block';
-                            ghostEmpireStage.classList.add('active');
-                        }
-                        if (ghostEmpireSection) {
-                            ghostEmpireSection.style.display = 'block';
-                        }
-                        // Load chart when Empire Stage is shown
-                        if (typeof loadGeckoTerminalChart === 'function') {
-                            loadGeckoTerminalChart();
-                        }
+                    // Load chart when Empire Stage is shown
+                    if (typeof loadGeckoTerminalChart === 'function') {
+                        loadGeckoTerminalChart();
                     }
-                }, 1500);
+                    
+                    // Initialize code generator
+                    if (typeof generateEmpireCode === 'function') {
+                        console.log('✅ Code generator ready');
+                    }
+                    
+                    console.log('✅ Empire Stage (Stage 4) opened successfully');
+                }, 500);
             } catch (error) {
                 console.error('Wallet connection error:', error);
                 showNotify('❌ فشل ربط المحفظة | Wallet connection failed', 'error');
@@ -5522,6 +5628,9 @@
         }, 1000);
 
         // ==================== WELCOME MODAL CLOSE AND START (Legacy) ====================
+        // ==================== CLOSE WELCOME AND START STAGE 1 ====================
+        // إغلاق رسالة الترحيب وفتح المرحلة 1 (التحقق الاجتماعي)
+        // Close welcome message and open Stage 1 (Social Verification)
         function closeWelcomeModalAndStart(event) {
             // Prevent event bubbling - Very important
             if (event) {
@@ -5529,15 +5638,11 @@
                 event.stopPropagation();
             }
             
-            console.log('? Button Clicked - Starting Stage 1');
+            console.log('✅ Button Clicked - Starting Stage 1 (Social Verification)');
             
-            // CONFIG is already defined in the script (merged from config.js)
-            // No need to check - it's always available
-            // بسيط: إخفاء Welcome Modal وإظهار Dashboard
             const welcomeModal = document.getElementById('welcomeModal');
             const welcomeOverlay = document.getElementById('welcome-overlay');
             const welcomeLayer = document.getElementById('welcome-layer');
-            const container = document.querySelector('.container');
             const startButton = document.getElementById('start-button');
             
             // Hide button immediately
@@ -5553,75 +5658,56 @@
                 markStageCompleted('HUMAN_VERIFY');
             }
             
-            // إخفاء Welcome Modal with animation
-            if (welcomeModal) {
-                welcomeModal.style.opacity = '0';
-                welcomeModal.style.transition = 'opacity 0.5s ease-in-out';
-                setTimeout(() => {
-                    welcomeModal.style.display = 'none';
-                }, 500);
-            }
-            
-            // إخفاء welcome-overlay with animation
-            if (welcomeOverlay) {
-                welcomeOverlay.style.opacity = '0';
-                welcomeOverlay.style.transition = 'opacity 0.5s ease-in-out';
-                setTimeout(() => {
-                    welcomeOverlay.style.display = 'none';
-                }, 500);
-            }
-            
-            // إخفاء welcome-layer with animation
-            if (welcomeLayer) {
-                welcomeLayer.style.opacity = '0';
-                welcomeLayer.style.transition = 'opacity 0.5s ease-in-out';
-                setTimeout(() => {
-                    welcomeLayer.style.display = 'none';
-                }, 500);
-            }
-            
-            // ???? ????? ?????? ???? ????? ??????? - ?????? ?? ????? ???? ???????
-            // Unified function to hide all welcome layers - ensures all layers are hidden
+            // ✅ إخفاء جميع صفحات الترحيب - Hide all welcome pages
             function hideAllWelcomeLayers() {
                 const layers = ['welcomeModal', 'welcome-overlay', 'welcome-layer'];
                 layers.forEach(layerId => {
                     const layer = document.getElementById(layerId);
                     if (layer) {
                         layer.style.opacity = '0';
-                        layer.style.transition = 'opacity 0.5s ease-in-out';
+                        layer.style.transition = 'opacity 0.3s ease-in-out';
                         setTimeout(() => {
                             layer.style.display = 'none';
-                        }, 500);
+                        }, 300);
                     }
                 });
             }
             
-            // ??????? ?????? ??????? ?????? ?? ????? ???? ???????
             // Call unified function to ensure all layers are hidden
             hideAllWelcomeLayers();
             
-            // CRITICAL: Start Stage 1 (Social Verification) - NOT Empire Stage
+            // ✅ إخفاء جميع الصفحات الأخرى - Hide all other pages
+            hideAllStages();
+            
+            // ✅ فتح المرحلة 1 فقط (التحقق الاجتماعي) - Open Stage 1 only (Social Verification)
             setTimeout(() => {
                 // Make sure Empire Stage is hidden
                 const ghostEmpire = document.getElementById('ghostEmpireStage');
+                const ghostEmpireSection = document.getElementById('ghost-empire-section');
                 if (ghostEmpire) {
                     ghostEmpire.style.display = 'none';
                     ghostEmpire.classList.remove('active');
+                    ghostEmpire.style.opacity = '0';
+                }
+                if (ghostEmpireSection) {
+                    ghostEmpireSection.style.display = 'none';
+                    ghostEmpireSection.style.opacity = '0';
                 }
                 
-                // Show Stage 1: Social Tasks
+                // Show Stage 1: Social Tasks ONLY
                 if (typeof showStage1 === 'function') {
                     showStage1();
+                    console.log('✅ Stage 1 (Social Verification) opened successfully');
                 } else {
+                    console.error('❌ showStage1 function not found!');
                     // Fallback: show container
+                    const container = document.querySelector('.container');
                     if (container) {
                         container.style.display = 'block';
                         container.style.opacity = '1';
                     }
                 }
-            }, 600);
-            
-            // REMOVED: Duplicate setTimeout that was calling initApp() which may open Empire Stage
+            }, 400);
             // We only need the first setTimeout that calls showStage1() directly
         }
         
@@ -5873,7 +5959,7 @@
             updateKickStats(); // Initialize Kick Stats
             // Initialize chart only if Chart.js is loaded
             if (typeof Chart !== 'undefined') {
-                initTokenChartWithRealData();
+            initTokenChartWithRealData();
             } else {
                 console.warn('⚠️ Chart.js not loaded - skipping token chart initialization');
             }
@@ -6643,7 +6729,7 @@
                             console.warn("⚠️ Backend API error, but data saved locally");
                             showNotify("⚠️ Data saved locally. Backend will process later | تم حفظ البيانات محلياً", 'warning');
                         }
-                    } catch (e) {
+                } catch (e) {
                         console.warn("⚠️ Backend API unavailable, but data saved locally:", e);
                         showNotify("⚠️ Data saved locally. Backend will process later | تم حفظ البيانات محلياً", 'warning');
                     }
@@ -7347,10 +7433,10 @@
             list.innerHTML = users.map((user, i) => {
                 const userStr = typeof user === 'string' ? user : (user[0] || 'Unknown');
                 return `
-                    <div class="user-item">
+                <div class="user-item">
                         <div class="user-avatar">${userStr[0]?.toUpperCase() || '?'}</div>
                         <span>${userStr}</span>
-                    </div>
+                </div>
                 `;
             }).join('');
         }
@@ -7514,7 +7600,9 @@
                 empireStage.classList.add('active');
                 
                 // Initialize social verification grid if not already done
-                if (!document.getElementById('socialVerificationGrid').innerHTML) {
+                // ✅ Fixed: Added null check to prevent TypeError
+                const socialGrid = document.getElementById('socialVerificationGrid');
+                if (socialGrid && !socialGrid.innerHTML) {
                     initGhostEmpire();
                 }
                 
@@ -8315,12 +8403,12 @@
                 
                 // Show confetti celebration
                 if (typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 500,
-                        spread: 120,
-                        origin: { y: 0.6 },
-                        colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
-                    });
+                confetti({
+                    particleCount: 500,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
+                });
                 }
                 
                 // Automatically open Ghost Empire after 1 second
@@ -8537,12 +8625,12 @@
                 
                 // Confetti celebration
                 if (typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 500,
-                        spread: 120,
-                        origin: { y: 0.6 },
-                        colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
-                    });
+                confetti({
+                    particleCount: 500,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: ['#a336ff', '#00ffa3', '#05ff05', '#ffffff']
+                });
                 }
 
                 // Show Ghost Empire Stage
@@ -9100,9 +9188,9 @@
             
             // Show confirm button immediately
             const confirmBtn = document.getElementById(`confirm${id}`);
-            if (confirmBtn) {
-                confirmBtn.style.display = 'block';
-            }
+                if (confirmBtn) {
+                    confirmBtn.style.display = 'block';
+                }
             
             // Mark as visited (optional - for tracking)
             if (typeof visitSocialLink === 'function') {

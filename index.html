@@ -1902,15 +1902,15 @@
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px;">
                 <button class="wallet-option" data-wallet="metamask">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" width="80" style="margin-bottom: 20px; display: block;">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
                 </button>
                 <button class="wallet-option" data-wallet="trust">
-                    <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" width="80" style="margin-bottom: 20px; display: block;">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
                 </button>
                 <button class="wallet-option" data-wallet="phantom">
-                    <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; border-radius: 50%; display: block;">
+                    <img src="https://phantom.app/img/phantom-logo.svg" width="80" style="margin-bottom: 20px; display: block;">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
                 </button>
             </div>
@@ -3326,6 +3326,10 @@
         // Works even if Thirdweb fails to load
         function initStage0() {
             try {
+                // If user already confirmed welcome in SPA, skip Stage 0
+                if (typeof AppManager !== 'undefined' && localStorage.getItem('aksg_user_entry_confirmed')) {
+                    return;
+                }
                 const welcomeOverlay = document.getElementById('welcome-overlay');
                 if (welcomeOverlay) {
                     // Ensure overlay is visible
@@ -3356,8 +3360,8 @@
                     
                     console.log("✅ Stage 0 initialized successfully");
                 } else {
-                    console.warn("⚠️ welcome-overlay not found - opening Stage 1 in new tab");
-                    openStageTab(2);
+                    // Overlay removed after confirmation; do nothing
+                    return;
                 }
             } catch (e) {
                 console.error("❌ Error initializing Stage 0:", e);
@@ -3572,12 +3576,22 @@
                 try {
                     const provider = window.ethereum || window.phantom?.ethereum;
                     if (!provider) {
-                        showNotify('⚠️ يرجى تثبيت محفظة Web3 (MetaMask/Trust/Phantom EVM)', 'warning');
+                        const installLinks = {
+                            metamask: 'https://metamask.io/download/',
+                            trust: 'https://trustwallet.com/download',
+                            phantom: 'https://phantom.app/download'
+                        };
+                        const link = installLinks[walletType];
+                        if (link) {
+                            window.open(link, '_blank', 'noopener,noreferrer');
+                        }
+                        showNotify('⚠️ يرجى تثبيت محفظة Web3 أولاً | Please install a Web3 wallet', 'warning');
                         return;
                     }
 
                     // Phantom note: ensure EVM provider exists
                     if (walletType === 'phantom' && !(provider.isPhantom || window.phantom?.ethereum)) {
+                        window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer');
                         showNotify('⚠️ Phantom (EVM) غير متوفر. استخدم MetaMask أو Trust.', 'warning');
                         return;
                     }

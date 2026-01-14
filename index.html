@@ -2064,13 +2064,21 @@
             </div>
         </div>
         
-        <!-- GeckoTerminal Chart (Bottom) -->
-        <div class="glass-card" style="margin-bottom: 40px;">
+        <!-- GeckoTerminal Chart (Bottom) - Hidden until Empire Stage -->
+        <div class="glass-card" id="geckoterminal-chart-section" style="margin-bottom: 40px; display: none;">
             <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 2rem; text-align: center;">
                 <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
             </h2>
-            <div id="gecko-iframe" style="width: 100%; height: 650px; border-radius: 20px; border: 2px solid var(--primary); overflow: hidden;">
-                <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0" style="border: none;"></iframe>
+            <div class="chart-container" style="width: 100%; height: 500px; border: 1px solid #00ff00; border-radius: 15px; overflow: hidden;">
+                <iframe
+                    id="geckoterminal-embed-main"
+                    title="GeckoTerminal Embed"
+                    src=""
+                    frameborder="0"
+                    allow="clipboard-write"
+                    allowfullscreen
+                    style="width: 100%; height: 100%;">
+                </iframe>
             </div>
         </div>
 
@@ -2232,8 +2240,19 @@
                     <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
                         <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
                     </h2>
-                    <div id="gecko-iframe" style="width: 100%; height: 500px; border-radius: 20px; border: 2px solid var(--primary); overflow: hidden;">
-                        <iframe width="100%" height="100%" src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=1&swaps=1" frameborder="0" style="border: none;"></iframe>
+                    <div class="chart-container" id="geckoterminal-chart-container" style="width: 100%; height: 500px; border: 1px solid #00ff00; border-radius: 15px; overflow: hidden; display: none;">
+                        <iframe
+                            id="geckoterminal-embed"
+                            title="GeckoTerminal Embed"
+                            src=""
+                            frameborder="0"
+                            allow="clipboard-write"
+                            allowfullscreen
+                            style="width: 100%; height: 100%;">
+                        </iframe>
+                    </div>
+                    <div id="geckoterminal-placeholder" style="width: 100%; height: 500px; border: 1px solid #00ff00; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.5);">
+                        <p style="color: #888; font-size: 1.2rem; text-align: center; padding: 20px;">GeckoTerminal Chart | مخطط GeckoTerminal<br><small>Chart will load when you reach the Empire Stage | سيتم تحميل الشارت عند الوصول لمرحلة الإمبراطورية</small></p>
                     </div>
                 </div>
             </div>
@@ -3515,6 +3534,9 @@
                 if (ghostEmpireStage) {
                     ghostEmpireStage.style.display = 'block';
                     ghostEmpireStage.classList.add('active');
+                    
+                    // Load GeckoTerminal chart only when Empire Stage is shown
+                    loadGeckoTerminalChart();
                 }
                 
                 // Also call saveUserDataSilent if available
@@ -3598,6 +3620,52 @@
                 fixMissingElements();
             }
         })();
+        
+        // ==================== LOAD GECKOTERMINAL CHART (Only when Empire Stage is shown) ====================
+        // تحميل شارت GeckoTerminal فقط عند الوصول لمرحلة الإمبراطورية
+        // Load GeckoTerminal Chart only when reaching Empire Stage
+        function loadGeckoTerminalChart() {
+            try {
+                // Check if we're in Empire Stage
+                const ghostEmpireStage = document.getElementById('ghostEmpireStage');
+                const ghostEmpireSection = document.getElementById('ghost-empire-section');
+                
+                if (!ghostEmpireStage || (!ghostEmpireStage.classList.contains('active') && ghostEmpireStage.style.display !== 'block')) {
+                    console.log('ℹ️ Empire Stage not active - chart will not load (saving bandwidth)');
+                    return;
+                }
+                
+                // Chart URL with correct parameters
+                const chartUrl = "https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=0&light_chart=0&chart_type=market_cap&resolution=1d&bg_color=111827";
+                
+                // Load chart in Empire Stage container
+                const chartContainer = document.getElementById('geckoterminal-chart-container');
+                const chartEmbed = document.getElementById('geckoterminal-embed');
+                const placeholder = document.getElementById('geckoterminal-placeholder');
+                
+                if (chartContainer && chartEmbed) {
+                    // Hide placeholder and show chart
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                    chartContainer.style.display = 'block';
+                    chartEmbed.src = chartUrl;
+                    console.log("✅ GeckoTerminal chart loaded in Empire Stage");
+                }
+                
+                // Also load in main section if exists
+                const chartSection = document.getElementById('geckoterminal-chart-section');
+                const chartEmbedMain = document.getElementById('geckoterminal-embed-main');
+                
+                if (chartSection && chartEmbedMain) {
+                    chartSection.style.display = 'block';
+                    chartEmbedMain.src = chartUrl;
+                    console.log("✅ GeckoTerminal chart loaded in main section");
+                }
+            } catch (e) {
+                console.error('❌ Error loading GeckoTerminal chart:', e);
+            }
+        }
         
         function clickSocialIcon(platform) {
             console.log(`🔗 Clicked social icon: ${platform}`);
@@ -4322,6 +4390,9 @@
                 setTimeout(() => {
                     ghostEmpire.classList.add('active');
                     ghostEmpire.style.opacity = '1';
+                    
+                    // Load GeckoTerminal chart only when Empire Stage is shown
+                    loadGeckoTerminalChart();
                 }, 100);
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5534,6 +5605,9 @@
                 setTimeout(() => {
                     ghostEmpire.classList.add('active');
                     currentStage = 2;
+                    
+                    // Load GeckoTerminal chart only when Empire Stage is shown
+                    loadGeckoTerminalChart();
                     
                     // Initialize social verification grid if not already done
                     const grid = document.getElementById('socialVerificationGrid');

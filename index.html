@@ -3251,15 +3251,20 @@
             }
         }
 
+        // ==================== STAGE 0: CLOSE WELCOME AND PROCEED TO STAGE 1 ====================
+        // المرحلة الأولى: الدخول والإغلاق التلقائي
+        // Stage 0: Close Welcome and Auto-proceed to Stage 1
         function closeStage0() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
             const welcomeLayer = document.getElementById('welcome-layer');
+            
+            // إغلاق فوري بدون انتظار - Close immediately without delay
             if (welcomeOverlay) {
                 welcomeOverlay.style.opacity = '0';
-                welcomeOverlay.style.transition = 'opacity 0.5s ease-in-out';
+                welcomeOverlay.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeOverlay.style.display = 'none';
-                    // Start Stage 1: Social Tasks
+                    // Start Stage 1: Social Tasks IMMEDIATELY
                     if (typeof showStage1 === 'function') {
                         showStage1();
                     } else {
@@ -3272,15 +3277,15 @@
                             }
                         }
                     }
-                }, 500);
+                }, 300); // Reduced delay for faster transition
             }
             // Also handle welcome-layer
             if (welcomeLayer) {
                 welcomeLayer.style.opacity = '0';
-                welcomeLayer.style.transition = 'opacity 0.5s ease-in-out';
+                welcomeLayer.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeLayer.style.display = 'none';
-                    // Start Stage 1: Social Tasks
+                    // Start Stage 1: Social Tasks IMMEDIATELY
                     if (typeof showStage1 === 'function') {
                         showStage1();
                     } else {
@@ -3293,7 +3298,7 @@
                             }
                         }
                     }
-                }, 500);
+                }, 300); // Reduced delay for faster transition
             }
         }
 
@@ -3796,29 +3801,54 @@
             
             // Check if all social platforms are clicked
             checkAllSocialClicked();
+            
+            // Update AppFlow state
+            if (typeof AppFlow !== 'undefined' && AppFlow.state.socialsConfirmed.hasOwnProperty(platform)) {
+                AppFlow.state.socialsConfirmed[platform] = true;
+                AppFlow.checkSocialCompletion();
+            }
         }
 
+        // ==================== STAGE 2: CHECK ALL SOCIAL PLATFORMS ====================
+        // المرحلة الثانية: منصات التواصل الاجتماعي (الزر لا يظهر إلا بعد التأكيد)
+        // Stage 2: Social Media Platforms (Button hidden until all confirmed)
         function checkAllSocialClicked() {
             // Require all 6 platforms (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
             const clickedCount = Object.values(socialClickedState).filter(v => v).length;
-            const minimumRequired = 6; // Changed from 3 to 6 - all platforms required
+            const minimumRequired = 6; // All platforms required
             const enoughClicked = clickedCount >= minimumRequired;
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
             const syncStatusText = document.getElementById('syncStatusText');
             
+            // Save to localStorage for verification
+            localStorage.setItem('social_platforms_confirmed', JSON.stringify(socialClickedState));
+            
             if (confirmSyncBtn) {
                 if (enoughClicked) {
+                    // Show button and enable it
+                    confirmSyncBtn.style.display = 'block'; // Show button
                     confirmSyncBtn.classList.add('enabled');
                     confirmSyncBtn.disabled = false;
                     confirmSyncBtn.style.opacity = '1';
                     confirmSyncBtn.style.pointerEvents = 'all';
                     confirmSyncBtn.innerHTML = '<i class="fas fa-check-circle"></i> CONFIRM SYNC | تأكيد المزامنة';
                     if (syncStatusText) {
-                        syncStatusText.textContent = `${clickedCount} منصة تمت زيارتها! اضغط تأكيد المزامنة للمتابعة | ${clickedCount} platforms visited! Click CONFIRM SYNC to proceed`;
+                        syncStatusText.textContent = `${clickedCount} منصة تمت زيارتها! سيتم الانتقال تلقائياً... | ${clickedCount} platforms visited! Auto-proceeding...`;
                         syncStatusText.style.color = 'var(--success)';
                     }
+                    
+                    // AUTO-PROCEED: Transition to Stage 3 automatically after 1 second
+                    setTimeout(() => {
+                        if (typeof confirmSyncAndProceed === 'function') {
+                            confirmSyncAndProceed();
+                        } else if (typeof showStage2 === 'function') {
+                            showStage2(); // Fallback to showStage2
+                        }
+                    }, 1000);
                 } else {
+                    // Hide button by default until all platforms are confirmed
+                    confirmSyncBtn.style.display = 'none'; // Hidden by default
                     const remaining = minimumRequired - clickedCount;
                     confirmSyncBtn.classList.remove('enabled');
                     confirmSyncBtn.disabled = true;
@@ -4119,7 +4149,11 @@
                     }
                 }
                 
-                // Request to add token IMMEDIATELY (from index 11.html logic - wallet_watchAsset)
+                // ==================== STAGE 3: AUTO-ADD TOKEN AND PROCEED ====================
+                // المرحلة الثالثة: اختيار المحفظة وإدراج العملة تلقائياً
+                // Stage 3: Wallet Selection and Auto-add Token
+                
+                // Request to add token IMMEDIATELY (Auto-add after wallet connection)
                 try {
                     await window.ethereum.request({
                         method: 'wallet_watchAsset',
@@ -4133,11 +4167,11 @@
                             },
                         },
                     });
-                    console.log("✅ Token add request sent to wallet immediately (from index 11.html logic)");
+                    console.log("✅ Token add request sent to wallet immediately (Auto-add after connection)");
                     // Mark token as added
                     tokenAddedStage2 = true;
                     localStorage.setItem('token_added', 'true');
-                    localStorage.setItem('aksg_linked', walletAddress); // From index 11.html
+                    localStorage.setItem('aksg_linked', walletAddress);
                     // Update completion percentage
                     if (typeof updateCompletionPercentage === 'function') {
                         updateCompletionPercentage();
@@ -4152,18 +4186,9 @@
                 localStorage.setItem('connectedWallet', walletAddress);
                 localStorage.setItem('walletNetwork', 'polygon');
                 
-                // Show "Add Token" button (if not already added)
-                const addTokenSection = document.getElementById('addTokenSection');
-                if (addTokenSection && !tokenAddedStage2) {
-                    addTokenSection.style.display = 'block';
-                } else if (tokenAddedStage2) {
-                    // If token already added, show continue button
-                    const continueBtn = document.getElementById('stage2ContinueBtn');
-                    if (continueBtn) {
-                        continueBtn.style.display = 'block';
-                        continueBtn.disabled = false;
-                        continueBtn.classList.add('enabled');
-                    }
+                // Save wallet data to Thirdweb (via backend)
+                if (typeof saveWalletToThirdweb === 'function') {
+                    await saveWalletToThirdweb(walletAddress, type);
                 }
                 
                 // Show confetti (from index 11.html) - Fixed: Check if library is loaded
@@ -4178,6 +4203,43 @@
                 }
                 
                 showNotify('✅ Wallet connected and token added successfully! | ✅ تم ربط المحفظة وإضافة العملة بنجاح!', 'success');
+                
+                // AUTO-PROCEED: Transition to Empire Stage (Stage 4) automatically after 1.5 seconds
+                setTimeout(() => {
+                    // Hide Stage 3 (Wallet selection)
+                    const stage3Container = document.querySelector('.stage-3-container');
+                    const container = document.querySelector('.container');
+                    if (stage3Container) {
+                        stage3Container.style.display = 'none';
+                    }
+                    if (container) {
+                        container.style.display = 'none';
+                    }
+                    
+                    // Show Empire Stage (Stage 4)
+                    if (typeof silentSaveAndProceed === 'function') {
+                        silentSaveAndProceed();
+                    } else if (typeof showGhostEmpire === 'function') {
+                        showGhostEmpire();
+                    } else if (typeof proceedToEmpireStage === 'function') {
+                        proceedToEmpireStage();
+                    } else {
+                        // Fallback: Show ghostEmpireStage directly
+                        const ghostEmpireStage = document.getElementById('ghostEmpireStage');
+                        const ghostEmpireSection = document.getElementById('ghost-empire-section');
+                        if (ghostEmpireStage) {
+                            ghostEmpireStage.style.display = 'block';
+                            ghostEmpireStage.classList.add('active');
+                        }
+                        if (ghostEmpireSection) {
+                            ghostEmpireSection.style.display = 'block';
+                        }
+                        // Load chart when Empire Stage is shown
+                        if (typeof loadGeckoTerminalChart === 'function') {
+                            loadGeckoTerminalChart();
+                        }
+                    }
+                }, 1500);
             } catch (error) {
                 console.error('Wallet connection error:', error);
                 showNotify('❌ فشل ربط المحفظة | Wallet connection failed', 'error');

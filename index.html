@@ -3449,6 +3449,7 @@
                 3: 'stage-wallet',
                 4: 'ghostEmpireStage'
             },
+            storageKey: 'aksg_user_entry_confirmed',
             socials: {
                 kick: false,
                 twitter: false,
@@ -3460,9 +3461,31 @@
 
             showStage(stageNum) {
                 hideAllStages();
+                // Extra safety: hide all stage containers
+                document.querySelectorAll('.stage-container').forEach(el => {
+                    el.classList.remove('active');
+                    el.style.display = 'none';
+                });
+
                 const stageId = this.stages[stageNum];
                 const stageEl = document.getElementById(stageId);
                 if (!stageEl) return;
+
+                // Ensure welcome overlay never stays above other stages
+                if (stageNum !== 1) {
+                    const welcomeOverlay = document.getElementById('welcome-overlay');
+                    const welcomeLayer = document.getElementById('welcome-layer');
+                    const welcomeModal = document.getElementById('welcomeModal');
+                    if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+                    if (welcomeLayer) welcomeLayer.style.display = 'none';
+                    if (welcomeModal) welcomeModal.style.display = 'none';
+                }
+
+                // Never show welcome again once confirmed
+                if (stageId === 'welcome-overlay' && localStorage.getItem(this.storageKey)) {
+                    this.showStage(2);
+                    return;
+                }
 
                 stageEl.classList.add('active');
                 stageEl.style.display = stageId === 'welcome-overlay' ? 'flex' : 'block';
@@ -3470,14 +3493,23 @@
             },
 
             init() {
-                this.showStage(1);
+                const hasJoined = localStorage.getItem(this.storageKey);
+                if (hasJoined) {
+                    const welcomeOverlay = document.getElementById('welcome-overlay');
+                    const welcomeLayer = document.getElementById('welcome-layer');
+                    const welcomeModal = document.getElementById('welcomeModal');
+                    if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+                    if (welcomeLayer) welcomeLayer.style.display = 'none';
+                    if (welcomeModal) welcomeModal.style.display = 'none';
+                }
+                this.showStage(hasJoined ? 2 : 1);
 
                 // Start buttons (welcome -> social)
                 document.querySelectorAll('#start-button, #confirm-entry-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.showStage(2);
+                        this.confirmEntry();
                     });
                 });
 
@@ -3510,6 +3542,11 @@
                         this.handleWalletConnection(walletType);
                     });
                 });
+            },
+
+            confirmEntry() {
+                localStorage.setItem(this.storageKey, 'true');
+                this.showStage(2);
             },
 
             checkSocials() {

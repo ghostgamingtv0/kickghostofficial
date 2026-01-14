@@ -3348,6 +3348,80 @@
         // Store visit timestamps to track when user clicked
         const socialVisitTimestamps = {};
         
+        // ==================== SAVE USER DATA SILENTLY (NO GAS REQUESTS) ====================
+        // دالة الحفظ الصامت (بدون معاملات) - Save User Data Silently (No Gas Requests)
+        function saveUserDataSilent() {
+            try {
+                const userWallet = (window.ethereum && window.ethereum.selectedAddress) 
+                    ? window.ethereum.selectedAddress 
+                    : localStorage.getItem('connectedWallet') || '0x...';
+                const contractAddress = CONFIG.CONTRACT_ADDRESS || CONFIG.TKN || "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
+                
+                // حفظ في المتصفح فوراً - Save to browser immediately
+                localStorage.setItem('connectedWallet', userWallet);
+                localStorage.setItem('targetContract', contractAddress);
+                localStorage.setItem('airdrop_status', 'ready_for_engine');
+                localStorage.setItem('data_saved_at', new Date().toISOString());
+
+                console.log("✅ البيانات محفوظة محلياً - جاهزة للتوزيع عبر API");
+                console.log("✅ Data saved locally - ready for distribution via API");
+                console.log("Wallet:", userWallet);
+                console.log("Contract:", contractAddress);
+                
+                // إرسال البيانات إلى Backend API - Send data to Backend API
+                const backendURL = CONFIG.BACKEND_API_URL;
+                if (backendURL && backendURL !== "https://your-backend-api.com/api/airdrop" && userWallet && userWallet !== '0x...') {
+                    fetch(backendURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'queue_airdrop',
+                            wallet: userWallet,
+                            contract: contractAddress,
+                            amount: 1000,
+                            token: 'AKSG',
+                            network: 'Polygon',
+                            chainId: 137,
+                            timestamp: new Date().toISOString()
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            console.log("✅ Data sent to backend successfully");
+                        } else {
+                            console.warn("⚠️ Backend API error, but data saved locally");
+                        }
+                    }).catch(e => {
+                        console.warn("⚠️ Backend API unavailable, but data saved locally:", e);
+                    });
+                }
+                
+                // الانتقال للمرحلة التالية تلقائياً - Proceed to next stage automatically
+                if (typeof proceedToEmpireStage === 'function') {
+                    proceedToEmpireStage();
+                } else if (typeof showGhostEmpire === 'function') {
+                    showGhostEmpire();
+                } else if (typeof proceedToStage2 === 'function') {
+                    proceedToStage2();
+                }
+                
+                return true;
+            } catch (e) {
+                console.error('❌ Error saving user data:', e);
+                return false;
+            }
+        }
+        
+        // Alias for compatibility
+        function proceedToEmpireStage() {
+            if (typeof showGhostEmpire === 'function') {
+                showGhostEmpire();
+            } else if (typeof proceedToStage2 === 'function') {
+                proceedToStage2();
+            }
+        }
+        
         function clickSocialIcon(platform) {
             console.log(`🔗 Clicked social icon: ${platform}`);
             const iconCard = document.getElementById(`social-${platform}`);
@@ -3530,6 +3604,11 @@
             // Mark social verification as complete
             localStorage.setItem('social_verification_complete', 'true');
             localStorage.setItem('social_visited_links', JSON.stringify(Object.keys(socialClickedState).filter(k => socialClickedState[k])));
+            
+            // Save user data silently (no gas requests) - حفظ البيانات صامتاً
+            if (typeof saveUserDataSilent === 'function') {
+                saveUserDataSilent();
+            }
             
             // Proceed to Stage 2
             proceedToStage2();
@@ -3837,9 +3916,15 @@
                     }
                 }
                 
-                // Show confetti (from index 11.html)
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+                // Show confetti (from index 11.html) - Fixed: Check if library is loaded
+                if (typeof confetti !== 'undefined' && typeof confetti === 'function') {
+                    try {
+                        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+                    } catch (e) {
+                        console.warn('⚠️ Confetti library not available - skipping animation');
+                    }
+                } else {
+                    console.log('ℹ️ Confetti library not loaded - skipping animation (non-critical)');
                 }
                 
                 showNotify('✅ Wallet connected and token added successfully! | ✅ تم ربط المحفظة وإضافة العملة بنجاح!', 'success');
@@ -4371,19 +4456,39 @@
                 attempts++;
             }
             
-            // Format as G-XXXXXX (as requested)
+            // Format as G-XXXXXX (as requested) - Enhanced with Glow Effect
             const empireCode = `G-${code}`;
             
-            // Save to localStorage
+            // Save to localStorage - ربط الكود بالمحفظة في التخزين
             localStorage.setItem('final_empire_code', empireCode);
-            localStorage.setItem('userClaimCode', empireCode); // Save full code with G- prefix
+            localStorage.setItem('userClaimCode', empireCode);
+            localStorage.setItem('user_claim_code', empireCode); // Additional key for compatibility
             
-            // Update display if element exists
+            // Update display if element exists - Enhanced Display with Orbitron Font and Green Glow
             const codeDisplay = document.getElementById('displayClaimCode');
             if (codeDisplay) {
                 codeDisplay.textContent = empireCode;
-                codeDisplay.style.textShadow = "0 0 20px #00ffa3";
+                codeDisplay.style.fontFamily = "'Orbitron', monospace";
+                codeDisplay.style.fontSize = "2.5rem";
+                codeDisplay.style.fontWeight = "bold";
+                codeDisplay.style.color = "#00ff00";
+                codeDisplay.style.textShadow = "0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00";
+                codeDisplay.style.letterSpacing = "3px";
             }
+            
+            // Also update any other display elements
+            const allCodeDisplays = document.querySelectorAll('[id*="claim"], [id*="code"], [id*="Code"]');
+            allCodeDisplays.forEach(el => {
+                if (el.textContent && (el.textContent.includes('G-') || el.id.includes('claim') || el.id.includes('code'))) {
+                    el.textContent = empireCode;
+                    el.style.color = "#00ff00";
+                    el.style.textShadow = "0 0 15px #00ff00";
+                    el.style.fontFamily = "'Orbitron', monospace";
+                    el.style.fontWeight = "bold";
+                }
+            });
+            
+            console.log("✅ Empire Code Generated:", empireCode);
             
             // Disable button after generation
             const genBtn = document.getElementById('generatorBtn');
@@ -4426,7 +4531,7 @@
             return code;
         }
 
-        // ==================== UPDATE COMPLETION PERCENTAGE ====================
+        // ==================== UPDATE COMPLETION PERCENTAGE (Fixed NaN) ====================
         function updateCompletionPercentage() {
             const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
             const walletConnected = localStorage.getItem('connectedWallet') !== null;
@@ -4439,12 +4544,18 @@
             if (tokenAdded) completed++;
             if (kickFollowVerified) completed++;
             
-            const percentage = Math.round((completed / 4) * 100);
+            // Fixed NaN: Ensure percentage is always a valid number
+            const percentage = isNaN(completed) || isNaN(4) ? 0 : Math.round((completed / 4) * 100);
+            const validPercentage = isNaN(percentage) || !isFinite(percentage) ? 0 : Math.max(0, Math.min(100, percentage));
             
-            // Update percentage display
+            // Update percentage display - Fixed: Always show valid number
             const completionEl = document.getElementById('completionPercentage');
             if (completionEl) {
-                completionEl.textContent = percentage + '%';
+                completionEl.textContent = validPercentage + '%';
+                // Ensure no NaN values
+                if (completionEl.textContent.includes('NaN') || completionEl.textContent.includes('undefined')) {
+                    completionEl.textContent = '0%';
+                }
             }
             
             // Update Generator button - STRICT: Only enabled if percentage === 100
@@ -6228,8 +6339,10 @@
 
         async function executeOnChainClaim() {
             try {
+                // Use saveUserDataSilent if wallet not connected
                 if (!userAddr) {
-                    throw new Error('Wallet not connected - please connect wallet first');
+                    console.log("⚠️ Wallet not connected - using saveUserDataSilent");
+                    return saveUserDataSilent();
                 }
 
                 // ⚠️ NO TRANSACTIONS - Send wallet to backend for airdrop distribution
@@ -6243,38 +6356,81 @@
                 // Check if already saved locally
                 const alreadySaved = localStorage.getItem(`claimed_${userAddr.toLowerCase()}`);
                 if (alreadySaved) {
-                    showNotify("This wallet data has already been saved", 'info');
-                    return false;
+                    showNotify("This wallet data has already been saved | تم حفظ بيانات هذه المحفظة بالفعل", 'info');
+                    return true; // Return true instead of false
                 }
 
-                // Execute claim transaction
-                // ⚠️ REMOVED: Blockchain transaction - Data save only
+                // ⚠️ NO BLOCKCHAIN TRANSACTION - Use saveUserDataSilent instead
                 // Save claim data locally only (NO BLOCKCHAIN TRANSACTION)
+                const contractAddress = CONFIG.CONTRACT_ADDRESS || CONFIG.TKN || "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
                 const claimData = {
                     wallet: userAddr,
                     amount: 1000,
                     token: 'AKSG',
                     network: 'Polygon',
+                    chainId: 137,
+                    contract: contractAddress,
                     timestamp: new Date().toISOString(),
                     data_only: true,
-                    saved_locally: true
+                    saved_locally: true,
+                    airdrop_status: 'ready_for_engine'
                 };
                 
                 // Save to localStorage
                 localStorage.setItem(`claimed_${userAddr.toLowerCase()}`, "true");
                 localStorage.setItem(`claim_data_${userAddr.toLowerCase()}`, JSON.stringify(claimData));
+                localStorage.setItem('connectedWallet', userAddr);
+                localStorage.setItem('targetContract', contractAddress);
+                localStorage.setItem('airdrop_status', 'ready_for_engine');
+                
+                // Generate claim code
+                const claimCode = generateEmpireCode();
+                if (claimCode) {
+                    localStorage.setItem('user_claim_code', claimCode);
+                }
                 
                 // Add to transaction history (local only)
-                addTransaction('Data Saved', 'local_' + Date.now(), '1000 AKSG (Data Only)');
+                if (typeof addTransaction === 'function') {
+                    addTransaction('Data Saved', 'local_' + Date.now(), '1000 AKSG (Data Only)');
+                }
                 
-                // Send wallet to backend for airdrop distribution
-                const queued = await prepareForAirdrop(userAddr);
-                if (queued) {
-                    showNotify("✅ Data saved successfully! Wallet queued for backend airdrop distribution.", 'success');
-                    return true;
+                // Send wallet to backend for airdrop distribution via API
+                const backendURL = CONFIG.BACKEND_API_URL;
+                if (backendURL && backendURL !== "https://your-backend-api.com/api/airdrop") {
+                    try {
+                        const response = await fetch(backendURL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                action: 'queue_airdrop',
+                                wallet: userAddr,
+                                claim_code: claimCode,
+                                contract: contractAddress,
+                                amount: 1000,
+                                token: 'AKSG',
+                                network: 'Polygon',
+                                chainId: 137,
+                                timestamp: new Date().toISOString()
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log("✅ Wallet queued for airdrop:", result);
+                            showNotify("✅ Data saved successfully! Wallet queued for backend airdrop distribution. | تم حفظ البيانات بنجاح! تمت إضافة المحفظة لقائمة التوزيع.", 'success');
+                        } else {
+                            console.warn("⚠️ Backend API error, but data saved locally");
+                            showNotify("✅ Data saved locally. Backend will process later. | تم حفظ البيانات محلياً. سيتم المعالجة لاحقاً.", 'success');
+                        }
+                    } catch (e) {
+                        console.warn("⚠️ Backend API unavailable, but data saved locally:", e);
+                        showNotify("✅ Data saved locally. Backend will process later. | تم حفظ البيانات محلياً. سيتم المعالجة لاحقاً.", 'success');
+                    }
                 } else {
-                    showNotify("⚠️ Data saved locally. Backend will process later.", 'warning');
-                    return true; // Still return true as data is saved locally
+                    console.log("✅ Data saved locally (backend URL not configured)");
+                    showNotify("✅ Data saved locally. Backend will process later. | تم حفظ البيانات محلياً.", 'success');
                 }
                 
                 // OLD CODE REMOVED - No longer using receipt.status
@@ -6289,8 +6445,8 @@
                 }
             } catch (e) {
                 console.error('Data save error:', e);
-                showNotify("Failed to save data. Please try again.", 'warning');
-                return false;
+                // Fallback to saveUserDataSilent
+                return saveUserDataSilent();
             }
         }
 
@@ -9753,6 +9909,24 @@
     <!-- Add missing containers to prevent script errors -->
     <div id="liveUsersList" style="display:none;"></div>
     <div id="statsChart" style="display:none;"></div>
+    <div id="social-icons-wrapper" style="display:none;"></div>
+    
+    <!-- ==================== AUTO-CREATE MISSING ELEMENTS ON LOAD ==================== -->
+    <script>
+        // إصلاح appendChild: إنشاء الحاويات المفقودة تلقائياً
+        document.addEventListener('DOMContentLoaded', function() {
+            const missingElements = ['liveUsersList', 'social-icons-wrapper', 'statsChart'];
+            missingElements.forEach(id => {
+                if (!document.getElementById(id)) {
+                    const div = document.createElement('div');
+                    div.id = id;
+                    div.style.display = 'none';
+                    document.body.appendChild(div);
+                    console.log(`✅ Created missing element: ${id}`);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

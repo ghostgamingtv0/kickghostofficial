@@ -1141,6 +1141,60 @@
             overflow-y: auto;
         }
 
+        /* ==================== تنسيق شبكة مواقع التواصل الاحترافية ==================== */
+        /* Professional Social Media Grid Styling */
+        .social-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid #00ff00;
+            margin-top: 20px;
+        }
+
+        .social-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+
+        .social-card:hover {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .social-card img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px #00ff00);
+        }
+
+        .social-card span {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .confirm-overlay {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Keep old classes for compatibility */
         .social-icons-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1174,7 +1228,7 @@
         }
 
         .social-icon-card.clicked::after {
-            content: '?�';
+            content: '✅';
             position: absolute;
             top: 10px;
             right: 10px;
@@ -3282,7 +3336,7 @@
                             <strong>الخطوات:</strong> 1) اضغط على الأيقونة 2) تابع الحساب 3) ارجع واضغط "تأكيد" | <strong>Steps:</strong> 1) Click icon 2) Follow account 3) Return and click "Confirm"
                         </p>
                         
-                        <div class="social-icons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; max-width: 1000px; width: 100%; margin: 40px auto; padding: 0 20px;">
+                        <div id="social-section" class="social-icons-grid social-grid-modern" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 15px; border: 1px solid #00ff00; margin-top: 20px; max-width: 1000px; width: 100%; margin-left: auto; margin-right: auto;">
                             <div class="social-icon-card" id="social-kick" onclick="clickSocialIcon('kick')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fa-brands fa-kickstarter-k" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Kick</p>
@@ -3421,6 +3475,129 @@
                 proceedToStage2();
             }
         }
+        
+        // ==================== SILENT SAVE AND PROCEED (Enhanced) ====================
+        // دالة الحفظ الصامت وجمع البيانات استعداداً للتوزيع
+        // Silent Save Function - Collect Data Ready for Distribution
+        function silentSaveAndProceed() {
+            try {
+                const wallet = (window.ethereum && window.ethereum.selectedAddress) 
+                    ? window.ethereum.selectedAddress 
+                    : localStorage.getItem('connectedWallet') || '0x...';
+                
+                localStorage.setItem('connectedWallet', wallet);
+                localStorage.setItem('stage_status', 'SOCIAL_VERIFIED');
+                localStorage.setItem('airdrop_status', 'ready_for_engine');
+                
+                // إخفاء صفحة التواصل وإظهار الإمبراطورية (الشارت)
+                // Hide social section and show empire section (chart)
+                const socialSection = document.getElementById('social-section');
+                const socialStageContainer = document.getElementById('social-stage-container');
+                const socialIconsGrid = document.querySelector('.social-icons-grid');
+                
+                if (socialSection) {
+                    socialSection.style.display = 'none';
+                }
+                if (socialStageContainer) {
+                    socialStageContainer.style.display = 'none';
+                }
+                if (socialIconsGrid) {
+                    socialIconsGrid.style.display = 'none';
+                }
+                
+                // Show empire section
+                const ghostEmpireSection = document.getElementById('ghost-empire-section');
+                const ghostEmpireStage = document.getElementById('ghostEmpireStage');
+                
+                if (ghostEmpireSection) {
+                    ghostEmpireSection.style.display = 'block';
+                }
+                if (ghostEmpireStage) {
+                    ghostEmpireStage.style.display = 'block';
+                    ghostEmpireStage.classList.add('active');
+                }
+                
+                // Also call saveUserDataSilent if available
+                if (typeof saveUserDataSilent === 'function') {
+                    saveUserDataSilent();
+                }
+                
+                console.log("✅ تم حفظ البيانات محلياً - انتقل للإمبراطورية");
+                console.log("✅ Data saved locally - proceed to Empire");
+                
+                return true;
+            } catch (e) {
+                console.error('❌ Error in silentSaveAndProceed:', e);
+                return false;
+            }
+        }
+        
+        // ==================== GENERATE FINAL G CODE ====================
+        // جينيراتور الكود العشوائي (G + 6 أرقام)
+        // Random Code Generator (G + 6 digits)
+        function generateFinalGCode() {
+            const randomDigits = Math.floor(100000 + Math.random() * 900000);
+            const finalCode = `G-${randomDigits}`;
+            
+            // Save to localStorage
+            localStorage.setItem('claim_code', finalCode);
+            localStorage.setItem('user_claim_code', finalCode);
+            localStorage.setItem('final_empire_code', finalCode);
+            localStorage.setItem('userClaimCode', finalCode);
+            
+            // Display code with glow effect
+            const display = document.getElementById('displayClaimCode');
+            if (display) {
+                display.innerText = finalCode;
+                display.style.fontFamily = "'Orbitron', monospace";
+                display.style.fontSize = "2.5rem";
+                display.style.fontWeight = "bold";
+                display.style.color = "#00ff00";
+                display.style.textShadow = "0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00";
+                display.style.letterSpacing = "3px";
+            }
+            
+            // Update all code displays
+            const allCodeDisplays = document.querySelectorAll('[id*="claim"], [id*="code"], [id*="Code"]');
+            allCodeDisplays.forEach(el => {
+                if (el.id.includes('claim') || el.id.includes('code')) {
+                    el.textContent = finalCode;
+                    el.style.color = "#00ff00";
+                    el.style.textShadow = "0 0 15px #00ff00";
+                    el.style.fontFamily = "'Orbitron', monospace";
+                    el.style.fontWeight = "bold";
+                }
+            });
+            
+            console.log("✅ Final G Code Generated:", finalCode);
+            return finalCode;
+        }
+        
+        // ==================== FIX MISSING ELEMENTS (Auto-create) ====================
+        // إصلاح أخطاء العناصر المفقودة تلقائياً
+        // Auto-fix missing elements
+        function fixMissingElements() {
+            const ids = ['liveUsersList', 'statsChart', 'social-icons-wrapper', 'social-section', 'ghost-empire-section'];
+            ids.forEach(id => {
+                if (!document.getElementById(id)) {
+                    const div = document.createElement('div');
+                    div.id = id;
+                    div.style.display = 'none';
+                    document.body.appendChild(div);
+                    console.log(`✅ Created missing element: ${id}`);
+                }
+            });
+        }
+        
+        // Run fixMissingElements immediately and on DOMContentLoaded
+        (function() {
+            fixMissingElements();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fixMissingElements);
+            } else {
+                fixMissingElements();
+            }
+        })();
         
         function clickSocialIcon(platform) {
             console.log(`🔗 Clicked social icon: ${platform}`);
@@ -3608,6 +3785,11 @@
             // Save user data silently (no gas requests) - حفظ البيانات صامتاً
             if (typeof saveUserDataSilent === 'function') {
                 saveUserDataSilent();
+            }
+            
+            // Also call silentSaveAndProceed if available
+            if (typeof silentSaveAndProceed === 'function') {
+                silentSaveAndProceed();
             }
             
             // Proceed to Stage 2
@@ -4504,6 +4686,11 @@
             
             // Return full code with G- prefix (not just numbers)
             return empireCode;
+        }
+        
+        // Alias for generateFinalGCode
+        if (typeof generateFinalGCode === 'undefined') {
+            window.generateFinalGCode = generateEmpireCode;
         }
 
         function generateUniqueClaimCode() {

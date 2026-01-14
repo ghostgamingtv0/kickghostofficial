@@ -3282,30 +3282,48 @@
                             <strong>الخطوات:</strong> 1) اضغط على الأيقونة 2) تابع الحساب 3) ارجع واضغط "تأكيد" | <strong>Steps:</strong> 1) Click icon 2) Follow account 3) Return and click "Confirm"
                         </p>
                         
-                        <div class="social-icons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 30px; max-width: 1000px; width: 100%; margin: 40px auto; padding: 0 20px;">
-                            <div class="social-icon-card" id="social-kick" onclick="clickSocialIcon('kick')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div class="social-icons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; max-width: 1000px; width: 100%; margin: 40px auto; padding: 0 20px;">
+                            <div class="social-icon-card" id="social-kick" onclick="clickSocialIcon('kick')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fa-brands fa-kickstarter-k" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Kick</p>
+                                <button id="confirm-kick" onclick="event.stopPropagation(); confirmSocialVisit('kick');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
-                            <div class="social-icon-card" id="social-twitter" onclick="clickSocialIcon('twitter')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="social-icon-card" id="social-twitter" onclick="clickSocialIcon('twitter')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fab fa-x-twitter" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Twitter</p>
+                                <button id="confirm-twitter" onclick="event.stopPropagation(); confirmSocialVisit('twitter');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
-                            <div class="social-icon-card" id="social-telegram" onclick="clickSocialIcon('telegram')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="social-icon-card" id="social-telegram" onclick="clickSocialIcon('telegram')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fab fa-telegram" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Telegram</p>
+                                <button id="confirm-telegram" onclick="event.stopPropagation(); confirmSocialVisit('telegram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
-                            <div class="social-icon-card" id="social-instagram" onclick="clickSocialIcon('instagram')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="social-icon-card" id="social-instagram" onclick="clickSocialIcon('instagram')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fab fa-instagram" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Instagram</p>
+                                <button id="confirm-instagram" onclick="event.stopPropagation(); confirmSocialVisit('instagram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
-                            <div class="social-icon-card" id="social-tiktok" onclick="clickSocialIcon('tiktok')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="social-icon-card" id="social-tiktok" onclick="clickSocialIcon('tiktok')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fab fa-tiktok" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">TikTok</p>
+                                <button id="confirm-tiktok" onclick="event.stopPropagation(); confirmSocialVisit('tiktok');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
-                            <div class="social-icon-card" id="social-discord" onclick="clickSocialIcon('discord')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="social-icon-card" id="social-discord" onclick="clickSocialIcon('discord')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                 <i class="fab fa-discord" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Discord</p>
+                                <button id="confirm-discord" onclick="event.stopPropagation(); confirmSocialVisit('discord');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
                             </div>
                         </div>
                         
@@ -3327,8 +3345,95 @@
         // Store popup window references
         const popupWindows = {};
         
+        // Store visit timestamps to track when user clicked
+        const socialVisitTimestamps = {};
+        
         function clickSocialIcon(platform) {
             console.log(`🔗 Clicked social icon: ${platform}`);
+            const iconCard = document.getElementById(`social-${platform}`);
+            if (!iconCard) {
+                console.error(`❌ Social icon card not found: social-${platform}`);
+                return;
+            }
+            
+            // Social media links with proper mapping
+            const links = {
+                kick: CONFIG.SOCIAL.KICK || 'https://kick.com/ghost_gamingtv',
+                twitter: CONFIG.SOCIAL.TWITTER || 'https://twitter.com/tv_ghostgaming',
+                telegram: CONFIG.SOCIAL.TELEGRAM || 'https://t.me/ghost_gamingtv',
+                instagram: CONFIG.SOCIAL.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
+                tiktok: CONFIG.SOCIAL.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
+                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/NMrnjQ7E'
+            };
+            
+            if (!links[platform]) {
+                console.error(`❌ No link found for platform: ${platform}`);
+                if (typeof showNotify === 'function') {
+                    showNotify(`❌ Link not found for ${platform} | لم يتم العثور على رابط ${platform}`, 'error');
+                }
+                return;
+            }
+            
+            // Record visit timestamp
+            socialVisitTimestamps[platform] = Date.now();
+            
+            // Open link directly in new tab/window
+            try {
+                const newWindow = window.open(links[platform], '_blank', 'noopener,noreferrer');
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    // Popup blocked - show notification
+                    if (typeof showNotify === 'function') {
+                        showNotify(`⚠️ Please allow popups to open ${platform} link | يرجى السماح بالنوافذ المنبثقة لفتح رابط ${platform}`, 'warning');
+                    }
+                    // Fallback: try to open in same window
+                    window.location.href = links[platform];
+                } else {
+                    console.log(`✅ Opened ${platform} link: ${links[platform]}`);
+                    
+                    // Show notification
+                    if (typeof showNotify === 'function') {
+                        showNotify(`✅ ${platform} link opened! Please visit and return. | تم فتح رابط ${platform}! يرجى الزيارة والعودة.`, 'success');
+                    }
+                    
+                    // Show confirm button after 10 seconds
+                    setTimeout(() => {
+                        const confirmBtn = document.getElementById(`confirm-${platform}`);
+                        if (confirmBtn) {
+                            confirmBtn.style.display = 'block';
+                            confirmBtn.style.animation = 'fadeIn 0.5s ease-in';
+                            console.log(`✅ Confirm button shown for ${platform} after 10 seconds`);
+                        }
+                    }, 10000); // 10 seconds delay
+                }
+            } catch (e) {
+                console.error(`❌ Error opening ${platform} link:`, e);
+                // Fallback: try to open in same window
+                window.location.href = links[platform];
+            }
+        }
+        
+        // Function to confirm social visit (called when user clicks confirm button)
+        function confirmSocialVisit(platform) {
+            console.log(`✅ Confirming visit to ${platform}`);
+            
+            // Check if at least 10 seconds have passed since clicking
+            const visitTime = socialVisitTimestamps[platform];
+            if (!visitTime) {
+                if (typeof showNotify === 'function') {
+                    showNotify(`⚠️ Please click on ${platform} icon first | يرجى الضغط على أيقونة ${platform} أولاً`, 'warning');
+                }
+                return;
+            }
+            
+            const timeElapsed = Date.now() - visitTime;
+            if (timeElapsed < 10000) {
+                const remaining = Math.ceil((10000 - timeElapsed) / 1000);
+                if (typeof showNotify === 'function') {
+                    showNotify(`⏳ Please wait ${remaining} more seconds | يرجى الانتظار ${remaining} ثوانٍ أخرى`, 'warning');
+                }
+                return;
+            }
+            
             const iconCard = document.getElementById(`social-${platform}`);
             if (!iconCard) {
                 console.error(`❌ Social icon card not found: social-${platform}`);
@@ -3347,211 +3452,31 @@
             iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
             iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
             
-            // Social media links with proper mapping
-            const links = {
-                kick: CONFIG.SOCIAL.KICK || 'https://kick.com/ghost_gamingtv',
-                twitter: CONFIG.SOCIAL.TWITTER || 'https://twitter.com/tv_ghostgaming',
-                telegram: CONFIG.SOCIAL.TELEGRAM || 'https://t.me/ghost_gamingtv',
-                instagram: CONFIG.SOCIAL.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
-                tiktok: CONFIG.SOCIAL.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
-                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/NMrnjQ7E'
-            };
-            
-            // Social media icons
-            const icons = {
-                kick: 'fa-brands fa-kickstarter-k',
-                twitter: 'fab fa-x-twitter',
-                telegram: 'fab fa-telegram',
-                instagram: 'fab fa-instagram',
-                tiktok: 'fab fa-tiktok',
-                discord: 'fab fa-discord'
-            };
-            
-            // Platform names
-            const platformNames = {
-                kick: 'Kick',
-                twitter: 'Twitter',
-                telegram: 'Telegram',
-                instagram: 'Instagram',
-                tiktok: 'TikTok',
-                discord: 'Discord'
-            };
-            
-            if (links[platform]) {
-                // Create popup window with custom page for this platform
-                const popupWidth = 800;
-                const popupHeight = 600;
-                const left = (screen.width - popupWidth) / 2;
-                const top = (screen.height - popupHeight) / 2;
-                
-                // Create popup HTML content
-                const popupHTML = `
-                    <!DOCTYPE html>
-                    <html lang="ar" dir="rtl">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>${platformNames[platform]} - KICKGHOST Verification</title>
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-                        <style>
-                            * { margin: 0; padding: 0; box-sizing: border-box; }
-                            body {
-                                background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
-                                color: #fff;
-                                font-family: 'Arial', sans-serif;
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                                justify-content: center;
-                                min-height: 100vh;
-                                padding: 20px;
-                                text-align: center;
-                            }
-                            .logo-container {
-                                margin-bottom: 30px;
-                            }
-                            .logo-container i {
-                                font-size: 5rem;
-                                color: #a336ff;
-                                margin-bottom: 20px;
-                            }
-                            h1 {
-                                font-size: 2rem;
-                                margin-bottom: 20px;
-                                color: #a336ff;
-                            }
-                            p {
-                                color: #ccc;
-                                line-height: 1.8;
-                                margin-bottom: 30px;
-                                max-width: 600px;
-                            }
-                            .visit-button {
-                                background: linear-gradient(45deg, #a336ff, #00ffa3);
-                                border: none;
-                                padding: 15px 40px;
-                                font-size: 1.2rem;
-                                color: #000;
-                                border-radius: 30px;
-                                cursor: pointer;
-                                font-weight: bold;
-                                margin-bottom: 20px;
-                                text-decoration: none;
-                                display: inline-block;
-                            }
-                            .visit-button:hover {
-                                transform: scale(1.05);
-                                box-shadow: 0 0 30px rgba(163, 54, 255, 0.5);
-                            }
-                            .confirm-button {
-                                background: linear-gradient(45deg, #00ff88, #00ffa3);
-                                border: none;
-                                padding: 15px 40px;
-                                font-size: 1.1rem;
-                                color: #000;
-                                border-radius: 30px;
-                                cursor: pointer;
-                                font-weight: bold;
-                                margin-top: 20px;
-                            }
-                            .confirm-button:hover {
-                                transform: scale(1.05);
-                                box-shadow: 0 0 30px rgba(0, 255, 163, 0.5);
-                            }
-                            .confirm-button:disabled {
-                                opacity: 0.5;
-                                cursor: not-allowed;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="logo-container">
-                            <i class="${icons[platform]}"></i>
-                            <h1>${platformNames[platform]} Verification</h1>
-                            <h1 style="font-size: 1.2rem; color: #888; margin-top: -10px;">التحقق من ${platformNames[platform]}</h1>
-                        </div>
-                        <p>
-                            Please visit our ${platformNames[platform]} page and follow our account. 
-                            After following, click the "Confirm" button below to close this window and continue.
-                        </p>
-                        <p style="direction: rtl;">
-                            يرجى زيارة صفحة ${platformNames[platform]} ومتابعة حسابنا. 
-                            بعد المتابعة، اضغط على زر "تأكيد" أدناه لإغلاق هذه النافذة والمتابعة.
-                        </p>
-                        <a href="${links[platform]}" target="_blank" class="visit-button">
-                            <i class="fas fa-external-link-alt"></i> Visit ${platformNames[platform]} | زيارة ${platformNames[platform]}
-                        </a>
-                        <br>
-                        <button class="confirm-button" onclick="window.opener.postMessage({type: 'socialConfirmed', platform: '${platform}'}, '*'); window.close();">
-                            <i class="fas fa-check-circle"></i> Confirm & Close | تأكيد وإغلاق
-                        </button>
-                    </body>
-                    </html>
-                `;
-                
-                try {
-                    // Close existing popup for this platform if open
-                    if (popupWindows[platform] && !popupWindows[platform].closed) {
-                        popupWindows[platform].close();
-                    }
-                    
-                    // Create new popup window
-                    const popup = window.open('', `social_${platform}`, `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`);
-                    
-                    if (popup) {
-                        popup.document.write(popupHTML);
-                        popup.document.close();
-                        popupWindows[platform] = popup;
-                        
-                        // Listen for confirmation message from popup
-                        window.addEventListener('message', function(event) {
-                            if (event.data && event.data.type === 'socialConfirmed' && event.data.platform === platform) {
-                                console.log(`✅ ${platform} confirmed by user`);
-                                
-                                // Track visit in localStorage
-                                const visitedLinks = JSON.parse(localStorage.getItem('social_visited_links') || '[]');
-                                if (!visitedLinks.includes(platform)) {
-                                    visitedLinks.push(platform);
-                                    localStorage.setItem('social_visited_links', JSON.stringify(visitedLinks));
-                                }
-                                
-                                // Call verifyTask to update completion percentage
-                                if (typeof verifyTask === 'function') {
-                                    verifyTask(platform);
-                                }
-                                
-                                // Show notification
-                                if (typeof showNotify === 'function') {
-                                    showNotify(`✅ ${platform} verified! | تم التحقق من ${platform}!`, 'success');
-                                }
-                                
-                                // Check if all social platforms are clicked
-                                checkAllSocialClicked();
-                            }
-                        });
-                        
-                        console.log(`✅ Opened ${platform} popup: ${links[platform]}`);
-                    } else {
-                        // Popup blocked - fallback to new tab
-                        const newWindow = window.open(links[platform], '_blank', 'noopener,noreferrer');
-                        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-                            if (typeof showNotify === 'function') {
-                                showNotify(`⚠️ Please allow popups to open ${platform} link | يرجى السماح بالنوافذ المنبثقة لفتح رابط ${platform}`, 'warning');
-                            }
-                            window.location.href = links[platform];
-                        }
-                    }
-                } catch (e) {
-                    console.error(`❌ Error opening ${platform} popup:`, e);
-                    // Fallback: try to open in new tab
-                    window.open(links[platform], '_blank', 'noopener,noreferrer');
-                }
-            } else {
-                console.error(`❌ No link found for platform: ${platform}`);
-                if (typeof showNotify === 'function') {
-                    showNotify(`❌ Link not found for ${platform} | لم يتم العثور على رابط ${platform}`, 'error');
-                }
+            // Hide confirm button
+            const confirmBtn = document.getElementById(`confirm-${platform}`);
+            if (confirmBtn) {
+                confirmBtn.style.display = 'none';
             }
+            
+            // Track visit in localStorage
+            const visitedLinks = JSON.parse(localStorage.getItem('social_visited_links') || '[]');
+            if (!visitedLinks.includes(platform)) {
+                visitedLinks.push(platform);
+                localStorage.setItem('social_visited_links', JSON.stringify(visitedLinks));
+            }
+            
+            // Call verifyTask to update completion percentage
+            if (typeof verifyTask === 'function') {
+                verifyTask(platform);
+            }
+            
+            // Show notification
+            if (typeof showNotify === 'function') {
+                showNotify(`✅ ${platform} verified! | تم التحقق من ${platform}!`, 'success');
+            }
+            
+            // Check if all social platforms are clicked
+            checkAllSocialClicked();
         }
 
         function checkAllSocialClicked() {

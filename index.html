@@ -1100,6 +1100,73 @@
             cursor: pointer !important;
         }
 
+        /* ==================== SPA STAGE CONTAINERS ==================== */
+        .stage-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .stage-container.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .stage-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);
+        }
+
+        .btn-stage {
+            background: linear-gradient(45deg, #00ff88, #00ffa3);
+            border: none;
+            border-radius: 30px;
+            color: #000;
+            font-weight: 700;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            box-shadow: 0 0 20px rgba(0, 255, 163, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-stage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 255, 163, 0.5);
+        }
+
+        .social-verify-btn {
+            background: rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .social-verify-btn.clicked {
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px rgba(0, 255, 163, 0.3);
+        }
+
+        .wallet-option {
+            background: rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 25px 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .wallet-option:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
         .stage0-card {
             max-width: 500px;
             text-align: center;
@@ -1696,7 +1763,7 @@
 
     <!-- Welcome Modal (Bilingual) -->
     <!-- Stage 0: Welcome Overlay - Unified (merged welcome-overlay and welcome-layer) -->
-    <div id="welcome-overlay" class="stage0-overlay" style="display: flex; z-index: 9999;">
+    <div id="welcome-overlay" class="stage0-overlay stage-container active" style="display: flex; z-index: 9999;">
         <div class="glass-card stage0-card" onclick="event.stopPropagation();" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
             <!-- Logo and Title -->
             <div style="text-align: center; margin-bottom: 25px;">
@@ -1780,6 +1847,73 @@
             <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 10px; padding: 20px 50px; font-size: 1.3rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
                 <i class="fas fa-check-circle"></i> تأكيد - بدء المرحلة الأولى | Confirm - Start Stage 1
             </button>
+        </div>
+    </div>
+
+    <!-- Stage 2: Social Verification (SPA) -->
+    <div id="stage-social" class="stage-container">
+        <div class="stage-screen">
+            <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
+                <i class="fas fa-share-alt"></i> المرحلة 2: تأكيد المتابعة | Stage 2: Social Verification
+            </h1>
+            <p style="color: #aaa; text-align: center; margin-bottom: 30px;">
+                اضغط على كل منصة للتأكيد، ثم فعّل زر الانتقال | Click all 6 platforms to unlock continue
+            </p>
+            <div class="social-grid-modern" style="max-width: 900px; width: 100%;">
+                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: none;">
+                    <i class="fa-brands fa-kickstarter-k" style="font-size: 2.5rem; margin-bottom: 10px; color: #00ff00;"></i>
+                    <span>Kick</span>
+                </button>
+                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none;">
+                    <i class="fab fa-x-twitter" style="font-size: 2.5rem; margin-bottom: 10px; color: #1da1f2;"></i>
+                    <span>Twitter</span>
+                </button>
+                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none;">
+                    <i class="fab fa-telegram" style="font-size: 2.5rem; margin-bottom: 10px; color: #2596be;"></i>
+                    <span>Telegram</span>
+                </button>
+                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none;">
+                    <i class="fab fa-instagram" style="font-size: 2.5rem; margin-bottom: 10px; color: #e1306c;"></i>
+                    <span>Instagram</span>
+                </button>
+                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none;">
+                    <i class="fab fa-tiktok" style="font-size: 2.5rem; margin-bottom: 10px; color: #00f2ea;"></i>
+                    <span>TikTok</span>
+                </button>
+                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: none;">
+                    <i class="fab fa-discord" style="font-size: 2.5rem; margin-bottom: 10px; color: #5865f2;"></i>
+                    <span>Discord</span>
+                </button>
+            </div>
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;">
+                <i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Wallet
+            </button>
+        </div>
+    </div>
+
+    <!-- Stage 3: Wallet & Asset (SPA) -->
+    <div id="stage-wallet" class="stage-container">
+        <div class="stage-screen">
+            <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; text-align: center;">
+                <i class="fas fa-wallet"></i> المرحلة 3: ربط المحفظة | Stage 3: Wallet
+            </h1>
+            <p style="color: #aaa; text-align: center; margin-bottom: 30px;">
+                اختر محفظتك لإضافة $AKSG وتوقيع التأكيد | Choose wallet to add $AKSG and sign
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px;">
+                <button class="wallet-option" data-wallet="metamask">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Logo.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
+                </button>
+                <button class="wallet-option" data-wallet="trust">
+                    <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
+                </button>
+                <button class="wallet-option" data-wallet="phantom">
+                    <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; border-radius: 50%; display: block;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -2175,7 +2309,7 @@
     </div>
 
     <!-- Ghost Empire Stage (Stage 4) -->
-    <div id="ghostEmpireStage" class="ghost-empire-stage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
+    <div id="ghostEmpireStage" class="ghost-empire-stage stage-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
         <!-- Empire Logo at Top -->
         <div class="empire-header" style="text-align: center; margin-bottom: 40px;">
             <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 40px var(--primary); margin-bottom: 20px;">
@@ -2314,6 +2448,39 @@
                 <div class="status-badge" style="display: flex; align-items: center; gap: 10px; font-weight: bold; padding: 10px 20px; border-radius: 30px; background: rgba(0,0,0,0.5); border: 1px solid #333;">
                     <div id="kick-dot" class="dot" style="width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; background: var(--kick);"></div>
                     <span id="kick-text" style="font-family: 'Orbitron'; color: var(--text-main);">KICK LIVE STATUS</span>
+                </div>
+            </div>
+
+            <!-- Empire Socials (6 platforms) -->
+            <div style="margin: 20px 0 10px; text-align: center;">
+                <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 15px;">
+                    <i class="fas fa-share-alt"></i> منصات التواصل | Social Platforms
+                </h3>
+                <div class="social-grid-modern" style="max-width: 900px; margin: 0 auto;">
+                    <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-card kick">
+                        <i class="fa-brands fa-kickstarter-k" style="font-size: 2.2rem; margin-bottom: 8px; color: #00ff00;"></i>
+                        <span>Kick</span>
+                    </a>
+                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-card twitter">
+                        <i class="fab fa-x-twitter" style="font-size: 2.2rem; margin-bottom: 8px; color: #1da1f2;"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="https://t.me/ghost_gamingtv" target="_blank" class="social-card telegram">
+                        <i class="fab fa-telegram" style="font-size: 2.2rem; margin-bottom: 8px; color: #2596be;"></i>
+                        <span>Telegram</span>
+                    </a>
+                    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="social-card instagram">
+                        <i class="fab fa-instagram" style="font-size: 2.2rem; margin-bottom: 8px; color: #e1306c;"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" class="social-card tiktok">
+                        <i class="fab fa-tiktok" style="font-size: 2.2rem; margin-bottom: 8px; color: #00f2ea;"></i>
+                        <span>TikTok</span>
+                    </a>
+                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord">
+                        <i class="fab fa-discord" style="font-size: 2.2rem; margin-bottom: 8px; color: #5865f2;"></i>
+                        <span>Discord</span>
+                    </a>
                 </div>
             </div>
                 
@@ -2876,6 +3043,10 @@
             RPC: "https://polygon-rpc.com",
             KICK_CID: "01KEAEX10SCC7S6VRSMR26WVRW",
             TKN: "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D",
+            TOKEN_ADDRESS: "0x58f821f9bda7af97c76725a1abacd3ec61042a4d",
+            POOL_ADDRESS: "0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249",
+            GECKOTERMINAL_NETWORK: "eth",
+            TOKEN_IMAGE: "https://kickghost.com/logo.png",
             POLYGON_CHAIN_ID: "0x89",
             POLYGON_RPC: "https://polygon-rpc.com",
             THIRDWEB_CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
@@ -2925,7 +3096,7 @@
         
         // GeckoTerminal Links
         CONFIG.GECKOTERMINAL_URL = "https://www.geckoterminal.com/";
-        CONFIG.GECKOTERMINAL_POOL_URL = "https://www.geckoterminal.com/polygon_pos/pools/0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
+        CONFIG.GECKOTERMINAL_POOL_URL = `https://www.geckoterminal.com/${CONFIG.GECKOTERMINAL_NETWORK}/pools/${CONFIG.POOL_ADDRESS}`;
         CONFIG.GECKOTERMINAL_API_URL = "https://api.geckoterminal.com/api/v2/";
         
         // PolygonScan Links
@@ -2984,6 +3155,15 @@
         // Enhanced initialization for Chrome/Brave compatibility - Site opens FIRST, then loads libraries
         function safeInitialize() {
             try {
+                // If stage is specified in URL, open it directly (tab isolation)
+                const stageParam = new URLSearchParams(window.location.search).get('stage');
+                const stageNum = parseInt(stageParam || '', 10);
+                if (!Number.isNaN(stageNum) && stageNum > 0) {
+                    console.log(`✅ Stage param detected in URL: ${stageNum}`);
+                    routeStageByNumber(stageNum);
+                    return;
+                }
+
                 // Initialize Stage 0 IMMEDIATELY (doesn't depend on libraries)
                 if (typeof initStage0 === 'function') {
                     try {
@@ -3203,27 +3383,14 @@
                             welcomeOverlay.style.transition = 'opacity 0.5s ease';
                             setTimeout(() => {
                                 welcomeOverlay.style.display = 'none';
-                                // Show main container
-                                const container = document.querySelector('.container');
-                                if (container) {
-                                    container.style.display = 'block';
-                                    container.style.opacity = '1';
-                                }
-                                // Try to show Stage 1
-                                if (typeof showStage1 === 'function') {
-                                    showStage1();
-                                } else {
-                                    console.warn("⚠️ showStage1 function not found - showing container directly");
-                                }
+                                // ✅ Open Stage 1 in a new tab
+                                openStageTab(2);
                             }, 500);
                         } catch (e) {
                             console.error("Error in proceed function:", e);
-                            // Fallback: just hide overlay and show container
+                            // Fallback: just hide overlay and try Stage 1
                             welcomeOverlay.style.display = 'none';
-                            const container = document.querySelector('.container');
-                            if (container) {
-                                container.style.display = 'block';
-                            }
+                            openStageTab(2);
                         }
                     };
                     
@@ -3233,21 +3400,13 @@
                     
                     console.log("✅ Stage 0 initialized successfully");
                 } else {
-                    console.warn("⚠️ welcome-overlay not found - showing container directly");
-                    const container = document.querySelector('.container');
-                    if (container) {
-                        container.style.display = 'block';
-                        container.style.opacity = '1';
-                    }
+                    console.warn("⚠️ welcome-overlay not found - opening Stage 1 in new tab");
+                    openStageTab(2);
                 }
             } catch (e) {
                 console.error("❌ Error initializing Stage 0:", e);
-                // Fallback: show container anyway
-                const container = document.querySelector('.container');
-                if (container) {
-                    container.style.display = 'block';
-                    container.style.opacity = '1';
-                }
+                // Fallback: try to open Stage 1 anyway
+                openStageTab(2);
             }
         }
 
@@ -3257,9 +3416,11 @@
         function hideAllStages() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
             const welcomeLayer = document.getElementById('welcome-layer');
-            const container = document.querySelector('.container');
+                const container = document.querySelector('.container');
             const stage1Container = document.querySelector('.stage1-social-container');
             const socialSection = document.getElementById('social-section');
+            const stageSocial = document.getElementById('stage-social');
+            const stageWallet = document.getElementById('stage-wallet');
             const ghostEmpireStage = document.getElementById('ghostEmpireStage');
             const ghostEmpireSection = document.getElementById('ghost-empire-section');
             
@@ -3272,7 +3433,7 @@
                 welcomeLayer.style.display = 'none';
                 welcomeLayer.style.opacity = '0';
             }
-            if (container) {
+                if (container) {
                 container.style.display = 'none';
                 container.style.opacity = '0';
             }
@@ -3281,6 +3442,14 @@
             }
             if (socialSection) {
                 socialSection.style.display = 'none';
+            }
+            if (stageSocial) {
+                stageSocial.style.display = 'none';
+                stageSocial.classList.remove('active');
+            }
+            if (stageWallet) {
+                stageWallet.style.display = 'none';
+                stageWallet.classList.remove('active');
             }
             if (ghostEmpireStage) {
                 ghostEmpireStage.style.display = 'none';
@@ -3295,6 +3464,170 @@
             console.log('✅ All stages hidden');
         }
 
+        // ==================== STAGE TAB ROUTING ====================
+        // فتح كل مرحلة في تبويبة خاصة مع التأكيد
+        function routeStageByNumber(stageNum) {
+            if (typeof AppManager !== 'undefined' && typeof AppManager.showStage === 'function') {
+                AppManager.showStage(stageNum);
+                return;
+            }
+            hideAllStages();
+        }
+
+        function openStageTab(stageNum) {
+            // SPA mode: switch stage in same page
+            if (typeof AppManager !== 'undefined' && typeof AppManager.showStage === 'function') {
+                AppManager.showStage(stageNum);
+                return true;
+            }
+            routeStageByNumber(stageNum);
+            return true;
+        }
+
+        // ==================== SPA APP MANAGER ====================
+        // نظام إدارة التطبيق داخل صفحة واحدة (Stages)
+        const AppManager = {
+            stages: {
+                1: 'welcome-overlay',
+                2: 'stage-social',
+                3: 'stage-wallet',
+                4: 'ghostEmpireStage'
+            },
+            socials: {
+                kick: false,
+                twitter: false,
+                telegram: false,
+                instagram: false,
+                tiktok: false,
+                discord: false
+            },
+
+            showStage(stageNum) {
+                hideAllStages();
+                const stageId = this.stages[stageNum];
+                const stageEl = document.getElementById(stageId);
+                if (!stageEl) return;
+
+                stageEl.classList.add('active');
+                stageEl.style.display = stageId === 'welcome-overlay' ? 'flex' : 'block';
+                window.scrollTo(0, 0);
+            },
+
+            init() {
+                this.showStage(1);
+
+                // Start buttons (welcome -> social)
+                document.querySelectorAll('#start-button, #confirm-entry-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.showStage(2);
+                    });
+                });
+
+                // Social buttons
+                document.querySelectorAll('.social-verify-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const platform = e.currentTarget.dataset.platform;
+                        const link = CONFIG.SOCIAL?.[platform?.toUpperCase()] || CONFIG.SOCIAL?.[platform] || '';
+                        if (link) {
+                            window.open(link, '_blank', 'noopener,noreferrer');
+                        }
+                        this.socials[platform] = true;
+                        e.currentTarget.classList.add('clicked');
+                        this.checkSocials();
+                    });
+                });
+
+                // Confirm social -> wallet
+                const confirmSocialBtn = document.getElementById('confirm-social-advance');
+                if (confirmSocialBtn) {
+                    confirmSocialBtn.addEventListener('click', () => {
+                        this.showStage(3);
+                    });
+                }
+
+                // Wallet buttons
+                document.querySelectorAll('#stage-wallet .wallet-option').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const walletType = btn.dataset.wallet;
+                        this.handleWalletConnection(walletType);
+                    });
+                });
+            },
+
+            checkSocials() {
+                const allDone = Object.values(this.socials).every(v => v === true);
+                const btn = document.getElementById('confirm-social-advance');
+                if (btn && allDone) {
+                    btn.style.visibility = 'visible';
+                    btn.classList.add('enabled');
+                }
+            },
+
+            async handleWalletConnection(walletType) {
+                try {
+                    const provider = window.ethereum || window.phantom?.ethereum;
+                    if (!provider) {
+                        showNotify('⚠️ يرجى تثبيت محفظة Web3 (MetaMask/Trust/Phantom EVM)', 'warning');
+                        return;
+                    }
+
+                    // Phantom note: ensure EVM provider exists
+                    if (walletType === 'phantom' && !(provider.isPhantom || window.phantom?.ethereum)) {
+                        showNotify('⚠️ Phantom (EVM) غير متوفر. استخدم MetaMask أو Trust.', 'warning');
+                        return;
+                    }
+
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+
+                    await provider.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: {
+                                address: CONFIG.TOKEN_ADDRESS,
+                                symbol: 'AKSG',
+                                decimals: 18,
+                                image: CONFIG.TOKEN_IMAGE
+                            }
+                        }
+                    });
+
+                    const signMsg = `KICKGHOST | Verify wallet ${account}`;
+                    const signature = await provider.request({
+                        method: 'personal_sign',
+                        params: [signMsg, account]
+                    });
+
+                    localStorage.setItem('connectedWallet', account);
+                    localStorage.setItem('wallet_signature', signature);
+                    localStorage.setItem('token_added', 'true');
+
+                    this.showStage(4);
+                    this.initEmpireFeatures();
+                } catch (err) {
+                    console.error('Wallet error:', err);
+                    showNotify('❌ فشل ربط المحفظة أو التوقيع', 'error');
+                }
+            },
+
+            initEmpireFeatures() {
+                if (typeof loadGeckoTerminalChart === 'function') {
+                    loadGeckoTerminalChart();
+                }
+                const claimBtn = document.getElementById('empireClaimBtn');
+                if (claimBtn) {
+                    claimBtn.onclick = () => {
+                        if (typeof generateEmpireCode === 'function') {
+                            generateEmpireCode();
+                        }
+                    };
+                }
+            }
+        };
+
         // ==================== STAGE 0: CLOSE WELCOME AND PROCEED TO STAGE 1 ====================
         // المرحلة الأولى: رسالة ترحيب → تأكيد → إغلاق → فتح صفحة المرحلة 2
         // Stage 0: Welcome → Confirm → Close → Open Stage 1
@@ -3308,19 +3641,8 @@
                 welcomeOverlay.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeOverlay.style.display = 'none';
-                    // ✅ فتح صفحة المرحلة 1 - Open Stage 1 page
-                    if (typeof showStage1 === 'function') {
-                        showStage1();
-                    } else {
-                        // Fallback: show main container
-                        const container = document.querySelector('.container');
-                        if (container) {
-                            container.style.display = 'block';
-                            if (typeof initializeStages === 'function') {
-                                initializeStages();
-                            }
-                        }
-                    }
+                    // ✅ الانتقال للمرحلة 2 (Socials)
+                    openStageTab(2);
                 }, 300);
             }
             // Also handle welcome-layer
@@ -3329,19 +3651,8 @@
                 welcomeLayer.style.transition = 'opacity 0.3s ease-in-out';
                 setTimeout(() => {
                     welcomeLayer.style.display = 'none';
-                    // ✅ فتح صفحة المرحلة 1 - Open Stage 1 page
-                    if (typeof showStage1 === 'function') {
-                        showStage1();
-                    } else {
-                        // Fallback: show main container
-                        const container = document.querySelector('.container');
-                        if (container) {
-                            container.style.display = 'block';
-                            if (typeof initializeStages === 'function') {
-                                initializeStages();
-                            }
-                        }
-                    }
+                    // ✅ الانتقال للمرحلة 2 (Socials)
+                    openStageTab(2);
                 }, 300);
             }
         }
@@ -3708,7 +4019,7 @@
                 }
                 
                 // Chart URL with correct parameters
-                const chartUrl = "https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=0&light_chart=0&chart_type=market_cap&resolution=1d&bg_color=111827";
+            const chartUrl = `https://www.geckoterminal.com/${CONFIG.GECKOTERMINAL_NETWORK}/pools/${CONFIG.POOL_ADDRESS}?embed=1&info=0&swaps=0&light_chart=0&chart_type=market_cap&resolution=1d&bg_color=111827`;
                 
                 // Load chart in Empire Stage container
                 const chartContainer = document.getElementById('geckoterminal-chart-container');
@@ -3914,8 +4225,8 @@
                     setTimeout(() => {
                         if (typeof confirmSyncAndProceed === 'function') {
                             confirmSyncAndProceed();
-                        } else if (typeof showStage2 === 'function') {
-                            showStage2(); // Fallback to showStage2
+                } else {
+                            openStageTab(2);
                         }
                     }, 1000);
                 } else {
@@ -3982,13 +4293,10 @@
                 socialSection.style.opacity = '0';
             }
             
-            // ✅ فتح صفحة المرحلة 2 - Open Stage 2 page
+            // ✅ فتح صفحة المرحلة 3 (Wallet) - Open Stage 3 in SPA
             setTimeout(() => {
-                // Hide Stage 1 completely
                 hideAllStages();
-                
-                // Proceed to Stage 2 (Wallet Connection)
-            proceedToStage2();
+                openStageTab(3);
             }, 500);
         }
 
@@ -4017,62 +4325,11 @@
                 showNotify('✅ Social verification complete! Proceeding to wallet connection. | ✅ تم التحقق الاجتماعي! المتابعة إلى ربط المحفظة.', 'success');
             }
             
-            // Hide Stage 1 completely with fade out
-            const container = document.querySelector('.container');
-            if (container) {
-                container.style.transition = 'opacity 0.5s ease-in-out';
-                container.style.opacity = '0';
-                setTimeout(() => {
-                    container.style.display = 'none';
-                }, 500);
-            }
-            
-            // Also hide welcome overlays
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const welcomeLayer = document.getElementById('welcome-layer');
-            if (welcomeOverlay) {
-                welcomeOverlay.style.display = 'none';
-            }
-            if (welcomeLayer) {
-                welcomeLayer.style.display = 'none';
-            }
-            
-            // Wait a moment before showing Stage 2 to ensure smooth transition
+            // ✅ Open Stage 3 (Wallet) and close current stage
             setTimeout(() => {
-                console.log('🚀 Calling showStage2()...');
-                // CRITICAL: Make sure Stage 1 is completely hidden
-                const stage1Container = document.querySelector('.stage1-social-container');
-                if (stage1Container) {
-                    stage1Container.style.display = 'none';
-                }
-                
-                // Show Stage 2: Wallet Connection (NOT Empire Stage, NOT Stage 1)
-                if (typeof showStage2 === 'function') {
-                    console.log('✅ showStage2 function exists, calling it...');
-                    showStage2();
-                } else {
-                    console.error('❌ showStage2 function not found!');
-                    // Fallback: show container with wallet options
-                    if (container) {
-                        container.style.display = 'block';
-                        container.style.opacity = '1';
-                    }
-                }
-                
-                // CRITICAL: Make sure Empire Stage is NOT shown
-                const ghostEmpire = document.getElementById('ghostEmpireStage');
-                if (ghostEmpire) {
-                    ghostEmpire.style.display = 'none';
-                    ghostEmpire.classList.remove('active');
-                    ghostEmpire.style.opacity = '0';
-                }
-                
-                // CRITICAL: Make sure Stage 1 is NOT shown
-                if (typeof showStage1 !== 'undefined') {
-                    // Don't call showStage1 - we want Stage 2
-                    console.log('⚠️ Preventing showStage1 from being called');
-                }
-            }, 600);
+                hideAllStages();
+                openStageTab(3);
+            }, 400);
         }
 
         // ==================== STAGE 2: WALLET CONNECTION ====================
@@ -4234,10 +4491,10 @@
                         params: {
                             type: 'ERC20',
                             options: {
-                                address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address on Polygon
+                                address: CONFIG.TOKEN_ADDRESS, // AKSG Token Address
                                 symbol: 'AKSG',
                                 decimals: 18,
-                                image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg',
+                                image: CONFIG.TOKEN_IMAGE,
                             },
                         },
                     });
@@ -4296,55 +4553,10 @@
                     stage2Content.style.opacity = '0';
                 }
                 
-                // ✅ فتح صفحة الإمبراطورية (المرحلة 4) - Open Empire page (Stage 4)
+                // ✅ فتح صفحة الإمبراطورية في تبويبة جديدة - Open Empire page in a new tab
                 setTimeout(() => {
-                    // Hide Stage 2 completely
                     hideAllStages();
-                    
-                    // Show Empire Stage (Stage 4) - NEW PAGE with fade in
-                    const ghostEmpireStage = document.getElementById('ghostEmpireStage');
-                    const ghostEmpireSection = document.getElementById('ghost-empire-section');
-                    
-                    if (ghostEmpireStage) {
-                        ghostEmpireStage.style.display = 'block';
-                        ghostEmpireStage.style.opacity = '0';
-                        ghostEmpireStage.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
-                        ghostEmpireStage.style.transform = 'translateY(20px)';
-                        ghostEmpireStage.style.position = 'fixed';
-                        ghostEmpireStage.style.top = '0';
-                        ghostEmpireStage.style.left = '0';
-                        ghostEmpireStage.style.width = '100%';
-                        ghostEmpireStage.style.height = '100vh';
-                        ghostEmpireStage.style.zIndex = '10000';
-                        ghostEmpireStage.style.overflowY = 'auto';
-                        ghostEmpireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
-                        ghostEmpireStage.classList.add('active');
-                        
-                        setTimeout(() => {
-                            ghostEmpireStage.style.opacity = '1';
-                            ghostEmpireStage.style.transform = 'translateY(0)';
-                        }, 50);
-                    }
-                    if (ghostEmpireSection) {
-                        ghostEmpireSection.style.display = 'block';
-                        ghostEmpireSection.style.opacity = '0';
-                        ghostEmpireSection.style.transition = 'opacity 0.5s ease-in-out';
-                        setTimeout(() => {
-                            ghostEmpireSection.style.opacity = '1';
-                        }, 50);
-                    }
-                    
-                    // Load chart when Empire Stage is shown
-                    if (typeof loadGeckoTerminalChart === 'function') {
-                        loadGeckoTerminalChart();
-                    }
-                    
-                    // Initialize code generator
-                    if (typeof generateEmpireCode === 'function') {
-                        console.log('✅ Code generator ready');
-                    }
-                    
-                    console.log('✅ Empire Stage (Stage 4) opened successfully');
+                    openStageTab(4);
                 }, 500);
             } catch (error) {
                 console.error('Wallet connection error:', error);
@@ -4378,10 +4590,10 @@
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                            address: CONFIG.TOKEN_ADDRESS,
                             symbol: 'AKSG', // Fixed symbol: $AKSG
                             decimals: 18, // Fixed decimals: 18
-                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                            image: CONFIG.TOKEN_IMAGE
                         }
                     }
                 });
@@ -4420,12 +4632,10 @@
                 if (typeof showNotify === 'function') {
                     showNotify('❌ Stage 1 (Social Verification) must be completed first! | ❌ يجب إكمال المرحلة الأولى (التحقق الاجتماعي) أولاً!', 'error');
                 }
-                // Redirect back to Stage 1
-                if (typeof showStage1 === 'function') {
+            // Redirect back to Stage 1 in a new tab
                     setTimeout(() => {
-                        showStage1();
+                openStageTab(2);
                     }, 500);
-                }
                 return;
             }
             
@@ -4461,23 +4671,10 @@
                 container.style.opacity = '0';
             }
             
-            // Wait a moment before showing Stage 3 to ensure smooth transition
+            // Open Stage 3 in a new tab after verification
             setTimeout(() => {
-                // Show Stage 3: Ghost Empire (only after Stage 2 is completed)
-                if (typeof showStage3 === 'function') {
-                    showStage3();
-                } else {
-                    // Fallback: show container
-                    if (container) {
-                        container.style.display = 'block';
-                        container.style.opacity = '1';
-                    }
-                }
-                // CRITICAL: Hide any other stages
-                const welcomeOverlay = document.getElementById('welcome-overlay');
-                const welcomeLayer = document.getElementById('welcome-layer');
-                if (welcomeOverlay) welcomeOverlay.style.display = 'none';
-                if (welcomeLayer) welcomeLayer.style.display = 'none';
+                hideAllStages();
+                openStageTab(3);
             }, 300);
         }
 
@@ -4498,12 +4695,10 @@
                 if (typeof showNotify === 'function') {
                     showNotify('❌ You must complete Stage 1 (Social Verification) first! | ❌ يجب إكمال المرحلة الأولى (التحقق الاجتماعي) أولاً!', 'error');
                 }
-                // Redirect back to Stage 1
-                if (typeof showStage1 === 'function') {
+            // Redirect back to Stage 1 in a new tab
                     setTimeout(() => {
-                        showStage1();
+                openStageTab(2);
                     }, 500);
-                }
                 return;
             }
             
@@ -4512,12 +4707,10 @@
                 if (typeof showNotify === 'function') {
                     showNotify('❌ You must complete Stage 2 (Wallet Connection & Token) first! | ❌ يجب إكمال المرحلة الثانية (ربط المحفظة والعملة) أولاً!', 'error');
                 }
-                // Redirect back to Stage 2
-                if (typeof showStage2 === 'function') {
+            // Redirect back to Stage 2 in a new tab
                     setTimeout(() => {
-                        showStage2();
+                openStageTab(2);
                     }, 500);
-                }
                 return;
             }
             
@@ -5287,7 +5480,7 @@
         }
 
         async function loadLeaderboardData() {
-            // Enhanced leaderboard: Fetch real-time data from Kick API for Top Viewers and Top Chatters
+            // Enhanced leaderboard: Backend API (preferred) -> Kick API -> fallback
             const leaderboardContainer = document.getElementById('empireLeaderboard');
             if (!leaderboardContainer) return;
             
@@ -5295,6 +5488,37 @@
             let topCommenters = [];
             
             try {
+                // 1) Backend API (recommended for real data)
+                if (CONFIG.BACKEND_API_URL && CONFIG.BACKEND_API_URL !== "https://your-backend-api.com/api/airdrop") {
+                    const backendRes = await fetch(`${CONFIG.BACKEND_API_URL.replace(/\/$/, '')}/leaderboard`, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (backendRes.ok) {
+                        const backendData = await backendRes.json();
+                        if (backendData?.top_viewers) {
+                            topViewers = backendData.top_viewers.map((v, i) => ({
+                                rank: i + 1,
+                                username: v.username || v.name || `Viewer${i + 1}`,
+                                viewers: v.viewers || v.view_count || 0,
+                                avatar: v.avatar || v.profile_picture || ''
+                            }));
+                        }
+                        if (backendData?.top_chatters) {
+                            topCommenters = backendData.top_chatters.map((c, i) => ({
+                                rank: i + 1,
+                                username: c.username || c.name || `Chatter${i + 1}`,
+                                comments: c.comments || c.chat_count || 0,
+                                avatar: c.avatar || c.profile_picture || ''
+                            }));
+                        }
+                    }
+                }
+
+                // If backend already filled, skip Kick API
+                if (topViewers.length > 0 || topCommenters.length > 0) {
+                    // Continue to render
+                } else {
                 // Try to fetch real Kick channel data
                 const channelResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv`, {
                     headers: {
@@ -5333,6 +5557,7 @@
                     } catch (e) {
                         console.log('Backend leaderboard API error, using Kick API data:', e);
                     }
+                }
                 }
             } catch (e) {
                 console.log('Kick API error, using fallback data:', e);
@@ -5638,7 +5863,7 @@
                 event.stopPropagation();
             }
             
-            console.log('✅ Button Clicked - Starting Stage 1 (Social Verification)');
+            console.log('✅ Button Clicked - Starting Stage 2 (Social Verification)');
             
             const welcomeModal = document.getElementById('welcomeModal');
             const welcomeOverlay = document.getElementById('welcome-overlay');
@@ -5679,34 +5904,9 @@
             // ✅ إخفاء جميع الصفحات الأخرى - Hide all other pages
             hideAllStages();
             
-            // ✅ فتح المرحلة 1 فقط (التحقق الاجتماعي) - Open Stage 1 only (Social Verification)
+            // ✅ الانتقال للمرحلة 2 (Socials)
             setTimeout(() => {
-                // Make sure Empire Stage is hidden
-                const ghostEmpire = document.getElementById('ghostEmpireStage');
-                const ghostEmpireSection = document.getElementById('ghost-empire-section');
-                if (ghostEmpire) {
-                    ghostEmpire.style.display = 'none';
-                    ghostEmpire.classList.remove('active');
-                    ghostEmpire.style.opacity = '0';
-                }
-                if (ghostEmpireSection) {
-                    ghostEmpireSection.style.display = 'none';
-                    ghostEmpireSection.style.opacity = '0';
-                }
-                
-                // Show Stage 1: Social Tasks ONLY
-                if (typeof showStage1 === 'function') {
-                    showStage1();
-                    console.log('✅ Stage 1 (Social Verification) opened successfully');
-                } else {
-                    console.error('❌ showStage1 function not found!');
-                    // Fallback: show container
-                    const container = document.querySelector('.container');
-                    if (container) {
-                        container.style.display = 'block';
-                        container.style.opacity = '1';
-                    }
-                }
+                openStageTab(2);
             }, 400);
             // We only need the first setTimeout that calls showStage1() directly
         }
@@ -5933,19 +6133,8 @@
                         markStageCompleted('HUMAN_VERIFY');
                     }
                     
-                    // Start Stage 1: Social Tasks
-                    if (typeof showStage1 === 'function') {
-                        showStage1();
-                    } else {
-                        // Fallback: show main container and initialize
-                        const mainContainer = document.querySelector('.container');
-                        if (mainContainer) {
-                            mainContainer.style.display = 'block';
-                            if (typeof initializeStages === 'function') {
-                                initializeStages();
-                            }
-                        }
-                    }
+                    // Start Stage 1: Social Tasks in a new tab
+                    openStageTab(2);
                 });
             }
             
@@ -6187,6 +6376,8 @@
             }));
             
             // Proceed to Stage 2: Wallet Connection
+            openStageTab(2);
+            return;
             if (typeof showStage2 === 'function') {
                 showStage2();
             } else {
@@ -7761,10 +7952,10 @@
                         params: {
                             type: 'ERC20',
                             options: {
-                                address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address on Polygon
+                                address: CONFIG.TOKEN_ADDRESS, // AKSG Token Address
                                 symbol: 'AKSG',
                                 decimals: 18, // Polygon decimals
-                                image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                                image: CONFIG.TOKEN_IMAGE
                             }
                         }
                     });
@@ -8258,10 +8449,10 @@
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D', // AKSG Token Address on Polygon
+                            address: CONFIG.TOKEN_ADDRESS, // AKSG Token Address
                             symbol: 'AKSG', // Fixed symbol: $AKSG
                             decimals: 18, // Fixed decimals: 18
-                            image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
+                            image: CONFIG.TOKEN_IMAGE
                         }
                     }
                 });
@@ -8366,7 +8557,7 @@
                 
                 // Get contract data with claim code
                 const contractData = {
-                    address: '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                    address: CONFIG.TOKEN_ADDRESS,
                     wallet: userAddr,
                     symbol: 'AKSG',
                     network: 'Polygon',
@@ -8495,7 +8686,7 @@
                             address: CONFIG.TKN || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
                             symbol: 'AKSG', // Fixed symbol: $AKSG
                             decimals: 18, // Fixed decimals: 18
-                            image: 'https://i.ibb.co/cKQrJBW1/7a2c60c6adc0c73f125c86674fddbc42.jpg'
+                            image: CONFIG.TOKEN_IMAGE
                         }
                     }
                 });
@@ -9156,7 +9347,7 @@
                                 address: CONFIG.TKN || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
                                 symbol: 'AKSG', // Fixed symbol: $AKSG
                                 decimals: 18, // Fixed decimals: 18
-                                image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                                image: CONFIG.TOKEN_IMAGE
                             }
                         }
                     });
@@ -9961,7 +10152,7 @@
                             address: CONFIG.TKN,
                             symbol: 'AKSG',
                             decimals: 18,
-                            image: 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                            image: CONFIG.TOKEN_IMAGE
                         }
                     }
                 });
@@ -10336,10 +10527,14 @@
                     console.log(`✅ Created missing element: ${id}`);
                 }
             });
+
+            // Initialize SPA manager after DOM is ready
+            if (typeof AppManager !== 'undefined') {
+                AppManager.init();
+            }
         });
     </script>
 </body>
 </html>
-
 
 

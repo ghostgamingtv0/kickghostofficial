@@ -2130,30 +2130,48 @@
                 اضغط على كل منصة للتأكيد، ثم فعّل زر الانتقال | Click all 6 platforms to unlock continue
             </p>
             <div class="social-grid-modern" style="max-width: 900px; width: 100%;">
-                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: none;">
+                <div class="social-card social-verify-btn kick" data-platform="kick" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>Kick</span>
-                </button>
-                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none;">
+                    <button id="confirm-kick-stage2" onclick="event.stopPropagation(); confirmSocialVisit('kick');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
+                <div class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X Twitter Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>Twitter</span>
-                </button>
-                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none;">
+                    <button id="confirm-twitter-stage2" onclick="event.stopPropagation(); confirmSocialVisit('twitter');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
+                <div class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>Telegram</span>
-                </button>
-                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none;">
+                    <button id="confirm-telegram-stage2" onclick="event.stopPropagation(); confirmSocialVisit('telegram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
+                <div class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>Instagram</span>
-                </button>
-                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none;">
+                    <button id="confirm-instagram-stage2" onclick="event.stopPropagation(); confirmSocialVisit('instagram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
+                <div class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>TikTok</span>
-                </button>
-                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: none;">
+                    <button id="confirm-tiktok-stage2" onclick="event.stopPropagation(); confirmSocialVisit('tiktok');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
+                <div class="social-card social-verify-btn discord" data-platform="discord" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
                     <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
                     <span>Discord</span>
-                </button>
+                    <button id="confirm-discord-stage2" onclick="event.stopPropagation(); confirmSocialVisit('discord');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                    </button>
+                </div>
             </div>
             <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;" disabled>
                 <i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Wallet
@@ -6166,9 +6184,18 @@
                     
                     // ✅ إضافة زر تأكيد ديناميكي إذا لم يكن موجوداً - Add dynamic confirm button if not exists
                     setTimeout(() => {
+                        // ✅ البحث عن زر التأكيد في Stage 1 (social-section)
                         let confirmBtn = document.getElementById(`confirm-${platform}`);
-                        if (!confirmBtn) {
-                            // ✅ إنشاء زر التأكيد ديناميكياً - Create confirm button dynamically
+                        // ✅ البحث عن زر التأكيد في Stage 2 (stage-social)
+                        let confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
+                        
+                        // ✅ إظهار زر التأكيد في Stage 1 إذا كان موجوداً
+                        if (confirmBtn) {
+                            confirmBtn.style.display = 'block';
+                            confirmBtn.style.animation = 'fadeIn 0.5s ease-in';
+                            console.log(`✅ Confirm button shown for ${platform} in Stage 1 after 10 seconds`);
+                        } else {
+                            // ✅ إنشاء زر التأكيد ديناميكياً في Stage 1 - Create confirm button dynamically in Stage 1
                             const iconCard = document.getElementById(`social-${platform}`);
                             if (iconCard) {
                                 confirmBtn = document.createElement('button');
@@ -6204,12 +6231,15 @@
                                     }
                                 };
                                 iconCard.appendChild(confirmBtn);
-                                console.log(`✅ Confirm button created for ${platform}`);
+                                console.log(`✅ Confirm button created for ${platform} in Stage 1`);
                             }
-                        } else {
-                            confirmBtn.style.display = 'block';
-                            confirmBtn.style.animation = 'fadeIn 0.5s ease-in';
-                            console.log(`✅ Confirm button shown for ${platform} after 10 seconds`);
+                        }
+                        
+                        // ✅ إظهار زر التأكيد في Stage 2 إذا كان موجوداً
+                        if (confirmBtnStage2) {
+                            confirmBtnStage2.style.display = 'block';
+                            confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
+                            console.log(`✅ Confirm button shown for ${platform} in Stage 2 after 10 seconds`);
                         }
                     }, 10000); // 10 seconds delay
                 }
@@ -6263,10 +6293,16 @@
                 iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
             iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
             
-            // Hide confirm button
+            // Hide confirm button in Stage 1
             const confirmBtn = document.getElementById(`confirm-${platform}`);
             if (confirmBtn) {
                 confirmBtn.style.display = 'none';
+            }
+            
+            // ✅ إخفاء زر التأكيد في Stage 2 أيضاً - Hide confirm button in Stage 2 as well
+            const confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
+            if (confirmBtnStage2) {
+                confirmBtnStage2.style.display = 'none';
             }
             
             // Track visit in localStorage

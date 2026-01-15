@@ -4417,17 +4417,24 @@
                     });
                 });
 
-                // Social buttons
+                // Social buttons - Use clickSocialIcon instead
                 document.querySelectorAll('.social-verify-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const platform = e.currentTarget.dataset.platform;
-                        const link = CONFIG.SOCIAL?.[platform?.toUpperCase()] || CONFIG.SOCIAL?.[platform] || '';
-                        if (link) {
-                            window.open(link, '_blank', 'noopener,noreferrer');
+                        if (platform) {
+                            // ✅ استخدام clickSocialIcon لفتح الرابط - Use clickSocialIcon to open link
+                            if (typeof clickSocialIcon === 'function') {
+                                clickSocialIcon(platform);
+                            } else {
+                                // Fallback: Open link directly
+                                const link = CONFIG.SOCIAL?.[platform?.toUpperCase()] || CONFIG.SOCIAL?.[platform] || '';
+                                if (link) {
+                                    window.open(link, '_blank', 'noopener,noreferrer');
+                                }
+                            }
+                            // ✅ لا نحدّث socials هنا - سنحدّثها في confirmSocialVisit
+                            // Don't update socials here - will be updated in confirmSocialVisit
                         }
-                        this.socials[platform] = true;
-                        e.currentTarget.classList.add('clicked');
-                        this.checkSocials();
                     });
                 });
 
@@ -4516,19 +4523,40 @@
             },
 
             checkSocials() {
-                const allDone = Object.values(this.socials).every(v => v === true);
+                // ✅ التحقق من socialClickedState أيضاً - Check socialClickedState as well
+                const socialClickedCount = Object.values(socialClickedState || {}).filter(v => v).length;
+                const appManagerCount = Object.values(this.socials).filter(v => v).length;
+                
+                // ✅ يجب أن يكون جميع الـ 6 منصات مؤكدة - All 6 platforms must be confirmed
+                const allDone = (socialClickedCount >= 6 && appManagerCount >= 6) || 
+                               Object.values(this.socials).every(v => v === true);
+                
                 const btn = document.getElementById('confirm-social-advance');
-                if (btn && allDone) {
-                    btn.style.visibility = 'visible';
-                    btn.style.display = 'block';
-                    btn.disabled = false;
-                    btn.classList.add('enabled');
-                    
-                    // ✅ حفظ حالة إكمال المرحلة 2 - Save Stage 2 completion
-                    localStorage.setItem('social_verification_complete', 'true');
-                    localStorage.setItem('stage2_social_completed_at', new Date().toISOString());
-                    
-                    console.log('✅ Stage 2 (Social) completed - Button enabled for Stage 3 (Wallet)');
+                if (btn) {
+                    if (allDone) {
+                        btn.style.visibility = 'visible';
+                        btn.style.display = 'block';
+                        btn.style.opacity = '1';
+                        btn.disabled = false;
+                        btn.classList.add('enabled');
+                        btn.style.pointerEvents = 'auto';
+                        
+                        // ✅ حفظ حالة إكمال المرحلة 2 - Save Stage 2 completion
+                        localStorage.setItem('social_verification_complete', 'true');
+                        localStorage.setItem('stage2_social_completed_at', new Date().toISOString());
+                        
+                        console.log('✅ Stage 2 (Social) completed - Button enabled for Stage 3 (Wallet)');
+                        console.log(`✅ Confirmed platforms: ${socialClickedCount}/6 (socialClickedState), ${appManagerCount}/6 (AppManager.socials)`);
+                    } else {
+                        // ✅ إخفاء الزر إذا لم تكتمل جميع المنصات - Hide button if not all platforms completed
+                        btn.style.visibility = 'hidden';
+                        btn.style.display = 'none';
+                        btn.disabled = true;
+                        btn.classList.remove('enabled');
+                        btn.style.pointerEvents = 'none';
+                        
+                        console.log(`⏳ Waiting for all platforms: ${socialClickedCount}/6 (socialClickedState), ${appManagerCount}/6 (AppManager.socials)`);
+                    }
                 }
             },
 
@@ -6136,10 +6164,49 @@
                         showNotify(`✅ ${platform} link opened in new tab! Please visit and return. | تم فتح رابط ${platform} في تبويبة جديدة! يرجى الزيارة والعودة.`, 'success');
                     }
                     
-                    // Show confirm button after 10 seconds
+                    // ✅ إضافة زر تأكيد ديناميكي إذا لم يكن موجوداً - Add dynamic confirm button if not exists
                     setTimeout(() => {
-                        const confirmBtn = document.getElementById(`confirm-${platform}`);
-                        if (confirmBtn) {
+                        let confirmBtn = document.getElementById(`confirm-${platform}`);
+                        if (!confirmBtn) {
+                            // ✅ إنشاء زر التأكيد ديناميكياً - Create confirm button dynamically
+                            const iconCard = document.getElementById(`social-${platform}`);
+                            if (iconCard) {
+                                confirmBtn = document.createElement('button');
+                                confirmBtn.id = `confirm-${platform}`;
+                                confirmBtn.className = 'confirm-social-btn';
+                                confirmBtn.innerHTML = `<i class="fas fa-check"></i> تأكيد | Confirm`;
+                                confirmBtn.style.cssText = `
+                                    display: block;
+                                    margin-top: 10px;
+                                    padding: 8px 16px;
+                                    background: rgba(0, 255, 163, 0.2);
+                                    border: 2px solid #00ffa3;
+                                    border-radius: 10px;
+                                    color: #00ffa3;
+                                    font-family: 'Orbitron', monospace;
+                                    font-size: 0.9rem;
+                                    cursor: pointer;
+                                    transition: all 0.3s;
+                                    animation: fadeIn 0.5s ease-in;
+                                `;
+                                confirmBtn.onmouseover = function() {
+                                    this.style.background = 'rgba(0, 255, 163, 0.4)';
+                                    this.style.transform = 'scale(1.05)';
+                                };
+                                confirmBtn.onmouseout = function() {
+                                    this.style.background = 'rgba(0, 255, 163, 0.2)';
+                                    this.style.transform = 'scale(1)';
+                                };
+                                confirmBtn.onclick = function(e) {
+                                    e.stopPropagation();
+                                    if (typeof confirmSocialVisit === 'function') {
+                                        confirmSocialVisit(platform);
+                                    }
+                                };
+                                iconCard.appendChild(confirmBtn);
+                                console.log(`✅ Confirm button created for ${platform}`);
+                            }
+                        } else {
                             confirmBtn.style.display = 'block';
                             confirmBtn.style.animation = 'fadeIn 0.5s ease-in';
                             console.log(`✅ Confirm button shown for ${platform} after 10 seconds`);
@@ -6219,6 +6286,15 @@
                 showNotify(`✅ ${platform} verified! | تم التحقق من ${platform}!`, 'success');
                 }
                 
+            // ✅ تحديث AppManager.socials مباشرة - Update AppManager.socials directly
+            if (typeof AppManager !== 'undefined' && AppManager.socials) {
+                AppManager.socials[platform] = true;
+                // ✅ استدعاء checkSocials لإظهار الزر - Call checkSocials to show button
+                if (typeof AppManager.checkSocials === 'function') {
+                    AppManager.checkSocials();
+                }
+            }
+            
             // Check if all social platforms are clicked
                 checkAllSocialClicked();
             
@@ -6237,6 +6313,31 @@
             const clickedCount = Object.values(socialClickedState).filter(v => v).length;
             const minimumRequired = 6; // All platforms required
             const enoughClicked = clickedCount >= minimumRequired;
+            
+            // ✅ تحديث AppManager.socials أيضاً - Update AppManager.socials as well
+            if (typeof AppManager !== 'undefined' && AppManager.socials) {
+                Object.keys(socialClickedState).forEach(platform => {
+                    if (socialClickedState[platform]) {
+                        AppManager.socials[platform] = true;
+                    }
+                });
+                // ✅ استدعاء checkSocials لإظهار الزر - Call checkSocials to show button
+                if (typeof AppManager.checkSocials === 'function') {
+                    AppManager.checkSocials();
+                }
+            }
+            
+            // ✅ أيضاً التحقق من زر confirm-social-advance مباشرة - Also check confirm-social-advance button directly
+            const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
+            if (confirmSocialAdvanceBtn && enoughClicked) {
+                confirmSocialAdvanceBtn.style.visibility = 'visible';
+                confirmSocialAdvanceBtn.style.display = 'block';
+                confirmSocialAdvanceBtn.style.opacity = '1';
+                confirmSocialAdvanceBtn.disabled = false;
+                confirmSocialAdvanceBtn.classList.add('enabled');
+                confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
+                console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked');
+            }
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
             const syncStatusText = document.getElementById('syncStatusText');
@@ -8963,6 +9064,21 @@
             socialVerificationState.confirmed.add(url);
             clickedSocialLinks.add(url);
             
+            // ✅ تحديث socialClickedState أيضاً - Update socialClickedState as well
+            // Map URL to platform name for socialClickedState
+            let platform = null;
+            if (url.includes('kick.com')) platform = 'kick';
+            else if (url.includes('twitter.com') || url.includes('x.com')) platform = 'twitter';
+            else if (url.includes('t.me') || url.includes('telegram')) platform = 'telegram';
+            else if (url.includes('instagram.com')) platform = 'instagram';
+            else if (url.includes('tiktok.com')) platform = 'tiktok';
+            else if (url.includes('discord')) platform = 'discord';
+            
+            if (platform && typeof socialClickedState !== 'undefined' && socialClickedState.hasOwnProperty(platform)) {
+                socialClickedState[platform] = true;
+                console.log(`✅ Updated socialClickedState.${platform} = true`);
+            }
+            
             const card = document.getElementById(`socialCard${index}`);
             const confirmBtn = document.getElementById(`confirmBtn${index}`);
             const check = document.getElementById(`check${index}`);
@@ -8998,6 +9114,11 @@
             // Save state
             saveSocialVerificationState();
             
+            // ✅ استدعاء checkAllSocialClicked أيضاً - Also call checkAllSocialClicked
+            if (typeof checkAllSocialClicked === 'function') {
+                checkAllSocialClicked();
+            }
+            
             // Check if all confirmed
             checkAllSocialLinksConfirmed();
         }
@@ -9017,6 +9138,26 @@
                 } else {
                     const remaining = SOCIAL_LINKS.length - socialVerificationState.confirmed.size;
                     confirmSyncBtn.innerHTML = `<i class="fas fa-clock"></i> CONFIRM ${remaining} MORE | أكمل ${remaining} ثانية`;
+                }
+            }
+            
+            // ✅ أيضاً تحديث زر confirm-social-advance - Also update confirm-social-advance button
+            const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
+            if (confirmSocialAdvanceBtn) {
+                if (allConfirmed) {
+                    confirmSocialAdvanceBtn.style.visibility = 'visible';
+                    confirmSocialAdvanceBtn.style.display = 'block';
+                    confirmSocialAdvanceBtn.style.opacity = '1';
+                    confirmSocialAdvanceBtn.disabled = false;
+                    confirmSocialAdvanceBtn.classList.add('enabled');
+                    confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
+                    console.log('✅ confirm-social-advance button enabled via checkAllSocialLinksConfirmed');
+                } else {
+                    const remaining = SOCIAL_LINKS.length - socialVerificationState.confirmed.size;
+                    confirmSocialAdvanceBtn.style.visibility = 'hidden';
+                    confirmSocialAdvanceBtn.disabled = true;
+                    confirmSocialAdvanceBtn.style.opacity = '0.5';
+                    confirmSocialAdvanceBtn.style.pointerEvents = 'none';
                 }
             }
         }
@@ -9120,8 +9261,26 @@
                             }
                             if (check) check.style.display = 'block';
                             clickedSocialLinks.add(link.url);
+                            
+                            // ✅ تحديث socialClickedState أيضاً عند التحميل - Update socialClickedState when loading
+                            let platform = null;
+                            if (link.url.includes('kick.com')) platform = 'kick';
+                            else if (link.url.includes('twitter.com') || link.url.includes('x.com')) platform = 'twitter';
+                            else if (link.url.includes('t.me') || link.url.includes('telegram')) platform = 'telegram';
+                            else if (link.url.includes('instagram.com')) platform = 'instagram';
+                            else if (link.url.includes('tiktok.com')) platform = 'tiktok';
+                            else if (link.url.includes('discord')) platform = 'discord';
+                            
+                            if (platform && typeof socialClickedState !== 'undefined' && socialClickedState.hasOwnProperty(platform)) {
+                                socialClickedState[platform] = true;
+                            }
                         }
                     });
+                    
+                    // ✅ أيضاً استدعاء checkAllSocialClicked - Also call checkAllSocialClicked
+                    if (typeof checkAllSocialClicked === 'function') {
+                        checkAllSocialClicked();
+                    }
                     
                     checkAllSocialLinksConfirmed();
                 }

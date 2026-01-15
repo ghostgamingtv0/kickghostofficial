@@ -4435,19 +4435,65 @@
                     });
                 });
 
-                // Social buttons - Use clickSocialIcon instead
+                // Social buttons - Stage 2: Open links directly
                 document.querySelectorAll('.social-verify-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         const platform = e.currentTarget.dataset.platform;
                         if (platform) {
-                            // ✅ استخدام clickSocialIcon لفتح الرابط - Use clickSocialIcon to open link
-                            if (typeof clickSocialIcon === 'function') {
-                                clickSocialIcon(platform);
+                            console.log(`🔗 Clicking social platform: ${platform}`);
+                            
+                            // ✅ الحصول على الرابط من CONFIG.SOCIAL مباشرة - Get link from CONFIG.SOCIAL directly
+                            const links = {
+                                kick: CONFIG.SOCIAL?.KICK || 'https://kick.com/ghost_gamingtv',
+                                twitter: CONFIG.SOCIAL?.TWITTER || 'https://twitter.com/tv_ghostgaming',
+                                telegram: CONFIG.SOCIAL?.TELEGRAM || 'https://t.me/ghost_gamingtv',
+                                instagram: CONFIG.SOCIAL?.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
+                                tiktok: CONFIG.SOCIAL?.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
+                                discord: CONFIG.SOCIAL?.DISCORD || 'https://discord.gg/NMrnjQ7E'
+                            };
+                            
+                            const link = links[platform];
+                            
+                            if (link) {
+                                console.log(`✅ Opening ${platform} link directly: ${link}`);
+                                // ✅ فتح الرابط في تبويبة جديدة - Open link in new tab
+                                const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
+                                
+                                if (newWindow && !newWindow.closed) {
+                                    // ✅ تسجيل وقت الزيارة - Record visit timestamp
+                                    if (typeof socialVisitTimestamps === 'undefined') {
+                                        window.socialVisitTimestamps = {};
+                                    }
+                                    socialVisitTimestamps[platform] = Date.now();
+                                    
+                                    // ✅ إظهار زر التأكيد بعد 10 ثوانٍ - Show confirm button after 10 seconds
+                                    setTimeout(() => {
+                                        const confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
+                                        if (confirmBtnStage2) {
+                                            confirmBtnStage2.style.display = 'block';
+                                            confirmBtnStage2.style.visibility = 'visible';
+                                            confirmBtnStage2.style.opacity = '1';
+                                            confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
+                                            console.log(`✅ Confirm button shown for ${platform} in Stage 2`);
+                                        }
+                                    }, 10000);
+                                    
+                                    // ✅ إظهار إشعار - Show notification
+                                    if (typeof showNotify === 'function') {
+                                        showNotify(`✅ ${platform} link opened! Please visit and return. | تم فتح رابط ${platform}! يرجى الزيارة والعودة.`, 'success');
+                                    }
+                                } else {
+                                    console.warn(`⚠️ Popup blocked for ${platform}`);
+                                    if (typeof showNotify === 'function') {
+                                        showNotify(`⚠️ Please allow popups to open ${platform} link | يرجى السماح بالنوافذ المنبثقة`, 'warning');
+                                    }
+                                }
                             } else {
-                                // Fallback: Open link directly
-                                const link = CONFIG.SOCIAL?.[platform?.toUpperCase()] || CONFIG.SOCIAL?.[platform] || '';
-                                if (link) {
-                                    window.open(link, '_blank', 'noopener,noreferrer');
+                                console.error(`❌ No link found for platform: ${platform}`);
+                                if (typeof showNotify === 'function') {
+                                    showNotify(`❌ Link not found for ${platform} | لم يتم العثور على رابط ${platform}`, 'error');
                                 }
                             }
                             // ✅ لا نحدّث socials هنا - سنحدّثها في confirmSocialVisit
@@ -6192,6 +6238,8 @@
                         // ✅ إظهار زر التأكيد في Stage 1 إذا كان موجوداً
                         if (confirmBtn) {
                             confirmBtn.style.display = 'block';
+                            confirmBtn.style.visibility = 'visible';
+                            confirmBtn.style.opacity = '1';
                             confirmBtn.style.animation = 'fadeIn 0.5s ease-in';
                             console.log(`✅ Confirm button shown for ${platform} in Stage 1 after 10 seconds`);
                         } else {
@@ -6204,6 +6252,8 @@
                                 confirmBtn.innerHTML = `<i class="fas fa-check"></i> تأكيد | Confirm`;
                                 confirmBtn.style.cssText = `
                                     display: block;
+                                    visibility: visible;
+                                    opacity: 1;
                                     margin-top: 10px;
                                     padding: 8px 16px;
                                     background: rgba(0, 255, 163, 0.2);
@@ -6235,11 +6285,18 @@
                             }
                         }
                         
-                        // ✅ إظهار زر التأكيد في Stage 2 إذا كان موجوداً
+                        // ✅ إظهار زر التأكيد في Stage 2 إذا كان موجوداً - Show confirm button in Stage 2 if exists
                         if (confirmBtnStage2) {
                             confirmBtnStage2.style.display = 'block';
+                            confirmBtnStage2.style.visibility = 'visible';
+                            confirmBtnStage2.style.opacity = '1';
                             confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
                             console.log(`✅ Confirm button shown for ${platform} in Stage 2 after 10 seconds`);
+                            
+                            // ✅ إظهار إشعار للمستخدم - Show notification to user
+                            if (typeof showNotify === 'function') {
+                                showNotify(`✅ يمكنك الآن تأكيد زيارة ${platform} | You can now confirm ${platform} visit`, 'success');
+                            }
                         }
                     }, 10000); // 10 seconds delay
                 }
@@ -6275,23 +6332,30 @@
                 return;
             }
             
-            const iconCard = document.getElementById(`social-${platform}`);
+            // ✅ البحث عن العنصر في Stage 1 أو Stage 2 - Find element in Stage 1 or Stage 2
+            let iconCard = document.getElementById(`social-${platform}`);
             if (!iconCard) {
-                console.error(`❌ Social icon card not found: social-${platform}`);
-                return;
+                // ✅ البحث في Stage 2 - Search in Stage 2
+                iconCard = document.querySelector(`.social-verify-btn[data-platform="${platform}"]`);
+            }
+            if (!iconCard) {
+                console.warn(`⚠️ Social icon card not found for ${platform}, but continuing...`);
             }
             
-                // Mark as visited
+            // Mark as visited
             if (socialClickedState.hasOwnProperty(platform)) {
                 socialClickedState[platform] = true;
             } else {
                 console.warn(`⚠️ Platform ${platform} not in socialClickedState`);
             }
             
+            // ✅ تحديث مظهر العنصر إذا كان موجوداً - Update element appearance if exists
+            if (iconCard) {
                 iconCard.classList.add('clicked');
                 iconCard.style.borderColor = 'var(--success)';
                 iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
-            iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
+                iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
+            }
             
             // Hide confirm button in Stage 1
             const confirmBtn = document.getElementById(`confirm-${platform}`);

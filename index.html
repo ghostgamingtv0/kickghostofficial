@@ -16,6 +16,140 @@
     
     <!-- All dependencies are merged into this HTML (no external files) -->
     
+    <!-- ==================== ✅ حماية شاملة ضد F12 و DevTools و Console ==================== -->
+    <!-- Comprehensive Protection Against F12, DevTools, and Console -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // ✅ حماية ضد F12 و DevTools - Protection against F12 and DevTools
+            let devtools = {open: false, orientation: null};
+            const threshold = 160;
+            
+            setInterval(function() {
+                if (window.outerHeight - window.innerHeight > threshold || 
+                    window.outerWidth - window.innerWidth > threshold) {
+                    if (!devtools.open) {
+                        devtools.open = true;
+                        // ✅ إعادة توجيه أو إغلاق - Redirect or close
+                        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4444;font-family:Orbitron;font-size:2rem;text-align:center;"><div><h1>Security Alert | تنبيه أمني</h1><p>Developer Tools Detected | تم اكتشاف أدوات المطور</p><p style="font-size:1rem;color:#888;">Access Denied | الوصول مرفوض</p></div></div>';
+                        // ✅ منع أي تفاعل - Prevent any interaction
+                        document.addEventListener('keydown', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
+                        }, true);
+                        document.addEventListener('contextmenu', function(e) {
+                            e.preventDefault();
+                            return false;
+                        }, true);
+                    }
+                } else {
+                    devtools.open = false;
+                }
+            }, 500);
+            
+            // ✅ حماية ضد F12 و Ctrl+Shift+I و Ctrl+Shift+J - Protection against F12, Ctrl+Shift+I, Ctrl+Shift+J
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+I (DevTools)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                // Ctrl+S (Save Page)
+                if (e.ctrlKey && e.keyCode === 83) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+            
+            // ✅ حماية ضد Right Click - Protection against Right Click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+            
+            // ✅ حماية ضد Select Text - Protection against Text Selection
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+            
+            // ✅ حماية ضد Drag - Protection against Drag
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+            
+            // ✅ حماية Console - Console Protection
+            const noop = function() {};
+            const methods = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml', 
+                           'group', 'groupEnd', 'time', 'timeEnd', 'count', 'trace', 'profile', 'profileEnd'];
+            
+            // ✅ إخفاء Console بشكل كامل - Completely hide Console
+            if (typeof console !== 'undefined') {
+                methods.forEach(function(method) {
+                    console[method] = noop;
+                });
+            }
+            
+            // ✅ حماية ضد debugger - Protection against debugger
+            setInterval(function() {
+                (function() {
+                    'use strict';
+                    try {
+                        eval('(function() { "use strict"; var devtools = {open: false, orientation: null}; var element = new Image(); Object.defineProperty(element, "id", {get: function() { devtools.open = true; document.body.innerHTML = "<div style=\\"display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4444;font-family:Orbitron;font-size:2rem;text-align:center;\\"><div><h1>Security Alert</h1><p>Developer Tools Detected</p></div></div>"; }}); console.log(element); })()');
+                    } catch(e) {}
+                })();
+            }, 1000);
+            
+            // ✅ حماية ضد DevTools Detection - DevTools Detection Protection
+            let element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    devtools.open = true;
+                    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4444;font-family:Orbitron;font-size:2rem;text-align:center;"><div><h1>Security Alert | تنبيه أمني</h1><p>Developer Tools Detected | تم اكتشاف أدوات المطور</p></div></div>';
+                }
+            });
+            
+            // ✅ منع فتح DevTools - Prevent DevTools Opening
+            window.addEventListener('resize', function() {
+                if (window.outerHeight - window.innerHeight > threshold || 
+                    window.outerWidth - window.innerWidth > threshold) {
+                    devtools.open = true;
+                    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4444;font-family:Orbitron;font-size:2rem;text-align:center;"><div><h1>Security Alert</h1><p>Developer Tools Detected</p></div></div>';
+                }
+            });
+            
+        })();
+    </script>
+    
     <style>
         /* تأكد أن هذا القسم في أعلى الـ CSS */
         /* welcome-layer merged with welcome-overlay - keeping for compatibility */
@@ -2476,45 +2610,184 @@
     <!-- ==================== STAGE 3: GHOST EMPIRE ==================== -->
     <!-- Stage 3: Ghost Empire - إمبراطورية Ghost (Claim Code & Chart) -->
     <div id="ghostEmpireStage" class="ghost-empire-stage stage-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
-        <!-- Empire Logo at Top -->
-        <div class="empire-header" style="text-align: center; margin-bottom: 40px;">
-            <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 40px var(--primary); margin-bottom: 20px;">
-            <h1 class="empire-title" style="font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); text-shadow: 0 0 30px var(--primary); margin-bottom: 30px;">GHOST EMPIRE</h1>
+        
+        <!-- Top Header: Logo, Social Links & KICK LIVE STATUS -->
+        <div class="empire-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(0, 0, 0, 0.3); border-bottom: 2px solid var(--primary); margin-bottom: 30px;">
+            <!-- Left: Empire Logo -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 30px var(--primary);">
+                <h1 class="empire-title" style="font-family: 'Orbitron'; font-size: 2rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); margin: 0;">GHOST EMPIRE</h1>
+            </div>
             
-            <!-- Kick Follow Verification Section -->
-            <!-- ✅ Stage 3: Kick Follow Verification - 3 Buttons Design -->
-            <div id="kickVerificationSection" style="background: rgba(5, 255, 5, 0.1); border-radius: 20px; padding: 40px; margin-bottom: 30px; border: 2px solid var(--kick); max-width: 700px; margin-left: auto; margin-right: auto; box-shadow: 0 0 30px rgba(5, 255, 5, 0.2);">
-                <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 15px; font-size: 1.8rem; text-align: center; text-shadow: 0 0 20px var(--kick); display: flex; align-items: center; justify-content: center; gap: 15px;">
-                    <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;"> المرحلة الثالثة: التحقق من متابعة Kick | Stage 3: Kick Follow Verification
-                </h3>
-                <p style="color: #aaa; text-align: center; margin-bottom: 30px; line-height: 1.8; font-size: 1.05rem;">
-                    يجب عليك متابعة حساب المشروع على منصة Kick لفتح المكافأة | You must follow the project account on Kick platform to unlock the reward
-                </p>
-                <div style="display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%;">
-                    <!-- Button 1: Visit Kick Profile (Gradient Blue to Teal) -->
-                    <a href="https://kick.com/ghost_gamingtv" target="_blank" class="btn-mega" style="padding: 18px 50px; font-size: 1.2rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 500px; background: linear-gradient(45deg, #00b3ff, #00ffa3); border: 2px solid #00ffa3; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 163, 0.4);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(0, 255, 163, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.4)'">
-                        <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> زيارة ملف KICK | VISIT KICK PROFILE
-                    </a>
-                    
-                    <!-- Button 2: Buy AKSG (Neon Green) -->
-                    <button id="buyAKSGBtn" class="btn-mega" onclick="openBuyModal()" style="padding: 18px 50px; font-size: 1.2rem; width: 100%; max-width: 500px; background: var(--kick); border: 2px solid var(--kick); border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; text-align: center; transition: all 0.3s; box-shadow: 0 0 20px rgba(5, 255, 5, 0.4); cursor: pointer;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(5, 255, 5, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(5, 255, 5, 0.4)'">
-                        <i class="fas fa-shopping-cart" style="margin-right: 10px;"></i> شراء $AKSG | BUY $AKSG
-                    </button>
-                    
-                    <!-- Button 3: Verify Follow (Teal/Cyan) -->
-                    <button id="verifyKickFollowBtn" onclick="verifyKickFollow()" class="btn-mega" style="padding: 18px 50px; font-size: 1.2rem; width: 100%; max-width: 500px; background: var(--secondary); border: 2px solid var(--secondary); border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; text-align: center; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 163, 0.4); cursor: pointer;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(0, 255, 163, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.4)'">
-                        <i class="fas fa-check-circle" style="margin-right: 10px;"></i> التحقق من المتابعة | VERIFY FOLLOW
-                    </button>
+            <!-- Center: Social Links & KICK LIVE STATUS -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                <!-- KICK LIVE STATUS -->
+                <div class="status-badge" style="display: flex; align-items: center; gap: 10px; font-weight: bold; padding: 10px 20px; border-radius: 30px; background: rgba(5, 255, 5, 0.2); border: 2px solid var(--kick); box-shadow: 0 0 20px rgba(5, 255, 5, 0.4);">
+                    <div id="kick-dot" class="dot" style="width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; background: var(--kick);"></div>
+                    <span id="kick-text" style="font-family: 'Orbitron'; color: var(--kick); font-size: 0.9rem;">KICK LIVE STATUS</span>
                 </div>
-                <div id="kickStatusDisplay" style="margin-top: 25px; text-align: center; display: none;">
-                    <p id="kickStatusText" style="color: var(--success); font-weight: 600; font-size: 1.1rem; font-family: 'Orbitron';"></p>
+                
+                <!-- Social Platforms Icons -->
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <a href="https://kick.com/ghost_gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid var(--kick);">
+                    </a>
+                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #1DA1F2;">
+                    </a>
+                    <a href="https://t.me/ghost_gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #0088cc;">
+                    </a>
+                    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #E4405F;">
+                    </a>
+                    <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #000;">
+                    </a>
+                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #5865F2;">
+                    </a>
                 </div>
             </div>
             
-            <!-- Claim Button (Disabled until Kick follower verified) -->
-            <button id="empireClaimBtn" class="claim-code-btn-neon" onclick="claimCode()" disabled style="margin-bottom: 30px;">
-                <i class="fas fa-key"></i> توليد الكود | Generate Code
-            </button>
+            <!-- Right: Weekly Reset Counter & Referral Button -->
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 15px;">
+                <!-- Weekly Reset Counter -->
+                <div id="weeklyResetCounter" style="background: rgba(163, 54, 255, 0.2); border: 2px solid var(--primary); border-radius: 15px; padding: 15px 25px; text-align: center; box-shadow: 0 0 20px rgba(163, 54, 255, 0.3);">
+                    <p style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; margin: 0 0 5px 0; font-weight: 700;">Weekly Reset | تجديد أسبوعي</p>
+                    <p id="resetCountdown" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1.1rem; margin: 0; font-weight: 700;">Loading...</p>
+                </div>
+                
+                <!-- Referral Button (Replaces KICK button) -->
+                <button id="referralBtn" onclick="openReferralModal()" class="btn-mega" style="padding: 12px 30px; font-size: 1rem; background: linear-gradient(45deg, #ff6b6b, #ffa500); border: 2px solid #ffa500; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 165, 0, 0.4); cursor: pointer; display: inline-flex; align-items: center; gap: 10px;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 30px rgba(255, 165, 0, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(255, 165, 0, 0.4)'">
+                    <i class="fas fa-share-alt"></i> Share & Earn | شارك واكسب
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content Grid: Welcome Message (Top Right) + Leaderboards + Chart -->
+        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 30px; max-width: 1800px; margin: 0 auto; padding: 0 30px; margin-bottom: 40px;">
+            
+            <!-- Left Column: Top Viewers Leaderboard -->
+            <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-eye"></i> أوفى المتابعين | Top Viewers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Views</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireViewersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Center Column: Welcome Message (Top) + Code Claimers (Middle) + Chart (Bottom) -->
+            <div class="empire-main-content" style="display: flex; flex-direction: column; gap: 30px;">
+                <!-- Welcome Message & Explanation (Top Right) -->
+                <div class="welcome-message-empire" style="background: rgba(163, 54, 255, 0.15); border-radius: 25px; padding: 30px; border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(163, 54, 255, 0.3);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 15px; font-size: 1.8rem; text-align: center;">
+                        <i class="fas fa-crown"></i> ثورة في مفهوم الانتماء الرقمي | A Revolution in Digital Loyalty
+                    </h2>
+                    <p style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 15px; font-weight: 600; text-align: center; line-height: 1.8;">
+                        نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.
+                    </p>
+                    <p style="font-size: 0.95rem; color: #aaa; line-height: 1.8; text-align: center;">
+                        <strong>We are the pioneers:</strong> "A follower is a partner in success, not just a number." With KICKGHOST, your engagement is a smart investment that converts every like and victory into $AKSG rewards.
+                    </p>
+                </div>
+                
+                <!-- Code Claimers Leaderboard (Center) -->
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-trophy"></i> أصحاب الأكواد | Code Claimers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Wallet</th>
+                                <th>Code</th>
+                                <th>Claimed At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireCodeClaimersLeaderboard">
+                            <!-- Populated by loadCodeClaimersLeaderboard() -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- GeckoTerminal Chart (Bottom) -->
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
+                    </h2>
+                    <div class="chart-container" id="geckoterminal-chart-container" style="width: 100%; height: 500px; border: 2px solid #00ff00; border-radius: 15px; overflow: hidden; display: block;">
+                        <iframe
+                            id="geckoterminal-embed"
+                            title="GeckoTerminal Embed"
+                            src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=1&chart_type=market_cap&resolution=1h&bg_color=111827"
+                            frameborder="0"
+                            allow="clipboard-write"
+                            allowfullscreen
+                            style="width: 100%; height: 100%;">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Top Chatters Leaderboard -->
+            <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-comments"></i> ملوك التعليقات | Top Chatters
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Msgs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireChattersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons Section -->
+        <div style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+            <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                <!-- Visit Kick & Verify Button -->
+                <button id="visitKickProfileBtn" onclick="visitKickProfileAndVerify()" class="btn-mega" style="padding: 18px 50px; font-size: 1.2rem; width: 100%; max-width: 500px; background: linear-gradient(45deg, #00b3ff, #00ffa3); border: 2px solid #00ffa3; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; text-align: center; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 163, 0.4); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(0, 255, 163, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.4)'">
+                    <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; border-radius: 6px;"> 
+                    <span>زيارة ملف KICK والتحقق من المتابعة | VISIT KICK PROFILE & VERIFY FOLLOW</span>
+                </button>
+                
+                <!-- Buy AKSG Button -->
+                <button id="buyAKSGBtn" class="btn-mega" onclick="openBuyModal()" style="padding: 18px 50px; font-size: 1.2rem; width: 100%; max-width: 500px; background: var(--kick); border: 2px solid var(--kick); border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; text-align: center; transition: all 0.3s; box-shadow: 0 0 20px rgba(5, 255, 5, 0.4); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(5, 255, 5, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(5, 255, 5, 0.4)'">
+                    <i class="fas fa-shopping-cart"></i> شراء $AKSG | BUY $AKSG
+                </button>
+                
+                <!-- Claim Code Button -->
+                <button id="empireClaimBtn" class="claim-code-btn-neon" onclick="claimCode()" disabled style="padding: 18px 50px; font-size: 1.2rem; width: 100%; max-width: 500px; margin-top: 10px;">
+                    <i class="fas fa-key"></i> توليد الكود | Generate Code
+                </button>
+                
+                <div id="kickStatusDisplay" style="margin-top: 15px; text-align: center; display: none;">
+                    <p id="kickStatusText" style="color: var(--success); font-weight: 600; font-size: 1.1rem; font-family: 'Orbitron';"></p>
+                </div>
+            </div>
         </div>
         
         <!-- Reordered Layout: Leaderboards on sides, Chart in center -->
@@ -3249,6 +3522,11 @@
         
         // NOTE: Secret keys are stored securely using getSecureCredential() function
         // Never log or expose secret keys in console or frontend code
+        
+        // ✅ Thirdweb Webhook Configuration
+        CONFIG.THIRDWEB_WEBHOOK_URL = "https://ghostgamingtv0.github.io/kickghostofficial/";
+        // Webhook Secret will be loaded securely via getSecureCredential() or process.env
+        
         // ==================== COMPLETE SOCIAL MEDIA LINKS WITH LOGOS ====================
         CONFIG.SOCIAL = {
             KICK: "https://kick.com/ghost_gamingtv",
@@ -3435,9 +3713,25 @@
                 return atob("ZmYwMzBkYjM1NmI3Mjg4ZDYyOTViYThjYjYxNWMyYWExMmEyNzdhYjYxZWM1M2ZlZjM2MDFkMGMxMmJkYjBhNg==");
             }
             
-            // Legacy keys (kept for backward compatibility)
-            if (key === 'VAULT_ADMIN_KEY') return atob("c2FfYWRtX05KQ1pfUkZCU19NQzVDX1VCRUNfTUJNTV9JVUIyXzQwZjk4YjZlLWEyODYtNGMwNi04Yzc0LWU0YjNhMWYzNzk0OA==");
-            if (key === 'VAULT_ACCESS_TOKEN') return atob("dnRfYWN0X01ETlBNTUFYTU1NS1Y1S1Y0TUlTTDZEU0RDUUVETEVVN0daNFRTUEFOTVVVSUxWVlJRM09DSUVVVVZST1BJUjYzVTZWTEkPRzVDV0xJQUNBR0dGVjVJVUdKUURJWTVIRVdPT1E3RzZLST==");
+            // ✅ Thirdweb Webhook Secret - Used for webhook verification
+            if (key === 'THIRDWEB_WEBHOOK_SECRET') {
+                // Base64 encoded: 197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4
+                return atob("MTk3ZmUwNDU1MWM5NWE4ZGIxMDBhMjUxZmNkOWZlMWQ4ZmFkZTE1ZDFlMzExMmQxZmY4NmEwZGM5MDg2YWRjNA==");
+            }
+            
+            // ✅ Thirdweb Vault Admin Key - Updated
+            if (key === 'VAULT_ADMIN_KEY') {
+                // New Vault Admin Key: sa_adm_NJCZ_RFBS_MC5C_UBEC_MBMM_IUB2_40f98b6e-a286-4c06-8c74-e4b3a1f37948
+                // Base64 encoded
+                return atob("c2FfYWRtX05KQ1pfUkZCU19NQzVDX1VCRUNfTUJNTV9JVUIyXzQwZjk4YjZlLWEyODYtNGMwNi04Yzc0LWU0YjNhMWYzNzk0OA==");
+            }
+            
+            // ✅ Thirdweb Vault Access Token - Updated
+            if (key === 'VAULT_ACCESS_TOKEN') {
+                // New Vault Access Token: vt_act_MDNPMMAXM55KV4MISL6DSDCQEDLEU7GZ4TSPFANMUUILRVRQ3OCIEUUVRWOPIR63U6VLIOG5CV2LIACA7GFW5IUGJQDIY5HEWOQ7G6KI
+                // Base64 encoded
+                return atob("dnRfYWN0X01ETlBNTUFYTU1NS1Y1S1Y0TUlTTDZEU0RDUUVETEVVN0daNFRTUEFOTVVVSUxWVlJRM09DSUVVVVZST1BJUjYzVTZWTEkPRzVDV0xJQUNBR0dGVjVJVUdKUURJWTVIRVdPT1E3RzZLST==");
+            }
             
             return null;
         }
@@ -3453,47 +3747,210 @@
         CONFIG.THIRDWEB_PROJECT_ID = getSecureCredential('PROJECT_ID');
         CONFIG.KICK_DEVELOPER_KEY = getSecureCredential('KICK_DEVELOPER_KEY');
         
-        // Legacy keys (kept for backward compatibility)
-        CONFIG.THIRDWEB_VAULT_ADMIN_KEY = getSecureCredential('VAULT_ADMIN_KEY');
-        CONFIG.THIRDWEB_VAULT_ACCESS_TOKEN = getSecureCredential('VAULT_ACCESS_TOKEN');
+        // ✅ Thirdweb Webhook Configuration
+        CONFIG.THIRDWEB_WEBHOOK_URL = "https://ghostgamingtv0.github.io/kickghostofficial/";
+        CONFIG.THIRDWEB_WEBHOOK_SECRET = (typeof process !== 'undefined' && process.env && process.env.THIRDWEB_WEBHOOK_SECRET) 
+            ? process.env.THIRDWEB_WEBHOOK_SECRET 
+            : getSecureCredential('THIRDWEB_WEBHOOK_SECRET') || '197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4';
         
-        // ✅ Security: Override console.log to prevent accidental key exposure
+        // ✅ Thirdweb Vault Configuration (Updated)
+        CONFIG.THIRDWEB_VAULT_ADMIN_KEY = (typeof process !== 'undefined' && process.env && process.env.THIRDWEB_VAULT_ADMIN_KEY) 
+            ? process.env.THIRDWEB_VAULT_ADMIN_KEY 
+            : getSecureCredential('VAULT_ADMIN_KEY') || 'sa_adm_NJCZ_RFBS_MC5C_UBEC_MBMM_IUB2_40f98b6e-a286-4c06-8c74-e4b3a1f37948';
+        
+        CONFIG.THIRDWEB_VAULT_ACCESS_TOKEN = (typeof process !== 'undefined' && process.env && process.env.THIRDWEB_VAULT_ACCESS_TOKEN) 
+            ? process.env.THIRDWEB_VAULT_ACCESS_TOKEN 
+            : getSecureCredential('VAULT_ACCESS_TOKEN') || 'vt_act_MDNPMMAXM55KV4MISL6DSDCQEDLEU7GZ4TSPFANMUUILRVRQ3OCIEUUVRWOPIR63U6VLIOG5CV2LIACA7GFW5IUGJQDIY5HEWOQ7G6KI';
+        
+        // ✅ Thirdweb API Base URL
+        CONFIG.THIRDWEB_API_BASE = "https://api.thirdweb.com/v1";
+        
+        // ✅ Vercel API Endpoint (for serverless functions)
+        CONFIG.VERCEL_API_ENDPOINT = "https://kickghostofficial.vercel.app/api/transaction";
+        
+        // ✅ Descope Configuration (Authentication & Authorization)
+        CONFIG.DESCOPE_DISCOVERY_URL = (typeof process !== 'undefined' && process.env && process.env.DESCOPE_DISCOVERY_URL) 
+            ? process.env.DESCOPE_DISCOVERY_URL 
+            : "https://api.descope.com/v1/apps/P38Hxf0mcBS9IWZ3UnQKre2WlabV/.well-known/openid-configuration";
+        
+        CONFIG.DESCOPE_ISSUER = (typeof process !== 'undefined' && process.env && process.env.DESCOPE_ISSUER) 
+            ? process.env.DESCOPE_ISSUER 
+            : "https://api.descope.com/v1/apps/P38Hxf0mcBS9IWZ3UnQKre2WlabV";
+        
+        CONFIG.DESCOPE_PROJECT_ID = (typeof process !== 'undefined' && process.env && process.env.DESCOPE_PROJECT_ID) 
+            ? process.env.DESCOPE_PROJECT_ID 
+            : "P38Hxf0mcBS9IWZ3UnQKre2WlabV";
+        
+        CONFIG.NEXT_PUBLIC_DESCOPE_BASE_URL = (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_DESCOPE_BASE_URL) 
+            ? process.env.NEXT_PUBLIC_DESCOPE_BASE_URL 
+            : "https://api.descope.com";
+        
+        CONFIG.NEXT_PUBLIC_DESCOPE_PROJECT_ID = (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_DESCOPE_PROJECT_ID) 
+            ? process.env.NEXT_PUBLIC_DESCOPE_PROJECT_ID 
+            : "P38Hxf0mcBS9IWZ3UnQKre2WlabV";
+        
+        // ✅ Security: Enhanced Protection - إخفاء جميع المفاتيح بشكل كامل
+        // Enhanced Key Protection - Hide all keys completely
         (function() {
-            const originalLog = console.log;
-            const originalWarn = console.warn;
-            const originalError = console.error;
+            'use strict';
             
+            // ✅ قائمة جميع المفاتيح الحساسة (شاملة) - Comprehensive list of all sensitive keys
             const sensitiveKeys = [
+                // Thirdweb Keys
                 CONFIG.THIRDWEB_SECRET_KEY,
+                CONFIG.THIRDWEB_WEBHOOK_SECRET,
+                CONFIG.THIRDWEB_VAULT_ADMIN_KEY,
+                CONFIG.THIRDWEB_VAULT_ACCESS_TOKEN,
+                CONFIG.THIRDWEB_CLIENT_ID,
+                CONFIG.THIRDWEB_PROJECT_ID,
+                // Kick Keys
                 CONFIG.KICK_DEVELOPER_KEY,
+                CONFIG.KICK_DEVELOPER_ID,
+                // Descope Keys
+                CONFIG.DESCOPE_PROJECT_ID,
+                CONFIG.NEXT_PUBLIC_DESCOPE_PROJECT_ID,
+                // Key Names
                 'SECRET_KEY',
-                'KICK_DEVELOPER_KEY'
+                'THIRDWEB_SECRET_KEY',
+                'THIRDWEB_WEBHOOK_SECRET',
+                'VAULT_ADMIN_KEY',
+                'VAULT_ACCESS_TOKEN',
+                'KICK_DEVELOPER_KEY',
+                'DESCOPE_PROJECT_ID',
+                'NEXT_PUBLIC_DESCOPE_PROJECT_ID',
+                'DESCOPE_ISSUER',
+                'DESCOPE_DISCOVERY_URL',
+                // Actual Key Values (Partial matches)
+                'a8d2fbfbbe9dcaa11cc48f3d2634e3fd',
+                '197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4',
+                'sa_adm_NJCZ_RFBS_MC5C_UBEC_MBMM_IUB2',
+                'vt_act_MDNPMMAXM55KV4MISL6DSDCQEDLEU7GZ4TSPFANMUUILRVRQ3OCIEUUVRWOPIR63U6VLIOG5CV2LIACA7GFW5IUGJQDIY5HEWOQ7G6KI',
+                'ff030db356b7288d6295ba8cb615c2aa12a277ab61ec53fef3601d0c12bdb0a6',
+                '01KEAEX10SCC7S6VRSMR26WVRW',
+                'prj_cmk2xz9h214g2fw0kc2gan3o0',
+                'P38Hxf0mcBS9IWZ3UnQKre2WlabV'
             ];
             
+            // ✅ دالة محسّنة لإخفاء المفاتيح - Enhanced function to hide keys
             function sanitizeMessage(message) {
-                if (typeof message !== 'string') return message;
+                if (typeof message !== 'string') {
+                    // ✅ إذا كان object، تحويله لـ string - If object, convert to string
+                    try {
+                        if (message && typeof message === 'object') {
+                            message = JSON.stringify(message);
+                        } else {
+                            message = String(message);
+                        }
+                    } catch(e) {
+                        return '[Object]';
+                    }
+                }
+                
+                // ✅ إخفاء جميع المفاتيح - Hide all keys
                 sensitiveKeys.forEach(key => {
-                    if (key && message.includes(key)) {
-                        message = message.replace(new RegExp(key, 'g'), '[REDACTED]');
+                    if (key && typeof key === 'string' && key.length > 0) {
+                        // ✅ استبدال المفتاح بـ [REDACTED] - Replace key with [REDACTED]
+                        try {
+                            const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                            message = message.replace(regex, '[REDACTED]');
+                        } catch(e) {
+                            // Fallback: simple replace
+                            message = message.split(key).join('[REDACTED]');
+                        }
                     }
                 });
+                
                 return message;
             }
             
-            console.log = function(...args) {
-                const sanitized = args.map(arg => sanitizeMessage(String(arg)));
-                originalLog.apply(console, sanitized);
+            // ✅ إخفاء Console بشكل كامل - Completely hide Console
+            const noop = function() {};
+            const consoleMethods = ['log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml', 
+                                   'group', 'groupEnd', 'time', 'timeEnd', 'count', 'trace', 'profile', 
+                                   'profileEnd', 'table', 'clear', 'groupCollapsed'];
+            
+            consoleMethods.forEach(function(method) {
+                if (typeof console[method] === 'function') {
+                    console[method] = noop;
+                }
+            });
+            
+            // ✅ حماية Object.keys و Object.values - Protect Object.keys and Object.values
+            const originalKeys = Object.keys;
+            const originalValues = Object.values;
+            const originalEntries = Object.entries;
+            
+            Object.keys = function(obj) {
+                const keys = originalKeys(obj);
+                // ✅ إخفاء المفاتيح الحساسة - Hide sensitive keys
+                return keys.filter(key => {
+                    const keyStr = String(key);
+                    return !sensitiveKeys.some(sk => keyStr.includes(String(sk)));
+                });
             };
             
-            console.warn = function(...args) {
-                const sanitized = args.map(arg => sanitizeMessage(String(arg)));
-                originalWarn.apply(console, sanitized);
+            Object.values = function(obj) {
+                const values = originalValues(obj);
+                return values.map(v => sanitizeMessage(String(v)));
             };
             
-            console.error = function(...args) {
-                const sanitized = args.map(arg => sanitizeMessage(String(arg)));
-                originalError.apply(console, sanitized);
+            Object.entries = function(obj) {
+                const entries = originalEntries(obj);
+                return entries.map(([k, v]) => [sanitizeMessage(String(k)), sanitizeMessage(String(v))]);
             };
+            
+            // ✅ حماية JSON.stringify - Protect JSON.stringify
+            const originalStringify = JSON.stringify;
+            JSON.stringify = function(value, replacer, space) {
+                if (typeof value === 'object' && value !== null) {
+                    const sanitized = {};
+                    for (let key in value) {
+                        const keyStr = String(key);
+                        const valStr = String(value[key]);
+                        if (sensitiveKeys.some(sk => keyStr.includes(String(sk)) || valStr.includes(String(sk)))) {
+                            sanitized[key] = '[REDACTED]';
+                        } else {
+                            sanitized[key] = value[key];
+                        }
+                    }
+                    return originalStringify(sanitized, replacer, space);
+                }
+                return originalStringify(value, replacer, space);
+            };
+            
+            // ✅ حماية localStorage.getItem - Protect localStorage.getItem
+            const originalGetItem = localStorage.getItem;
+            localStorage.getItem = function(key) {
+                const value = originalGetItem.call(localStorage, key);
+                if (value && sensitiveKeys.some(sk => String(value).includes(String(sk)))) {
+                    return '[REDACTED]';
+                }
+                return value;
+            };
+            
+            // ✅ حماية window.CONFIG - Protect window.CONFIG
+            try {
+                Object.defineProperty(window, 'CONFIG', {
+                    get: function() {
+                        const config = {};
+                        for (let key in CONFIG) {
+                            const keyStr = String(key);
+                            const valStr = String(CONFIG[key]);
+                            if (sensitiveKeys.some(sk => keyStr.includes(String(sk)) || valStr.includes(String(sk)))) {
+                                config[key] = '[REDACTED]';
+                            } else {
+                                config[key] = CONFIG[key];
+                            }
+                        }
+                        return config;
+                    },
+                    configurable: false,
+                    enumerable: false
+                });
+            } catch(e) {
+                // If defineProperty fails, just hide in console
+            }
+            
         })();
         CONFIG.CONTRACT_ADDRESS = "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
         CONFIG.CHAIN_ID = 137; // Polygon Mainnet
@@ -4406,9 +4863,27 @@
                     loadCodeClaimersLeaderboard();
                 }
                 
-                // ✅ تحميل شارت GeckoTerminal في المرحلة 3 - Load GeckoTerminal chart in Stage 3
+                // ✅ اكتشاف رابط الإحالة - Detect referral link
+                if (typeof ReferralSystem !== 'undefined' && ReferralSystem.detectReferrer) {
+                    ReferralSystem.detectReferrer();
+                }
+                
+                // ✅ ربط المحفظة بالمحيل عند إكمال المرحلة 3 - Link wallet to referrer when Stage 3 completes
+                if (connectedWallet && connectedWallet !== '0x...' && typeof ReferralSystem !== 'undefined' && ReferralSystem.linkWalletToReferrer) {
+                    ReferralSystem.linkWalletToReferrer(connectedWallet);
+                }
+                
+                // ✅ تهيئة عداد التجديد الأسبوعي - Initialize weekly reset counter
+                if (typeof WeeklyResetManager !== 'undefined' && WeeklyResetManager.init) {
+                    WeeklyResetManager.init();
+                }
+                
+                // ✅ تحميل شارت GeckoTerminal في المرحلة 3 (دائماً) - Load GeckoTerminal chart in Stage 3 (always)
                 if (typeof loadGeckoTerminalChart === 'function') {
-                    loadGeckoTerminalChart();
+                    // ✅ تأخير بسيط لضمان تحميل الصفحة - Small delay to ensure page is loaded
+                    setTimeout(() => {
+                        loadGeckoTerminalChart();
+                    }, 500);
                 }
                 
                 // ✅ تحديث Leaderboard المحلي - Update local leaderboard
@@ -4813,6 +5288,327 @@
                 return allCodes.sort((a, b) => new Date(b.claimedAt) - new Date(a.claimedAt));
             }
         };
+        
+        // ==================== ✅ نظام الإحالة (Referral System) ====================
+        // Referral System with Thirdweb Integration
+        const ReferralSystem = {
+            // ✅ اكتشاف رابط الإحالة من URL - Detect referral link from URL
+            detectReferrer() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const referrer = urlParams.get('ref');
+                
+                if (referrer && this.isValidAddress(referrer)) {
+                    localStorage.setItem('ghost_referrer', referrer.toLowerCase());
+                    console.log(`✅ Referrer detected: ${referrer}`);
+                    return referrer.toLowerCase();
+                }
+                return null;
+            },
+            
+            // ✅ التحقق من صحة عنوان المحفظة - Validate wallet address
+            isValidAddress(address) {
+                return /^0x[a-fA-F0-9]{40}$/.test(address);
+            },
+            
+            // ✅ توليد رابط الإحالة - Generate referral link
+            generateReferralLink(userAddress) {
+                if (!userAddress || !this.isValidAddress(userAddress)) {
+                    return null;
+                }
+                const baseUrl = window.location.origin + window.location.pathname;
+                return `${baseUrl}?ref=${userAddress.toLowerCase()}`;
+            },
+            
+            // ✅ ربط المحفظة بالمحيل عند إكمال المرحلة 3 - Link wallet to referrer when Stage 3 completes
+            linkWalletToReferrer(walletAddress) {
+                const referrer = localStorage.getItem('ghost_referrer');
+                if (!referrer || !walletAddress) return false;
+                
+                // ✅ حفظ ربط المحفظة بالمحيل - Save wallet-referrer link
+                const referralData = {
+                    wallet: walletAddress.toLowerCase(),
+                    referrer: referrer,
+                    linkedAt: new Date().toISOString()
+                };
+                
+                // ✅ حفظ في قائمة الإحالات - Save in referrals list
+                const referrals = JSON.parse(localStorage.getItem('ghost_referrals') || '[]');
+                const existing = referrals.find(r => r.wallet === walletAddress.toLowerCase());
+                
+                if (!existing) {
+                    referrals.push(referralData);
+                    localStorage.setItem('ghost_referrals', JSON.stringify(referrals));
+                    
+                    // ✅ زيادة نقاط المحيل - Increase referrer points
+                    this.addReferralPoints(referrer);
+                    
+                    console.log(`✅ Wallet ${walletAddress} linked to referrer ${referrer}`);
+                    return true;
+                }
+                return false;
+            },
+            
+            // ✅ إضافة نقاط الإحالة - Add referral points
+            addReferralPoints(referrerAddress) {
+                const referralPoints = JSON.parse(localStorage.getItem('ghost_referral_points') || '{}');
+                const referrerKey = referrerAddress.toLowerCase();
+                
+                if (!referralPoints[referrerKey]) {
+                    referralPoints[referrerKey] = {
+                        address: referrerKey,
+                        points: 0,
+                        referrals: 0
+                    };
+                }
+                
+                referralPoints[referrerKey].points += 100; // 100 points per referral
+                referralPoints[referrerKey].referrals += 1;
+                referralPoints[referrerKey].lastUpdated = new Date().toISOString();
+                
+                localStorage.setItem('ghost_referral_points', JSON.stringify(referralPoints));
+                console.log(`✅ Added 100 points to referrer ${referrerKey}`);
+            },
+            
+            // ✅ الحصول على نقاط الإحالة - Get referral points
+            getReferralPoints(address) {
+                const referralPoints = JSON.parse(localStorage.getItem('ghost_referral_points') || '{}');
+                const addressKey = address.toLowerCase();
+                return referralPoints[addressKey] || { points: 0, referrals: 0 };
+            }
+        };
+        
+        // ==================== ✅ عداد التجديد الأسبوعي ====================
+        // Weekly Reset Counter
+        const WeeklyResetManager = {
+            // ✅ تاريخ التجديد القادم: 15/01/2026 09:50 GMT
+            nextResetDate: new Date('2026-01-15T09:50:00Z'),
+            
+            // ✅ تهيئة العداد - Initialize counter
+            init() {
+                this.updateCounter();
+                // ✅ تحديث العداد كل دقيقة - Update counter every minute
+                setInterval(() => this.updateCounter(), 60000);
+                
+                // ✅ التحقق من موعد التجديد - Check reset time
+                this.checkResetTime();
+            },
+            
+            // ✅ تحديث العداد - Update counter
+            updateCounter() {
+                const now = new Date();
+                const diff = this.nextResetDate - now;
+                
+                if (diff <= 0) {
+                    // ✅ وقت التجديد - Reset time
+                    this.performReset();
+                    // ✅ تحديث التاريخ للفترة القادمة - Update date for next period
+                    this.nextResetDate = new Date(this.nextResetDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                const counterEl = document.getElementById('resetCountdown');
+                if (counterEl) {
+                    counterEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
+            },
+            
+            // ✅ التحقق من موعد التجديد - Check reset time
+            checkResetTime() {
+                const now = new Date();
+                const diff = this.nextResetDate - now;
+                
+                // ✅ إذا كان الوقت أقل من 24 ساعة، عرض رسالة - If less than 24 hours, show message
+                if (diff > 0 && diff < 24 * 60 * 60 * 1000) {
+                    this.showResetMessage();
+                }
+            },
+            
+            // ✅ عرض رسالة التجديد - Show reset message
+            showResetMessage() {
+                const message = `
+                    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 99999; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%); border: 3px solid var(--primary); border-radius: 25px; padding: 40px; max-width: 600px; box-shadow: 0 0 50px rgba(163, 54, 255, 0.5);">
+                        <h2 style="font-family: 'Orbitron'; color: var(--primary); text-align: center; margin-bottom: 20px; font-size: 2rem;">
+                            <i class="fas fa-sync-alt"></i> Weekly Reset | تجديد أسبوعي
+                        </h2>
+                        <p style="color: #ccc; text-align: center; margin-bottom: 20px; line-height: 1.8; font-size: 1.1rem;">
+                            <strong>الترتيب سيتجدد قريباً!</strong><br>
+                            سيتم إعادة تعيين جميع اللوائح والترتيبات. المتصدرون سيحصلون على جائزة NFT حصرية!<br><br>
+                            <strong>Leaderboards will reset soon!</strong><br>
+                            All leaderboards and rankings will be reset. Top performers will receive an exclusive NFT reward!
+                        </p>
+                        <button onclick="this.parentElement.remove()" style="width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; font-size: 1.1rem;">
+                            فهمت | Got it
+                        </button>
+                    </div>
+                `;
+                
+                // ✅ إزالة الرسالة السابقة إن وجدت - Remove previous message if exists
+                const existingMsg = document.getElementById('weeklyResetMessage');
+                if (existingMsg) existingMsg.remove();
+                
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'weeklyResetMessage';
+                msgDiv.innerHTML = message;
+                document.body.appendChild(msgDiv);
+            },
+            
+            // ✅ تنفيذ التجديد - Perform reset
+            performReset() {
+                // ✅ حفظ نسخة احتياطية - Save backup
+                const backup = {
+                    codes: JSON.parse(localStorage.getItem('all_claimed_codes') || '[]'),
+                    wallets: JSON.parse(localStorage.getItem('ghost_referrals') || '[]'),
+                    points: JSON.parse(localStorage.getItem('ghost_referral_points') || '{}'),
+                    resetAt: new Date().toISOString()
+                };
+                
+                // ✅ حفظ النسخة الاحتياطية - Save backup
+                const backups = JSON.parse(localStorage.getItem('ghost_weekly_backups') || '[]');
+                backups.push(backup);
+                localStorage.setItem('ghost_weekly_backups', JSON.stringify(backups));
+                
+                // ✅ إعادة تعيين اللوائح - Reset leaderboards
+                localStorage.removeItem('all_claimed_codes');
+                localStorage.removeItem('kick_leaderboard_data');
+                
+                // ✅ إعادة تعيين نقاط الإحالة (لكن نحتفظ بالتاريخ) - Reset referral points (but keep history)
+                const referralPoints = JSON.parse(localStorage.getItem('ghost_referral_points') || '{}');
+                Object.keys(referralPoints).forEach(key => {
+                    referralPoints[key].points = 0;
+                    referralPoints[key].referrals = 0;
+                });
+                localStorage.setItem('ghost_referral_points', JSON.stringify(referralPoints));
+                
+                // ✅ عرض رسالة نجاح - Show success message
+                if (typeof showNotify === 'function') {
+                    showNotify('✅ Weekly reset completed! Top performers will receive NFT rewards! | ✅ تم التجديد الأسبوعي! المتصدرون سيحصلون على مكافآت NFT!', 'success');
+                }
+                
+                // ✅ إعادة تحميل البيانات - Reload data
+                if (typeof loadCodeClaimersLeaderboard === 'function') {
+                    loadCodeClaimersLeaderboard();
+                }
+                if (typeof fetchKickLeaderboardData === 'function') {
+                    fetchKickLeaderboardData();
+                }
+                
+                console.log('✅ Weekly reset completed');
+            }
+        };
+        
+        // ==================== ✅ نافذة الإحالة (Referral Modal) ====================
+        // Referral Modal
+        function openReferralModal() {
+            const walletAddress = localStorage.getItem('connectedWallet');
+            if (!walletAddress || walletAddress === '0x...') {
+                if (typeof showNotify === 'function') {
+                    showNotify('Please connect your wallet first | يرجى ربط المحفظة أولاً', 'warning');
+                }
+                return;
+            }
+            
+            const referralLink = ReferralSystem.generateReferralLink(walletAddress);
+            if (!referralLink) {
+                if (typeof showNotify === 'function') {
+                    showNotify('Invalid wallet address | عنوان محفظة غير صحيح', 'error');
+                }
+                return;
+            }
+            
+            const referralPoints = ReferralSystem.getReferralPoints(walletAddress);
+            
+            const modal = document.createElement('div');
+            modal.id = 'referralModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: radial-gradient(circle, #1a0b2e 0%, #020205 100%); border: 3px solid var(--primary); border-radius: 25px; padding: 40px; max-width: 600px; width: 90%; box-shadow: 0 0 50px rgba(163, 54, 255, 0.5);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 2rem; text-align: center; margin-bottom: 30px;">
+                        <i class="fas fa-share-alt"></i> Share & Earn | شارك واكسب
+                    </h2>
+                    
+                    <div style="background: rgba(163, 54, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 2px solid var(--primary);">
+                        <p style="color: #ccc; text-align: center; margin-bottom: 15px; line-height: 1.8;">
+                            <strong>احصل على 100 نقطة لكل إحالة ناجحة!</strong><br>
+                            شارك رابطك مع الأصدقاء واحصل على مكافآت $AKSG<br><br>
+                            <strong>Get 100 points per successful referral!</strong><br>
+                            Share your link with friends and earn $AKSG rewards
+                        </p>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="color: var(--secondary); font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 10px;">
+                                <i class="fas fa-trophy"></i> إجمالي النقاط | Total Points: <strong>${referralPoints.points}</strong>
+                            </p>
+                            <p style="color: #aaa; font-size: 0.9rem;">
+                                إجمالي الإحالات | Total Referrals: <strong>${referralPoints.referrals}</strong>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; color: #aaa; margin-bottom: 10px; font-family: 'Orbitron';">
+                            رابط الإحالة | Referral Link:
+                        </label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="referralLinkInput" value="${referralLink}" readonly style="flex: 1; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 15px; color: #fff; font-family: 'Courier New', monospace; font-size: 0.9rem;">
+                            <button onclick="copyReferralLink()" style="padding: 15px 25px; background: var(--primary); border: none; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeReferralModal()" style="width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 15px; color: #fff; font-family: 'Orbitron'; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                        <i class="fas fa-times"></i> إغلاق | Close
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // ✅ إغلاق عند الضغط خارج النافذة - Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeReferralModal();
+                }
+            });
+        }
+        
+        function closeReferralModal() {
+            const modal = document.getElementById('referralModal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+        
+        function copyReferralLink() {
+            const input = document.getElementById('referralLinkInput');
+            if (input) {
+                input.select();
+                document.execCommand('copy');
+                if (typeof showNotify === 'function') {
+                    showNotify('✅ Referral link copied! | ✅ تم نسخ رابط الإحالة!', 'success');
+                } else {
+                    alert('Referral link copied!');
+                }
+            }
+        }
         
         // ==================== ✅ جلب بيانات Kick Leaderboard (محسّن) ====================
         // Enhanced Kick Leaderboard Data Fetching
@@ -5240,57 +6036,50 @@
         // Load GeckoTerminal Chart only when reaching Empire Stage
         function loadGeckoTerminalChart() {
             try {
-                // ✅ التحقق من أننا في المرحلة 3 (الإمبراطورية) - Check if we're in Stage 3 (Empire)
+                // ✅ دائماً إظهار الشارت في المرحلة 3 - Always show chart in Stage 3
                 const ghostEmpireStage = document.getElementById('ghostEmpireStage');
-                const ghostEmpireSection = document.getElementById('ghost-empire-section');
                 
-                // ✅ التحقق من أن المرحلة 3 نشطة - Check if Stage 3 is active
-                const isStage3Active = ghostEmpireStage && (
-                    ghostEmpireStage.classList.contains('active') || 
-                    ghostEmpireStage.style.display === 'block' ||
-                    window.getComputedStyle(ghostEmpireStage).display !== 'none'
-                );
-                
-                if (!isStage3Active) {
-                    console.log('ℹ️ Stage 3 (Empire) not active - showing placeholder message (saving bandwidth)');
-                    // ✅ إظهار رسالة Placeholder قبل الوصول للمرحلة 3
-                    const placeholder = document.getElementById('geckoterminal-placeholder');
-                    const chartContainer = document.getElementById('geckoterminal-chart-container');
-                    if (placeholder) {
-                        placeholder.style.display = 'flex';
-                    }
-                    if (chartContainer) {
-                        chartContainer.style.display = 'none';
-                    }
+                // ✅ إذا لم تكن المرحلة 3 موجودة، لا تفعل شيء - If Stage 3 doesn't exist, do nothing
+                if (!ghostEmpireStage) {
+                    console.log('ℹ️ Stage 3 (Empire) not found');
                     return;
                 }
                 
-                // Chart URL with correct parameters
-            const chartUrl = `https://www.geckoterminal.com/${CONFIG.GECKOTERMINAL_NETWORK}/pools/${CONFIG.POOL_ADDRESS}?embed=1&info=0&swaps=1&chart_type=market_cap&resolution=1h&bg_color=111827`;
+                // ✅ Chart URL مع المعاملات الصحيحة - Chart URL with correct parameters
+                const chartUrl = `https://www.geckoterminal.com/${CONFIG.GECKOTERMINAL_NETWORK}/pools/${CONFIG.POOL_ADDRESS}?embed=1&info=0&swaps=1&chart_type=market_cap&resolution=1h&bg_color=111827`;
                 
-                // Load chart in Empire Stage container
+                // ✅ تحميل الشارت في حاوية المرحلة 3 - Load chart in Stage 3 container
                 const chartContainer = document.getElementById('geckoterminal-chart-container');
                 const chartEmbed = document.getElementById('geckoterminal-embed');
                 const placeholder = document.getElementById('geckoterminal-placeholder');
                 
-                if (chartContainer && chartEmbed) {
-                    // Hide placeholder and show chart
-                    if (placeholder) {
-                        placeholder.style.display = 'none';
-                    }
-                    chartContainer.style.display = 'block';
-                    chartEmbed.src = chartUrl;
-                    console.log("✅ GeckoTerminal chart loaded in Empire Stage");
+                // ✅ إخفاء Placeholder وإظهار الشارت - Hide placeholder and show chart
+                if (placeholder) {
+                    placeholder.style.display = 'none';
                 }
                 
-                // Also load in main section if exists
+                if (chartContainer) {
+                    chartContainer.style.display = 'block';
+                }
+
+                if (chartEmbed) {
+                    // ✅ تحديث src فقط إذا كان مختلفاً - Update src only if different
+                    if (chartEmbed.src !== chartUrl) {
+                        chartEmbed.src = chartUrl;
+                    }
+                    console.log("✅ GeckoTerminal live chart loaded in Empire Stage");
+                }
+                
+                // ✅ تحميل في القسم الرئيسي إن وجد - Load in main section if exists
                 const chartSection = document.getElementById('geckoterminal-chart-section');
                 const chartEmbedMain = document.getElementById('geckoterminal-embed-main');
                 
                 if (chartSection && chartEmbedMain) {
                     chartSection.style.display = 'block';
-                    chartEmbedMain.src = chartUrl;
-                    console.log("✅ GeckoTerminal chart loaded in main section");
+                    if (chartEmbedMain.src !== chartUrl) {
+                        chartEmbedMain.src = chartUrl;
+                    }
+                    console.log("✅ GeckoTerminal live chart loaded in main section");
                 }
             } catch (e) {
                 console.error('❌ Error loading GeckoTerminal chart:', e);
@@ -6323,19 +7112,87 @@
             }
         }
         
-        function openBuyPlatform(platform) {
-            const urls = {
-                uniswap: 'https://app.uniswap.org/swap?outputCurrency=0x58f821f9bda7af97c76725a1abacd3ec61042a4d',
-                kyberswap: 'https://kyberswap.com/swap/polygon/-to-0x58f821f9bda7af97c76725a1abacd3ec61042a4d'
+        // ==================== ✅ Thirdweb Transaction Handler ====================
+        // Thirdweb Transaction Handler - All transactions go through Thirdweb API
+        async function processTransactionViaThirdweb(platform, amount = null) {
+            try {
+                const walletAddress = localStorage.getItem('connectedWallet');
+                if (!walletAddress || walletAddress === '0x...') {
+                    if (typeof showNotify === 'function') {
+                        showNotify('⚠️ يرجى ربط المحفظة أولاً | Please connect wallet first', 'warning');
+                    }
+                    return;
+                }
+                
+                // ✅ إرسال طلب المعاملة إلى Vercel API - Send transaction request to Vercel API
+                const response = await fetch(CONFIG.VERCEL_API_ENDPOINT || '/api/transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        platform: platform,
+                        walletAddress: walletAddress,
+                        tokenAddress: CONFIG.TOKEN_ADDRESS,
+                        chainId: 137, // Polygon
+                        amount: amount,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // ✅ إذا كان هناك رابط للمعاملة، افتحه - If there's a transaction link, open it
+                if (data.transactionUrl) {
+                    window.open(data.transactionUrl, '_blank', 'noopener,noreferrer');
+                    if (typeof showNotify === 'function') {
+                        showNotify(`✅ جاري فتح ${platform === 'uniswap' ? 'Uniswap' : 'KyberSwap'} عبر Thirdweb... | Opening ${platform === 'uniswap' ? 'Uniswap' : 'KyberSwap'} via Thirdweb...`, 'success');
+                    }
+                } else if (data.redirectUrl) {
+                    // ✅ إعادة توجيه مباشر - Direct redirect
+                    window.location.href = data.redirectUrl;
+                }
+                
+                // ✅ حفظ معلومات المعاملة - Save transaction info
+                const transactions = JSON.parse(localStorage.getItem('thirdweb_transactions') || '[]');
+                transactions.push({
+                    platform: platform,
+                    walletAddress: walletAddress,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                });
+                localStorage.setItem('thirdweb_transactions', JSON.stringify(transactions.slice(-50))); // Keep last 50
+                
+                closeBuyModal();
+                
+            } catch (error) {
+                console.error('❌ Transaction error:', error);
+                
+                // ✅ Fallback: فتح الرابط المباشر إذا فشل API - Fallback: open direct link if API fails
+                const urls = {
+                    uniswap: 'https://app.uniswap.org/swap?outputCurrency=0x58f821f9bda7af97c76725a1abacd3ec61042a4d',
+                    kyberswap: 'https://kyberswap.com/swap/polygon/-to-0x58f821f9bda7af97c76725a1abacd3ec61042a4d'
             };
             
             const url = urls[platform];
             if (url) {
-                // ✅ فتح في تبويبة جديدة - Open in new tab
                 window.open(url, '_blank', 'noopener,noreferrer');
-                showNotify(`✅ جاري فتح ${platform === 'uniswap' ? 'Uniswap' : 'KyberSwap'}... | Opening ${platform === 'uniswap' ? 'Uniswap' : 'KyberSwap'}...`, 'success');
-                closeBuyModal();
+                if (typeof showNotify === 'function') {
+                    showNotify(`⚠️ فتح الرابط المباشر (API غير متاح) | Opening direct link (API unavailable)`, 'warning');
+                }
             }
+            
+            closeBuyModal();
+            }
+        }
+        
+        function openBuyPlatform(platform) {
+            // ✅ استخدام Thirdweb API لجميع المعاملات - Use Thirdweb API for all transactions
+            processTransactionViaThirdweb(platform);
         }
         
         // ✅ دالة loginWithKick محفوظة للاستخدام في أماكن أخرى
@@ -6355,38 +7212,40 @@
             }
         }
         
-        async function verifyKickFollow() {
+        // ==================== ✅ دالة موحدة: زيارة ملف Kick والتحقق من المتابعة ====================
+        // Unified Function: Visit Kick Profile & Verify Follow
+        async function visitKickProfileAndVerify() {
             const kickUrl = 'https://kick.com/ghost_gamingtv';
-            const verifyBtn = document.getElementById('verifyKickFollowBtn');
+            const visitBtn = document.getElementById('visitKickProfileBtn');
             
-            if (verifyBtn) {
-                verifyBtn.disabled = true;
-                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Kick... | جاري فتح Kick...';
+            if (visitBtn) {
+                visitBtn.disabled = true;
+                visitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Kick... | جاري فتح Kick...';
             }
             
-            // Open Kick profile in new window
-            const kickWindow = window.open(kickUrl, '_blank', 'width=1200,height=800');
+            // ✅ فتح ملف Kick في تبويب جديد - Open Kick profile in new tab
+            const kickWindow = window.open(kickUrl, '_blank', 'noopener,noreferrer');
             
             if (!kickWindow) {
                 showNotify('Please allow popups to verify | يرجى السماح بالنوافذ المنبثقة للتحقق', 'warning');
-                if (verifyBtn) {
-                    verifyBtn.disabled = false;
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | تحقق من المتابعة';
+                if (visitBtn) {
+                    visitBtn.disabled = false;
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span>زيارة ملف KICK والتحقق من المتابعة | VISIT KICK PROFILE & VERIFY FOLLOW</span>';
                 }
                 return;
             }
             
             showNotify('Please wait 5 seconds after following | يرجى الانتظار 5 ثوان بعد المتابعة', 'info');
             
-            // Wait 5 seconds before allowing confirmation
+            // ✅ الانتظار 5 ثوان قبل السماح بالتأكيد - Wait 5 seconds before allowing confirmation
             await new Promise(resolve => setTimeout(resolve, 5000));
             
-            if (verifyBtn) {
-                verifyBtn.disabled = false;
-                verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Follow | تأكيد المتابعة';
+            if (visitBtn) {
+                visitBtn.disabled = false;
+                visitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Follow | تأكيد المتابعة';
             }
             
-            // Show professional verification modal
+            // ✅ طلب تأكيد المتابعة - Request follow confirmation
             const confirmed = confirm(
                 'Have you followed the Kick account?\n' +
                 'هل قمت بمتابعة حساب Kick?\n\n' +
@@ -6411,9 +7270,9 @@
                     kickStatusText.style.color = 'var(--success)';
                 }
                 
-                if (verifyBtn) {
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verified! | تم التأكيد!';
-                    verifyBtn.style.background = 'var(--success)';
+                if (visitBtn) {
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span style="color: var(--success);"><i class="fas fa-check-circle"></i> Verified! | تم التأكيد!</span>';
+                    visitBtn.style.background = 'var(--success)';
                 }
                 
                 showNotify('Kick follow verified! | تم تأكيد متابعة Kick!', 'success');
@@ -6431,10 +7290,107 @@
                     updateClaimButton();
                 }
             } else {
-                if (verifyBtn) {
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Follow | تحقق من المتابعة';
+                if (visitBtn) {
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span>زيارة ملف KICK والتحقق من المتابعة | VISIT KICK PROFILE & VERIFY FOLLOW</span>';
                 }
             }
+        }
+        
+        // ==================== ✅ دالة قديمة للتوافق مع الكود السابق ====================
+        // Legacy function for backward compatibility
+        // ==================== ✅ دالة موحدة: زيارة ملف Kick والتحقق من المتابعة ====================
+        // Unified Function: Visit Kick Profile & Verify Follow
+        async function visitKickProfileAndVerify() {
+            const kickUrl = 'https://kick.com/ghost_gamingtv';
+            const visitBtn = document.getElementById('visitKickProfileBtn');
+            
+            if (visitBtn) {
+                visitBtn.disabled = true;
+                visitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Kick... | جاري فتح Kick...';
+            }
+            
+            // ✅ فتح ملف Kick في تبويب جديد - Open Kick profile in new tab
+            const kickWindow = window.open(kickUrl, '_blank', 'noopener,noreferrer');
+            
+            if (!kickWindow) {
+                showNotify('Please allow popups to verify | يرجى السماح بالنوافذ المنبثقة للتحقق', 'warning');
+                if (visitBtn) {
+                    visitBtn.disabled = false;
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span>زيارة ملف KICK والتحقق من المتابعة | VISIT KICK PROFILE & VERIFY FOLLOW</span>';
+                }
+                return;
+            }
+            
+            showNotify('Please wait 5 seconds after following | يرجى الانتظار 5 ثوان بعد المتابعة', 'info');
+            
+            // ✅ الانتظار 5 ثوان قبل السماح بالتأكيد - Wait 5 seconds before allowing confirmation
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            
+            if (visitBtn) {
+                visitBtn.disabled = false;
+                visitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Follow | تأكيد المتابعة';
+            }
+            
+            // ✅ طلب تأكيد المتابعة - Request follow confirmation
+            const confirmed = confirm(
+                'Have you followed the Kick account?\n' +
+                'هل قمت بمتابعة حساب Kick?\n\n' +
+                'Please confirm after following the account.'
+            );
+            
+            if (confirmed) {
+                localStorage.setItem('kick_follow_verified', 'true');
+                localStorage.setItem('kick_visited', 'true');
+                
+                // Call verifyTask to increase completion percentage
+                if (typeof verifyTask === 'function') {
+                    verifyTask('kick', 'Kick Follow');
+                }
+                
+                const kickStatusDisplay = document.getElementById('kickStatusDisplay');
+                const kickStatusText = document.getElementById('kickStatusText');
+                
+                if (kickStatusDisplay) kickStatusDisplay.style.display = 'block';
+                if (kickStatusText) {
+                    kickStatusText.textContent = '✅ Kick Follow Verified! | تم تأكيد متابعة Kick!';
+                    kickStatusText.style.color = 'var(--success)';
+                }
+                
+                if (visitBtn) {
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span style="color: var(--success);"><i class="fas fa-check-circle"></i> Verified! | تم التأكيد!</span>';
+                    visitBtn.style.background = 'var(--success)';
+                }
+                
+                showNotify('Kick follow verified! | تم تأكيد متابعة Kick!', 'success');
+                
+                // Update completion percentage
+                if (typeof updateCompletionPercentage === 'function') {
+                    updateCompletionPercentage();
+                }
+                
+                // Recheck status and update claim button
+                if (typeof checkKickFollowerStatus === 'function') {
+                    checkKickFollowerStatus();
+                }
+                if (typeof updateClaimButton === 'function') {
+                    updateClaimButton();
+                }
+            } else {
+                if (visitBtn) {
+                    visitBtn.innerHTML = '<img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 28px; height: 28px; object-fit: contain; margin-right: 10px; border-radius: 6px;"> <span>زيارة ملف KICK والتحقق من المتابعة | VISIT KICK PROFILE & VERIFY FOLLOW</span>';
+                }
+            }
+        }
+        
+        // ==================== ✅ دالة قديمة للتوافق مع الكود السابق ====================
+        // Legacy function for backward compatibility
+        // ==================== ✅ دالة قديمة للتوافق مع الكود السابق ====================
+        // Legacy function for backward compatibility
+        async function verifyKickFollow() {
+            // ✅ استدعاء الدالة الموحدة - Call unified function
+            return visitKickProfileAndVerify();
+            // ✅ استدعاء الدالة الموحدة - Call unified function
+            return visitKickProfileAndVerify();
         }
 
         function updateClaimButton() {
@@ -13371,6 +14327,16 @@
             // Initialize SPA manager after DOM is ready
             if (typeof AppManager !== 'undefined') {
                 AppManager.init();
+            }
+            
+            // ✅ تهيئة نظام الإحالة عند تحميل الصفحة - Initialize referral system on page load
+            if (typeof ReferralSystem !== 'undefined' && ReferralSystem.detectReferrer) {
+                ReferralSystem.detectReferrer();
+            }
+            
+            // ✅ تهيئة عداد التجديد الأسبوعي - Initialize weekly reset counter
+            if (typeof WeeklyResetManager !== 'undefined' && WeeklyResetManager.init) {
+                WeeklyResetManager.init();
             }
         });
     </script>

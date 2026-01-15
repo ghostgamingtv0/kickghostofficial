@@ -3489,10 +3489,10 @@
             POLYGON_CHAIN_ID: "0x89",
             POLYGON_RPC: "https://polygon-rpc.com",
             THIRDWEB_CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
-            SITE_URL: "https://ghostgamingtv0.github.io/kickghostofficial/",
-            AIRDROP_BUTTON_URL: "https://ghostgamingtv0.github.io/kickghostofficial/",
+            SITE_URL: "https://kickghostofficial.vercel.app/",
+            AIRDROP_BUTTON_URL: "https://kickghostofficial.vercel.app/",
             KICK_CLIENT_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
-            KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
+            KICK_REDIRECT_URI: "https://kickghostofficial.vercel.app/",
             BACKEND_API_URL: "https://your-backend-api.com/api/airdrop", // Backend API for airdrop distribution
             KICK_DEVELOPER_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
             KICK_DEVELOPER_KEY: "ff030db356b7288d6295ba8cb615c2aa12a277ab61ec53fef3601d0c12bdb0a6",
@@ -3524,7 +3524,7 @@
         // Never log or expose secret keys in console or frontend code
         
         // ✅ Thirdweb Webhook Configuration
-        CONFIG.THIRDWEB_WEBHOOK_URL = "https://ghostgamingtv0.github.io/kickghostofficial/";
+        CONFIG.THIRDWEB_WEBHOOK_URL = "https://kickghostofficial.vercel.app/";
         // Webhook Secret will be loaded securely via getSecureCredential() or process.env
         
         // ==================== COMPLETE SOCIAL MEDIA LINKS WITH LOGOS ====================
@@ -3748,7 +3748,7 @@
         CONFIG.KICK_DEVELOPER_KEY = getSecureCredential('KICK_DEVELOPER_KEY');
         
         // ✅ Thirdweb Webhook Configuration
-        CONFIG.THIRDWEB_WEBHOOK_URL = "https://ghostgamingtv0.github.io/kickghostofficial/";
+        CONFIG.THIRDWEB_WEBHOOK_URL = "https://kickghostofficial.vercel.app/";
         CONFIG.THIRDWEB_WEBHOOK_SECRET = (typeof process !== 'undefined' && process.env && process.env.THIRDWEB_WEBHOOK_SECRET) 
             ? process.env.THIRDWEB_WEBHOOK_SECRET 
             : getSecureCredential('THIRDWEB_WEBHOOK_SECRET') || '197fe04551c95a8db100a251fcd9fe1d8fade15d1e3112d1ff86a0dc9086adc4';
@@ -5315,7 +5315,8 @@
                 if (!userAddress || !this.isValidAddress(userAddress)) {
                     return null;
                 }
-                const baseUrl = window.location.origin + window.location.pathname;
+                // ✅ استخدام Vercel URL - Use Vercel URL
+                const baseUrl = CONFIG.SITE_URL || "https://kickghostofficial.vercel.app/";
                 return `${baseUrl}?ref=${userAddress.toLowerCase()}`;
             },
             
@@ -7199,7 +7200,7 @@
         function loginWithKick() {
             // Check if CONFIG has Kick OAuth settings with fallback
             const kickClientId = (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID) ? CONFIG.KICK_CLIENT_ID : (typeof window.ENV !== 'undefined' && window.ENV.KICK_CLIENT_ID) ? window.ENV.KICK_CLIENT_ID : '01KEAEX10SCC7S6VRSMR26WVRW';
-            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : window.location.origin;
+            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : "https://kickghostofficial.vercel.app/";
             
             if (kickClientId && kickRedirectUri) {
                 const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${kickClientId}&redirect_uri=${encodeURIComponent(kickRedirectUri)}&scope=user:read%20chat:read`;
@@ -13463,7 +13464,7 @@
                 return;
             }
             
-            const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : window.location.origin;
+            const siteUrl = (typeof CONFIG !== 'undefined' && CONFIG.SITE_URL) ? CONFIG.SITE_URL : "https://kickghostofficial.vercel.app/";
             const shareText = `🎮 KICKGHOST $AKSG Claim Code\n\nكود المطالبة: ${codeToShare}\nClaim Code: ${codeToShare}\n\nJoin the Ghost Empire: ${siteUrl}`;
             
             if (navigator.share) {
@@ -13485,7 +13486,7 @@
         function loginWithKick() {
             // Ensure CONFIG exists with fallbacks
             const kickClientId = (typeof CONFIG !== 'undefined' && CONFIG.KICK_CLIENT_ID) ? CONFIG.KICK_CLIENT_ID : (typeof window.ENV !== 'undefined' && window.ENV.KICK_CLIENT_ID) ? window.ENV.KICK_CLIENT_ID : '01KEAEX10SCC7S6VRSMR26WVRW';
-            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : window.location.origin;
+            const kickRedirectUri = (typeof CONFIG !== 'undefined' && CONFIG.KICK_REDIRECT_URI) ? CONFIG.KICK_REDIRECT_URI : (typeof window.ENV !== 'undefined' && window.ENV.KICK_REDIRECT_URI) ? window.ENV.KICK_REDIRECT_URI : "https://kickghostofficial.vercel.app/";
             
             const authUrl = `https://kick.com/oauth/authorize?response_type=code&client_id=${kickClientId}&redirect_uri=${encodeURIComponent(kickRedirectUri)}&scope=user:read%20chat:read`;
             window.location.href = authUrl;
@@ -13506,7 +13507,7 @@
                     const response = await callThirdwebBackendAPI('kick_oauth', {
                         code: code,
                         wallet: userAddr || 'pending',
-                        redirect_uri: CONFIG.KICK_REDIRECT_URI || window.location.origin
+                        redirect_uri: CONFIG.KICK_REDIRECT_URI || "https://kickghostofficial.vercel.app/"
                     });
                     
                     // If backend returns user data, store it for leaderboard

@@ -3185,7 +3185,7 @@
             TOKEN_ADDRESS: "0x58f821f9bda7af97c76725a1abacd3ec61042a4d",
             POOL_ADDRESS: "0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249",
             GECKOTERMINAL_NETWORK: "polygon_pos",
-            TOKEN_IMAGE: "https://kickghost.com/logo.png",
+            TOKEN_IMAGE: "https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg",
             POLYGON_CHAIN_ID: "0x89",
             POLYGON_RPC: "https://polygon-rpc.com",
             THIRDWEB_CLIENT_ID: "a8d2fbfbbe9dcaa11cc48f3d2634e3fd",
@@ -3415,7 +3415,12 @@
         
         // ✅ Extended CONFIG with secure credentials - Load only when needed
         // ⚠️ IMPORTANT: Never log these values or expose them in console
-        CONFIG.THIRDWEB_SECRET_KEY = getSecureCredential('SECRET_KEY');
+        // ✅ Thirdweb Secret Key - Support for Vercel environment variables
+        // Priority: process.env (Vercel) > getSecureCredential > hardcoded fallback
+        CONFIG.THIRDWEB_SECRET_KEY = (typeof process !== 'undefined' && process.env && process.env.THIRDWEB_SECRET_KEY) 
+            ? process.env.THIRDWEB_SECRET_KEY 
+            : getSecureCredential('SECRET_KEY') || '5BexlwGGKS0-E1M6fOrtf3OlHNW1q-nllKaYqhKCNItCyFIT1hNZhlXKYj0vhn4iLHVw8RBod8k0CnlbQCUrlg';
+        
         CONFIG.THIRDWEB_PROJECT_ID = getSecureCredential('PROJECT_ID');
         CONFIG.KICK_DEVELOPER_KEY = getSecureCredential('KICK_DEVELOPER_KEY');
         
@@ -4043,25 +4048,63 @@
 
             async handleWalletConnection(walletType) {
                 try {
-                    const provider = window.ethereum || window.phantom?.ethereum;
-                    if (!provider) {
-                        const installLinks = {
-                            metamask: 'https://metamask.io/download/',
-                            trust: 'https://trustwallet.com/download',
-                            phantom: 'https://phantom.app/download'
-                        };
-                        const link = installLinks[walletType];
-                        if (link) {
-                            window.open(link, '_blank', 'noopener,noreferrer');
+                    // ==================== ✅ التحقق من وجود المحفظة وفتحها مباشرة ====================
+                    // Check for wallet and open it directly
+                    let provider = null;
+                    
+                    // ✅ MetaMask Detection
+                    if (walletType === 'metamask') {
+                        if (window.ethereum && window.ethereum.isMetaMask) {
+                            provider = window.ethereum;
+                            console.log('✅ MetaMask detected - opening MetaMask directly');
+                        } else if (window.ethereum) {
+                            // Generic ethereum provider (might be MetaMask)
+                            provider = window.ethereum;
+                            console.log('✅ Ethereum provider detected - attempting MetaMask connection');
+                        } else {
+                            // MetaMask not installed - open install page
+                            window.open('https://metamask.io/download/', '_blank', 'noopener,noreferrer');
+                            showNotify('⚠️ يرجى تثبيت MetaMask أولاً | Please install MetaMask first', 'warning');
+                            return;
                         }
-                        showNotify('⚠️ يرجى تثبيت محفظة Web3 أولاً | Please install a Web3 wallet', 'warning');
-                        return;
                     }
-
-                    // Phantom note: ensure EVM provider exists
-                    if (walletType === 'phantom' && !(provider.isPhantom || window.phantom?.ethereum)) {
-                        window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer');
-                        showNotify('⚠️ Phantom (EVM) غير متوفر. استخدم MetaMask أو Trust.', 'warning');
+                    
+                    // ✅ Trust Wallet Detection
+                    else if (walletType === 'trust') {
+                        if (window.ethereum && (window.ethereum.isTrust || window.ethereum.isTrustWallet)) {
+                            provider = window.ethereum;
+                            console.log('✅ Trust Wallet detected - opening Trust Wallet directly');
+                        } else if (window.ethereum) {
+                            // Generic ethereum provider (might be Trust Wallet)
+                            provider = window.ethereum;
+                            console.log('✅ Ethereum provider detected - attempting Trust Wallet connection');
+                        } else {
+                            // Trust Wallet not installed - open install page
+                            window.open('https://trustwallet.com/download', '_blank', 'noopener,noreferrer');
+                            showNotify('⚠️ يرجى تثبيت Trust Wallet أولاً | Please install Trust Wallet first', 'warning');
+                            return;
+                        }
+                    }
+                    
+                    // ✅ Phantom Detection
+                    else if (walletType === 'phantom') {
+                        if (window.phantom && window.phantom.ethereum) {
+                            provider = window.phantom.ethereum;
+                            console.log('✅ Phantom detected - opening Phantom directly');
+                        } else if (window.ethereum && window.ethereum.isPhantom) {
+                            provider = window.ethereum;
+                            console.log('✅ Phantom (EVM) detected - opening Phantom directly');
+                        } else {
+                            // Phantom not installed - open install page
+                            window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer');
+                            showNotify('⚠️ يرجى تثبيت Phantom أولاً | Please install Phantom first', 'warning');
+                            return;
+                        }
+                    }
+                    
+                    // ✅ إذا لم يتم العثور على provider - If no provider found
+                    if (!provider) {
+                        showNotify('⚠️ لم يتم العثور على المحفظة | Wallet not found', 'warning');
                         return;
                     }
 
@@ -4243,6 +4286,16 @@
                     localStorage.setItem('final_stage_data', JSON.stringify(finalStageData));
                     localStorage.setItem('ready_for_claim_code', 'true');
                     
+                    // ✅ جمع معلومات Kick Developer - Collect Kick Developer data
+                    if (typeof collectKickDeveloperData === 'function') {
+                        collectKickDeveloperData().catch(e => console.warn('Kick data collection failed:', e));
+                    }
+                    
+                    // ✅ جمع معلومات Thirdweb - Collect Thirdweb data (wallet address only)
+                    if (typeof collectThirdwebData === 'function') {
+                        collectThirdwebData(account).catch(e => console.warn('Thirdweb data collection failed:', e));
+                    }
+                    
                     // ✅ إرسال البيانات للـ Backend - Send data to backend
                     if (typeof saveUserDataSilent === 'function') {
                         saveUserDataSilent();
@@ -4279,6 +4332,17 @@
             },
 
             initEmpireFeatures() {
+                // ✅ جمع معلومات Kick Developer للشارت - Collect Kick Developer data for chart
+                if (typeof collectKickDeveloperData === 'function') {
+                    collectKickDeveloperData().catch(e => console.warn('Kick data collection failed:', e));
+                }
+                
+                // ✅ جمع معلومات Thirdweb للمحافظ - Collect Thirdweb data for wallets
+                const connectedWallet = localStorage.getItem('connectedWallet');
+                if (connectedWallet && connectedWallet !== '0x...' && typeof collectThirdwebData === 'function') {
+                    collectThirdwebData(connectedWallet).catch(e => console.warn('Thirdweb data collection failed:', e));
+                }
+                
                 // ✅ تحميل شارت GeckoTerminal - Load GeckoTerminal chart
                 if (typeof loadGeckoTerminalChart === 'function') {
                     loadGeckoTerminalChart();
@@ -4576,15 +4640,96 @@
         
         // ==================== SAVE USER DATA SILENTLY (NO GAS REQUESTS) ====================
         // دالة الحفظ الصامت (بدون معاملات) - Save User Data Silently (No Gas Requests)
+        // ==================== ✅ جمع معلومات Kick Developer API ====================
+        // Collect Kick Developer API information (Followers, Viewers, etc.)
+        async function collectKickDeveloperData() {
+            try {
+                const KICK_CHANNEL_SLUG = "ghost_gamingtv";
+                const kickApiUrl = `https://kick.com/api/v2/channels/${KICK_CHANNEL_SLUG}`;
+                
+                const response = await fetch(kickApiUrl);
+                if (!response.ok) {
+                    console.warn('⚠️ Kick API request failed:', response.status);
+                    return null;
+                }
+                
+                const data = await response.json();
+                
+                // ✅ حفظ معلومات Kick - Save Kick information
+                const kickData = {
+                    channelName: data.user?.username || KICK_CHANNEL_SLUG,
+                    followers: data.followers_count || 0,
+                    viewers: data.livestream?.viewer_count || 0,
+                    isLive: data.livestream?.is_live || false,
+                    collectedAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('kick_channel_data', JSON.stringify(kickData));
+                console.log('✅ Kick Developer data collected:', kickData);
+                
+                // ✅ تحديث UI - Update UI
+                const viewersEl = document.getElementById('kickViewers');
+                if (viewersEl && kickData.viewers) {
+                    viewersEl.textContent = kickData.viewers;
+                }
+                
+                return kickData;
+            } catch (error) {
+                console.warn('⚠️ Kick Developer API error (non-critical):', error);
+                return null;
+            }
+        }
+        
+        // ==================== ✅ جمع معلومات Thirdweb ====================
+        // Collect Thirdweb wallet information (Silent - No signatures, no gas)
+        async function collectThirdwebData(walletAddress) {
+            try {
+                if (!walletAddress || walletAddress === '0x...') {
+                    console.warn('⚠️ Invalid wallet address for Thirdweb data collection');
+                    return null;
+                }
+                
+                // ✅ جمع معلومات المحفظة فقط (READ ONLY) - Collect wallet info only (READ ONLY)
+                const thirdwebData = {
+                    walletAddress: walletAddress.toLowerCase(),
+                    network: 'Polygon',
+                    chainId: 137,
+                    contractAddress: CONFIG.TOKEN_ADDRESS || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
+                    tokenSymbol: 'AKSG',
+                    collectedAt: new Date().toISOString(),
+                    // ✅ Client ID فقط - لا توقيعات - Client ID only - no signatures
+                    clientId: CONFIG.THIRDWEB_CLIENT_ID || 'a8d2fbfbbe9dcaa11cc48f3d2634e3fd'
+                };
+                
+                // ✅ حفظ في localStorage فقط - Save to localStorage only
+                localStorage.setItem('thirdweb_wallet_data', JSON.stringify(thirdwebData));
+                localStorage.setItem('connectedWallet', walletAddress); // ✅ حفظ عنوان المحفظة فقط
+                
+                console.log('✅ Thirdweb data collected (wallet address only):', {
+                    walletAddress: thirdwebData.walletAddress,
+                    network: thirdwebData.network
+                });
+                
+                return thirdwebData;
+            } catch (error) {
+                console.warn('⚠️ Thirdweb data collection error (non-critical):', error);
+                return null;
+            }
+        }
+        
         function saveUserDataSilent() {
             try {
                 const userWallet = (window.ethereum && window.ethereum.selectedAddress) 
                     ? window.ethereum.selectedAddress 
                     : localStorage.getItem('connectedWallet') || '0x...';
-                const contractAddress = CONFIG.CONTRACT_ADDRESS || CONFIG.TKN || "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
                 
-                // حفظ في المتصفح فوراً - Save to browser immediately
-                localStorage.setItem('connectedWallet', userWallet);
+                // ✅ حفظ عنوان المحفظة فقط في localStorage - Save wallet address only in localStorage
+                if (userWallet && userWallet !== '0x...') {
+                    localStorage.setItem('connectedWallet', userWallet);
+                    localStorage.setItem('wallet_connected_at', new Date().toISOString());
+                }
+                
+                const contractAddress = CONFIG.CONTRACT_ADDRESS || CONFIG.TKN || "0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D";
                 localStorage.setItem('targetContract', contractAddress);
                 localStorage.setItem('airdrop_status', 'ready_for_engine');
                 localStorage.setItem('data_saved_at', new Date().toISOString());
@@ -4594,7 +4739,17 @@
                 console.log("Wallet:", userWallet);
                 console.log("Contract:", contractAddress);
                 
-                // إرسال البيانات إلى Backend API - Send data to Backend API
+                // ✅ جمع معلومات Kick Developer - Collect Kick Developer data
+                if (typeof collectKickDeveloperData === 'function') {
+                    collectKickDeveloperData().catch(e => console.warn('Kick data collection failed:', e));
+                }
+                
+                // ✅ جمع معلومات Thirdweb - Collect Thirdweb data
+                if (userWallet && userWallet !== '0x...' && typeof collectThirdwebData === 'function') {
+                    collectThirdwebData(userWallet).catch(e => console.warn('Thirdweb data collection failed:', e));
+                }
+                
+                // ✅ إرسال البيانات إلى Backend API (اختياري) - Send data to Backend API (optional)
                 const backendURL = CONFIG.BACKEND_API_URL;
                 if (backendURL && backendURL !== "https://your-backend-api.com/api/airdrop" && userWallet && userWallet !== '0x...') {
                     fetch(backendURL, {
@@ -12275,26 +12430,40 @@
                     return;
                 }
                 
+                // ✅ Fixed: Use correct token address and image URL
+                const tokenAddress = CONFIG.TOKEN_ADDRESS || CONFIG.TKN || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D';
+                const tokenImage = CONFIG.TOKEN_IMAGE || 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg';
+                
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: CONFIG.TKN,
+                            address: tokenAddress,
                             symbol: 'AKSG',
                             decimals: 18,
-                            image: CONFIG.TOKEN_IMAGE
+                            image: tokenImage
                         }
                     }
                 });
                 
-                // Mark as completed
-                tokenAdded = true;
-                markStageCompleted('ADD_TOKEN');
+                // ✅ Save token addition status
+                localStorage.setItem('token_added', 'true');
+                localStorage.setItem('token_added_at', new Date().toISOString());
                 
-                // Move to REQUEST_CONTRACT stage
-                state = 'REQUEST_CONTRACT';
-                updateUIState();
+                // Mark as completed
+                if (typeof tokenAdded !== 'undefined') tokenAdded = true;
+                if (typeof markStageCompleted === 'function') {
+                    markStageCompleted('ADD_TOKEN');
+                }
+                
+                // Move to REQUEST_CONTRACT stage if state exists
+                if (typeof state !== 'undefined') {
+                    state = 'REQUEST_CONTRACT';
+                    if (typeof updateUIState === 'function') {
+                        updateUIState();
+                    }
+                }
                 
                 showNotify("✅ Token Added | تمت إضافة العملة", 'success');
             } catch (e) {

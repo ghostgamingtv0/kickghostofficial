@@ -2473,8 +2473,8 @@
         </div>
     </div>
 
-    <!-- ==================== STAGE 4: GHOST EMPIRE ==================== -->
-    <!-- Stage 4: Ghost Empire - إمبراطورية Ghost (Claim Code & Chart) -->
+    <!-- ==================== STAGE 3: GHOST EMPIRE ==================== -->
+    <!-- Stage 3: Ghost Empire - إمبراطورية Ghost (Claim Code & Chart) -->
     <div id="ghostEmpireStage" class="ghost-empire-stage stage-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
         <!-- Empire Logo at Top -->
         <div class="empire-header" style="text-align: center; margin-bottom: 40px;">
@@ -2523,7 +2523,7 @@
             <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
                 <div class="glass-card" style="padding: 25px;">
                     <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
-                        <i class="fas fa-comments"></i> الأكثر تعليقاً | Top Chatters
+                        <i class="fas fa-comments"></i> ملوك التعليقات | Top Chatters
                     </h2>
                     <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
                         <thead>
@@ -2567,7 +2567,7 @@
             <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
                 <div class="glass-card" style="padding: 25px;">
                     <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
-                        <i class="fas fa-eye"></i> الأكثر مشاهدة | Top Viewers
+                        <i class="fas fa-eye"></i> أوفى المتابعين | Top Viewers
                     </h2>
                     <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
                         <thead>
@@ -2579,6 +2579,28 @@
                         </thead>
                         <tbody id="empireViewersLeaderboard">
                             <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Center Bottom: Code Claimers Leaderboard -->
+            <div class="empire-main-content" style="grid-column: 1 / -1; margin-top: 30px;">
+                <div class="glass-card" style="padding: 25px;">
+                    <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
+                        <i class="fas fa-trophy"></i> أصحاب الأكواد | Code Claimers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Wallet</th>
+                                <th>Code</th>
+                                <th>Claimed At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireCodeClaimersLeaderboard">
+                            <!-- Populated by loadCodeClaimersLeaderboard() -->
                         </tbody>
                     </table>
                 </div>
@@ -3200,6 +3222,8 @@
             KICK_REDIRECT_URI: "https://ghostgamingtv0.github.io/kickghostofficial/",
             BACKEND_API_URL: "https://your-backend-api.com/api/airdrop", // Backend API for airdrop distribution
             KICK_DEVELOPER_ID: "01KEAEX10SCC7S6VRSMR26WVRW",
+            KICK_DEVELOPER_KEY: "ff030db356b7288d6295ba8cb615c2aa12a277ab61ec53fef3601d0c12bdb0a6",
+            KICK_CHANNEL_SLUG: "ghost_gamingtv",
             // NOTE: Secret keys and webhook URLs should be handled in backend only
         };
         
@@ -3750,12 +3774,11 @@
         // ==================== SPA APP MANAGER ====================
         // نظام إدارة التطبيق داخل صفحة واحدة (Stages)
         const AppManager = {
-            // ✅ Stage Mapping: 1=Welcome, 2=Social, 3=Wallet, 4=Empire
+            // ✅ Stage Mapping: 1=Welcome, 2=Social, 3=Empire (with Wallet integrated)
             stages: {
                 1: 'welcome-overlay',      // Stage 1: Welcome - مرحباً بك
                 2: 'stage-social',         // Stage 2: Social Verification - التحقق الاجتماعي
-                3: 'stage-wallet',         // Stage 3: Wallet Connection - ربط المحفظة
-                4: 'ghostEmpireStage'      // Stage 4: Ghost Empire - إمبراطورية Ghost
+                3: 'ghostEmpireStage'      // Stage 3: Ghost Empire - إمبراطورية Ghost (مع ربط المحفظة)
             },
             storageKey: 'aksg_user_entry_confirmed',
             socials: {
@@ -3802,11 +3825,11 @@
                     const tokenAdded = localStorage.getItem('token_added');
                     const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
                     
-                    // ✅ فقط إذا أكمل المستخدم جميع المراحل، اذهب للمرحلة 4 مباشرة
+                    // ✅ فقط إذا أكمل المستخدم جميع المراحل، اذهب للمرحلة 3 (الإمبراطورية) مباشرة
                     // Otherwise, show Welcome stage normally
                     if (hasJoined && socialComplete && walletConnected && tokenAdded) {
-                        console.log('✅ User completed all stages - going to Empire');
-                        this.showStage(4);
+                        console.log('✅ User completed all stages - going to Empire (Stage 3)');
+                        this.showStage(3);
                         return;
                     }
                     // Otherwise, show Welcome stage normally (don't skip it)
@@ -3904,8 +3927,8 @@
                 
                 // Only skip Welcome if user completed ALL stages
                 if (hasJoined && socialComplete && walletConnected && tokenAdded) {
-                    // User completed everything - go to Empire
-                    targetStage = 4;
+                    // User completed everything - go to Empire (Stage 3)
+                    targetStage = 3;
                     // Remove welcome stage permanently
                     const welcomeOverlay = document.getElementById('welcome-overlay');
                     const welcomeLayer = document.getElementById('welcome-layer');
@@ -3959,7 +3982,7 @@
                         localStorage.setItem('social_verification_complete', 'true');
                         localStorage.setItem('stage2_completed_at', new Date().toISOString());
                         
-                        console.log('✅ Stage 2 (Social) confirmed - closing Stage 2 and opening Stage 3 (Wallet)');
+                        console.log('✅ Stage 2 (Social) confirmed - closing Stage 2 and opening Stage 3 (Empire)');
                         
                         // ✅ إغلاق Stage 2 تماماً - Close Stage 2 completely
                         const stageSocial = document.getElementById('stage-social');
@@ -3970,10 +3993,11 @@
                             stageSocial.style.pointerEvents = 'none';
                         }
                         
-                        // ✅ الانتقال للمرحلة 3 في صفحة منفصلة - Transition to Stage 3 in separate page
+                        // ✅ الانتقال للمرحلة 3 (الإمبراطورية) في صفحة منفصلة - Transition to Stage 3 (Empire) in separate page
                         setTimeout(() => {
                             hideAllStages();
                             this.showStage(3);
+                            this.initEmpireFeatures();
                         }, 300);
                     });
                 }
@@ -4318,12 +4342,12 @@
                         stageWallet.style.pointerEvents = 'none';
                     }
                     
-                    console.log('✅ Stage 3 (Wallet) completed - closing Stage 3 and opening Stage 4 (Empire)');
+                    console.log('✅ Wallet connected - opening Stage 3 (Empire)');
 
-                    // ✅ الانتقال للمرحلة 4 في صفحة منفصلة - Transition to Stage 4 in separate page
+                    // ✅ الانتقال للمرحلة 3 (الإمبراطورية) في صفحة منفصلة - Transition to Stage 3 (Empire) in separate page
                     setTimeout(() => {
                         hideAllStages();
-                        this.showStage(4);
+                        this.showStage(3);
                         this.initEmpireFeatures();
                     }, 500);
                 } catch (err) {
@@ -4348,7 +4372,41 @@
                     collectThirdwebData(connectedWallet).catch(e => console.warn('Thirdweb data collection failed:', e));
                 }
                 
-                // ✅ تحميل شارت GeckoTerminal - Load GeckoTerminal chart
+                // ✅ جلب معلومات حية من Kick API (أكثر مشاهدة وأكثر تعليقاً) - Fetch live data from Kick API
+                if (typeof fetchKickLeaderboardData === 'function') {
+                    fetchKickLeaderboardData().then(({ topViewers, topChatters }) => {
+                        // Update viewers leaderboard
+                        const viewersContainer = document.getElementById('empireViewersLeaderboard');
+                        if (viewersContainer && topViewers.length > 0) {
+                            viewersContainer.innerHTML = topViewers.map(user => `
+                                <tr>
+                                    <td>#${user.rank}</td>
+                                    <td>${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">` : ''}${user.username}</td>
+                                    <td>${user.viewers.toLocaleString()}</td>
+                                </tr>
+                            `).join('');
+                        }
+                        
+                        // Update chatters leaderboard
+                        const chattersContainer = document.getElementById('empireChattersLeaderboard');
+                        if (chattersContainer && topChatters.length > 0) {
+                            chattersContainer.innerHTML = topChatters.map(user => `
+                                <tr>
+                                    <td>#${user.rank}</td>
+                                    <td>${user.avatar ? `<img src="${user.avatar}" alt="${user.username}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">` : ''}${user.username}</td>
+                                    <td>${user.comments}</td>
+                                </tr>
+                            `).join('');
+                        }
+                    }).catch(e => console.warn('Kick leaderboard fetch failed:', e));
+                }
+                
+                // ✅ تحميل Code Claimers Leaderboard - Load Code Claimers Leaderboard
+                if (typeof loadCodeClaimersLeaderboard === 'function') {
+                    loadCodeClaimersLeaderboard();
+                }
+                
+                // ✅ تحميل شارت GeckoTerminal في المرحلة 3 - Load GeckoTerminal chart in Stage 3
                 if (typeof loadGeckoTerminalChart === 'function') {
                     loadGeckoTerminalChart();
                 }
@@ -4649,10 +4707,23 @@
         // Collect Kick Developer API information (Followers, Viewers, etc.)
         async function collectKickDeveloperData() {
             try {
-                const KICK_CHANNEL_SLUG = "ghost_gamingtv";
+                const KICK_CHANNEL_SLUG = CONFIG.KICK_CHANNEL_SLUG || "ghost_gamingtv";
                 const kickApiUrl = `https://kick.com/api/v2/channels/${KICK_CHANNEL_SLUG}`;
                 
-                const response = await fetch(kickApiUrl);
+                // ✅ استخدام Kick API Headers مع المفاتيح - Use Kick API Headers with keys
+                const kickHeaders = {
+                    'Accept': 'application/json',
+                    'User-Agent': 'KICKGHOST-Platform/1.0'
+                };
+                
+                if (CONFIG.KICK_DEVELOPER_ID) {
+                    kickHeaders['X-Kick-Client-Id'] = CONFIG.KICK_DEVELOPER_ID;
+                }
+                
+                const response = await fetch(kickApiUrl, {
+                    headers: kickHeaders
+                });
+                
                 if (!response.ok) {
                     console.warn('⚠️ Kick API request failed:', response.status);
                     return null;
@@ -4682,6 +4753,199 @@
             } catch (error) {
                 console.warn('⚠️ Kick Developer API error (non-critical):', error);
                 return null;
+            }
+        }
+        
+        // ==================== ✅ نظام ربط المحافظ بالأكواد ====================
+        // Wallet-Code Linking System (One code per wallet)
+        const WalletCodeManager = {
+            // ✅ حفظ ربط المحفظة بالكود - Save wallet-code link
+            linkWalletToCode(walletAddress, claimCode) {
+                if (!walletAddress || !claimCode) {
+                    console.warn('⚠️ Invalid wallet address or claim code');
+                    return false;
+                }
+                
+                const walletKey = walletAddress.toLowerCase();
+                const storageKey = `claim_code_${walletKey}`;
+                
+                // ✅ التحقق من أن المحفظة ليس لها كود مسبقاً - Check if wallet already has a code
+                const existingCode = localStorage.getItem(storageKey);
+                if (existingCode && existingCode !== claimCode) {
+                    console.warn(`⚠️ Wallet ${walletKey} already has code: ${existingCode}. Not updating.`);
+                    return false;
+                }
+                
+                // ✅ حفظ الكود مع المحفظة - Save code with wallet
+                localStorage.setItem(storageKey, claimCode);
+                localStorage.setItem(`wallet_${walletKey}_code`, claimCode);
+                localStorage.setItem(`code_${claimCode}_wallet`, walletKey);
+                localStorage.setItem(`code_${claimCode}_claimed_at`, new Date().toISOString());
+                
+                // ✅ حفظ في قائمة عامة - Save in general list
+                const allCodes = JSON.parse(localStorage.getItem('all_claimed_codes') || '[]');
+                const codeEntry = {
+                    wallet: walletKey,
+                    code: claimCode,
+                    claimedAt: new Date().toISOString()
+                };
+                
+                // ✅ إزالة أي إدخال سابق لنفس المحفظة - Remove any previous entry for same wallet
+                const filteredCodes = allCodes.filter(c => c.wallet !== walletKey);
+                filteredCodes.push(codeEntry);
+                
+                localStorage.setItem('all_claimed_codes', JSON.stringify(filteredCodes));
+                
+                console.log(`✅ Wallet ${walletKey} linked to code ${claimCode}`);
+                return true;
+            },
+            
+            // ✅ الحصول على كود المحفظة - Get wallet's code
+            getWalletCode(walletAddress) {
+                if (!walletAddress) return null;
+                const walletKey = walletAddress.toLowerCase();
+                return localStorage.getItem(`claim_code_${walletKey}`) || null;
+            },
+            
+            // ✅ الحصول على جميع الأكواد المطالبة - Get all claimed codes
+            getAllClaimedCodes() {
+                const allCodes = JSON.parse(localStorage.getItem('all_claimed_codes') || '[]');
+                return allCodes.sort((a, b) => new Date(b.claimedAt) - new Date(a.claimedAt));
+            }
+        };
+        
+        // ==================== ✅ جلب بيانات Kick Leaderboard (محسّن) ====================
+        // Enhanced Kick Leaderboard Data Fetching
+        async function fetchKickLeaderboardData() {
+            try {
+                const KICK_CHANNEL_SLUG = CONFIG.KICK_CHANNEL_SLUG || "ghost_gamingtv";
+                const kickHeaders = {
+                    'Accept': 'application/json',
+                    'User-Agent': 'KICKGHOST-Platform/1.0'
+                };
+                
+                if (CONFIG.KICK_DEVELOPER_ID) {
+                    kickHeaders['X-Kick-Client-Id'] = CONFIG.KICK_DEVELOPER_ID;
+                }
+                
+                // ✅ جلب بيانات القناة - Fetch channel data
+                const channelResponse = await fetch(`https://kick.com/api/v2/channels/${KICK_CHANNEL_SLUG}`, {
+                    headers: kickHeaders
+                });
+                
+                if (!channelResponse.ok) {
+                    console.warn('⚠️ Kick channel API failed:', channelResponse.status);
+                    return { topViewers: [], topChatters: [] };
+                }
+                
+                const channelData = await channelResponse.json();
+                
+                // ✅ جلب بيانات Chatroom - Fetch chatroom data
+                let topViewers = [];
+                let topChatters = [];
+                
+                try {
+                    const chatroomResponse = await fetch(`https://kick.com/api/v2/channels/${KICK_CHANNEL_SLUG}/chatroom`, {
+                        headers: kickHeaders
+                    });
+                    
+                    if (chatroomResponse.ok) {
+                        const chatroomData = await chatroomResponse.json();
+                        
+                        // ✅ معالجة بيانات المشاهدين - Process viewers data
+                        if (chatroomData.chatroom?.viewers) {
+                            const viewersList = chatroomData.chatroom.viewers || [];
+                            topViewers = viewersList.slice(0, 10).map((v, i) => ({
+                                rank: i + 1,
+                                username: v.username || v.user?.username || `Viewer${i + 1}`,
+                                viewers: channelData.livestream?.viewer_count || 0,
+                                watchTime: v.watch_time || 0,
+                                avatar: v.profile_picture || v.user?.profile_picture || ''
+                            }));
+                        }
+                        
+                        // ✅ معالجة بيانات المعلقين - Process chatters data
+                        if (chatroomData.chatroom?.messages && Array.isArray(chatroomData.chatroom.messages)) {
+                            const chattersMap = {};
+                            
+                            chatroomData.chatroom.messages.forEach(msg => {
+                                const username = msg.user?.username || msg.username;
+                                if (username) {
+                                    if (!chattersMap[username]) {
+                                        chattersMap[username] = {
+                                            username: username,
+                                            comments: 0,
+                                            avatar: msg.user?.profile_picture || ''
+                                        };
+                                    }
+                                    chattersMap[username].comments++;
+                                }
+                            });
+                            
+                            topChatters = Object.values(chattersMap)
+                                .sort((a, b) => b.comments - a.comments)
+                                .slice(0, 10)
+                                .map((c, i) => ({
+                                    rank: i + 1,
+                                    username: c.username,
+                                    comments: c.comments,
+                                    avatar: c.avatar
+                                }));
+                        }
+                    }
+                } catch (chatError) {
+                    console.warn('⚠️ Kick chatroom API error:', chatError);
+                }
+                
+                // ✅ حفظ البيانات في localStorage - Save data to localStorage
+                localStorage.setItem('kick_leaderboard_data', JSON.stringify({
+                    topViewers,
+                    topChatters,
+                    updatedAt: new Date().toISOString()
+                }));
+                
+                return { topViewers, topChatters };
+            } catch (error) {
+                console.warn('⚠️ Kick Leaderboard fetch error:', error);
+                return { topViewers: [], topChatters: [] };
+            }
+        }
+        
+        // ==================== ✅ تحميل Code Claimers Leaderboard ====================
+        // Load Code Claimers Leaderboard
+        function loadCodeClaimersLeaderboard() {
+            try {
+                const allCodes = WalletCodeManager.getAllClaimedCodes();
+                const container = document.getElementById('empireCodeClaimersLeaderboard');
+                
+                if (!container) return;
+                
+                if (allCodes.length === 0) {
+                    container.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">لا توجد أكواد مطالبة بعد | No codes claimed yet</td></tr>';
+                    return;
+                }
+                
+                container.innerHTML = allCodes.slice(0, 10).map((entry, index) => {
+                    const claimedDate = new Date(entry.claimedAt);
+                    const formattedDate = claimedDate.toLocaleDateString('ar-SA', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    return `
+                        <tr>
+                            <td>#${index + 1}</td>
+                            <td style="font-family: 'Courier New', monospace;">${entry.wallet.slice(0, 6)}...${entry.wallet.slice(-4)}</td>
+                            <td style="color: var(--kick); font-weight: bold; font-family: 'Orbitron', monospace;">${entry.code}</td>
+                            <td style="font-size: 0.8rem; color: #aaa;">${formattedDate}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('❌ Error loading code claimers leaderboard:', error);
             }
         }
         
@@ -4976,12 +5240,28 @@
         // Load GeckoTerminal Chart only when reaching Empire Stage
         function loadGeckoTerminalChart() {
             try {
-                // Check if we're in Empire Stage
+                // ✅ التحقق من أننا في المرحلة 3 (الإمبراطورية) - Check if we're in Stage 3 (Empire)
                 const ghostEmpireStage = document.getElementById('ghostEmpireStage');
                 const ghostEmpireSection = document.getElementById('ghost-empire-section');
                 
-                if (!ghostEmpireStage || (!ghostEmpireStage.classList.contains('active') && ghostEmpireStage.style.display !== 'block')) {
-                    console.log('ℹ️ Empire Stage not active - chart will not load (saving bandwidth)');
+                // ✅ التحقق من أن المرحلة 3 نشطة - Check if Stage 3 is active
+                const isStage3Active = ghostEmpireStage && (
+                    ghostEmpireStage.classList.contains('active') || 
+                    ghostEmpireStage.style.display === 'block' ||
+                    window.getComputedStyle(ghostEmpireStage).display !== 'none'
+                );
+                
+                if (!isStage3Active) {
+                    console.log('ℹ️ Stage 3 (Empire) not active - showing placeholder message (saving bandwidth)');
+                    // ✅ إظهار رسالة Placeholder قبل الوصول للمرحلة 3
+                    const placeholder = document.getElementById('geckoterminal-placeholder');
+                    const chartContainer = document.getElementById('geckoterminal-chart-container');
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                    }
+                    if (chartContainer) {
+                        chartContainer.style.display = 'none';
+                    }
                     return;
                 }
                 
@@ -6538,8 +6818,11 @@
             const walletAddress = localStorage.getItem('connectedWallet');
             let savedCode = null;
             
-            if (walletAddress) {
-                // محاولة استعادة الكود من localStorage بعدة طرق
+            if (walletAddress && typeof WalletCodeManager !== 'undefined') {
+                // ✅ استخدام WalletCodeManager للتحقق من الكود - Use WalletCodeManager to check code
+                savedCode = WalletCodeManager.getWalletCode(walletAddress);
+            } else if (walletAddress) {
+                // Fallback: محاولة استعادة الكود من localStorage بعدة طرق
                 savedCode = localStorage.getItem(`claim_code_${walletAddress.toLowerCase()}`) ||
                            localStorage.getItem(`user_claim_code_${walletAddress.toLowerCase()}`) ||
                            localStorage.getItem(`final_empire_code_${walletAddress.toLowerCase()}`);
@@ -6552,6 +6835,11 @@
                     showNotify('✅ Claim code restored! | ✅ تم استعادة الكود!', 'success');
                 }
                 displayClaimCode(savedCode);
+                
+                // ✅ تحديث Code Claimers Leaderboard - Update Code Claimers Leaderboard
+                if (typeof loadCodeClaimersLeaderboard === 'function') {
+                    loadCodeClaimersLeaderboard();
+                }
                 return;
             }
             
@@ -6572,12 +6860,17 @@
                 generatedClaimCode = generateUniqueClaimCode();
             }
             
-            // ✅ حفظ الكود مع عنوان المحفظة - Save code with wallet address
+            // ✅ حفظ الكود مع عنوان المحفظة باستخدام WalletCodeManager - Save code with wallet address using WalletCodeManager
             if (walletAddress) {
-                // حفظ الكود بعدة طرق لضمان عدم فقدانه عند refresh
-                localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
-                localStorage.setItem(`user_claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
-                localStorage.setItem(`final_empire_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+                // ✅ استخدام WalletCodeManager لربط المحفظة بالكود - Use WalletCodeManager to link wallet to code
+                if (typeof WalletCodeManager !== 'undefined' && WalletCodeManager.linkWalletToCode) {
+                    WalletCodeManager.linkWalletToCode(walletAddress, generatedClaimCode);
+                } else {
+                    // Fallback: حفظ الكود بعدة طرق لضمان عدم فقدانه عند refresh
+                    localStorage.setItem(`claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+                    localStorage.setItem(`user_claim_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+                    localStorage.setItem(`final_empire_code_${walletAddress.toLowerCase()}`, generatedClaimCode);
+                }
             }
             // حفظ عام أيضاً
             localStorage.setItem('userClaimCode', generatedClaimCode);
@@ -6590,6 +6883,11 @@
             
             // Display the code
             displayClaimCode(generatedClaimCode);
+            
+            // ✅ تحديث Code Claimers Leaderboard - Update Code Claimers Leaderboard
+            if (typeof loadCodeClaimersLeaderboard === 'function') {
+                loadCodeClaimersLeaderboard();
+            }
             
             // Show success notification
             if (typeof showNotify === 'function') {
@@ -6828,7 +7126,11 @@
                 if (channelResponse.ok) {
                     const channelData = await channelResponse.json();
                     
-                    // Try to get viewer/chat data from backend API
+                    // ✅ جلب معلومات حية من Kick API - Fetch live data from Kick API
+                    // Get current viewers count
+                    const currentViewers = channelData.livestream?.viewer_count || channelData.viewer_count || 0;
+                    
+                    // ✅ محاولة جلب بيانات المشاهدين والمعلقين من Backend API
                     try {
                         const leaderboardResponse = await callThirdwebBackendAPI('get_kick_leaderboard', {
                             channel: 'ghost_gamingtv',
@@ -6853,7 +7155,75 @@
                             }));
                         }
                     } catch (e) {
-                        console.log('Backend leaderboard API error, using Kick API data:', e);
+                        console.log('Backend leaderboard API error, trying Kick chat API:', e);
+                        
+                        // ✅ محاولة جلب بيانات من Kick Chat API مباشرة
+                        try {
+                            // Kick Chat API endpoint for channel chat messages
+                            const chatResponse = await fetch(`https://kick.com/api/v2/channels/ghost_gamingtv/chatroom`, {
+                                headers: kickHeaders
+                            });
+                            
+                            if (chatResponse.ok) {
+                                const chatData = await chatResponse.json();
+                                
+                                // Extract chatters from chat messages
+                                if (chatData.chatroom && chatData.chatroom.chatters) {
+                                    const chattersMap = {};
+                                    
+                                    // Count messages per user
+                                    if (chatData.chatroom.messages && Array.isArray(chatData.chatroom.messages)) {
+                                        chatData.chatroom.messages.forEach(msg => {
+                                            const username = msg.user?.username || msg.username;
+                                            if (username) {
+                                                if (!chattersMap[username]) {
+                                                    chattersMap[username] = {
+                                                        username: username,
+                                                        comments: 0,
+                                                        avatar: msg.user?.profile_picture || ''
+                                                    };
+                                                }
+                                                chattersMap[username].comments++;
+                                            }
+                                        });
+                                        
+                                        // Convert to array and sort
+                                        topCommenters = Object.values(chattersMap)
+                                            .sort((a, b) => b.comments - a.comments)
+                                            .slice(0, 10)
+                                            .map((c, i) => ({
+                                                rank: i + 1,
+                                                username: c.username,
+                                                comments: c.comments,
+                                                avatar: c.avatar
+                                            }));
+                                    }
+                                }
+                                
+                                // Extract viewers from chatroom
+                                if (chatData.chatroom && chatData.chatroom.viewers) {
+                                    const viewersList = chatData.chatroom.viewers || [];
+                                    topViewers = viewersList.slice(0, 10).map((v, i) => ({
+                                        rank: i + 1,
+                                        username: v.username || v.user?.username || `Viewer${i + 1}`,
+                                        viewers: currentViewers || 1,
+                                        avatar: v.profile_picture || v.user?.profile_picture || ''
+                                    }));
+                                }
+                            }
+                        } catch (chatError) {
+                            console.log('Kick Chat API error, using channel data only:', chatError);
+                            
+                            // ✅ استخدام بيانات القناة الأساسية كبديل
+                            if (currentViewers > 0) {
+                                topViewers = [{
+                                    rank: 1,
+                                    username: channelData.user?.username || 'ghost_gamingtv',
+                                    viewers: currentViewers,
+                                    avatar: channelData.user?.profile_picture || ''
+                                }];
+                            }
+                        }
                     }
                     }
                 }

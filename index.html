@@ -1902,15 +1902,15 @@
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px;">
                 <button class="wallet-option" data-wallet="metamask">
-                    <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <img src="https://cdn.jsdelivr.net/gh/MetaMask/brand-resources@master/SVG/metamask-fox.svg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%23f6851b%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>M</text></svg>';">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
                 </button>
                 <button class="wallet-option" data-wallet="trust">
-                    <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" width="80" style="margin-bottom: 20px; display: block;">
+                    <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%231c68f4%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>T</text></svg>';">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
                 </button>
                 <button class="wallet-option" data-wallet="phantom">
-                    <img src="https://phantom.app/img/phantom-logo.svg" width="80" style="margin-bottom: 20px; display: block;">
+                    <img src="https://phantom.app/img/phantom-logo.svg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%237c3aed%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>P</text></svg>';">
                     <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
                 </button>
             </div>
@@ -3633,7 +3633,11 @@
                     this.initEmpireFeatures();
                 } catch (err) {
                     console.error('Wallet error:', err);
-                    showNotify('❌ فشل ربط المحفظة أو التوقيع', 'error');
+                    if (err && err.code === 4001) {
+                        showNotify('تم رفض الطلب من المستخدم | Request rejected by user', 'warning');
+                    } else {
+                        showNotify('❌ فشل ربط المحفظة أو التوقيع', 'error');
+                    }
                 }
             },
 

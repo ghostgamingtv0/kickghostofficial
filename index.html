@@ -4458,28 +4458,29 @@
                             
                             if (link) {
                                 console.log(`✅ Opening ${platform} link directly: ${link}`);
+                                
+                                // ✅ تسجيل وقت الزيارة دائماً - Record visit timestamp always
+                                if (typeof socialVisitTimestamps === 'undefined') {
+                                    window.socialVisitTimestamps = {};
+                                }
+                                socialVisitTimestamps[platform] = Date.now();
+                                
                                 // ✅ فتح الرابط في تبويبة جديدة - Open link in new tab
                                 const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
                                 
-                                if (newWindow && !newWindow.closed) {
-                                    // ✅ تسجيل وقت الزيارة - Record visit timestamp
-                                    if (typeof socialVisitTimestamps === 'undefined') {
-                                        window.socialVisitTimestamps = {};
+                                // ✅ إظهار زر التأكيد بعد 10 ثوانٍ دائماً - Show confirm button after 10 seconds always
+                                setTimeout(() => {
+                                    const confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
+                                    if (confirmBtnStage2) {
+                                        confirmBtnStage2.style.display = 'block';
+                                        confirmBtnStage2.style.visibility = 'visible';
+                                        confirmBtnStage2.style.opacity = '1';
+                                        confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
+                                        console.log(`✅ Confirm button shown for ${platform} in Stage 2`);
                                     }
-                                    socialVisitTimestamps[platform] = Date.now();
-                                    
-                                    // ✅ إظهار زر التأكيد بعد 10 ثوانٍ - Show confirm button after 10 seconds
-                                    setTimeout(() => {
-                                        const confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
-                                        if (confirmBtnStage2) {
-                                            confirmBtnStage2.style.display = 'block';
-                                            confirmBtnStage2.style.visibility = 'visible';
-                                            confirmBtnStage2.style.opacity = '1';
-                                            confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
-                                            console.log(`✅ Confirm button shown for ${platform} in Stage 2`);
-                                        }
-                                    }, 10000);
-                                    
+                                }, 10000);
+                                
+                                if (newWindow && !newWindow.closed) {
                                     // ✅ إظهار إشعار - Show notification
                                     if (typeof showNotify === 'function') {
                                         showNotify(`✅ ${platform} link opened! Please visit and return. | تم فتح رابط ${platform}! يرجى الزيارة والعودة.`, 'success');

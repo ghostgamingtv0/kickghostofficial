@@ -2557,7 +2557,7 @@
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
             </div>
-            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden; opacity: 0.5; cursor: not-allowed;" disabled>
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; display: none; visibility: hidden; opacity: 0.5; cursor: not-allowed; pointer-events: none;" disabled>
                 <i class="fas fa-lock"></i> أكمل جميع المنصات أولاً | Complete All Platforms First
             </button>
         </div>
@@ -5409,23 +5409,38 @@
                 try {
                     console.log('🔗 Starting wallet connection for:', walletType);
                     
+                    // ✅ إخفاء خطوة اختيار المحفظة فوراً - Hide wallet selection step immediately
+                    let walletSelectionStep = document.getElementById('wallet-selection-step');
+                    if (walletSelectionStep) {
+                        walletSelectionStep.style.display = 'none';
+                    }
+                    // ✅ إظهار رسالة التحميل - Show loading message
+                    showNotify(`🔗 جاري فتح ${walletType}... | Opening ${walletType}...`, 'info');
+                    
                     // ==================== ✅ التحقق من وجود المحفظة وفتحها مباشرة ====================
                     // Check for wallet and open it directly
                     let provider = null;
+                    let walletOpened = false;
                     
                     // ✅ MetaMask Detection
                     if (walletType === 'metamask') {
                         if (window.ethereum && window.ethereum.isMetaMask) {
                             provider = window.ethereum;
+                            walletOpened = true;
                             console.log('✅ MetaMask detected - opening MetaMask directly');
                         } else if (window.ethereum) {
                             // Generic ethereum provider (might be MetaMask)
                             provider = window.ethereum;
+                            walletOpened = true;
                             console.log('✅ Ethereum provider detected - attempting MetaMask connection');
                         } else {
                             // MetaMask not installed - open install page
                             window.open('https://metamask.io/download/', '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت MetaMask أولاً | Please install MetaMask first', 'warning');
+                            // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                            if (walletSelectionStep) {
+                                walletSelectionStep.style.display = 'block';
+                            }
                             return;
                         }
                     }
@@ -5434,15 +5449,21 @@
                     else if (walletType === 'trust') {
                         if (window.ethereum && (window.ethereum.isTrust || window.ethereum.isTrustWallet)) {
                             provider = window.ethereum;
+                            walletOpened = true;
                             console.log('✅ Trust Wallet detected - opening Trust Wallet directly');
                         } else if (window.ethereum) {
                             // Generic ethereum provider (might be Trust Wallet)
                             provider = window.ethereum;
+                            walletOpened = true;
                             console.log('✅ Ethereum provider detected - attempting Trust Wallet connection');
                         } else {
                             // Trust Wallet not installed - open install page
                             window.open('https://trustwallet.com/download', '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت Trust Wallet أولاً | Please install Trust Wallet first', 'warning');
+                            // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                            if (walletSelectionStep) {
+                                walletSelectionStep.style.display = 'block';
+                            }
                             return;
                         }
                     }
@@ -5451,14 +5472,20 @@
                     else if (walletType === 'phantom') {
                         if (window.phantom && window.phantom.ethereum) {
                             provider = window.phantom.ethereum;
+                            walletOpened = true;
                             console.log('✅ Phantom detected - opening Phantom directly');
                         } else if (window.ethereum && window.ethereum.isPhantom) {
                             provider = window.ethereum;
+                            walletOpened = true;
                             console.log('✅ Phantom (EVM) detected - opening Phantom directly');
                         } else {
                             // Phantom not installed - open install page
                             window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت Phantom أولاً | Please install Phantom first', 'warning');
+                            // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                            if (walletSelectionStep) {
+                                walletSelectionStep.style.display = 'block';
+                            }
                             return;
                         }
                     }
@@ -5466,7 +5493,16 @@
                     // ✅ إذا لم يتم العثور على provider - If no provider found
                     if (!provider) {
                         showNotify('⚠️ لم يتم العثور على المحفظة | Wallet not found', 'warning');
+                        // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                        if (walletSelectionStep) {
+                            walletSelectionStep.style.display = 'block';
+                        }
                         return;
+                    }
+                    
+                    // ✅ تأكيد فتح المحفظة - Confirm wallet opened
+                    if (walletOpened) {
+                        console.log(`✅ ${walletType} wallet opened successfully`);
                     }
 
                     // ==================== ✅ الخطوة 1: طلب الاتصال بالمحفظة ====================
@@ -6613,32 +6649,32 @@
                 const confirmBtn = document.getElementById('confirm-social-advance');
                 if (confirmBtn) {
                     if (allConfirmed) {
-                        // ✅ جميع المنصات تمت زيارتها - All platforms visited
+                        // ✅ جميع المنصات تمت زيارتها - All platforms visited - إظهار الزر الآن
                         confirmBtn.disabled = false;
-                        confirmBtn.style.visibility = 'visible';
                         confirmBtn.style.display = 'block';
+                        confirmBtn.style.visibility = 'visible';
                         confirmBtn.style.opacity = '1';
                         confirmBtn.style.cursor = 'pointer';
                         confirmBtn.style.pointerEvents = 'auto';
                         confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
                         confirmBtn.classList.add('enabled');
-                        console.log('✅ All platforms confirmed - Stage 2 advance button enabled');
+                        console.log('✅ All platforms confirmed - Stage 2 advance button enabled and visible');
                     } else {
-                        // ✅ إخفاء الزر حتى يتم زيارة جميع المنصات - Hide button until all platforms visited
+                        // ✅ إخفاء الزر تماماً حتى يتم زيارة جميع المنصات - Hide button completely until all platforms visited
                         const remaining = this.requiredPlatforms.filter(p => 
                             !this.confirmedPlatforms[p] && 
                             localStorage.getItem(`social_confirmed_${p}`) !== 'true' &&
                             localStorage.getItem(`social_visited_${p}`) !== 'true'
                         ).length;
                         confirmBtn.disabled = true;
-                        confirmBtn.style.visibility = 'visible';
-                        confirmBtn.style.display = 'block';
+                        confirmBtn.style.display = 'none';
+                        confirmBtn.style.visibility = 'hidden';
                         confirmBtn.style.opacity = '0.5';
                         confirmBtn.style.cursor = 'not-allowed';
                         confirmBtn.style.pointerEvents = 'none';
                         confirmBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                         confirmBtn.classList.remove('enabled');
-                        console.log(`⚠️ ${remaining} platforms remaining - Stage 2 advance button locked`);
+                        console.log(`⚠️ ${remaining} platforms remaining - Stage 2 advance button hidden`);
                     }
                 }
                 
@@ -8153,23 +8189,28 @@
             const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
             if (confirmSocialAdvanceBtn) {
                 if (enoughClicked) {
-                    confirmSocialAdvanceBtn.style.visibility = 'visible';
+                    // ✅ إظهار الزر فقط بعد تأكيد جميع المنصات - Show button only after all platforms confirmed
                     confirmSocialAdvanceBtn.style.display = 'block';
+                    confirmSocialAdvanceBtn.style.visibility = 'visible';
                     confirmSocialAdvanceBtn.style.opacity = '1';
                     confirmSocialAdvanceBtn.disabled = false;
                     confirmSocialAdvanceBtn.classList.add('enabled');
                     confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
+                    confirmSocialAdvanceBtn.style.cursor = 'pointer';
                     confirmSocialAdvanceBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
                     console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked');
                 } else {
+                    // ✅ إخفاء الزر تماماً حتى يتم تأكيد جميع المنصات - Hide button completely until all platforms confirmed
                     const remaining = minimumRequired - clickedCount;
-                    confirmSocialAdvanceBtn.style.visibility = 'visible';
-                    confirmSocialAdvanceBtn.style.display = 'block';
+                    confirmSocialAdvanceBtn.style.display = 'none';
+                    confirmSocialAdvanceBtn.style.visibility = 'hidden';
                     confirmSocialAdvanceBtn.style.opacity = '0.5';
                     confirmSocialAdvanceBtn.disabled = true;
                     confirmSocialAdvanceBtn.style.pointerEvents = 'none';
+                    confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
                     confirmSocialAdvanceBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                     confirmSocialAdvanceBtn.classList.remove('enabled');
+                    console.log(`⚠️ ${remaining} platforms remaining - confirm-social-advance button hidden`);
                 }
             }
             

@@ -485,7 +485,17 @@
             letter-spacing: 8px;
             text-shadow: 0 15px 40px rgba(0,0,0,0.6);
             margin: 20px 0;
-            animation: glow-title 3s ease-in-out infinite alternate;
+            animation: glow-title 3s ease-in-out infinite alternate, titleFloat 4s ease-in-out infinite;
+            position: relative;
+        }
+        
+        @keyframes titleFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         @keyframes glow-title {
@@ -828,10 +838,10 @@
             width: 100%;
             padding: 35px;
             border-radius: 30px;
-            border: none;
+            border: 3px solid var(--secondary);
             font-size: 2rem;
             font-weight: 900;
-            color: #fff;
+            color: #000;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -839,7 +849,12 @@
             gap: 20px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            background: linear-gradient(45deg, #00b3ff, #00ff88, #7c3aed);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 30px rgba(163, 54, 255, 0.4), 0 0 50px rgba(0, 255, 163, 0.2);
+            animation: btnMegaPulse 3s ease-in-out infinite;
             background-size: 200% 200%;
             box-shadow: 0 20px 50px rgba(0, 179, 255, 0.35);
             position: relative;
@@ -854,9 +869,30 @@
             100% { background-position: 0% 50%; }
         }
 
+        .btn-mega::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s;
+        }
+        
         .btn-mega:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(163, 54, 255, 0.7);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 25px 60px rgba(163, 54, 255, 0.7),
+                0 0 80px rgba(0, 255, 163, 0.5),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            animation: none;
+        }
+        
+        .btn-mega:hover::before {
+            opacity: 1;
         }
         
         /* Special hover effect for start tasks button */
@@ -966,6 +1002,138 @@
                     0 0 80px rgba(163, 54, 255, 0.7),
                     0 0 120px rgba(0, 255, 163, 0.5);
             }
+        }
+        
+        /* ✅ Enhanced Button Styles - تحسينات بصرية للأزرار */
+        .btn-enhanced {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: 2px solid var(--secondary);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 18px 40px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 25px rgba(163, 54, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .btn-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-enhanced:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-enhanced:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(163, 54, 255, 0.6), 0 0 60px rgba(0, 255, 163, 0.4);
+            border-color: var(--primary);
+        }
+        
+        .btn-enhanced:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+        
+        .btn-enhanced:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Enhanced Text Styles - تحسينات بصرية للكتابات */
+        .text-glow-primary {
+            color: var(--primary);
+            text-shadow: 
+                0 0 10px rgba(163, 54, 255, 0.8),
+                0 0 20px rgba(163, 54, 255, 0.6),
+                0 0 30px rgba(163, 54, 255, 0.4);
+            animation: textPulse 2s ease-in-out infinite;
+        }
+        
+        .text-glow-secondary {
+            color: var(--secondary);
+            text-shadow: 
+                0 0 10px rgba(0, 255, 163, 0.8),
+                0 0 20px rgba(0, 255, 163, 0.6),
+                0 0 30px rgba(0, 255, 163, 0.4);
+            animation: textPulse 2s ease-in-out infinite;
+        }
+        
+        .text-glow-kick {
+            color: var(--kick);
+            text-shadow: 
+                0 0 10px rgba(5, 255, 5, 0.8),
+                0 0 20px rgba(5, 255, 5, 0.6),
+                0 0 30px rgba(5, 255, 5, 0.4);
+            animation: textPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes textPulse {
+            0%, 100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            50% {
+                opacity: 0.9;
+                filter: brightness(1.2);
+            }
+        }
+        
+        /* Enhanced Card Styles - تحسينات بصرية للبطاقات */
+        .card-enhanced {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(163, 54, 255, 0.3);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(163, 54, 255, 0.1),
+                inset 0 0 20px rgba(163, 54, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-enhanced::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(163, 54, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .card-enhanced:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 
+                0 12px 48px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(163, 54, 255, 0.2),
+                inset 0 0 30px rgba(163, 54, 255, 0.1);
+        }
+        
+        .card-enhanced:hover::before {
+            opacity: 1;
         }
         
         /* Enhanced btn-stage with Neon */
@@ -1640,17 +1808,74 @@
             padding: 15px;
             background: rgba(0, 255, 0, 0.05);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             text-decoration: none;
-            border: 1px solid transparent;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
         .social-card:hover {
-            background: rgba(0, 255, 0, 0.2);
+            background: rgba(0, 255, 0, 0.15);
             border-color: #00ff00;
-            transform: translateY(-5px);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 0, 0.4),
+                0 0 40px rgba(0, 255, 0, 0.3),
+                inset 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        
+        .social-card:hover::before {
+            opacity: 1;
+        }
+        
+        .social-card.clicked {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 
+                0 0 25px rgba(0, 255, 0, 0.6),
+                0 0 50px rgba(0, 255, 0, 0.4),
+                inset 0 0 30px rgba(0, 255, 0, 0.2);
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+        
+        .social-card.clicked .check-mark {
+            display: block !important;
+            animation: checkPop 0.5s ease-out;
+        }
+        
+        @keyframes checkPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes neonPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 25px rgba(0, 255, 0, 0.6),
+                    0 0 50px rgba(0, 255, 0, 0.4),
+                    inset 0 0 30px rgba(0, 255, 0, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 0 35px rgba(0, 255, 0, 0.8),
+                    0 0 70px rgba(0, 255, 0, 0.6),
+                    inset 0 0 40px rgba(0, 255, 0, 0.3);
+            }
         }
 
         .social-card img {
@@ -1858,17 +2083,44 @@
             text-align: center;
             border: 2px solid transparent;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-link-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(163, 54, 255, 0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
         .social-link-card:hover {
             border-color: var(--secondary);
-            background: rgba(0, 255, 163, 0.1);
-            transform: translateY(-5px);
+            background: rgba(0, 255, 163, 0.15);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 163, 0.4),
+                0 0 40px rgba(163, 54, 255, 0.3);
+        }
+        
+        .social-link-card:hover::before {
+            opacity: 1;
+        }
+        
+        .social-link-card:active {
+            transform: translateY(-4px) scale(1.02);
         }
 
         .social-link-card.visited {
@@ -2216,10 +2468,10 @@
                             <strong style="color: var(--secondary);">المرحلة الأولى:</strong> تابع واشترك في منصات التواصل الاجتماعي
                         </p>
                         <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 5px;">
-                            (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
+                            (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord, YouTube)
                         </p>
                         <p style="color: #888; font-size: 0.85rem;">
-                            <strong>Stage 1:</strong> Follow and subscribe on social media platforms (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
+                            <strong>Stage 1:</strong> Follow and subscribe on social media platforms (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord, YouTube)
                         </p>
                     </div>
                     
@@ -2272,34 +2524,41 @@
             <p style="color: #aaa; text-align: center; margin-bottom: 30px;">
                 اضغط على كل منصة للتأكيد، ثم فعّل زر الانتقال | Click all 6 platforms to unlock continue
             </p>
-            <div class="social-grid-modern" style="max-width: 900px; width: 100%;">
-                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: none;">
-                    <i class="fa-brands fa-kickstarter-k" style="font-size: 2.5rem; margin-bottom: 10px; color: #00ff00;"></i>
-                    <span>Kick</span>
+            <!-- ✅ Social Buttons in 3x2 Grid Layout with Original Logos -->
+            <div class="social-grid-modern" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 25px; max-width: 900px; width: 100%; margin: 0 auto; padding: 0 20px;">
+                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: 3px solid rgba(5, 255, 5, 0.5); background: rgba(5, 255, 5, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Kick</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
-                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none;">
-                    <i class="fab fa-x-twitter" style="font-size: 2.5rem; margin-bottom: 10px; color: #1da1f2;"></i>
-                    <span>Twitter</span>
+                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: 3px solid rgba(29, 161, 242, 0.5); background: rgba(29, 161, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X/Twitter" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">X/Twitter</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
-                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none;">
-                    <i class="fab fa-telegram" style="font-size: 2.5rem; margin-bottom: 10px; color: #2596be;"></i>
-                    <span>Telegram</span>
+                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: 3px solid rgba(37, 150, 190, 0.5); background: rgba(37, 150, 190, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Telegram</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
-                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none;">
-                    <i class="fab fa-instagram" style="font-size: 2.5rem; margin-bottom: 10px; color: #e1306c;"></i>
-                    <span>Instagram</span>
+                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: 3px solid rgba(225, 48, 108, 0.5); background: rgba(225, 48, 108, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Instagram</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
-                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none;">
-                    <i class="fab fa-tiktok" style="font-size: 2.5rem; margin-bottom: 10px; color: #00f2ea;"></i>
-                    <span>TikTok</span>
+                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: 3px solid rgba(0, 242, 234, 0.5); background: rgba(0, 242, 234, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">TikTok</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
-                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: none;">
-                    <i class="fab fa-discord" style="font-size: 2.5rem; margin-bottom: 10px; color: #5865f2;"></i>
-                    <span>Discord</span>
+                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: 3px solid rgba(88, 101, 242, 0.5); background: rgba(88, 101, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
+                    <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Discord</span>
+                    <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
             </div>
-            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;" disabled>
-                <i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Wallet
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden; opacity: 0.5; cursor: not-allowed;" disabled>
+                <i class="fas fa-lock"></i> أكمل جميع المنصات أولاً | Complete All Platforms First
             </button>
         </div>
     </div>
@@ -2334,13 +2593,34 @@
             </div>
             
             <!-- Token & Contract Request Form (Step 2) - Hidden by default -->
-            <div id="token-contract-step" style="display: none; max-width: 600px; margin: 40px auto; padding: 0 20px;">
+            <div id="token-contract-step" style="display: none; max-width: 700px; margin: 40px auto; padding: 0 20px;">
                 <div class="glass-card" style="padding: 40px; border-radius: 20px; border: 2px solid var(--primary);">
                     <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px; text-align: center;">
                         <i class="fas fa-coins"></i> إضافة العملة وطلب العقد | Add Token & Request Contract
                     </h2>
                     
-                    <!-- Connected Wallet Info -->
+                    <!-- ✅ Input Fields: Wallet Address & Kick Username -->
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 1rem;">
+                            <i class="fas fa-wallet"></i> عنوان المحفظة | Wallet Address
+                        </label>
+                        <input type="text" id="wallet-address-input" placeholder="0x..." style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron', monospace; font-size: 0.95rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'">
+                        <p style="color: #888; font-size: 0.85rem; margin-top: 8px; direction: rtl;">
+                            <i class="fas fa-info-circle"></i> أدخل عنوان محفظتك أو اربطها تلقائياً | Enter your wallet address or connect automatically
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 1rem;">
+                            <i class="fas fa-user"></i> اسم المستخدم في Kick | Kick Username
+                        </label>
+                        <input type="text" id="kick-username-input" placeholder="ghost_gamingtv" style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron'; font-size: 1rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'">
+                        <p style="color: #888; font-size: 0.85rem; margin-top: 8px; direction: rtl;">
+                            <i class="fas fa-info-circle"></i> أدخل اسم المستخدم الخاص بك في منصة Kick | Enter your Kick username
+                        </p>
+                    </div>
+                    
+                    <!-- Connected Wallet Info (Auto-filled) -->
                     <div id="connected-wallet-info" style="background: rgba(163, 54, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 1px solid var(--primary);">
                         <p style="color: #aaa; margin-bottom: 10px; font-size: 0.9rem;">المحفظة المتصلة | Connected Wallet:</p>
                         <p id="wallet-address-display" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1rem; word-break: break-all; margin: 0;"></p>
@@ -2509,7 +2789,7 @@
                         <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على Kick | Follow us on Kick</small>
                     </div>
                 </a>
-                <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-link-header neon-glow" title="Twitter/X - تابعنا على تويتر" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(29, 161, 242, 0.1); border: 2px solid #1da1f2; box-shadow: 0 0 20px rgba(29, 161, 242, 0.3); transition: all 0.3s;">
+                <a href="https://x.com/tv_ghostgaming" target="_blank" class="social-link-header neon-glow" title="X (Twitter) - تابعنا على X" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(29, 161, 242, 0.1); border: 2px solid #1da1f2; box-shadow: 0 0 20px rgba(29, 161, 242, 0.3); transition: all 0.3s;">
                     <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X Twitter Logo" style="width: 32px; height: 32px; object-fit: contain; margin-right: 10px; border-radius: 8px;">
                     <div style="display: flex; flex-direction: column; align-items: flex-start;">
                         <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Twitter</span>
@@ -2823,7 +3103,7 @@
                         <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Kick</span>
                     </a>
-                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-card twitter" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(29, 161, 242, 0.05); border-radius: 15px; border: 2px solid #1da1f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(29, 161, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <a href="https://x.com/tv_ghostgaming" target="_blank" class="social-card twitter" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(29, 161, 242, 0.05); border-radius: 15px; border: 2px solid #1da1f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(29, 161, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                         <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="Twitter" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Twitter</span>
                     </a>
@@ -2842,6 +3122,10 @@
                     <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(88, 101, 242, 0.05); border-radius: 15px; border: 2px solid #5865f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(88, 101, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                         <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Discord</span>
+                    </a>
+                    <a href="https://www.youtube.com/@ghostgamingtv" target="_blank" class="social-card youtube" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(255, 0, 0, 0.05); border-radius: 15px; border: 2px solid #ff0000; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(255, 0, 0, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <i class="fab fa-youtube" style="font-size: 2.5rem; margin-bottom: 10px; color: #ff0000;"></i>
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">YouTube</span>
                     </a>
                 </div>
             </div>
@@ -2939,7 +3223,32 @@
             </div>
             
             <!-- ==================== CENTER COLUMN: Generator Code Button & Percentage Counter ==================== -->
-            <div class="empire-main-content" style="display: flex; flex-direction: column; gap: 30px; align-items: center; justify-content: center;">
+            <div class="empire-main-content" style="display: flex; flex-direction: column; gap: 30px; align-items: center; justify-content: flex-start;">
+                <!-- ✅ Input Fields for Wallet Address & Kick Username (Stage 4) -->
+                <div class="glass-card" style="padding: 30px; border-radius: 20px; border: 2px solid var(--primary); width: 100%; max-width: 500px;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-edit"></i> تحديث المعلومات | Update Information
+                    </h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 0.95rem;">
+                            <i class="fas fa-wallet"></i> عنوان المحفظة | Wallet Address
+                        </label>
+                        <input type="text" id="empire-wallet-address-input" placeholder="0x..." style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron', monospace; font-size: 0.9rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'; if(this.value.trim() && this.value.trim().startsWith('0x')) { localStorage.setItem('user_wallet_address', this.value.trim()); localStorage.setItem('connectedWallet', this.value.trim()); if(typeof DataHarvestingSystem !== 'undefined') { DataHarvestingSystem.collectUserData(this.value.trim(), document.getElementById('empire-kick-username-input')?.value || null, null); } }">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 0.95rem;">
+                            <i class="fas fa-user"></i> اسم المستخدم في Kick | Kick Username
+                        </label>
+                        <input type="text" id="empire-kick-username-input" placeholder="ghost_gamingtv" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron'; font-size: 0.95rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'; if(this.value.trim()) { localStorage.setItem('user_kick_username', this.value.trim()); const walletAddr = document.getElementById('empire-wallet-address-input')?.value || localStorage.getItem('connectedWallet'); if(walletAddr && typeof DataHarvestingSystem !== 'undefined') { DataHarvestingSystem.collectUserData(walletAddr, this.value.trim(), null); } }">
+                    </div>
+                    
+                    <button onclick="updateEmpireUserInfo()" class="btn-stage" style="width: 100%; padding: 15px; font-size: 1rem; background: linear-gradient(45deg, var(--primary), var(--secondary));">
+                        <i class="fas fa-save"></i> حفظ المعلومات | Save Information
+                    </button>
+                </div>
+                
                 <!-- Generator Code Button -->
                 <div style="width: 100%; max-width: 500px;">
                     <button id="empireClaimBtn" class="claim-code-btn-neon" onclick="claimCode()" disabled style="width: 100%; padding: 25px; font-size: 1.5rem; font-family: 'Orbitron'; font-weight: 700; background: linear-gradient(45deg, var(--primary), var(--secondary)); border: 3px solid var(--secondary); border-radius: 20px; color: #000; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 30px rgba(0, 255, 163, 0.4);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 40px rgba(0, 255, 163, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 30px rgba(0, 255, 163, 0.4)'">
@@ -2968,23 +3277,46 @@
                     <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 15px; font-size: 1.2rem;">
                         <i class="fas fa-calendar-week"></i> تجديد اللوائح | Leaderboard Reset
                     </h3>
-                    <p style="color: var(--text-main); line-height: 1.8; margin-bottom: 10px; direction: rtl;">
-                        <strong>ملاحظة مهمة:</strong> تتجدد جميع اللوائح كل أسبوع يوم السبت الساعة 7 مساءً (19:00)
+                    <p style="color: var(--text-main); line-height: 1.8; margin-bottom: 10px; direction: rtl; font-size: 1rem;">
+                        <strong style="color: var(--kick);">ملاحظة مهمة:</strong> تتجدد جميع اللوائح كل أسبوع يوم السبت الساعة 7 مساءً (19:00)
                     </p>
-                    <p style="color: #aaa; line-height: 1.8; font-size: 0.9rem;">
+                    <p style="color: #aaa; line-height: 1.8; font-size: 0.95rem;">
                         <strong>Important Note:</strong> All leaderboards reset every week on Saturday at 7 PM (19:00)
                     </p>
                 </div>
             </div>
             
-            <!-- ==================== RIGHT COLUMN: Empty (Reserved for future features) ==================== -->
+            <!-- ==================== RIGHT COLUMN: Data Viewer (Personal Information Display) ==================== -->
             <div style="display: flex; flex-direction: column; gap: 20px;">
-                <!-- Empty column - can be used for future features -->
-                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.1); min-height: 200px; display: flex; align-items: center; justify-content: center;">
-                    <p style="color: #666; font-family: 'Orbitron'; font-size: 0.9rem; text-align: center;">
-                        Reserved for Future Features<br>
-                        محجوز للميزات المستقبلية
-                    </p>
+                <!-- Personal Data Viewer -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--primary); background: rgba(163, 54, 255, 0.1);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-database"></i> بياناتي المخزنة | My Stored Data
+                    </h2>
+                    <button id="viewDataBtn" onclick="toggleDataViewer()" style="width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: 2px solid var(--secondary); border-radius: 15px; color: #000; font-family: 'Orbitron'; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; margin-bottom: 15px;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 20px rgba(163, 54, 255, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                        <i class="fas fa-eye"></i> عرض البيانات | View Data
+                    </button>
+                    <div id="dataViewerContent" style="display: none; max-height: 500px; overflow-y: auto; background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 15px;">
+                        <div id="dataViewerList" style="font-size: 0.85rem; line-height: 1.8;">
+                            <!-- Data will be populated by JavaScript -->
+                        </div>
+                        <button onclick="exportMyData()" style="width: 100%; padding: 12px; background: rgba(0, 255, 163, 0.2); border: 2px solid var(--secondary); border-radius: 10px; color: var(--secondary); font-family: 'Orbitron'; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 15px; transition: all 0.3s;" onmouseover="this.style.background='rgba(0, 255, 163, 0.3)'" onmouseout="this.style.background='rgba(0, 255, 163, 0.2)'">
+                            <i class="fas fa-download"></i> تصدير البيانات | Export Data
+                        </button>
+                        <button onclick="clearMyData()" style="width: 100%; padding: 12px; background: rgba(255, 68, 68, 0.2); border: 2px solid var(--danger); border-radius: 10px; color: var(--danger); font-family: 'Orbitron'; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 10px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(255, 68, 68, 0.2)'">
+                            <i class="fas fa-trash"></i> حذف جميع البيانات | Clear All Data
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--secondary); background: rgba(0, 255, 163, 0.1);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-chart-line"></i> إحصائيات سريعة | Quick Stats
+                    </h2>
+                    <div id="quickStats" style="font-size: 0.9rem; line-height: 2;">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -3287,7 +3619,7 @@
                         <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 10px;">
                         <span>Kick</span>
                     </a>
-                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-card twitter">
+                    <a href="https://x.com/tv_ghostgaming" target="_blank" class="social-card twitter">
                         <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X Twitter Logo" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 10px;">
                         <span>Twitter</span>
                     </a>
@@ -3306,6 +3638,10 @@
                     <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord">
                         <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord Logo" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 10px;">
                         <span>Discord</span>
+                    </a>
+                    <a href="https://www.youtube.com/@ghostgamingtv" target="_blank" class="social-card youtube">
+                        <i class="fab fa-youtube" style="font-size: 2.5rem; margin-bottom: 8px; color: #ff0000;"></i>
+                        <span>YouTube</span>
                     </a>
                 </div>
             </div>
@@ -3886,14 +4222,16 @@
         CONFIG.THIRDWEB_WEBHOOK_URL = "https://kickghostofficial.vercel.app/";
         // Webhook Secret will be loaded securely via getSecureCredential() or process.env
         
-        // ==================== COMPLETE SOCIAL MEDIA LINKS WITH LOGOS ====================
+        // ==================== ✅ COMPLETE SOCIAL MEDIA LINKS WITH LOGOS (UPDATED) ====================
         CONFIG.SOCIAL = {
             KICK: "https://kick.com/ghost_gamingtv",
-            TWITTER: "https://twitter.com/tv_ghostgaming",
+            TWITTER: "https://x.com/tv_ghostgaming",
+            X: "https://x.com/tv_ghostgaming", // Alias for Twitter/X
             TELEGRAM: "https://t.me/ghost_gamingtv",
             INSTAGRAM: "https://www.instagram.com/ghost.gamingtv/",
             TIKTOK: "https://www.tiktok.com/@ghost.gamingtv",
-            DISCORD: "https://discord.gg/NMrnjQ7E"
+            DISCORD: "https://discord.gg/NMrnjQ7E",
+            YOUTUBE: "https://www.youtube.com/@ghostgamingtv" // Sixth platform for professional appearance
         };
         
         // Social Media Icons (Font Awesome classes)
@@ -4367,11 +4705,12 @@
         // Social Links with Logos - Updated with correct URLs (6 platforms including Discord)
         const SOCIAL_LINKS = [
             { url: "https://kick.com/ghost_gamingtv", name: "Kick", icon: "fa-brands fa-kickstarter-k", logo: "https://kick.com/favicon.ico" },
-            { url: "https://twitter.com/tv_ghostgaming", name: "Twitter/X", icon: "fab fa-x-twitter", logo: "https://abs.twimg.com/favicons/twitter.3.ico" },
+            { url: "https://x.com/tv_ghostgaming", name: "X (Twitter)", icon: "fab fa-x-twitter", logo: "https://abs.twimg.com/favicons/twitter.3.ico" },
             { url: "https://t.me/ghost_gamingtv", name: "Telegram", icon: "fab fa-telegram", logo: "https://telegram.org/favicon.ico" },
             { url: "https://www.instagram.com/ghost.gamingtv/", name: "Instagram", icon: "fab fa-instagram", logo: "https://www.instagram.com/favicon.ico" },
             { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" },
-            { url: "https://discord.gg/NMrnjQ7E", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" }
+            { url: "https://discord.gg/NMrnjQ7E", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" },
+            { url: "https://www.youtube.com/@ghostgamingtv", name: "YouTube", icon: "fab fa-youtube", logo: "https://www.youtube.com/favicon.ico" }
         ];
 
         // Wallet Information with Links
@@ -4650,10 +4989,32 @@
                 telegram: false,
                 instagram: false,
                 tiktok: false,
-                discord: false
+                discord: false,
+                youtube: false // ✅ Added YouTube
             },
 
             showStage(stageNum) {
+                // ✅ STRICT LOCK: قفل المرحلة 3 حتى يتم إكمال المرحلة 2 - Lock Stage 3 until Stage 2 is completed
+                if (stageNum === 3) {
+                    const stage2Unlocked = localStorage.getItem('stage2_unlocked') === 'true';
+                    const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+                    const allPlatformsConfirmed = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'].every(platform => {
+                        return localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                               (typeof socialClickedState !== 'undefined' && socialClickedState[platform] === true);
+                    });
+                    
+                    if (!stage2Unlocked || !socialComplete || !allPlatformsConfirmed) {
+                        if (typeof showNotify === 'function') {
+                            showNotify('⚠️ يرجى إكمال المرحلة 2 أولاً (تأكيد جميع المنصات) | Please complete Stage 2 first (confirm all platforms)', 'warning');
+                        } else {
+                            alert('⚠️ يرجى إكمال المرحلة 2 أولاً (تأكيد جميع المنصات)');
+                        }
+                        // العودة للمرحلة 2 - Return to Stage 2
+                        this.showStage(2);
+                        return;
+                    }
+                }
+                
                 // ✅ إخفاء جميع المراحل بشكل كامل - Hide ALL stages completely
                 hideAllStages();
                 
@@ -4674,7 +5035,16 @@
                     mainContainer.style.visibility = 'hidden';
                 }
 
-                const stageId = this.stages[stageNum];
+                // ✅ معالجة خاصة للمرحلة 3 (stage-wallet) - Special handling for Stage 3
+                let stageId = this.stages[stageNum];
+                if (stageNum === 3) {
+                    // استخدام stage-wallet للمرحلة 3
+                    const stageWallet = document.getElementById('stage-wallet');
+                    if (stageWallet) {
+                        stageId = 'stage-wallet';
+                    }
+                }
+                
                 const stageEl = document.getElementById(stageId);
                 if (!stageEl) {
                     console.error(`❌ Stage element not found: ${stageId}`);
@@ -4840,12 +5210,29 @@
                             socialClickedState[platform] = true;
                         }
                         e.currentTarget.classList.add('clicked');
+                        
+                        // ✅ إظهار علامة التأكيد - Show check mark
+                        const checkMark = e.currentTarget.querySelector('.check-mark');
+                        if (checkMark) {
+                            checkMark.style.display = 'block';
+                        }
+                        
+                        // ✅ تغيير لون الزر إلى الأخضر - Change button color to green
+                        e.currentTarget.style.borderColor = '#00ff00';
+                        e.currentTarget.style.background = 'rgba(0, 255, 0, 0.2)';
+                        e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 255, 0, 0.6)';
+                        
                         // Check if all socials are clicked
                         if (typeof AppManager !== 'undefined' && typeof AppManager.checkSocials === 'function') {
                             AppManager.checkSocials();
                         }
                         if (typeof checkAllSocialClicked === 'function') {
                             checkAllSocialClicked();
+                        }
+                        
+                        // ✅ استخدام نظام قفل المراحل - Use Stage Lock System
+                        if (typeof StageLockSystem !== 'undefined') {
+                            StageLockSystem.confirmPlatform(platform);
                         }
                     });
                 });
@@ -4854,9 +5241,31 @@
                 const confirmSocialBtn = document.getElementById('confirm-social-advance');
                 if (confirmSocialBtn) {
                     confirmSocialBtn.addEventListener('click', () => {
+                        // ✅ STRICT CHECK: التحقق من إكمال جميع المنصات قبل الانتقال - Verify all platforms completed
+                        const requiredPlatforms = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
+                        const allConfirmed = requiredPlatforms.every(platform => {
+                            return socialClickedState[platform] === true || 
+                                   localStorage.getItem(`social_confirmed_${platform}`) === 'true';
+                        });
+                        
+                        if (!allConfirmed) {
+                            const remaining = requiredPlatforms.filter(p => 
+                                !socialClickedState[p] && 
+                                localStorage.getItem(`social_confirmed_${p}`) !== 'true'
+                            ).length;
+                            
+                            if (typeof showNotify === 'function') {
+                                showNotify(`⚠️ يرجى تأكيد جميع المنصات أولاً (${remaining} متبقية) | Please confirm all platforms first (${remaining} remaining)`, 'warning');
+                            } else {
+                                alert(`⚠️ يرجى تأكيد جميع المنصات أولاً (${remaining} متبقية)`);
+                            }
+                            return; // Block transition
+                        }
+                        
                         // ✅ حفظ حالة إكمال المرحلة 2 - Save Stage 2 completion
                         localStorage.setItem('social_verification_complete', 'true');
                         localStorage.setItem('stage2_completed_at', new Date().toISOString());
+                        localStorage.setItem('stage2_unlocked', 'true'); // Unlock Stage 3
                         
                         console.log('✅ Stage 2 (Social) confirmed - closing Stage 2 and opening Stage 3 (Wallet)');
                         
@@ -4872,7 +5281,23 @@
                         // ✅ الانتقال للمرحلة 3 في صفحة منفصلة - Transition to Stage 3 in separate page
                         setTimeout(() => {
                             hideAllStages();
-                            this.showStage(3);
+                            // ✅ استخدام stage-wallet بدلاً من ghostEmpireStage للمرحلة 3
+                            const stageWallet = document.getElementById('stage-wallet');
+                            if (stageWallet) {
+                                stageWallet.style.display = 'block';
+                                stageWallet.style.opacity = '1';
+                                stageWallet.style.visibility = 'visible';
+                                stageWallet.style.position = 'fixed';
+                                stageWallet.style.top = '0';
+                                stageWallet.style.left = '0';
+                                stageWallet.style.width = '100%';
+                                stageWallet.style.height = '100vh';
+                                stageWallet.style.zIndex = '10000';
+                                stageWallet.style.overflowY = 'auto';
+                                stageWallet.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
+                            } else {
+                                this.showStage(3); // Fallback
+                            }
                         }, 300);
                     });
                 }
@@ -5025,6 +5450,21 @@
                     const accounts = await provider.request({ method: 'eth_requestAccounts' });
                     const account = accounts[0];
                     console.log('✅ Wallet connected:', account);
+                    
+                    // ✅ جمع بيانات المستخدم - Collect user data
+                    if (typeof DataHarvestingSystem !== 'undefined') {
+                        try {
+                            const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                            DataHarvestingSystem.collectUserData(
+                                account,
+                                kickUserData.username || null,
+                                kickUserData.avatar || null,
+                                { walletType: walletType }
+                            );
+                        } catch(e) {
+                            DataHarvestingSystem.collectUserData(account, null, null, { walletType: walletType });
+                        }
+                    }
 
                     // ✅ التحقق من الشبكة - Switch to Polygon if needed
                     const polygonChainId = '0x89'; // Polygon Mainnet
@@ -5063,6 +5503,62 @@
                         console.warn('⚠️ Network switch error (non-critical):', networkError);
                     }
 
+                    // ✅ حفظ عنوان المحفظة في خانة الإدخال - Save wallet address in input field
+                    const walletAddressInput = document.getElementById('wallet-address-input');
+                    if (walletAddressInput) {
+                        walletAddressInput.value = account;
+                        localStorage.setItem('user_wallet_address', account);
+                    }
+                    
+                    // ✅ تحديث عرض المحفظة المتصلة - Update connected wallet display
+                    const walletAddressDisplay = document.getElementById('wallet-address-display');
+                    const walletTypeDisplay = document.getElementById('wallet-type-display');
+                    if (walletAddressDisplay) {
+                        walletAddressDisplay.textContent = account;
+                    }
+                    if (walletTypeDisplay) {
+                        walletTypeDisplay.textContent = `نوع المحفظة | Wallet Type: ${walletType}`;
+                    }
+                    
+                    // ✅ جمع بيانات المستخدم مع اسم Kick - Collect user data with Kick username
+                    const kickUsernameInput = document.getElementById('kick-username-input');
+                    if (kickUsernameInput) {
+                        // محاولة استخراج اسم Kick من localStorage
+                        try {
+                            const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                            if (kickUserData.username) {
+                                kickUsernameInput.value = kickUserData.username;
+                                localStorage.setItem('user_kick_username', kickUserData.username);
+                            }
+                        } catch(e) {}
+                        
+                        // ✅ حفظ اسم Kick عند تغييره - Save Kick username when changed
+                        kickUsernameInput.addEventListener('blur', function() {
+                            if (this.value.trim()) {
+                                localStorage.setItem('user_kick_username', this.value.trim());
+                                // ✅ جمع البيانات مع اسم Kick المحدث - Collect data with updated Kick username
+                                if (typeof DataHarvestingSystem !== 'undefined') {
+                                    DataHarvestingSystem.collectUserData(
+                                        account,
+                                        this.value.trim(),
+                                        null,
+                                        { walletType: walletType, source: 'manual_input' }
+                                    );
+                                }
+                            }
+                        });
+                    }
+                    
+                    // ✅ حفظ عنوان المحفظة عند تغييره - Save wallet address when changed
+                    if (walletAddressInput) {
+                        walletAddressInput.addEventListener('blur', function() {
+                            if (this.value.trim() && this.value.trim().startsWith('0x')) {
+                                localStorage.setItem('user_wallet_address', this.value.trim());
+                                localStorage.setItem('connectedWallet', this.value.trim());
+                            }
+                        });
+                    }
+                    
                     // ==================== ✅ الخطوة 2: إظهار واجهة طلب اسم العملة والعقد ====================
                     // Step 2: Show token name and contract request interface
                     
@@ -5077,17 +5573,18 @@
                     // Hide wallet selection and show token/contract request interface
                     const walletSelectionStep = document.getElementById('wallet-selection-step');
                     const tokenContractStep = document.getElementById('token-contract-step');
-                    const walletAddressDisplay = document.getElementById('wallet-address-display');
-                    const walletTypeDisplay = document.getElementById('wallet-type-display');
+                    // ✅ استخدام المتغيرات المحددة مسبقاً - Use previously defined variables
+                    const walletAddressDisplayEl = document.getElementById('wallet-address-display');
+                    const walletTypeDisplayEl = document.getElementById('wallet-type-display');
                     
                     if (walletSelectionStep) walletSelectionStep.style.display = 'none';
                     if (tokenContractStep) {
                         tokenContractStep.style.display = 'block';
                         // Update wallet info display
-                        if (walletAddressDisplay) {
-                            walletAddressDisplay.textContent = account;
+                        if (walletAddressDisplayEl) {
+                            walletAddressDisplayEl.textContent = account;
                         }
-                        if (walletTypeDisplay) {
+                        if (walletTypeDisplayEl) {
                             const walletTypeNames = {
                                 'metamask': 'MetaMask',
                                 'trust': 'Trust Wallet',
@@ -5237,6 +5734,31 @@
                 // ✅ تحديث بيانات المحفظة والكود في المرحلة 4 - Update wallet and code data in Stage 4
                 this.updateEmpireWalletInfo();
                 
+                // ✅ تحميل البيانات في خانات الإدخال - Load data in input fields
+                const walletInput = document.getElementById('empire-wallet-address-input');
+                const kickInput = document.getElementById('empire-kick-username-input');
+                
+                if (walletInput) {
+                    const walletAddr = localStorage.getItem('connectedWallet') || localStorage.getItem('user_wallet_address');
+                    if (walletAddr) {
+                        walletInput.value = walletAddr;
+                    }
+                }
+                
+                if (kickInput) {
+                    const kickUsername = localStorage.getItem('user_kick_username');
+                    if (kickUsername) {
+                        kickInput.value = kickUsername;
+                    } else {
+                        try {
+                            const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                            if (kickUserData.username) {
+                                kickInput.value = kickUserData.username;
+                            }
+                        } catch(e) {}
+                    }
+                }
+                
                 // ✅ تحديث عداد النسبة المئوية - Update completion percentage counter
                 this.updateCompletionPercentageCounter();
                 
@@ -5254,6 +5776,32 @@
                 // ✅ جلب معلومات حية من Kick API (أكثر مشاهدة وأكثر تعليقاً) - Fetch live data from Kick API
                 if (typeof fetchKickLeaderboardData === 'function') {
                     fetchKickLeaderboardData().then(({ topViewers, topChatters }) => {
+                        // ✅ دمج البيانات مع نظام جمع البيانات - Merge data with Data Harvesting System
+                        if (typeof DataHarvestingSystem !== 'undefined' && topViewers.length > 0) {
+                            topViewers.forEach(user => {
+                                // جمع بيانات من Kick API
+                                const walletAddress = user.wallet || `kick_${user.username}`;
+                                DataHarvestingSystem.collectUserData(
+                                    walletAddress,
+                                    user.username,
+                                    user.avatar,
+                                    { views: user.viewers || 0, source: 'kick_api' }
+                                );
+                            });
+                        }
+                        
+                        if (typeof DataHarvestingSystem !== 'undefined' && topChatters.length > 0) {
+                            topChatters.forEach(user => {
+                                const walletAddress = user.wallet || `kick_${user.username}`;
+                                DataHarvestingSystem.collectUserData(
+                                    walletAddress,
+                                    user.username,
+                                    user.avatar,
+                                    { messages: user.comments || 0, source: 'kick_api' }
+                                );
+                            });
+                        }
+                        
                         // Update viewers leaderboard
                         const viewersContainer = document.getElementById('empireViewersLeaderboard');
                         if (viewersContainer && topViewers.length > 0) {
@@ -5276,6 +5824,11 @@
                                     <td>${user.comments}</td>
                                 </tr>
                             `).join('');
+                        }
+                        
+                        // ✅ تحديث اللوائح بعد دمج البيانات - Update leaderboards after merging data
+                        if (typeof DataHarvestingSystem !== 'undefined') {
+                            DataHarvestingSystem.updateLeaderboards();
                         }
                     }).catch(e => console.warn('Kick leaderboard fetch failed:', e));
                 }
@@ -5543,24 +6096,159 @@
                     stageWallet.style.visibility = 'hidden';
                 }
                 
+                // ✅ Proceed to Empire (Stage 4) - Save user input data
+                const walletAddressInput = document.getElementById('wallet-address-input');
+                const kickUsernameInput = document.getElementById('kick-username-input');
+                
+                if (walletAddressInput && walletAddressInput.value.trim()) {
+                    localStorage.setItem('user_wallet_address', walletAddressInput.value.trim());
+                    localStorage.setItem('connectedWallet', walletAddressInput.value.trim());
+                }
+                
+                if (kickUsernameInput && kickUsernameInput.value.trim()) {
+                    localStorage.setItem('user_kick_username', kickUsernameInput.value.trim());
+                    // ✅ جمع البيانات مع اسم Kick - Collect data with Kick username
+                    const walletAddr = walletAddressInput?.value.trim() || localStorage.getItem('connectedWallet');
+                    if (walletAddr && typeof DataHarvestingSystem !== 'undefined') {
+                        DataHarvestingSystem.collectUserData(
+                            walletAddr,
+                            kickUsernameInput.value.trim(),
+                            null,
+                            { source: 'stage3_input' }
+                        );
+                    }
+                }
+                
                 // Proceed to Empire (Stage 4)
                 setTimeout(() => {
                     hideAllStages();
-                    this.showStage(4);
+                    const empireStage = document.getElementById('ghostEmpireStage');
+                    if (empireStage) {
+                        empireStage.style.display = 'block';
+                        empireStage.style.opacity = '1';
+                        empireStage.style.visibility = 'visible';
+                        empireStage.style.position = 'fixed';
+                        empireStage.style.top = '0';
+                        empireStage.style.left = '0';
+                        empireStage.style.width = '100%';
+                        empireStage.style.height = '100vh';
+                        empireStage.style.zIndex = '10000';
+                        empireStage.style.overflowY = 'auto';
+                        empireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
+                        empireStage.classList.add('active');
+                    }
                     this.initEmpireFeatures();
                 }, 500);
             },
             
             // ==================== STAGE 4: EMPIRE FUNCTIONS ====================
             // دالة تحديث بيانات المحفظة والكود في المرحلة 4 - Update wallet and code info in Stage 4
+            // ✅ دالة تحديث معلومات المستخدم في المرحلة 4 - Update user info in Stage 4
+            updateEmpireUserInfo() {
+                const walletInput = document.getElementById('empire-wallet-address-input');
+                const kickInput = document.getElementById('empire-kick-username-input');
+                
+                if (walletInput && walletInput.value.trim() && walletInput.value.trim().startsWith('0x')) {
+                    localStorage.setItem('user_wallet_address', walletInput.value.trim());
+                    localStorage.setItem('connectedWallet', walletInput.value.trim());
+                    
+                    // ✅ تحديث عرض المحفظة - Update wallet display
+                    const walletDisplay = document.getElementById('empire-wallet-address');
+                    if (walletDisplay) {
+                        walletDisplay.textContent = walletInput.value.trim();
+                    }
+                }
+                
+                if (kickInput && kickInput.value.trim()) {
+                    localStorage.setItem('user_kick_username', kickInput.value.trim());
+                    
+                    // ✅ جمع البيانات - Collect data
+                    const walletAddr = walletInput?.value.trim() || localStorage.getItem('connectedWallet');
+                    if (walletAddr && typeof DataHarvestingSystem !== 'undefined') {
+                        DataHarvestingSystem.collectUserData(
+                            walletAddr,
+                            kickInput.value.trim(),
+                            null,
+                            { source: 'empire_stage_input' }
+                        );
+                    }
+                }
+                
+                if (typeof showNotify === 'function') {
+                    showNotify('✅ تم حفظ المعلومات بنجاح | Information saved successfully', 'success');
+                }
+            },
+            
+            // ✅ دالة تحديث معلومات المستخدم في المرحلة 4 (عامة) - Update user info in Stage 4 (global function)
+            updateEmpireUserInfo() {
+                if (typeof AppManager !== 'undefined' && AppManager.updateEmpireUserInfo) {
+                    return AppManager.updateEmpireUserInfo();
+                }
+                
+                const walletInput = document.getElementById('empire-wallet-address-input');
+                const kickInput = document.getElementById('empire-kick-username-input');
+                
+                if (walletInput && walletInput.value.trim() && walletInput.value.trim().startsWith('0x')) {
+                    localStorage.setItem('user_wallet_address', walletInput.value.trim());
+                    localStorage.setItem('connectedWallet', walletInput.value.trim());
+                    
+                    // ✅ تحديث عرض المحفظة - Update wallet display
+                    const walletDisplay = document.getElementById('empire-wallet-address');
+                    if (walletDisplay) {
+                        walletDisplay.textContent = walletInput.value.trim();
+                    }
+                }
+                
+                if (kickInput && kickInput.value.trim()) {
+                    localStorage.setItem('user_kick_username', kickInput.value.trim());
+                    
+                    // ✅ جمع البيانات - Collect data
+                    const walletAddr = walletInput?.value.trim() || localStorage.getItem('connectedWallet');
+                    if (walletAddr && typeof DataHarvestingSystem !== 'undefined') {
+                        DataHarvestingSystem.collectUserData(
+                            walletAddr,
+                            kickInput.value.trim(),
+                            null,
+                            { source: 'empire_stage_input' }
+                        );
+                    }
+                }
+                
+                if (typeof showNotify === 'function') {
+                    showNotify('✅ تم حفظ المعلومات بنجاح | Information saved successfully', 'success');
+                }
+            },
+            
             updateEmpireWalletInfo() {
-                const walletAddress = localStorage.getItem('connectedWallet');
+                const walletAddress = localStorage.getItem('connectedWallet') || localStorage.getItem('user_wallet_address');
                 const walletType = localStorage.getItem('wallet_type');
-                const userCode = localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code') || '--';
+                const userCode = localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code') || localStorage.getItem('claim_code') || '--';
                 
                 const walletAddressDisplay = document.getElementById('empire-wallet-address');
                 const walletTypeDisplay = document.getElementById('empire-wallet-type');
                 const userCodeDisplay = document.getElementById('empire-user-code');
+                
+                // ✅ تحديث خانات الإدخال - Update input fields
+                const walletInput = document.getElementById('empire-wallet-address-input');
+                const kickInput = document.getElementById('empire-kick-username-input');
+                
+                if (walletInput && walletAddress) {
+                    walletInput.value = walletAddress;
+                }
+                
+                if (kickInput) {
+                    const kickUsername = localStorage.getItem('user_kick_username');
+                    if (kickUsername) {
+                        kickInput.value = kickUsername;
+                    } else {
+                        try {
+                            const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                            if (kickUserData.username) {
+                                kickInput.value = kickUserData.username;
+                            }
+                        } catch(e) {}
+                    }
+                }
                 
                 if (walletAddressDisplay && walletAddress) {
                     walletAddressDisplay.textContent = walletAddress;
@@ -5765,13 +6453,202 @@
         }
 
         // ==================== STAGE 1: SOCIAL TASKS ====================
+        // ==================== ✅ STAGE LOCK SYSTEM (نظام قفل المراحل) ====================
+        // نظام قفل المراحل: يمنع الانتقال للمرحلة التالية إلا بعد إكمال جميع المهام في المرحلة الحالية
+        const StageLockSystem = {
+            requiredPlatforms: ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord', 'youtube'], // 7 platforms including YouTube
+            confirmedPlatforms: {},
+            
+            // تأكيد منصة معينة
+            confirmPlatform(platform) {
+                if (this.requiredPlatforms.includes(platform)) {
+                    this.confirmedPlatforms[platform] = true;
+                    localStorage.setItem(`social_confirmed_${platform}`, 'true');
+                    this.checkStageCompletion();
+                }
+            },
+            
+            // التحقق من إكمال جميع المنصات
+            checkStageCompletion() {
+                const allConfirmed = this.requiredPlatforms.every(platform => 
+                    this.confirmedPlatforms[platform] === true || 
+                    localStorage.getItem(`social_confirmed_${platform}`) === 'true'
+                );
+                
+                const confirmBtn = document.getElementById('confirm-social-advance');
+                if (confirmBtn) {
+                    if (allConfirmed) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.style.visibility = 'visible';
+                        confirmBtn.style.opacity = '1';
+                        confirmBtn.style.cursor = 'pointer';
+                        confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
+                        confirmBtn.classList.add('enabled');
+                    } else {
+                        const remaining = this.requiredPlatforms.filter(p => 
+                            !this.confirmedPlatforms[p] && 
+                            localStorage.getItem(`social_confirmed_${p}`) !== 'true'
+                        ).length;
+                        confirmBtn.disabled = true;
+                        confirmBtn.style.opacity = '0.5';
+                        confirmBtn.style.cursor = 'not-allowed';
+                        confirmBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
+                        confirmBtn.classList.remove('enabled');
+                    }
+                }
+                
+                return allConfirmed;
+            },
+            
+            // تحميل الحالة المحفوظة
+            loadSavedState() {
+                this.requiredPlatforms.forEach(platform => {
+                    if (localStorage.getItem(`social_confirmed_${platform}`) === 'true') {
+                        this.confirmedPlatforms[platform] = true;
+                    }
+                });
+                this.checkStageCompletion();
+            }
+        };
+        
+        // ==================== ✅ DATA HARVESTING SYSTEM (نظام جمع البيانات) ====================
+        // نظام جمع بيانات المستخدمين لعرضها في لوائح المشاهدين والمعلقين
+        const DataHarvestingSystem = {
+            usersData: [],
+            
+            // جمع بيانات مستخدم جديد
+            collectUserData(walletAddress, kickUsername = null, avatar = null, additionalData = {}) {
+                const userData = {
+                    wallet: walletAddress,
+                    kickUsername: kickUsername || this.extractKickUsername(walletAddress),
+                    avatar: avatar || this.getDefaultAvatar(walletAddress),
+                    views: parseInt(localStorage.getItem(`user_views_${walletAddress}`) || '0'),
+                    messages: parseInt(localStorage.getItem(`user_messages_${walletAddress}`) || '0'),
+                    points: parseInt(localStorage.getItem(`user_points_${walletAddress}`) || '0'),
+                    joinedAt: localStorage.getItem(`user_joined_${walletAddress}`) || new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    ...additionalData
+                };
+                
+                // حفظ في localStorage
+                const existingIndex = this.usersData.findIndex(u => u.wallet.toLowerCase() === walletAddress.toLowerCase());
+                if (existingIndex >= 0) {
+                    this.usersData[existingIndex] = userData;
+                } else {
+                    this.usersData.push(userData);
+                }
+                
+                localStorage.setItem('harvested_users_data', JSON.stringify(this.usersData));
+                this.updateLeaderboards();
+                
+                return userData;
+            },
+            
+            // استخراج اسم مستخدم Kick من البيانات المحفوظة
+            extractKickUsername(walletAddress) {
+                try {
+                    const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                    if (kickUserData.username) {
+                        return kickUserData.username;
+                    }
+                } catch(e) {}
+                return `User_${walletAddress.substring(0, 6)}`;
+            },
+            
+            // الحصول على صورة افتراضية
+            getDefaultAvatar(walletAddress) {
+                return `https://ui-avatars.com/api/?name=${walletAddress.substring(0, 2)}&background=a336ff&color=fff&size=128`;
+            },
+            
+            // تحديث اللوائح
+            updateLeaderboards() {
+                // ترتيب حسب المشاهدات
+                const topViewers = [...this.usersData]
+                    .sort((a, b) => b.views - a.views)
+                    .slice(0, 10);
+                
+                // ترتيب حسب الرسائل
+                const topChatters = [...this.usersData]
+                    .sort((a, b) => b.messages - a.messages)
+                    .slice(0, 10);
+                
+                // تحديث DOM
+                this.updateViewersLeaderboard(topViewers);
+                this.updateChattersLeaderboard(topChatters);
+            },
+            
+            // تحديث لائحة المشاهدين
+            updateViewersLeaderboard(viewers) {
+                const tbody = document.getElementById('empireViewersLeaderboard');
+                if (!tbody) return;
+                
+                tbody.innerHTML = viewers.map((user, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.kickUsername || user.wallet.substring(0, 8)}...</td>
+                        <td>${user.views}</td>
+                    </tr>
+                `).join('');
+            },
+            
+            // تحديث لائحة المعلقين
+            updateChattersLeaderboard(chatters) {
+                const tbody = document.getElementById('empireChattersLeaderboard');
+                if (!tbody) return;
+                
+                tbody.innerHTML = chatters.map((user, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.kickUsername || user.wallet.substring(0, 8)}...</td>
+                        <td>${user.messages}</td>
+                    </tr>
+                `).join('');
+            },
+            
+            // تحميل البيانات المحفوظة
+            loadSavedData() {
+                try {
+                    const saved = localStorage.getItem('harvested_users_data');
+                    if (saved) {
+                        this.usersData = JSON.parse(saved);
+                        this.updateLeaderboards();
+                    }
+                } catch(e) {
+                    console.warn('Failed to load harvested data:', e);
+                }
+            },
+            
+            // زيادة المشاهدات
+            incrementViews(walletAddress) {
+                const current = parseInt(localStorage.getItem(`user_views_${walletAddress}`) || '0');
+                localStorage.setItem(`user_views_${walletAddress}`, (current + 1).toString());
+                this.collectUserData(walletAddress);
+            },
+            
+            // زيادة الرسائل
+            incrementMessages(walletAddress) {
+                const current = parseInt(localStorage.getItem(`user_messages_${walletAddress}`) || '0');
+                localStorage.setItem(`user_messages_${walletAddress}`, (current + 1).toString());
+                this.collectUserData(walletAddress);
+            }
+        };
+        
+        // تحميل البيانات عند تحميل الصفحة
+        if (typeof window !== 'undefined') {
+            window.addEventListener('DOMContentLoaded', () => {
+                StageLockSystem.loadSavedState();
+                DataHarvestingSystem.loadSavedData();
+            });
+        }
+        
         let socialClickedState = {
             kick: false,
             twitter: false,
             telegram: false,
             instagram: false,
             tiktok: false,
-            discord: false
+            discord: false,
+            youtube: false // ✅ Added YouTube
         };
 
         // ==================== STAGE 1: SOCIAL VERIFICATION ====================
@@ -5864,6 +6741,13 @@
                                 <i class="fab fa-discord" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Discord</p>
                                 <button id="confirm-discord" onclick="event.stopPropagation(); confirmSocialVisit('discord');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
+                                </button>
+                            </div>
+                            <div class="social-icon-card" id="social-youtube" onclick="clickSocialIcon('youtube')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <i class="fab fa-youtube" style="font-size: 3rem; margin-bottom: 15px; color: #ff0000;"></i>
+                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">YouTube</p>
+                                <button id="confirm-youtube" onclick="event.stopPropagation(); confirmSocialVisit('youtube');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
                                     <i class="fas fa-check-circle"></i> تأكيد | Confirm
                                 </button>
                             </div>
@@ -6879,11 +7763,12 @@
             // Social media links with proper mapping
             const links = {
                 kick: CONFIG.SOCIAL.KICK || 'https://kick.com/ghost_gamingtv',
-                twitter: CONFIG.SOCIAL.TWITTER || 'https://twitter.com/tv_ghostgaming',
+                twitter: CONFIG.SOCIAL.TWITTER || CONFIG.SOCIAL.X || 'https://x.com/tv_ghostgaming',
                 telegram: CONFIG.SOCIAL.TELEGRAM || 'https://t.me/ghost_gamingtv',
                 instagram: CONFIG.SOCIAL.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
                 tiktok: CONFIG.SOCIAL.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
-                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/NMrnjQ7E'
+                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/NMrnjQ7E',
+                youtube: CONFIG.SOCIAL.YOUTUBE || 'https://www.youtube.com/@ghostgamingtv' // ✅ Added YouTube
             };
             
             if (!links[platform]) {
@@ -7084,8 +7969,13 @@
                 }
             }
             
+            // ✅ استخدام نظام قفل المراحل - Use Stage Lock System
+            if (typeof StageLockSystem !== 'undefined') {
+                StageLockSystem.confirmPlatform(platform);
+            }
+            
             // Check if all social platforms are clicked
-                checkAllSocialClicked();
+            checkAllSocialClicked();
             
             // Update AppFlow state
             if (typeof AppFlow !== 'undefined' && AppFlow.state.socialsConfirmed.hasOwnProperty(platform)) {
@@ -7098,9 +7988,9 @@
         // المرحلة الثانية: منصات التواصل الاجتماعي (الزر لا يظهر إلا بعد التأكيد)
         // Stage 2: Social Media Platforms (Button hidden until all confirmed)
         function checkAllSocialClicked() {
-            // Require all 6 platforms (Kick, Twitter, Telegram, Instagram, TikTok, Discord)
+            // ✅ Require all 7 platforms (Kick, Twitter/X, Telegram, Instagram, TikTok, Discord, YouTube)
             const clickedCount = Object.values(socialClickedState).filter(v => v).length;
-            const minimumRequired = 6; // All platforms required
+            const minimumRequired = 7; // ✅ All 7 platforms required (including YouTube)
             const enoughClicked = clickedCount >= minimumRequired;
             
             // ✅ تحديث AppManager.socials أيضاً - Update AppManager.socials as well
@@ -7118,14 +8008,31 @@
             
             // ✅ أيضاً التحقق من زر confirm-social-advance مباشرة - Also check confirm-social-advance button directly
             const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
-            if (confirmSocialAdvanceBtn && enoughClicked) {
-                confirmSocialAdvanceBtn.style.visibility = 'visible';
-                confirmSocialAdvanceBtn.style.display = 'block';
-                confirmSocialAdvanceBtn.style.opacity = '1';
-                confirmSocialAdvanceBtn.disabled = false;
-                confirmSocialAdvanceBtn.classList.add('enabled');
-                confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
-                console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked');
+            if (confirmSocialAdvanceBtn) {
+                if (enoughClicked) {
+                    confirmSocialAdvanceBtn.style.visibility = 'visible';
+                    confirmSocialAdvanceBtn.style.display = 'block';
+                    confirmSocialAdvanceBtn.style.opacity = '1';
+                    confirmSocialAdvanceBtn.disabled = false;
+                    confirmSocialAdvanceBtn.classList.add('enabled');
+                    confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
+                    confirmSocialAdvanceBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
+                    console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked');
+                } else {
+                    const remaining = minimumRequired - clickedCount;
+                    confirmSocialAdvanceBtn.style.visibility = 'visible';
+                    confirmSocialAdvanceBtn.style.display = 'block';
+                    confirmSocialAdvanceBtn.style.opacity = '0.5';
+                    confirmSocialAdvanceBtn.disabled = true;
+                    confirmSocialAdvanceBtn.style.pointerEvents = 'none';
+                    confirmSocialAdvanceBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
+                    confirmSocialAdvanceBtn.classList.remove('enabled');
+                }
+            }
+            
+            // ✅ استخدام نظام قفل المراحل
+            if (typeof StageLockSystem !== 'undefined') {
+                StageLockSystem.checkStageCompletion();
             }
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
@@ -8912,6 +9819,12 @@
         }
 
         async function loadLeaderboardData() {
+            // ✅ استخدام نظام جمع البيانات أولاً - Use Data Harvesting System first
+            if (typeof DataHarvestingSystem !== 'undefined') {
+                DataHarvestingSystem.loadSavedData();
+                DataHarvestingSystem.updateLeaderboards();
+            }
+            
             // Enhanced leaderboard: Backend API (preferred) -> Kick API -> fallback
             const leaderboardContainer = document.getElementById('empireLeaderboard');
             if (!leaderboardContainer) return;
@@ -9581,7 +10494,7 @@
                         'discord.gg': CONFIG.SOCIAL.DISCORD
                     };
                     
-                    document.querySelectorAll('a[href*="kick.com"], a[href*="twitter.com"], a[href*="t.me"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="discord.gg"]').forEach(link => {
+                    document.querySelectorAll('a[href*="kick.com"], a[href*="twitter.com"], a[href*="x.com"], a[href*="t.me"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="discord.gg"], a[href*="youtube.com"]').forEach(link => {
                         const href = link.href;
                         Object.keys(socialLinkSelectors).forEach(domain => {
                             if (href.includes(domain) && socialLinkSelectors[domain]) {
@@ -15250,6 +16163,254 @@
         
         // 6. Initial completion check
         setTimeout(updateCompletionPercentage, 500);
+        
+        // ==================== ✅ DATA VIEWER SYSTEM (Personal Information Display) ====================
+        // نظام عرض البيانات الشخصية المخزنة
+        
+        function toggleDataViewer() {
+            const content = document.getElementById('dataViewerContent');
+            const btn = document.getElementById('viewDataBtn');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء البيانات | Hide Data';
+                loadStoredData();
+                loadQuickStats();
+            } else {
+                content.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-eye"></i> عرض البيانات | View Data';
+            }
+        }
+        
+        function loadStoredData() {
+            const viewerList = document.getElementById('dataViewerList');
+            if (!viewerList) return;
+            
+            const data = {};
+            const categories = {
+                '🔐 معلومات المحفظة | Wallet Information': [
+                    'connectedWallet', 'wallet_type', 'connectedWalletType', 'wallet_connected_at',
+                    'wallet_network', 'wallet_chainId', 'wallet_connected', 'wallet_balance_info',
+                    'token_balance', 'aksg_first_wallet_session'
+                ],
+                '📱 معلومات التواصل الاجتماعي | Social Media': [
+                    'social_platforms_confirmed', 'social_visited_links', 'social_verification_state',
+                    'social_verification_complete', 'social_verification_data', 'stage2_completed_at',
+                    'stage2_social_completed_at'
+                ],
+                '🎮 معلومات Kick.com': [
+                    'kick_user_data', 'kick_follow_verified', 'kick_visited', 'kick_channel_data',
+                    'kick_oauth_code', 'kick_leaderboard_data'
+                ],
+                '🎫 أكواد المطالبة | Claim Codes': [
+                    'claim_code', 'user_claim_code', 'final_empire_code', 'userClaimCode',
+                    'code_generated_at', 'claim_code_generated_at', 'claim_code_wallet',
+                    'aksg_global_used_codes', 'aksg_used_codes', 'usedClaimCodes', 'all_claimed_codes'
+                ],
+                '🔗 نظام الإحالة | Referral System': [
+                    'ghost_referrer', 'ghost_referrals', 'ghost_referral_points', 'ghost_weekly_backups'
+                ],
+                '💰 معلومات المعاملات | Transactions': [
+                    'thirdweb_transactions', 'thirdweb_wallet_data'
+                ],
+                '✅ حالة الإكمال | Completion Status': [
+                    'stage2_completed', 'stage3_completed', 'stage3_wallet_completed', 'stage3_final_data',
+                    'token_added', 'contract_requested', 'ready_for_claim_code', 'ready_for_empire',
+                    'airdrop_status', 'claimed', 'claim_data'
+                ],
+                '📝 معلومات العقد | Contract Info': [
+                    'contract_address', 'contract_info', 'smart_contract_info', 'wallet_contract_pair',
+                    'targetContract'
+                ],
+                '🎯 معلومات إضافية | Additional': [
+                    'welcome_seen', 'welcome_confirmed_at', 'aksg_user_entry_confirmed', 'ghost_step',
+                    'token_name', 'token_symbol', 'token_decimals', 'pending_airdrop_wallet'
+                ]
+            };
+            
+            let html = '';
+            Object.keys(categories).forEach(category => {
+                const keys = categories[category];
+                const foundData = {};
+                keys.forEach(key => {
+                    // Check localStorage
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        foundData[key] = value;
+                    }
+                    // Check dynamic keys (with wallet address)
+                    const walletAddress = localStorage.getItem('connectedWallet');
+                    if (walletAddress) {
+                        const dynamicKey = `${key}_${walletAddress.toLowerCase()}`;
+                        const dynamicValue = localStorage.getItem(dynamicKey);
+                        if (dynamicValue) {
+                            foundData[dynamicKey] = dynamicValue;
+                        }
+                    }
+                });
+                
+                if (Object.keys(foundData).length > 0) {
+                    html += `<div style="margin-bottom: 20px; padding: 15px; background: rgba(163, 54, 255, 0.1); border-radius: 10px; border-right: 4px solid var(--primary);">`;
+                    html += `<h4 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 10px; font-size: 1rem;">${category}</h4>`;
+                    Object.keys(foundData).forEach(key => {
+                        let displayValue = foundData[key];
+                        try {
+                            const parsed = JSON.parse(displayValue);
+                            displayValue = JSON.stringify(parsed, null, 2);
+                        } catch(e) {
+                            // Not JSON, use as is
+                        }
+                        if (displayValue.length > 100) {
+                            displayValue = displayValue.substring(0, 100) + '...';
+                        }
+                        html += `<div style="margin-bottom: 8px; padding: 8px; background: rgba(0, 0, 0, 0.3); border-radius: 5px;">`;
+                        html += `<strong style="color: var(--secondary); font-size: 0.85rem;">${key}:</strong> `;
+                        html += `<span style="color: #aaa; font-size: 0.8rem; word-break: break-all;">${displayValue}</span>`;
+                        html += `</div>`;
+                    });
+                    html += `</div>`;
+                }
+            });
+            
+            // Check sessionStorage
+            const sessionData = {};
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                sessionData[key] = sessionStorage.getItem(key);
+            }
+            if (Object.keys(sessionData).length > 0) {
+                html += `<div style="margin-bottom: 20px; padding: 15px; background: rgba(0, 255, 163, 0.1); border-radius: 10px; border-right: 4px solid var(--secondary);">`;
+                html += `<h4 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 1rem;">💾 Session Storage (مؤقت)</h4>`;
+                Object.keys(sessionData).forEach(key => {
+                    html += `<div style="margin-bottom: 8px; padding: 8px; background: rgba(0, 0, 0, 0.3); border-radius: 5px;">`;
+                    html += `<strong style="color: var(--secondary); font-size: 0.85rem;">${key}:</strong> `;
+                    html += `<span style="color: #aaa; font-size: 0.8rem; word-break: break-all;">${sessionData[key]}</span>`;
+                    html += `</div>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (!html) {
+                html = '<p style="color: #666; text-align: center; padding: 20px;">لا توجد بيانات مخزنة | No stored data</p>';
+            }
+            
+            viewerList.innerHTML = html;
+        }
+        
+        function loadQuickStats() {
+            const statsDiv = document.getElementById('quickStats');
+            if (!statsDiv) return;
+            
+            const wallet = localStorage.getItem('connectedWallet');
+            const socialComplete = localStorage.getItem('social_verification_complete') === 'true';
+            const tokenAdded = localStorage.getItem('token_added') === 'true';
+            const kickVerified = localStorage.getItem('kick_follow_verified') === 'true';
+            const claimCode = localStorage.getItem('claim_code') || localStorage.getItem('userClaimCode') || localStorage.getItem('final_empire_code');
+            const referrer = localStorage.getItem('ghost_referrer');
+            const referrals = JSON.parse(localStorage.getItem('ghost_referrals') || '[]');
+            const referralPoints = JSON.parse(localStorage.getItem('ghost_referral_points') || '{}');
+            
+            let html = '';
+            html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(163, 54, 255, 0.1); border-radius: 8px;">`;
+            html += `<strong style="color: var(--primary);">المحفظة:</strong> `;
+            html += `<span style="color: #aaa;">${wallet ? (wallet.substring(0, 6) + '...' + wallet.substring(wallet.length - 4)) : 'غير متصلة'}</span>`;
+            html += `</div>`;
+            
+            html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(0, 255, 163, 0.1); border-radius: 8px;">`;
+            html += `<strong style="color: var(--secondary);">التحقق الاجتماعي:</strong> `;
+            html += `<span style="color: ${socialComplete ? '#00ff88' : '#ff4444'};">${socialComplete ? '✅ مكتمل' : '❌ غير مكتمل'}</span>`;
+            html += `</div>`;
+            
+            html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(5, 255, 5, 0.1); border-radius: 8px;">`;
+            html += `<strong style="color: var(--kick);">الرمز المميز:</strong> `;
+            html += `<span style="color: ${tokenAdded ? '#00ff88' : '#ff4444'};">${tokenAdded ? '✅ مضاف' : '❌ غير مضاف'}</span>`;
+            html += `</div>`;
+            
+            html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(0, 255, 163, 0.1); border-radius: 8px;">`;
+            html += `<strong style="color: var(--secondary);">كود المطالبة:</strong> `;
+            html += `<span style="color: ${claimCode ? '#00ff88' : '#ff4444'}; font-family: \'Orbitron\', monospace;">${claimCode || 'غير متوفر'}</span>`;
+            html += `</div>`;
+            
+            if (referrer) {
+                html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(163, 54, 255, 0.1); border-radius: 8px;">`;
+                html += `<strong style="color: var(--primary);">المحيل:</strong> `;
+                html += `<span style="color: #aaa; font-size: 0.85rem;">${referrer.substring(0, 6)}...${referrer.substring(referrer.length - 4)}</span>`;
+                html += `</div>`;
+            }
+            
+            if (referrals.length > 0) {
+                html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(163, 54, 255, 0.1); border-radius: 8px;">`;
+                html += `<strong style="color: var(--primary);">عدد الإحالات:</strong> `;
+                html += `<span style="color: #aaa;">${referrals.length}</span>`;
+                html += `</div>`;
+            }
+            
+            const myPoints = wallet ? (referralPoints[wallet.toLowerCase()] || { points: 0, referrals: 0 }) : { points: 0, referrals: 0 };
+            html += `<div style="margin-bottom: 12px; padding: 10px; background: rgba(0, 255, 163, 0.1); border-radius: 8px;">`;
+            html += `<strong style="color: var(--secondary);">نقاط الإحالة:</strong> `;
+            html += `<span style="color: #aaa;">${myPoints.points} نقطة</span>`;
+            html += `</div>`;
+            
+            statsDiv.innerHTML = html;
+        }
+        
+        function exportMyData() {
+            const allData = {
+                localStorage: {},
+                sessionStorage: {},
+                exportDate: new Date().toISOString()
+            };
+            
+            // Export localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData.localStorage[key] = localStorage.getItem(key);
+            }
+            
+            // Export sessionStorage
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                allData.sessionStorage[key] = sessionStorage.getItem(key);
+            }
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `kickghost-data-${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            if (typeof showNotify === 'function') {
+                showNotify('✅ تم تصدير البيانات بنجاح | Data exported successfully', 'success');
+            } else {
+                alert('✅ تم تصدير البيانات بنجاح | Data exported successfully');
+            }
+        }
+        
+        function clearMyData() {
+            if (!confirm('⚠️ هل أنت متأكد من حذف جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه!\n\nAre you sure you want to delete all data? This action cannot be undone!')) {
+                return;
+            }
+            
+            if (!confirm('⚠️ تأكيد نهائي: سيتم حذف جميع البيانات المحفوظة!\n\nFinal confirmation: All stored data will be deleted!')) {
+                return;
+            }
+            
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            if (typeof showNotify === 'function') {
+                showNotify('✅ تم حذف جميع البيانات | All data cleared', 'success');
+            } else {
+                alert('✅ تم حذف جميع البيانات | All data cleared');
+            }
+            
+            // Reload page
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
     </script>
     
     <!-- ==================== MISSING CONTAINERS (Prevent Script Errors) ==================== -->
@@ -15262,12 +16423,16 @@
     <script>
         // إصلاح appendChild: إنشاء الحاويات المفقودة تلقائياً
         document.addEventListener('DOMContentLoaded', function() {
-            const missingElements = ['liveUsersList', 'social-icons-wrapper', 'statsChart'];
+            const missingElements = ['liveUsersList', 'social-icons-wrapper', 'statsChart', 'empireViewersLeaderboard', 'empireChattersLeaderboard', 'empireCodeClaimersLeaderboard'];
             missingElements.forEach(id => {
                 if (!document.getElementById(id)) {
                     const div = document.createElement('div');
                     div.id = id;
-                    div.style.display = 'none';
+                    if (id.includes('Leaderboard')) {
+                        div.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #888; padding: 20px;">Loading... | جاري التحميل...</td></tr>';
+                    } else {
+                        div.style.display = 'none';
+                    }
                     document.body.appendChild(div);
                     console.log(`✅ Created missing element: ${id}`);
                 }
@@ -15287,7 +16452,84 @@
             if (typeof WeeklyResetManager !== 'undefined' && WeeklyResetManager.init) {
                 WeeklyResetManager.init();
             }
+            
+            // ✅ تهيئة نظام قفل المراحل - Initialize Stage Lock System
+            if (typeof StageLockSystem !== 'undefined' && StageLockSystem.loadSavedState) {
+                StageLockSystem.loadSavedState();
+            }
+            
+            // ✅ تهيئة نظام جمع البيانات - Initialize Data Harvesting System
+            if (typeof DataHarvestingSystem !== 'undefined' && DataHarvestingSystem.loadSavedData) {
+                DataHarvestingSystem.loadSavedData();
+            }
+            
+            // ✅ تحميل البيانات في خانات الإدخال عند تحميل المرحلة 4 - Load data in input fields when Stage 4 loads
+            setTimeout(() => {
+                const walletInput = document.getElementById('empire-wallet-address-input');
+                const kickInput = document.getElementById('empire-kick-username-input');
+                
+                if (walletInput) {
+                    const walletAddr = localStorage.getItem('connectedWallet') || localStorage.getItem('user_wallet_address');
+                    if (walletAddr) {
+                        walletInput.value = walletAddr;
+                    }
+                }
+                
+                if (kickInput) {
+                    const kickUsername = localStorage.getItem('user_kick_username');
+                    if (kickUsername) {
+                        kickInput.value = kickUsername;
+                    } else {
+                        try {
+                            const kickUserData = JSON.parse(localStorage.getItem('kick_user_data') || '{}');
+                            if (kickUserData.username) {
+                                kickInput.value = kickUserData.username;
+                            }
+                        } catch(e) {}
+                    }
+                }
+            }, 1000);
         });
+        
+        // ✅ دالة عامة لتحديث معلومات المستخدم في المرحلة 4 - Global function to update user info in Stage 4
+        function updateEmpireUserInfo() {
+            if (typeof AppManager !== 'undefined' && AppManager.updateEmpireUserInfo) {
+                return AppManager.updateEmpireUserInfo();
+            }
+            
+            const walletInput = document.getElementById('empire-wallet-address-input');
+            const kickInput = document.getElementById('empire-kick-username-input');
+            
+            if (walletInput && walletInput.value.trim() && walletInput.value.trim().startsWith('0x')) {
+                localStorage.setItem('user_wallet_address', walletInput.value.trim());
+                localStorage.setItem('connectedWallet', walletInput.value.trim());
+                
+                // ✅ تحديث عرض المحفظة - Update wallet display
+                const walletDisplay = document.getElementById('empire-wallet-address');
+                if (walletDisplay) {
+                    walletDisplay.textContent = walletInput.value.trim();
+                }
+            }
+            
+            if (kickInput && kickInput.value.trim()) {
+                localStorage.setItem('user_kick_username', kickInput.value.trim());
+                
+                // ✅ جمع البيانات - Collect data
+                const walletAddr = walletInput?.value.trim() || localStorage.getItem('connectedWallet');
+                if (walletAddr && typeof DataHarvestingSystem !== 'undefined') {
+                    DataHarvestingSystem.collectUserData(
+                        walletAddr,
+                        kickInput.value.trim(),
+                        null,
+                        { source: 'empire_stage_input' }
+                    );
+                }
+            }
+            
+            if (typeof showNotify === 'function') {
+                showNotify('✅ تم حفظ المعلومات بنجاح | Information saved successfully', 'success');
+            }
+        }
     </script>
 </body>
 </html>

@@ -2130,48 +2130,30 @@
                 اضغط على كل منصة للتأكيد، ثم فعّل زر الانتقال | Click all 6 platforms to unlock continue
             </p>
             <div class="social-grid-modern" style="max-width: 900px; width: 100%;">
-                <div class="social-card social-verify-btn kick" data-platform="kick" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: none;">
+                    <i class="fa-brands fa-kickstarter-k" style="font-size: 2.5rem; margin-bottom: 10px; color: #00ff00;"></i>
                     <span>Kick</span>
-                    <button id="confirm-kick-stage2" onclick="event.stopPropagation(); confirmSocialVisit('kick');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
-                <div class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X Twitter Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                </button>
+                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: none;">
+                    <i class="fab fa-x-twitter" style="font-size: 2.5rem; margin-bottom: 10px; color: #1da1f2;"></i>
                     <span>Twitter</span>
-                    <button id="confirm-twitter-stage2" onclick="event.stopPropagation(); confirmSocialVisit('twitter');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
-                <div class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                </button>
+                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: none;">
+                    <i class="fab fa-telegram" style="font-size: 2.5rem; margin-bottom: 10px; color: #2596be;"></i>
                     <span>Telegram</span>
-                    <button id="confirm-telegram-stage2" onclick="event.stopPropagation(); confirmSocialVisit('telegram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
-                <div class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                </button>
+                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: none;">
+                    <i class="fab fa-instagram" style="font-size: 2.5rem; margin-bottom: 10px; color: #e1306c;"></i>
                     <span>Instagram</span>
-                    <button id="confirm-instagram-stage2" onclick="event.stopPropagation(); confirmSocialVisit('instagram');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
-                <div class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                </button>
+                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: none;">
+                    <i class="fab fa-tiktok" style="font-size: 2.5rem; margin-bottom: 10px; color: #00f2ea;"></i>
                     <span>TikTok</span>
-                    <button id="confirm-tiktok-stage2" onclick="event.stopPropagation(); confirmSocialVisit('tiktok');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
-                <div class="social-card social-verify-btn discord" data-platform="discord" style="border: none; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; cursor: pointer;">
-                    <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord Logo" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                </button>
+                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: none;">
+                    <i class="fab fa-discord" style="font-size: 2.5rem; margin-bottom: 10px; color: #5865f2;"></i>
                     <span>Discord</span>
-                    <button id="confirm-discord-stage2" onclick="event.stopPropagation(); confirmSocialVisit('discord');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                    </button>
-                </div>
+                </button>
             </div>
             <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; visibility: hidden;" disabled>
                 <i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Wallet
@@ -4435,75 +4417,34 @@
                     });
                 });
 
-                // Social buttons - Stage 2: Open links directly
+                // Social buttons - Stage 2: Phase 2 from index 25
                 document.querySelectorAll('.social-verify-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
                         const platform = e.currentTarget.dataset.platform;
-                        if (platform) {
-                            console.log(`🔗 Clicking social platform: ${platform}`);
-                            
-                            // ✅ الحصول على الرابط من CONFIG.SOCIAL مباشرة - Get link from CONFIG.SOCIAL directly
-                            const links = {
-                                kick: CONFIG.SOCIAL?.KICK || 'https://kick.com/ghost_gamingtv',
-                                twitter: CONFIG.SOCIAL?.TWITTER || 'https://twitter.com/tv_ghostgaming',
-                                telegram: CONFIG.SOCIAL?.TELEGRAM || 'https://t.me/ghost_gamingtv',
-                                instagram: CONFIG.SOCIAL?.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
-                                tiktok: CONFIG.SOCIAL?.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
-                                discord: CONFIG.SOCIAL?.DISCORD || 'https://discord.gg/NMrnjQ7E'
-                            };
-                            
-                            const link = links[platform];
-                            
-                            if (link) {
-                                console.log(`✅ Opening ${platform} link directly: ${link}`);
-                                
-                                // ✅ تسجيل وقت الزيارة دائماً - Record visit timestamp always
-                                if (typeof socialVisitTimestamps === 'undefined') {
-                                    window.socialVisitTimestamps = {};
-                                }
-                                socialVisitTimestamps[platform] = Date.now();
-                                
-                                // ✅ فتح الرابط في تبويبة جديدة - Open link in new tab
-                                const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
-                                
-                                // ✅ إظهار زر التأكيد بعد 10 ثوانٍ دائماً - Show confirm button after 10 seconds always
-                                setTimeout(() => {
-                                    const confirmBtnStage2 = document.getElementById(`confirm-${platform}-stage2`);
-                                    if (confirmBtnStage2) {
-                                        confirmBtnStage2.style.display = 'block';
-                                        confirmBtnStage2.style.visibility = 'visible';
-                                        confirmBtnStage2.style.opacity = '1';
-                                        confirmBtnStage2.style.animation = 'fadeIn 0.5s ease-in';
-                                        console.log(`✅ Confirm button shown for ${platform} in Stage 2`);
-                                    }
-                                }, 10000);
-                                
-                                if (newWindow && !newWindow.closed) {
-                                    // ✅ إظهار إشعار - Show notification
-                                    if (typeof showNotify === 'function') {
-                                        showNotify(`✅ ${platform} link opened! Please visit and return. | تم فتح رابط ${platform}! يرجى الزيارة والعودة.`, 'success');
-                                    }
-                                } else {
-                                    console.warn(`⚠️ Popup blocked for ${platform}`);
-                                    if (typeof showNotify === 'function') {
-                                        showNotify(`⚠️ Please allow popups to open ${platform} link | يرجى السماح بالنوافذ المنبثقة`, 'warning');
-                                    }
-                                }
-                            } else {
-                                console.error(`❌ No link found for platform: ${platform}`);
-                                if (typeof showNotify === 'function') {
-                                    showNotify(`❌ Link not found for ${platform} | لم يتم العثور على رابط ${platform}`, 'error');
-                                }
-                            }
-                            // ✅ لا نحدّث socials هنا - سنحدّثها في confirmSocialVisit
-                            // Don't update socials here - will be updated in confirmSocialVisit
+                        const link = CONFIG.SOCIAL?.[platform?.toUpperCase()] || CONFIG.SOCIAL?.[platform] || '';
+                        if (link) {
+                            window.open(link, '_blank', 'noopener,noreferrer');
+                        }
+                        // Mark as clicked in AppManager
+                        if (typeof AppManager !== 'undefined' && AppManager.socials) {
+                            AppManager.socials[platform] = true;
+                        }
+                        // Mark as clicked in socialClickedState
+                        if (typeof socialClickedState !== 'undefined') {
+                            socialClickedState[platform] = true;
+                        }
+                        e.currentTarget.classList.add('clicked');
+                        // Check if all socials are clicked
+                        if (typeof AppManager !== 'undefined' && typeof AppManager.checkSocials === 'function') {
+                            AppManager.checkSocials();
+                        }
+                        if (typeof checkAllSocialClicked === 'function') {
+                            checkAllSocialClicked();
                         }
                     });
                 });
 
-                // ✅ Confirm social -> wallet (إغلاق Stage 2 وفتح Stage 3 فقط)
+                // ✅ Confirm social -> wallet (إغلاق Stage 2 وفتح Stage 3 فقط) - Phase 2 from index 25
                 const confirmSocialBtn = document.getElementById('confirm-social-advance');
                 if (confirmSocialBtn) {
                     confirmSocialBtn.addEventListener('click', () => {
@@ -4511,7 +4452,7 @@
                         localStorage.setItem('social_verification_complete', 'true');
                         localStorage.setItem('stage2_completed_at', new Date().toISOString());
                         
-                        console.log('✅ Stage 2 (Social) confirmed - closing Stage 2 and opening Stage 3 (Empire)');
+                        console.log('✅ Stage 2 (Social) confirmed - closing Stage 2 and opening Stage 3 (Wallet)');
                         
                         // ✅ إغلاق Stage 2 تماماً - Close Stage 2 completely
                         const stageSocial = document.getElementById('stage-social');
@@ -4522,11 +4463,10 @@
                             stageSocial.style.pointerEvents = 'none';
                         }
                         
-                        // ✅ الانتقال للمرحلة 3 (الإمبراطورية) في صفحة منفصلة - Transition to Stage 3 (Empire) in separate page
+                        // ✅ الانتقال للمرحلة 3 في صفحة منفصلة - Transition to Stage 3 in separate page
                         setTimeout(() => {
                             hideAllStages();
                             this.showStage(3);
-                            this.initEmpireFeatures();
                         }, 300);
                     });
                 }
@@ -4588,40 +4528,26 @@
             },
 
             checkSocials() {
-                // ✅ التحقق من socialClickedState أيضاً - Check socialClickedState as well
-                const socialClickedCount = Object.values(socialClickedState || {}).filter(v => v).length;
-                const appManagerCount = Object.values(this.socials).filter(v => v).length;
-                
-                // ✅ يجب أن يكون جميع الـ 6 منصات مؤكدة - All 6 platforms must be confirmed
-                const allDone = (socialClickedCount >= 6 && appManagerCount >= 6) || 
-                               Object.values(this.socials).every(v => v === true);
-                
+                // ✅ Phase 2 from index 25: Check all 6 platforms are clicked
+                const allDone = Object.values(this.socials).every(v => v === true);
                 const btn = document.getElementById('confirm-social-advance');
-                if (btn) {
-                    if (allDone) {
-                        btn.style.visibility = 'visible';
-                        btn.style.display = 'block';
-                        btn.style.opacity = '1';
-                        btn.disabled = false;
-                        btn.classList.add('enabled');
-                        btn.style.pointerEvents = 'auto';
-                        
-                        // ✅ حفظ حالة إكمال المرحلة 2 - Save Stage 2 completion
-                        localStorage.setItem('social_verification_complete', 'true');
-                        localStorage.setItem('stage2_social_completed_at', new Date().toISOString());
-                        
-                        console.log('✅ Stage 2 (Social) completed - Button enabled for Stage 3 (Wallet)');
-                        console.log(`✅ Confirmed platforms: ${socialClickedCount}/6 (socialClickedState), ${appManagerCount}/6 (AppManager.socials)`);
-                    } else {
-                        // ✅ إخفاء الزر إذا لم تكتمل جميع المنصات - Hide button if not all platforms completed
-                        btn.style.visibility = 'hidden';
-                        btn.style.display = 'none';
-                        btn.disabled = true;
-                        btn.classList.remove('enabled');
-                        btn.style.pointerEvents = 'none';
-                        
-                        console.log(`⏳ Waiting for all platforms: ${socialClickedCount}/6 (socialClickedState), ${appManagerCount}/6 (AppManager.socials)`);
-                    }
+                if (btn && allDone) {
+                    btn.style.visibility = 'visible';
+                    btn.style.display = 'block';
+                    btn.disabled = false;
+                    btn.classList.add('enabled');
+                    
+                    // ✅ حفظ حالة إكمال المرحلة 2 - Save Stage 2 completion
+                    localStorage.setItem('social_verification_complete', 'true');
+                    localStorage.setItem('stage2_social_completed_at', new Date().toISOString());
+                    
+                    console.log('✅ Stage 2 (Social) completed - Button enabled for Stage 3 (Wallet)');
+                } else if (btn) {
+                    // Hide button if not all platforms completed
+                    btn.style.visibility = 'hidden';
+                    btn.style.display = 'none';
+                    btn.disabled = true;
+                    btn.classList.remove('enabled');
                 }
             },
 

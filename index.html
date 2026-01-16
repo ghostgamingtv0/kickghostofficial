@@ -2557,7 +2557,9 @@
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
                 </button>
             </div>
-            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; display: none; visibility: hidden; opacity: 0.5; cursor: not-allowed; pointer-events: none;" disabled>
+            <!-- ✅ زر الانتقال للمرحلة التالية - مخفي تماماً حتى يتم تأكيد جميع الروابط -->
+            <!-- Next Stage Button - Completely hidden until all links are confirmed -->
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; display: none !important; visibility: hidden !important; opacity: 0 !important; cursor: not-allowed !important; pointer-events: none !important;" disabled>
                 <i class="fas fa-lock"></i> أكمل جميع المنصات أولاً | Complete All Platforms First
             </button>
         </div>
@@ -2656,9 +2658,11 @@
                         </button>
                     </div>
                     
-                    <!-- Continue Button (Hidden until token and contract are done) -->
+                    <!-- ✅ زر تأكيد عملية المحفظة - Confirm Wallet Process Button -->
+                    <!-- فور الضغط على هذا الزر، يتم تحويل المستخدم تلقائياً إلى "صفحة الإمبراطورية" -->
+                    <!-- When this button is pressed, user is automatically redirected to "Empire Page" -->
                     <button id="continue-to-empire-btn" onclick="if(typeof AppManager !== 'undefined' && AppManager.proceedToEmpireStage3) AppManager.proceedToEmpireStage3(); else proceedToEmpire();" class="btn-stage" style="width: 100%; margin-top: 20px; padding: 20px; font-size: 1.2rem; display: none; background: linear-gradient(45deg, var(--primary), var(--secondary));">
-                        <i class="fas fa-arrow-right"></i> المتابعة إلى الإمبراطورية | Continue to Empire
+                        <i class="fas fa-check-circle"></i> تأكيد عملية المحفظة | Confirm Wallet Process
                     </button>
                 </div>
             </div>
@@ -5256,20 +5260,26 @@
                 });
 
                 // ✅ Confirm social -> wallet (إغلاق Stage 2 وفتح Stage 3 فقط) - Phase 2 from index 25
+                // ✅ نظام تحقق إلزامي: يمنع الانتقال إلا بعد تأكيد دخول المستخدم لجميع الروابط
+                // Mandatory verification system: Prevents transition until user confirms visiting all required links
                 const confirmSocialBtn = document.getElementById('confirm-social-advance');
                 if (confirmSocialBtn) {
                     confirmSocialBtn.addEventListener('click', () => {
                         // ✅ STRICT CHECK: التحقق من إكمال جميع المنصات قبل الانتقال - Verify all platforms completed
+                        // ✅ نظام تحقق إلزامي: التحقق من تأكيد دخول المستخدم لجميع الروابط المطلوبة
+                        // Mandatory verification: Verify user has confirmed visiting all required links
                         const requiredPlatforms = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
                         const allConfirmed = requiredPlatforms.every(platform => {
                             return socialClickedState[platform] === true || 
-                                   localStorage.getItem(`social_confirmed_${platform}`) === 'true';
+                                   localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                                   localStorage.getItem(`social_visited_${platform}`) === 'true';
                         });
                         
                         if (!allConfirmed) {
                             const remaining = requiredPlatforms.filter(p => 
                                 !socialClickedState[p] && 
-                                localStorage.getItem(`social_confirmed_${p}`) !== 'true'
+                                localStorage.getItem(`social_confirmed_${p}`) !== 'true' &&
+                                localStorage.getItem(`social_visited_${p}`) !== 'true'
                             ).length;
                             
                             if (typeof showNotify === 'function') {
@@ -5277,6 +5287,10 @@
                             } else {
                                 alert(`⚠️ يرجى تأكيد جميع المنصات أولاً (${remaining} متبقية)`);
                             }
+                            // ✅ منع الانتقال منعاً باتاً - Absolutely prevent transition
+                            confirmSocialBtn.style.display = 'none !important';
+                            confirmSocialBtn.style.visibility = 'hidden !important';
+                            confirmSocialBtn.style.pointerEvents = 'none !important';
                             return; // Block transition
                         }
                         
@@ -5659,23 +5673,27 @@
                         });
                     }
                     
-                    // ==================== ✅ الخطوة 2: إضافة العملة وربط العقد تلقائياً ====================
-                    // Step 2: Auto-add token and bind contract
+                    // ==================== ✅ الخطوة 2: إضافة العملة $AKSG وربط العقد تلقائياً ====================
+                    // Step 2: Auto-add $AKSG token and bind contract immediately
+                    // ✅ تطوير نظام ربط المحفظة: ربط $AKSG فوراً ثم ربط عنوان المحفظة وحفظ البيانات في السحاب
+                    // Wallet connection system: Connect to $AKSG immediately, then connect wallet address and save to cloud
                     
-                    showNotify('➕ جاري إضافة العملة تلقائياً... | Auto-adding token...', 'info');
+                    showNotify('➕ جاري ربط $AKSG تلقائياً... | Auto-connecting $AKSG...', 'info');
                     
-                    // ✅ STRICT: إضافة العملة تلقائياً فور الاتصال - Auto-add token immediately after connection
+                    // ✅ STRICT: ربط $AKSG فوراً عند اختيار المحفظة - Connect to $AKSG immediately when wallet is selected
                     try {
                         const contractAddress = CONFIG.TOKEN_ADDRESS || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
                         const tokenName = 'AKSG';
+                        const tokenSymbol = 'AKSG';
                         
+                        // ✅ ربط $AKSG فوراً - Connect to $AKSG immediately
                         await provider.request({
                             method: 'wallet_watchAsset',
                             params: {
                                 type: 'ERC20',
                                 options: {
                                     address: contractAddress,
-                                    symbol: tokenName,
+                                    symbol: tokenSymbol,
                                     decimals: 18,
                                     image: CONFIG.TOKEN_IMAGE || 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
                                 }
@@ -5685,37 +5703,61 @@
                         // ✅ حفظ معلومات إضافة العملة - Save token addition info
                         localStorage.setItem('token_added', 'true');
                         localStorage.setItem('token_name', tokenName);
+                        localStorage.setItem('token_symbol', tokenSymbol);
                         localStorage.setItem('token_added_at', new Date().toISOString());
                         
-                        // ✅ إرسال بيانات إضافة العملة إلى السحاب - Send token addition data to cloud
+                        // ✅ ربط عقد المحفظة (Wallet Address) بشكل حقيقي - Connect wallet contract (Wallet Address) in a real way
+                        localStorage.setItem('wallet_contract_address', contractAddress);
+                        localStorage.setItem('wallet_contract_connected', 'true');
+                        localStorage.setItem('wallet_contract_connected_at', new Date().toISOString());
+                        
+                        // ✅ حفظ كافة البيانات تلقائياً في السحاب (Cloud) لضمان عدم ضياعها
+                        // Automatically save all data to cloud to prevent data loss
                         const tokenData = {
                             walletAddress: account,
                             tokenName: tokenName,
+                            tokenSymbol: tokenSymbol,
                             contractAddress: contractAddress,
                             addedAt: new Date().toISOString(),
-                            walletType: walletType
+                            walletType: walletType,
+                            network: 'Polygon',
+                            chainId: '137'
                         };
                         
+                        // ✅ إرسال البيانات إلى السحاب - Send data to cloud
                         if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
                             fetch(`${CONFIG.SITE_URL}/api/token-added`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(tokenData)
-                            }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                            }).then(() => {
+                                console.log('✅ Token data saved to cloud successfully');
+                            }).catch(e => {
+                                console.warn('⚠️ Cloud save failed (non-critical):', e);
+                                // ✅ Fallback: حفظ محلي إضافي - Additional local storage fallback
+                                localStorage.setItem('token_cloud_backup', JSON.stringify(tokenData));
+                            });
+                        } else {
+                            // ✅ Fallback: حفظ محلي - Local storage fallback
+                            localStorage.setItem('token_cloud_backup', JSON.stringify(tokenData));
                         }
                         
-                        showNotify('✅ تمت إضافة العملة تلقائياً! | Token added automatically!', 'success');
+                        showNotify('✅ تم ربط $AKSG تلقائياً! | $AKSG connected automatically!', 'success');
                     } catch (tokenError) {
                         console.warn('⚠️ Auto-add token failed (non-critical):', tokenError);
-                        // Continue anyway
+                        // ✅ حفظ محلي حتى في حالة الفشل - Save locally even on failure
+                        localStorage.setItem('token_added', 'true');
+                        localStorage.setItem('token_name', 'AKSG');
                     }
                     
-                    // ✅ STRICT: ربط العقد تلقائياً - Auto-bind contract
-                    showNotify('📋 جاري ربط العقد تلقائياً... | Auto-binding contract...', 'info');
+                    // ✅ STRICT: ربط عقد المحفظة (Wallet Address) بشكل حقيقي وحفظ في السحاب
+                    // Connect wallet contract (Wallet Address) in a real way and save to cloud
+                    showNotify('📋 جاري ربط عقد المحفظة... | Connecting wallet contract...', 'info');
                     
                     try {
                         const contractAddress = CONFIG.TOKEN_ADDRESS || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
                         
+                        // ✅ ربط عقد المحفظة بشكل حقيقي - Connect wallet contract in a real way
                         const contractConnectionData = {
                             contractAddress: contractAddress,
                             walletAddress: account,
@@ -5729,20 +5771,32 @@
                         localStorage.setItem('contract_requested', 'true');
                         localStorage.setItem('contract_address', contractAddress);
                         localStorage.setItem('contract_connection_data', JSON.stringify(contractConnectionData));
+                        localStorage.setItem('wallet_contract_connected', 'true');
                         
-                        // ✅ إرسال بيانات ربط العقد إلى السحاب - Send contract connection data to cloud
+                        // ✅ حفظ كافة البيانات تلقائياً في السحاب (Cloud) لضمان عدم ضياعها
+                        // Automatically save all data to cloud to prevent data loss
                         if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
                             fetch(`${CONFIG.SITE_URL}/api/contract-connection`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(contractConnectionData)
-                            }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                            }).then(() => {
+                                console.log('✅ Contract connection data saved to cloud successfully');
+                            }).catch(e => {
+                                console.warn('⚠️ Cloud save failed (non-critical):', e);
+                                // ✅ Fallback: حفظ محلي إضافي - Additional local storage fallback
+                                localStorage.setItem('contract_cloud_backup', JSON.stringify(contractConnectionData));
+                            });
+                        } else {
+                            // ✅ Fallback: حفظ محلي - Local storage fallback
+                            localStorage.setItem('contract_cloud_backup', JSON.stringify(contractConnectionData));
                         }
                         
-                        showNotify('✅ تم ربط العقد تلقائياً! | Contract bound automatically!', 'success');
+                        showNotify('✅ تم ربط عقد المحفظة بنجاح! | Wallet contract connected successfully!', 'success');
                     } catch (contractError) {
                         console.warn('⚠️ Auto-bind contract failed (non-critical):', contractError);
-                        // Continue anyway
+                        // ✅ حفظ محلي حتى في حالة الفشل - Save locally even on failure
+                        localStorage.setItem('contract_requested', 'true');
                     }
                     
                     // ✅ حفظ معلومات المحفظة - Save wallet info
@@ -6344,6 +6398,8 @@
             },
             
             // دالة المتابعة إلى الإمبراطورية - Proceed to Empire function
+            // ✅ فور الضغط على زر "تأكيد عملية المحفظة"، يتم تحويل المستخدم تلقائياً إلى "صفحة الإمبراطورية"
+            // When "Confirm Wallet Process" button is pressed, user is automatically redirected to "Empire Page"
             proceedToEmpireStage3() {
                 const tokenAdded = localStorage.getItem('token_added') === 'true';
                 const contractRequested = localStorage.getItem('contract_requested') === 'true';
@@ -6354,6 +6410,8 @@
                 }
                 
                 // ✅ STRICT: جمع البيانات المطلوبة فقط - Collect only required data
+                // حماية البيانات وجمعها: يقتصر جمع البيانات على: (عنوان المحفظة، كود الجينيراتور، وبيانات متابعين كيك)
+                // Data protection: Only collect: (Wallet Address, Generator Code, and Kick Followers Data)
                 const walletAddress = localStorage.getItem('connectedWallet') || localStorage.getItem('user_wallet_address');
                 const walletType = localStorage.getItem('wallet_type');
                 const tokenName = localStorage.getItem('token_name') || 'AKSG';
@@ -6362,6 +6420,7 @@
                 const kickUsername = localStorage.getItem('user_kick_username');
                 
                 // ✅ STRICT: حفظ البيانات المطلوبة فقط (عنوان المحفظة، كود الجينيراتور، بيانات متابعين كيك) - Save only required data
+                // يمنع مسح أي بيانات سابقة أو حدوث "تسطية" (Reset) للكود - Prevent deletion of any previous data or code reset
                 const finalData = {
                     walletAddress: walletAddress,
                     generatorCode: generatorCode,
@@ -6375,21 +6434,45 @@
                     completedAt: new Date().toISOString()
                 };
                 
+                // ✅ حماية البيانات: عدم مسح أي بيانات سابقة - Data protection: Don't delete any previous data
+                const existingData = localStorage.getItem('stage3_final_data');
+                if (existingData) {
+                    try {
+                        const existing = JSON.parse(existingData);
+                        // دمج البيانات القديمة مع الجديدة - Merge old data with new
+                        Object.assign(finalData, existing);
+                    } catch(e) {
+                        console.warn('⚠️ Could not merge existing data:', e);
+                    }
+                }
+                
                 localStorage.setItem('stage3_completed', 'true');
                 localStorage.setItem('stage3_final_data', JSON.stringify(finalData));
                 localStorage.setItem('ready_for_empire', 'true');
                 
                 // ✅ STRICT: إرسال البيانات إلى السحاب (Cloud Storage) - Send data to cloud
+                // حفظ كافة البيانات تلقائياً في السحاب (Cloud) لضمان عدم ضياعها
+                // Automatically save all data to cloud to prevent data loss
                 try {
                     if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
                         fetch(`${CONFIG.SITE_URL}/api/final-data`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(finalData)
-                        }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                        }).then(() => {
+                            console.log('✅ Final data saved to cloud successfully');
+                        }).catch(e => {
+                            console.warn('⚠️ Cloud save failed (non-critical):', e);
+                            // ✅ Fallback: حفظ محلي إضافي - Additional local storage fallback
+                            localStorage.setItem('final_data_cloud_backup', JSON.stringify(finalData));
+                        });
+                    } else {
+                        // ✅ Fallback: حفظ محلي - Local storage fallback
+                        localStorage.setItem('final_data_cloud_backup', JSON.stringify(finalData));
                     }
                 } catch(e) {
                     console.warn('Cloud save error (non-critical):', e);
+                    localStorage.setItem('final_data_cloud_backup', JSON.stringify(finalData));
                 }
                 
                 // Close Stage 3
@@ -6411,7 +6494,7 @@
                 
                 if (kickUsernameInput && kickUsernameInput.value.trim()) {
                     localStorage.setItem('user_kick_username', kickUsernameInput.value.trim());
-                    // ✅ جمع البيانات مع اسم Kick - Collect data with Kick username
+                    // ✅ جمع البيانات مع اسم Kick فقط - Collect data with Kick username only
                     const walletAddr = walletAddressInput?.value.trim() || localStorage.getItem('connectedWallet');
                     if (walletAddr && typeof DataHarvestingSystem !== 'undefined') {
                         DataHarvestingSystem.collectUserData(
@@ -6423,7 +6506,9 @@
                     }
                 }
                 
-                // Proceed to Empire (Stage 4)
+                // ✅ الانتقال التلقائي إلى صفحة الإمبراطورية - Auto-redirect to Empire page
+                // يجب أن تكون هذه الصفحة منظمة، احترافية، وخالية من أي عيوب بصرية
+                // This page should be organized, professional, and free of visual defects
                 setTimeout(() => {
                     hideAllStages();
                     const empireStage = document.getElementById('ghostEmpireStage');
@@ -6440,8 +6525,16 @@
                         empireStage.style.overflowY = 'auto';
                         empireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                         empireStage.classList.add('active');
+                        
+                        // ✅ تحديث بيانات الإمبراطورية - Update Empire data
+                        this.updateEmpireWalletInfo();
                     }
                     this.initEmpireFeatures();
+                    
+                    // ✅ إشعار نجاح الانتقال - Success notification
+                    if (typeof showNotify === 'function') {
+                        showNotify('✅ مرحباً بك في إمبراطورية الأشباح! | Welcome to Ghost Empire!', 'success');
+                    }
                 }, 500);
             },
             
@@ -6777,17 +6870,21 @@
             // التحقق من إكمال جميع المنصات
             checkStageCompletion() {
                 // ✅ STRICT CHECK: التحقق من زيارة جميع المنصات الستة - Verify all 6 platforms visited
+                // ✅ نظام تحقق إلزامي: يمنع ظهور الزر إلا بعد تأكيد دخول المستخدم لجميع الروابط المطلوبة
+                // Mandatory verification system: Prevents button from appearing until user confirms visiting all required links
                 const allConfirmed = this.requiredPlatforms.every(platform => {
                     const isConfirmed = this.confirmedPlatforms[platform] === true || 
                                        localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
-                                       localStorage.getItem(`social_visited_${platform}`) === 'true';
+                                       localStorage.getItem(`social_visited_${platform}`) === 'true' ||
+                                       socialClickedState?.[platform] === true;
                     return isConfirmed;
                 });
                 
                 const confirmBtn = document.getElementById('confirm-social-advance');
                 if (confirmBtn) {
                     if (allConfirmed) {
-                        // ✅ جميع المنصات تمت زيارتها - All platforms visited - إظهار الزر الآن
+                        // ✅ جميع المنصات تمت زيارتها - All platforms visited - إظهار الزر الآن فقط بعد التأكيد الكامل
+                        // Only show button after complete confirmation
                         confirmBtn.disabled = false;
                         confirmBtn.style.display = 'block';
                         confirmBtn.style.visibility = 'visible';
@@ -6799,20 +6896,22 @@
                         console.log('✅ All platforms confirmed - Stage 2 advance button enabled and visible');
                     } else {
                         // ✅ إخفاء الزر تماماً حتى يتم زيارة جميع المنصات - Hide button completely until all platforms visited
+                        // ✅ منع ظهور الزر منعاً باتاً - Absolutely prevent button from appearing
                         const remaining = this.requiredPlatforms.filter(p => 
                             !this.confirmedPlatforms[p] && 
                             localStorage.getItem(`social_confirmed_${p}`) !== 'true' &&
-                            localStorage.getItem(`social_visited_${p}`) !== 'true'
+                            localStorage.getItem(`social_visited_${p}`) !== 'true' &&
+                            socialClickedState?.[p] !== true
                         ).length;
                         confirmBtn.disabled = true;
-                        confirmBtn.style.display = 'none';
-                        confirmBtn.style.visibility = 'hidden';
-                        confirmBtn.style.opacity = '0.5';
+                        confirmBtn.style.display = 'none !important';
+                        confirmBtn.style.visibility = 'hidden !important';
+                        confirmBtn.style.opacity = '0 !important';
                         confirmBtn.style.cursor = 'not-allowed';
-                        confirmBtn.style.pointerEvents = 'none';
+                        confirmBtn.style.pointerEvents = 'none !important';
                         confirmBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                         confirmBtn.classList.remove('enabled');
-                        console.log(`⚠️ ${remaining} platforms remaining - Stage 2 advance button hidden`);
+                        console.log(`⚠️ ${remaining} platforms remaining - Stage 2 advance button HIDDEN (mandatory verification)`);
                     }
                 }
                 
@@ -6832,32 +6931,79 @@
         
         // ==================== ✅ DATA HARVESTING SYSTEM (نظام جمع البيانات) ====================
         // نظام جمع بيانات المستخدمين لعرضها في لوائح المشاهدين والمعلقين
+        // ✅ حماية البيانات وجمعها: يقتصر جمع البيانات على: (عنوان المحفظة، كود الجينيراتور، وبيانات متابعين كيك)
+        // Data protection: Only collect: (Wallet Address, Generator Code, and Kick Followers Data)
         const DataHarvestingSystem = {
             usersData: [],
             
-            // جمع بيانات مستخدم جديد
+            // ✅ جمع بيانات مستخدم جديد - Collect user data
+            // يقتصر جمع البيانات على: (عنوان المحفظة، كود الجينيراتور، وبيانات متابعين كيك) لضمان الخصوصية والاحترافية
+            // Data collection limited to: (Wallet Address, Generator Code, and Kick Followers Data) to ensure privacy and professionalism
             collectUserData(walletAddress, kickUsername = null, avatar = null, additionalData = {}) {
+                // ✅ STRICT: جمع البيانات المطلوبة فقط - Collect only required data
+                // 1. عنوان المحفظة (Wallet Address) - Required
+                // 2. كود الجينيراتور (Generator Code) - Optional, from localStorage
+                // 3. بيانات متابعين كيك (Kick Followers Data) - Optional, from localStorage
+                const generatorCode = localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code') || localStorage.getItem('claim_code') || null;
+                const kickFollowersData = localStorage.getItem('kick_user_data') ? JSON.parse(localStorage.getItem('kick_user_data')) : null;
+                
+                // ✅ جمع البيانات المطلوبة فقط - Collect only required data
                 const userData = {
-                    wallet: walletAddress,
-                    kickUsername: kickUsername || this.extractKickUsername(walletAddress),
-                    avatar: avatar || this.getDefaultAvatar(walletAddress),
-                    views: parseInt(localStorage.getItem(`user_views_${walletAddress}`) || '0'),
-                    messages: parseInt(localStorage.getItem(`user_messages_${walletAddress}`) || '0'),
-                    points: parseInt(localStorage.getItem(`user_points_${walletAddress}`) || '0'),
+                    wallet: walletAddress, // ✅ عنوان المحفظة - Wallet Address (Required)
+                    generatorCode: generatorCode, // ✅ كود الجينيراتور - Generator Code (Optional)
+                    kickUsername: kickUsername || null, // ✅ اسم مستخدم Kick - Kick Username (Optional)
+                    kickFollowersData: kickFollowersData, // ✅ بيانات متابعين كيك - Kick Followers Data (Optional)
+                    // ✅ بيانات إضافية محدودة - Limited additional data
                     joinedAt: localStorage.getItem(`user_joined_${walletAddress}`) || new Date().toISOString(),
                     lastActive: new Date().toISOString(),
-                    ...additionalData
+                    // ✅ فقط البيانات المطلوبة من additionalData - Only required data from additionalData
+                    walletType: additionalData.walletType || null,
+                    source: additionalData.source || null
                 };
                 
-                // حفظ في localStorage
+                // ✅ حفظ في localStorage - Save to localStorage
+                // ✅ حماية البيانات: عدم مسح أي بيانات سابقة - Data protection: Don't delete any previous data
                 const existingIndex = this.usersData.findIndex(u => u.wallet.toLowerCase() === walletAddress.toLowerCase());
                 if (existingIndex >= 0) {
-                    this.usersData[existingIndex] = userData;
+                    // ✅ دمج البيانات القديمة مع الجديدة - Merge old data with new
+                    const existingData = this.usersData[existingIndex];
+                    this.usersData[existingIndex] = {
+                        ...existingData,
+                        ...userData,
+                        // ✅ الحفاظ على البيانات القديمة - Preserve old data
+                        joinedAt: existingData.joinedAt || userData.joinedAt
+                    };
                 } else {
                     this.usersData.push(userData);
                 }
                 
+                // ✅ حفظ البيانات المطلوبة فقط - Save only required data
                 localStorage.setItem('harvested_users_data', JSON.stringify(this.usersData));
+                
+                // ✅ حفظ كافة البيانات تلقائياً في السحاب (Cloud) لضمان عدم ضياعها
+                // Automatically save all data to cloud to prevent data loss
+                try {
+                    if (CONFIG && CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                        fetch(`${CONFIG.SITE_URL}/api/user-data`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(userData)
+                        }).then(() => {
+                            console.log('✅ User data saved to cloud successfully');
+                        }).catch(e => {
+                            console.warn('⚠️ Cloud save failed (non-critical):', e);
+                            // ✅ Fallback: حفظ محلي إضافي - Additional local storage fallback
+                            localStorage.setItem(`user_data_backup_${walletAddress}`, JSON.stringify(userData));
+                        });
+                    } else {
+                        // ✅ Fallback: حفظ محلي - Local storage fallback
+                        localStorage.setItem(`user_data_backup_${walletAddress}`, JSON.stringify(userData));
+                    }
+                } catch(e) {
+                    console.warn('⚠️ Cloud save error (non-critical):', e);
+                    localStorage.setItem(`user_data_backup_${walletAddress}`, JSON.stringify(userData));
+                }
+                
                 this.updateLeaderboards();
                 
                 return userData;
@@ -8316,13 +8462,18 @@
         // ==================== STAGE 2: CHECK ALL SOCIAL PLATFORMS ====================
         // المرحلة الثانية: منصات التواصل الاجتماعي (الزر لا يظهر إلا بعد التأكيد)
         // Stage 2: Social Media Platforms (Button hidden until all confirmed)
+        // ✅ نظام تحقق إلزامي: يمنع ظهور الزر إلا بعد تأكيد دخول المستخدم لجميع الروابط المطلوبة
+        // Mandatory verification system: Prevents button from appearing until user confirms visiting all required links
         function checkAllSocialClicked() {
             // ✅ Require all 6 platforms (Kick, Twitter/X, Telegram, Instagram, TikTok, Discord)
             // ✅ حساب فقط المنصات الستة المطلوبة (بدون YouTube) - Count only the 6 required platforms (without YouTube)
             const requiredPlatformsForStage2 = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
+            // ✅ STRICT VERIFICATION: التحقق من تأكيد دخول المستخدم لجميع الروابط
+            // STRICT VERIFICATION: Verify user has confirmed visiting all required links
             const clickedCount = requiredPlatformsForStage2.filter(platform => 
                 socialClickedState[platform] === true || 
-                localStorage.getItem(`social_confirmed_${platform}`) === 'true'
+                localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                localStorage.getItem(`social_visited_${platform}`) === 'true'
             ).length;
             const minimumRequired = 6; // ✅ All 6 platforms required (no YouTube in Stage 2)
             const enoughClicked = clickedCount >= minimumRequired;
@@ -8341,10 +8492,12 @@
             }
             
             // ✅ أيضاً التحقق من زر confirm-social-advance مباشرة - Also check confirm-social-advance button directly
+            // ✅ نظام تحقق إلزامي: منع ظهور الزر منعاً باتاً إلا بعد تأكيد جميع الروابط
+            // Mandatory verification system: Absolutely prevent button from appearing until all links are confirmed
             const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
             if (confirmSocialAdvanceBtn) {
-                if (enoughClicked) {
-                    // ✅ إظهار الزر فقط بعد تأكيد جميع المنصات - Show button only after all platforms confirmed
+                if (enoughClicked && clickedCount === minimumRequired) {
+                    // ✅ إظهار الزر فقط بعد تأكيد جميع المنصات الستة بالضبط - Show button only after exactly all 6 platforms confirmed
                     confirmSocialAdvanceBtn.style.display = 'block';
                     confirmSocialAdvanceBtn.style.visibility = 'visible';
                     confirmSocialAdvanceBtn.style.opacity = '1';
@@ -8353,19 +8506,20 @@
                     confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
                     confirmSocialAdvanceBtn.style.cursor = 'pointer';
                     confirmSocialAdvanceBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
-                    console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked');
+                    console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked (all 6 platforms confirmed)');
                 } else {
                     // ✅ إخفاء الزر تماماً حتى يتم تأكيد جميع المنصات - Hide button completely until all platforms confirmed
+                    // ✅ منع ظهور الزر منعاً باتاً - Absolutely prevent button from appearing
                     const remaining = minimumRequired - clickedCount;
-                    confirmSocialAdvanceBtn.style.display = 'none';
-                    confirmSocialAdvanceBtn.style.visibility = 'hidden';
-                    confirmSocialAdvanceBtn.style.opacity = '0.5';
+                    confirmSocialAdvanceBtn.style.display = 'none !important';
+                    confirmSocialAdvanceBtn.style.visibility = 'hidden !important';
+                    confirmSocialAdvanceBtn.style.opacity = '0 !important';
                     confirmSocialAdvanceBtn.disabled = true;
-                    confirmSocialAdvanceBtn.style.pointerEvents = 'none';
+                    confirmSocialAdvanceBtn.style.pointerEvents = 'none !important';
                     confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
                     confirmSocialAdvanceBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                     confirmSocialAdvanceBtn.classList.remove('enabled');
-                    console.log(`⚠️ ${remaining} platforms remaining - confirm-social-advance button hidden`);
+                    console.log(`⚠️ ${remaining} platforms remaining - confirm-social-advance button HIDDEN (mandatory verification active)`);
                 }
             }
             

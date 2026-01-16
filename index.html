@@ -2508,7 +2508,7 @@
             </div>
             
             <!-- Confirm Button -->
-            <button id="start-button" onclick="closeWelcomeModalAndStart(event)" class="btn-mega" style="margin-top: 10px; padding: 20px 50px; font-size: 1.3rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
+            <button id="start-button" onclick="if(typeof closeWelcomeModalAndStart === 'function') { closeWelcomeModalAndStart(event); } else if(typeof AppManager !== 'undefined' && typeof AppManager.confirmEntry === 'function') { AppManager.confirmEntry(); } else { console.error('❌ No function found to handle Stage 1 button'); }" class="btn-mega" style="margin-top: 10px; padding: 20px 50px; font-size: 1.3rem; width: 100%; cursor: pointer; z-index: 10000; position: relative;">
                 <i class="fas fa-check-circle"></i> ابدأ التحقق الاجتماعي | Start Social Verification
             </button>
         </div>
@@ -5330,39 +5330,44 @@
             },
 
             confirmEntry() {
+                console.log('✅ AppManager.confirmEntry() called');
+                
                 // ✅ حفظ حالة التأكيد - Save confirmation state
                 localStorage.setItem(this.storageKey, 'true');
                 localStorage.setItem('welcome_confirmed_at', new Date().toISOString());
+                localStorage.setItem('stage1_completed', 'true');
+                localStorage.setItem('stage1_completed_at', new Date().toISOString());
                 
                 // ✅ حذف مرحلة الترحيب نهائياً من DOM - Permanently remove welcome stage from DOM
                 const welcomeOverlay = document.getElementById('welcome-overlay');
                 const welcomeLayer = document.getElementById('welcome-layer');
                 const welcomeModal = document.getElementById('welcomeModal');
+                const startButton = document.getElementById('start-button');
+                
+                // Hide button immediately
+                if (startButton) {
+                    startButton.style.display = 'none';
+                    startButton.style.opacity = '0';
+                    startButton.style.visibility = 'hidden';
+                    startButton.disabled = true;
+                }
                 
                 if (welcomeOverlay) {
                     welcomeOverlay.style.display = 'none';
                     welcomeOverlay.style.opacity = '0';
                     welcomeOverlay.style.visibility = 'hidden';
                     welcomeOverlay.style.pointerEvents = 'none';
-                    if (welcomeOverlay.parentNode) {
-                        welcomeOverlay.parentNode.removeChild(welcomeOverlay);
-                    }
                 }
                 if (welcomeLayer) {
                     welcomeLayer.style.display = 'none';
                     welcomeLayer.style.opacity = '0';
                     welcomeLayer.style.visibility = 'hidden';
-                    if (welcomeLayer.parentNode) {
-                        welcomeLayer.parentNode.removeChild(welcomeLayer);
-                    }
                 }
                 if (welcomeModal) {
                     welcomeModal.style.display = 'none';
                     welcomeModal.style.opacity = '0';
                     welcomeModal.style.visibility = 'hidden';
-                    if (welcomeModal.parentNode) {
-                        welcomeModal.parentNode.removeChild(welcomeModal);
-                    }
+                    welcomeModal.style.pointerEvents = 'none';
                 }
                 
                 console.log('✅ Stage 1 (Welcome) confirmed - opening Stage 2 (Social) in separate page');
@@ -5370,9 +5375,12 @@
                 // ✅ الانتقال للمرحلة 2 في صفحة منفصلة - Transition to Stage 2 in separate page
                 setTimeout(() => {
                     // إخفاء جميع المراحل أولاً
-                    hideAllStages();
+                    if (typeof hideAllStages === 'function') {
+                        hideAllStages();
+                    }
                     // فتح المرحلة 2 فقط
                     this.showStage(2);
+                    console.log('✅ Stage 2 (Social) opened successfully');
                 }, 300);
             },
 
@@ -5654,13 +5662,16 @@
                     
                     // ✅ إخفاء خطوة اختيار المحفظة وإظهار واجهة طلب اسم العملة والعقد
                     // Hide wallet selection and show token/contract request interface
-                    const walletSelectionStep = document.getElementById('wallet-selection-step');
+                    // ✅ استخدام المتغير المحدد مسبقاً في بداية الدالة - Use previously defined variable from function start
                     const tokenContractStep = document.getElementById('token-contract-step');
                     // ✅ استخدام المتغيرات المحددة مسبقاً - Use previously defined variables
                     const walletAddressDisplayEl = document.getElementById('wallet-address-display');
                     const walletTypeDisplayEl = document.getElementById('wallet-type-display');
                     
-                    if (walletSelectionStep) walletSelectionStep.style.display = 'none';
+                    // ✅ walletSelectionStep تم تعريفه في بداية الدالة - walletSelectionStep already defined at function start
+                    if (walletSelectionStep) {
+                        walletSelectionStep.style.display = 'none';
+                    }
                     if (tokenContractStep) {
                         tokenContractStep.style.display = 'block';
                         // Update wallet info display
@@ -10481,17 +10492,28 @@
                 event.stopPropagation();
             }
             
-            console.log('✅ Button Clicked - Starting Stage 2 (Social Verification)');
+            console.log('✅ Stage 1 Button Clicked - Starting Stage 2 (Social Verification)');
             
             // ✅ استخدام AppManager إذا كان متاحاً - Use AppManager if available
             if (typeof AppManager !== 'undefined' && typeof AppManager.confirmEntry === 'function') {
-                AppManager.confirmEntry();
-                return;
+                try {
+                    AppManager.confirmEntry();
+                    console.log('✅ AppManager.confirmEntry() called successfully');
+                    return;
+                } catch (error) {
+                    console.error('❌ Error in AppManager.confirmEntry():', error);
+                    // Continue with fallback
+                }
             }
+            
+            // ✅ Fallback: تنفيذ الوظيفة مباشرة إذا فشل AppManager - Execute directly if AppManager fails
+            console.log('⚠️ AppManager not available, using fallback method');
             
             // ✅ حفظ في localStorage أن المستخدم رأى الرسالة - Save that user saw the message
             localStorage.setItem('welcome_seen', 'true');
             localStorage.setItem('aksg_user_entry_confirmed', 'true');
+            localStorage.setItem('stage1_completed', 'true');
+            localStorage.setItem('stage1_completed_at', new Date().toISOString());
             
             // ✅ Mark HUMAN_VERIFY stage as completed
             if (typeof markStageCompleted === 'function') {
@@ -10509,6 +10531,7 @@
                 startButton.style.display = 'none';
                 startButton.style.opacity = '0';
                 startButton.style.visibility = 'hidden';
+                startButton.disabled = true;
             }
             
             // ✅ حذف مرحلة الترحيب من DOM نهائياً - Permanently remove welcome stage from DOM
@@ -10517,12 +10540,20 @@
                 welcomeOverlay.style.transition = 'opacity 0.3s ease-in-out';
                 welcomeOverlay.style.visibility = 'hidden';
                 welcomeOverlay.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    welcomeOverlay.style.display = 'none';
-                    if (welcomeOverlay.parentNode) {
-                        welcomeOverlay.parentNode.removeChild(welcomeOverlay);
-                    }
-                }, 300);
+                welcomeOverlay.style.display = 'none';
+            }
+            
+            if (welcomeModal) {
+                welcomeModal.style.display = 'none';
+                welcomeModal.style.opacity = '0';
+                welcomeModal.style.visibility = 'hidden';
+                welcomeModal.style.pointerEvents = 'none';
+            }
+            
+            if (welcomeLayer) {
+                welcomeLayer.style.display = 'none';
+                welcomeLayer.style.opacity = '0';
+                welcomeLayer.style.visibility = 'hidden';
             }
             
             if (welcomeLayer) {
@@ -10550,21 +10581,47 @@
             }
             
             // ✅ إخفاء جميع الصفحات الأخرى - Hide all other pages
-            hideAllStages();
+            if (typeof hideAllStages === 'function') {
+                hideAllStages();
+            } else {
+                // Fallback: Hide all stages manually
+                document.querySelectorAll('.stage-container').forEach(stage => {
+                    stage.style.display = 'none';
+                    stage.style.opacity = '0';
+                    stage.style.visibility = 'hidden';
+                });
+            }
             
             // ✅ الانتقال للمرحلة 2 (Socials) - Transition to Stage 2
             setTimeout(() => {
+                console.log('🔄 Transitioning to Stage 2...');
+                
+                // ✅ محاولة استخدام AppManager أولاً - Try AppManager first
                 if (typeof AppManager !== 'undefined' && typeof AppManager.showStage === 'function') {
+                    console.log('✅ Using AppManager.showStage(2)');
                     AppManager.showStage(2);
-                } else if (typeof showStage1 === 'function') {
-                    showStage1();
-                } else {
+                } 
+                // ✅ Fallback: فتح المرحلة 2 مباشرة - Fallback: Open Stage 2 directly
+                else {
                     const stageSocial = document.getElementById('stage-social');
                     if (stageSocial) {
+                        console.log('✅ Opening Stage 2 directly');
                         stageSocial.style.display = 'block';
                         stageSocial.style.opacity = '1';
                         stageSocial.style.visibility = 'visible';
+                        stageSocial.style.position = 'fixed';
+                        stageSocial.style.top = '0';
+                        stageSocial.style.left = '0';
+                        stageSocial.style.width = '100%';
+                        stageSocial.style.height = '100vh';
+                        stageSocial.style.zIndex = '10000';
+                        stageSocial.style.overflowY = 'auto';
+                        stageSocial.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
                         stageSocial.classList.add('active');
+                        console.log('✅ Stage 2 opened successfully');
+                    } else {
+                        console.error('❌ Stage 2 element not found!');
+                        showNotify('❌ خطأ في فتح المرحلة 2 | Error opening Stage 2', 'error');
                     }
                 }
             }, 400);

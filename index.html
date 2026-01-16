@@ -4988,6 +4988,47 @@
         // ==================== SPA APP MANAGER ====================
         // نظام إدارة التطبيق داخل صفحة واحدة (Stages)
         const AppManager = {
+            // ✅ منع التضارب: إخفاء جميع أزرار المحفظة - Prevent conflicts: Hide all wallet buttons
+            hideAllWalletButtons() {
+                const buttonsToHide = [
+                    'add-token-btn',
+                    'request-contract-btn',
+                    'continue-to-empire-btn',
+                    'confirm-wallet-btn'
+                ];
+                
+                buttonsToHide.forEach(buttonId => {
+                    const button = document.getElementById(buttonId);
+                    if (button) {
+                        button.style.display = 'none';
+                        button.style.visibility = 'hidden';
+                        button.style.opacity = '0';
+                        button.disabled = true;
+                        button.style.pointerEvents = 'none';
+                        button.style.cursor = 'not-allowed';
+                    }
+                });
+                
+                // ✅ إخفاء خطوات المحفظة - Hide wallet steps
+                const walletSelectionStep = document.getElementById('wallet-selection-step');
+                const tokenContractStep = document.getElementById('token-contract-step');
+                const connectedWalletInfo = document.getElementById('connected-wallet-info');
+                
+                if (walletSelectionStep) {
+                    walletSelectionStep.style.display = 'none';
+                }
+                
+                if (tokenContractStep) {
+                    tokenContractStep.style.display = 'none';
+                }
+                
+                if (connectedWalletInfo) {
+                    connectedWalletInfo.style.display = 'none';
+                }
+                
+                console.log('✅ All wallet buttons hidden to prevent conflicts');
+            },
+            
             // ✅ Stage Mapping: 1=Welcome, 2=Social, 3=Empire (with Wallet integrated)
             stages: {
                 1: 'welcome-overlay',      // Stage 1: Welcome - مرحباً بك
@@ -5002,6 +5043,33 @@
                 instagram: false,
                 tiktok: false,
                 discord: false
+            },
+            
+            // ✅ منع الضغط المتعدد - Prevent multiple clicks
+            isProcessing: false,
+            
+            // ✅ منع التضارب: إخفاء جميع أزرار المحفظة - Prevent conflicts: Hide all wallet buttons
+            hideAllWalletButtons() {
+                const buttonsToHide = [
+                    'add-token-btn',
+                    'request-contract-btn',
+                    'continue-to-empire-btn',
+                    'confirm-wallet-btn'
+                ];
+                
+                buttonsToHide.forEach(buttonId => {
+                    const button = document.getElementById(buttonId);
+                    if (button) {
+                        button.style.display = 'none';
+                        button.style.visibility = 'hidden';
+                        button.style.opacity = '0';
+                        button.disabled = true;
+                        button.style.pointerEvents = 'none';
+                        button.style.cursor = 'not-allowed';
+                    }
+                });
+                
+                console.log('✅ All wallet buttons hidden to prevent conflicts');
             },
 
             showStage(stageNum) {
@@ -5461,15 +5529,37 @@
 
             async handleWalletConnection(walletType) {
                 try {
+                    // ✅ منع الضغط المتعدد - Prevent multiple clicks
+                    if (this.isProcessing) {
+                        console.warn('⚠️ Wallet connection already in progress, ignoring duplicate click');
+                        showNotify('⏳ جاري معالجة طلب سابق... | Processing previous request...', 'warning');
+                        return;
+                    }
+                    
+                    this.isProcessing = true;
                     console.log('🔗 Starting wallet connection for:', walletType);
+                    
+                    // ✅ منع التضارب: إخفاء جميع الأزرار والمراحل أولاً - Prevent conflicts: Hide all buttons and stages first
+                    this.hideAllWalletButtons();
                     
                     // ✅ إخفاء خطوة اختيار المحفظة فوراً - Hide wallet selection step immediately
                     let walletSelectionStep = document.getElementById('wallet-selection-step');
                     if (walletSelectionStep) {
                         walletSelectionStep.style.display = 'none';
+                        walletSelectionStep.style.visibility = 'hidden';
+                        walletSelectionStep.style.opacity = '0';
                     }
+                    
                     // ✅ إظهار رسالة التحميل - Show loading message
                     showNotify(`🔗 جاري فتح ${walletType}... | Opening ${walletType}...`, 'info');
+                    
+                    // ✅ منع الضغط المتعدد - Prevent multiple clicks
+                    const walletButtons = document.querySelectorAll('.wallet-option');
+                    walletButtons.forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.5';
+                    });
                     
                     // ==================== ✅ التحقق من وجود المحفظة وفتحها مباشرة ====================
                     // Check for wallet and open it directly
@@ -5488,13 +5578,23 @@
                             walletOpened = true;
                             console.log('✅ Ethereum provider detected - attempting MetaMask connection');
                         } else {
-                            // MetaMask not installed - open install page
-                            window.open('https://metamask.io/download/', '_blank', 'noopener,noreferrer');
+                            // MetaMask not installed - open install page in new tab (SPECIAL PAGE)
+                            const metamaskUrl = 'https://metamask.io/download/';
+                            window.open(metamaskUrl, '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت MetaMask أولاً | Please install MetaMask first', 'warning');
                             // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
                             if (walletSelectionStep) {
                                 walletSelectionStep.style.display = 'block';
+                                walletSelectionStep.style.visibility = 'visible';
+                                walletSelectionStep.style.opacity = '1';
                             }
+                            // ✅ إعادة تفعيل الأزرار - Re-enable buttons
+                            const walletButtons = document.querySelectorAll('.wallet-option');
+                            walletButtons.forEach(btn => {
+                                btn.disabled = false;
+                                btn.style.pointerEvents = 'auto';
+                                btn.style.opacity = '1';
+                            });
                             return;
                         }
                     }
@@ -5511,13 +5611,23 @@
                             walletOpened = true;
                             console.log('✅ Ethereum provider detected - attempting Trust Wallet connection');
                         } else {
-                            // Trust Wallet not installed - open install page
-                            window.open('https://trustwallet.com/download', '_blank', 'noopener,noreferrer');
+                            // Trust Wallet not installed - open install page in new tab (SPECIAL PAGE)
+                            const trustUrl = 'https://trustwallet.com/download';
+                            window.open(trustUrl, '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت Trust Wallet أولاً | Please install Trust Wallet first', 'warning');
                             // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
                             if (walletSelectionStep) {
                                 walletSelectionStep.style.display = 'block';
+                                walletSelectionStep.style.visibility = 'visible';
+                                walletSelectionStep.style.opacity = '1';
                             }
+                            // ✅ إعادة تفعيل الأزرار - Re-enable buttons
+                            const walletButtons = document.querySelectorAll('.wallet-option');
+                            walletButtons.forEach(btn => {
+                                btn.disabled = false;
+                                btn.style.pointerEvents = 'auto';
+                                btn.style.opacity = '1';
+                            });
                             return;
                         }
                     }
@@ -5533,13 +5643,23 @@
                             walletOpened = true;
                             console.log('✅ Phantom (EVM) detected - opening Phantom directly');
                         } else {
-                            // Phantom not installed - open install page
-                            window.open('https://phantom.app/download', '_blank', 'noopener,noreferrer');
+                            // Phantom not installed - open install page in new tab (SPECIAL PAGE)
+                            const phantomUrl = 'https://phantom.app/download';
+                            window.open(phantomUrl, '_blank', 'noopener,noreferrer');
                             showNotify('⚠️ يرجى تثبيت Phantom أولاً | Please install Phantom first', 'warning');
                             // إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
                             if (walletSelectionStep) {
                                 walletSelectionStep.style.display = 'block';
+                                walletSelectionStep.style.visibility = 'visible';
+                                walletSelectionStep.style.opacity = '1';
                             }
+                            // ✅ إعادة تفعيل الأزرار - Re-enable buttons
+                            const walletButtons = document.querySelectorAll('.wallet-option');
+                            walletButtons.forEach(btn => {
+                                btn.disabled = false;
+                                btn.style.pointerEvents = 'auto';
+                                btn.style.opacity = '1';
+                            });
                             return;
                         }
                     }
@@ -5775,6 +5895,11 @@
                         }
                         
                         showNotify('✅ تم ربط $AKSG تلقائياً! | $AKSG connected automatically!', 'success');
+                        
+                        // ✅ حفظ حالة ربط العملة - Save token linking state
+                        localStorage.setItem('token_linked_at', new Date().toISOString());
+                        localStorage.setItem('token_link_wallet_type', walletType);
+                        localStorage.setItem('token_link_wallet_address', account);
                     } catch (tokenError) {
                         console.warn('⚠️ Auto-add token failed (non-critical):', tokenError);
                         // ✅ حفظ محلي حتى في حالة الفشل - Save locally even on failure
@@ -5839,12 +5964,20 @@
                             
                             // ✅ IMMEDIATE REDIRECT: Auto-redirect to Empire Page after 1 second
                             setTimeout(() => {
+                                // ✅ إخفاء جميع أزرار المحفظة قبل الانتقال - Hide all wallet buttons before transition
+                                this.hideAllWalletButtons();
+                                
                                 if (typeof this.proceedToEmpireStage3 === 'function') {
                                     this.proceedToEmpireStage3();
                                 } else if (typeof proceedToEmpire === 'function') {
                                     proceedToEmpire();
                                 }
                             }, 1000);
+                        } else {
+                            // ✅ إذا لم يظهر الزر، أظهره يدوياً - If button didn't appear, show it manually
+                            setTimeout(() => {
+                                this.checkStage3Completion();
+                            }, 500);
                         }
                     } catch (contractError) {
                         console.warn('⚠️ Auto-bind contract failed (non-critical):', contractError);
@@ -5867,9 +6000,16 @@
                     // ✅ walletSelectionStep تم تعريفه في بداية الدالة - walletSelectionStep already defined at function start
                     if (walletSelectionStep) {
                         walletSelectionStep.style.display = 'none';
+                        walletSelectionStep.style.visibility = 'hidden';
+                        walletSelectionStep.style.opacity = '0';
                     }
+                    
+                    // ✅ إظهار خطوة العملة والعقد - Show token/contract step
                     if (tokenContractStep) {
                         tokenContractStep.style.display = 'block';
+                        tokenContractStep.style.visibility = 'visible';
+                        tokenContractStep.style.opacity = '1';
+                        
                         // Update wallet info display
                         if (walletAddressDisplayEl) {
                             walletAddressDisplayEl.textContent = account;
@@ -5880,7 +6020,40 @@
                                 'trust': 'Trust Wallet',
                                 'phantom': 'Phantom'
                             };
-                            walletTypeDisplay.textContent = walletTypeNames[walletType] || walletType;
+                            walletTypeDisplayEl.textContent = `نوع المحفظة | Wallet Type: ${walletTypeNames[walletType] || walletType}`;
+                        }
+                        
+                        // ✅ إظهار معلومات المحفظة المتصلة - Show connected wallet info
+                        const connectedWalletInfo = document.getElementById('connected-wallet-info');
+                        if (connectedWalletInfo) {
+                            connectedWalletInfo.style.display = 'block';
+                            connectedWalletInfo.style.visibility = 'visible';
+                            connectedWalletInfo.style.opacity = '1';
+                        }
+                        
+                        // ✅ إخفاء جميع الأزرار ثم إظهار المطلوب فقط - Hide all buttons then show required only
+                        this.hideAllWalletButtons();
+                        
+                        // ✅ إظهار أزرار العملة والعقد - Show token/contract buttons
+                        const addTokenBtn = document.getElementById('add-token-btn');
+                        const requestContractBtn = document.getElementById('request-contract-btn');
+                        
+                        if (addTokenBtn) {
+                            addTokenBtn.style.display = 'block';
+                            addTokenBtn.style.visibility = 'visible';
+                            addTokenBtn.style.opacity = '1';
+                            addTokenBtn.disabled = false;
+                            addTokenBtn.style.pointerEvents = 'auto';
+                            addTokenBtn.style.cursor = 'pointer';
+                        }
+                        
+                        if (requestContractBtn) {
+                            requestContractBtn.style.display = 'block';
+                            requestContractBtn.style.visibility = 'visible';
+                            requestContractBtn.style.opacity = '1';
+                            requestContractBtn.disabled = false;
+                            requestContractBtn.style.pointerEvents = 'auto';
+                            requestContractBtn.style.cursor = 'pointer';
                         }
                     }
                     
@@ -5891,12 +6064,28 @@
                     showNotify('📋 جاري ربط مع Thirdweb... | Connecting with Thirdweb...', 'info');
                     try {
                         // ✅ تهيئة Thirdweb SDK - Initialize Thirdweb SDK
+                        // ✅ SPECIAL PAGE: ربط Thirdweb في صفحة خاصة - Link Thirdweb in special page
                         if (typeof initializeThirdwebSDK === 'function') {
-                            const thirdwebResult = await initializeThirdwebSDK();
-                            if (thirdwebResult && thirdwebResult.contract) {
-                                console.log('✅ Thirdweb SDK connected successfully');
-                                localStorage.setItem('thirdweb_connected', 'true');
+                            try {
+                                const thirdwebResult = await initializeThirdwebSDK();
+                                if (thirdwebResult && thirdwebResult.contract) {
+                                    console.log('✅ Thirdweb SDK connected successfully');
+                                    localStorage.setItem('thirdweb_connected', 'true');
+                                    localStorage.setItem('thirdweb_connected_at', new Date().toISOString());
+                                    showNotify('✅ تم ربط Thirdweb بنجاح! | Thirdweb linked successfully!', 'success');
+                                }
+                            } catch (thirdwebError) {
+                                console.warn('⚠️ Thirdweb SDK initialization failed:', thirdwebError);
+                                // ✅ Fallback: فتح صفحة Thirdweb في تبويبة جديدة - Fallback: Open Thirdweb page in new tab
+                                const thirdwebUrl = 'https://thirdweb.com/';
+                                window.open(thirdwebUrl, '_blank', 'noopener,noreferrer');
+                                showNotify('⚠️ يرجى ربط Thirdweb يدوياً | Please link Thirdweb manually', 'warning');
                             }
+                        } else {
+                            // ✅ إذا لم تكن الدالة موجودة، افتح صفحة Thirdweb مباشرة - If function doesn't exist, open Thirdweb page directly
+                            const thirdwebUrl = 'https://thirdweb.com/';
+                            window.open(thirdwebUrl, '_blank', 'noopener,noreferrer');
+                            showNotify('📋 جاري فتح Thirdweb... | Opening Thirdweb...', 'info');
                         }
                         
                         // ✅ جمع معلومات المحفظة والعقد - Collect wallet and contract info
@@ -5922,16 +6111,30 @@
                         localStorage.setItem('smart_contract_info', JSON.stringify(contractInfo));
                         
                         // ✅ إرسال بيانات العقد إلى Vercel/Backend (Cloud Storage) - Send contract data to Vercel/Backend (Cloud Storage)
+                        // ✅ SPECIAL PAGE: فتح Vercel في تبويبة جديدة لربط البيانات - Open Vercel in new tab to link data
                         try {
                             if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                                // ✅ إرسال البيانات إلى Vercel API - Send data to Vercel API
                                 fetch(`${CONFIG.SITE_URL}/api/contract-info`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(contractInfo)
-                                }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                                }).then(() => {
+                                    console.log('✅ Contract info sent to Vercel successfully');
+                                    showNotify('✅ تم ربط Vercel بنجاح! | Vercel linked successfully!', 'success');
+                                }).catch(e => {
+                                    console.warn('⚠️ Vercel API save failed (non-critical):', e);
+                                    // ✅ Fallback: فتح صفحة Vercel في تبويبة جديدة - Fallback: Open Vercel page in new tab
+                                    window.open(CONFIG.SITE_URL, '_blank', 'noopener,noreferrer');
+                                });
+                                
+                                // ✅ فتح صفحة Vercel في تبويبة جديدة لربط البيانات - Open Vercel page in new tab to link data
+                                setTimeout(() => {
+                                    window.open(CONFIG.SITE_URL, '_blank', 'noopener,noreferrer');
+                                }, 1000);
                             }
                         } catch(e) {
-                            console.warn('Cloud save error (non-critical):', e);
+                            console.warn('⚠️ Cloud save error (non-critical):', e);
                         }
                         
                         // ✅ STRICT: التحقق من إكمال المرحلة 3 تلقائياً - Auto-check Stage 3 completion
@@ -6004,6 +6207,37 @@
                     
                     // ✅ حفظ معلومات إكمال المرحلة 3 - Save Stage 3 completion
                     localStorage.setItem('stage3_wallet_completed', 'true');
+                    
+                    // ✅ إعادة تفعيل الأزرار - Re-enable buttons
+                    this.isProcessing = false;
+                    
+                    console.log('✅ Wallet connection process completed successfully');
+                    
+                } catch (error) {
+                    console.error('❌ Wallet connection error:', error);
+                    
+                    // ✅ إعادة تفعيل الأزرار عند الخطأ - Re-enable buttons on error
+                    this.isProcessing = false;
+                    
+                    // ✅ إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                    const walletSelectionStep = document.getElementById('wallet-selection-step');
+                    if (walletSelectionStep) {
+                        walletSelectionStep.style.display = 'block';
+                        walletSelectionStep.style.visibility = 'visible';
+                        walletSelectionStep.style.opacity = '1';
+                    }
+                    
+                    // ✅ إعادة تفعيل أزرار المحفظة - Re-enable wallet buttons
+                    const walletButtons = document.querySelectorAll('.wallet-option');
+                    walletButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.opacity = '1';
+                    });
+                    
+                    showNotify(`❌ خطأ في ربط المحفظة: ${error.message || error} | Wallet connection error: ${error.message || error}`, 'error');
+                }
+            },
                     localStorage.setItem('stage3_completed_at', new Date().toISOString());
                     localStorage.setItem('stage3_wallet_address', account);
                     
@@ -6041,8 +6275,32 @@
                     }
                     
                     console.log('✅ Wallet connected successfully - showing token/contract request interface');
+                    
+                    // ✅ إعادة تفعيل isProcessing - Re-enable isProcessing
+                    this.isProcessing = false;
+                    
                 } catch (err) {
-                    console.error('Wallet error:', err);
+                    console.error('❌ Wallet connection error:', err);
+                    
+                    // ✅ إعادة تفعيل isProcessing عند الخطأ - Re-enable isProcessing on error
+                    this.isProcessing = false;
+                    
+                    // ✅ إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
+                    const walletSelectionStep = document.getElementById('wallet-selection-step');
+                    if (walletSelectionStep) {
+                        walletSelectionStep.style.display = 'block';
+                        walletSelectionStep.style.visibility = 'visible';
+                        walletSelectionStep.style.opacity = '1';
+                    }
+                    
+                    // ✅ إعادة تفعيل أزرار المحفظة - Re-enable wallet buttons
+                    const walletButtons = document.querySelectorAll('.wallet-option');
+                    walletButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.opacity = '1';
+                    });
+                    
                     if (err && err.code === 4001) {
                         showNotify('تم رفض الطلب من المستخدم | Request rejected by user', 'warning');
                     } else {
@@ -6432,6 +6690,24 @@
                 const contractRequested = localStorage.getItem('contract_requested') === 'true';
                 const continueBtn = document.getElementById('continue-to-empire-btn');
                 
+                // ✅ منع التضارب: التأكد من إخفاء الأزرار الأخرى أولاً - Prevent conflicts: Ensure other buttons are hidden first
+                const addTokenBtn = document.getElementById('add-token-btn');
+                const requestContractBtn = document.getElementById('request-contract-btn');
+                
+                if (addTokenBtn && tokenAdded) {
+                    addTokenBtn.style.display = 'none';
+                    addTokenBtn.style.visibility = 'hidden';
+                    addTokenBtn.style.opacity = '0';
+                    addTokenBtn.disabled = true;
+                }
+                
+                if (requestContractBtn && contractRequested) {
+                    requestContractBtn.style.display = 'none';
+                    requestContractBtn.style.visibility = 'hidden';
+                    requestContractBtn.style.opacity = '0';
+                    requestContractBtn.disabled = true;
+                }
+                
                 if (tokenAdded && contractRequested && continueBtn) {
                     continueBtn.style.display = 'block';
                     continueBtn.style.visibility = 'visible';
@@ -6439,14 +6715,27 @@
                     continueBtn.disabled = false;
                     continueBtn.style.cursor = 'pointer';
                     continueBtn.style.pointerEvents = 'auto';
+                    continueBtn.style.transition = 'all 0.3s ease';
                     showNotify('✅ تم إكمال جميع الخطوات! يمكنك المتابعة الآن | All steps completed! You can proceed now', 'success');
                     
                     // ✅ STRICT: الانتقال التلقائي للإمبراطورية بعد 2 ثانية - Auto-transition to Empire after 2 seconds
                     setTimeout(() => {
+                        // ✅ إخفاء جميع الأزرار قبل الانتقال - Hide all buttons before transition
+                        this.hideAllWalletButtons();
+                        
                         if (typeof this.proceedToEmpireStage3 === 'function') {
                             this.proceedToEmpireStage3();
                         }
                     }, 2000);
+                } else {
+                    // ✅ إذا لم تكتمل الخطوات، إخفاء زر الانتقال - If steps not completed, hide transition button
+                    if (continueBtn) {
+                        continueBtn.style.display = 'none';
+                        continueBtn.style.visibility = 'hidden';
+                        continueBtn.style.opacity = '0';
+                        continueBtn.disabled = true;
+                        continueBtn.style.pointerEvents = 'none';
+                    }
                 }
             },
             

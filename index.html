@@ -2526,7 +2526,7 @@
             </p>
             <!-- ✅ Social Buttons in 3x2 Grid Layout with Original Logos -->
             <div class="social-grid-modern" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 25px; max-width: 900px; width: 100%; margin: 0 auto; padding: 0 20px;">
-                <button class="social-card social-verify-btn kick" data-platform="kick" style="border: 3px solid rgba(5, 255, 5, 0.5); background: rgba(5, 255, 5, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn kick" data-platform="kick" onclick="clickSocialIcon('kick');" style="border: 3px solid rgba(5, 255, 5, 0.5); background: rgba(5, 255, 5, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Kick</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -2534,7 +2534,7 @@
                         <i class="fas fa-check-circle"></i> تأكيد | Confirm
                     </button>
                 </button>
-                <button class="social-card social-verify-btn twitter" data-platform="twitter" style="border: 3px solid rgba(29, 161, 242, 0.5); background: rgba(29, 161, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn twitter" data-platform="twitter" onclick="clickSocialIcon('twitter');" style="border: 3px solid rgba(29, 161, 242, 0.5); background: rgba(29, 161, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X/Twitter" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">X/Twitter</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -2542,7 +2542,7 @@
                         <i class="fas fa-check-circle"></i> تأكيد | Confirm
                     </button>
                 </button>
-                <button class="social-card social-verify-btn telegram" data-platform="telegram" style="border: 3px solid rgba(37, 150, 190, 0.5); background: rgba(37, 150, 190, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn telegram" data-platform="telegram" onclick="clickSocialIcon('telegram');" style="border: 3px solid rgba(37, 150, 190, 0.5); background: rgba(37, 150, 190, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Telegram</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -2550,7 +2550,7 @@
                         <i class="fas fa-check-circle"></i> تأكيد | Confirm
                     </button>
                 </button>
-                <button class="social-card social-verify-btn instagram" data-platform="instagram" style="border: 3px solid rgba(225, 48, 108, 0.5); background: rgba(225, 48, 108, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn instagram" data-platform="instagram" onclick="clickSocialIcon('instagram');" style="border: 3px solid rgba(225, 48, 108, 0.5); background: rgba(225, 48, 108, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Instagram</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -2558,7 +2558,7 @@
                         <i class="fas fa-check-circle"></i> تأكيد | Confirm
                     </button>
                 </button>
-                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" style="border: 3px solid rgba(0, 242, 234, 0.5); background: rgba(0, 242, 234, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn tiktok" data-platform="tiktok" onclick="clickSocialIcon('tiktok');" style="border: 3px solid rgba(0, 242, 234, 0.5); background: rgba(0, 242, 234, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">TikTok</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -2566,7 +2566,7 @@
                         <i class="fas fa-check-circle"></i> تأكيد | Confirm
                     </button>
                 </button>
-                <button class="social-card social-verify-btn discord" data-platform="discord" style="border: 3px solid rgba(88, 101, 242, 0.5); background: rgba(88, 101, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                <button class="social-card social-verify-btn discord" data-platform="discord" onclick="clickSocialIcon('discord');" style="border: 3px solid rgba(88, 101, 242, 0.5); background: rgba(88, 101, 242, 0.1); border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
                     <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 60px; height: 60px; border-radius: 12px; margin-bottom: 15px; object-fit: contain;">
                     <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 1rem; font-weight: 600;">Discord</span>
                     <div class="check-mark" style="position: absolute; top: 10px; right: 10px; display: none; color: #00ff00; font-size: 1.5rem;"><i class="fas fa-check-circle"></i></div>
@@ -5825,6 +5825,27 @@
                         }
                         
                         showNotify('✅ تم ربط عقد المحفظة بنجاح! | Wallet contract connected successfully!', 'success');
+                        
+                        // ✅ IMMEDIATE: Show "Confirm Wallet Process" button and auto-redirect to Empire
+                        const continueToEmpireBtn = document.getElementById('continue-to-empire-btn');
+                        if (continueToEmpireBtn) {
+                            continueToEmpireBtn.style.display = 'block';
+                            continueToEmpireBtn.style.visibility = 'visible';
+                            continueToEmpireBtn.style.opacity = '1';
+                            continueToEmpireBtn.disabled = false;
+                            continueToEmpireBtn.style.cursor = 'pointer';
+                            continueToEmpireBtn.style.pointerEvents = 'auto';
+                            showNotify('✅ تم ربط المحفظة و$AKSG! جاري الانتقال للإمبراطورية... | Wallet and $AKSG linked! Redirecting to Empire...', 'success');
+                            
+                            // ✅ IMMEDIATE REDIRECT: Auto-redirect to Empire Page after 1 second
+                            setTimeout(() => {
+                                if (typeof this.proceedToEmpireStage3 === 'function') {
+                                    this.proceedToEmpireStage3();
+                                } else if (typeof proceedToEmpire === 'function') {
+                                    proceedToEmpire();
+                                }
+                            }, 1000);
+                        }
                     } catch (contractError) {
                         console.warn('⚠️ Auto-bind contract failed (non-critical):', contractError);
                         // ✅ حفظ محلي حتى في حالة الفشل - Save locally even on failure
@@ -6538,36 +6559,38 @@
                     }
                 }
                 
-                // ✅ الانتقال التلقائي إلى صفحة الإمبراطورية - Auto-redirect to Empire page
+                // ✅ IMMEDIATE TRANSITION: الانتقال التلقائي الفوري إلى صفحة الإمبراطورية - Immediate auto-redirect to Empire page
                 // يجب أن تكون هذه الصفحة منظمة، احترافية، وخالية من أي عيوب بصرية
                 // This page should be organized, professional, and free of visual defects
-                setTimeout(() => {
-                    hideAllStages();
-                    const empireStage = document.getElementById('ghostEmpireStage');
-                    if (empireStage) {
-                        empireStage.style.display = 'block';
-                        empireStage.style.opacity = '1';
-                        empireStage.style.visibility = 'visible';
-                        empireStage.style.position = 'fixed';
-                        empireStage.style.top = '0';
-                        empireStage.style.left = '0';
-                        empireStage.style.width = '100%';
-                        empireStage.style.height = '100vh';
-                        empireStage.style.zIndex = '10000';
-                        empireStage.style.overflowY = 'auto';
-                        empireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
-                        empireStage.classList.add('active');
-                        
-                        // ✅ تحديث بيانات الإمبراطورية - Update Empire data
+                hideAllStages();
+                const empireStage = document.getElementById('ghostEmpireStage');
+                if (empireStage) {
+                    empireStage.style.display = 'block';
+                    empireStage.style.opacity = '1';
+                    empireStage.style.visibility = 'visible';
+                    empireStage.style.position = 'fixed';
+                    empireStage.style.top = '0';
+                    empireStage.style.left = '0';
+                    empireStage.style.width = '100%';
+                    empireStage.style.height = '100vh';
+                    empireStage.style.zIndex = '10000';
+                    empireStage.style.overflowY = 'auto';
+                    empireStage.style.background = 'radial-gradient(circle, #1a0b2e 0%, #020205 100%)';
+                    empireStage.classList.add('active');
+                    
+                    // ✅ تحديث بيانات الإمبراطورية - Update Empire data
+                    if (typeof this.updateEmpireWalletInfo === 'function') {
                         this.updateEmpireWalletInfo();
                     }
+                }
+                if (typeof this.initEmpireFeatures === 'function') {
                     this.initEmpireFeatures();
-                    
-                    // ✅ إشعار نجاح الانتقال - Success notification
-                    if (typeof showNotify === 'function') {
-                        showNotify('✅ مرحباً بك في إمبراطورية الأشباح! | Welcome to Ghost Empire!', 'success');
-                    }
-                }, 500);
+                }
+                
+                // ✅ إشعار نجاح الانتقال - Success notification
+                if (typeof showNotify === 'function') {
+                    showNotify('✅ مرحباً بك في إمبراطورية الأشباح! | Welcome to Ghost Empire!', 'success');
+                }
             },
             
             // ==================== STAGE 4: EMPIRE FUNCTIONS ====================
@@ -8534,6 +8557,59 @@
         // Stage 2: Social Media Platforms (Button hidden until all confirmed)
         // ✅ نظام تحقق إلزامي: يمنع ظهور الزر إلا بعد تأكيد دخول المستخدم لجميع الروابط المطلوبة
         // Mandatory verification system: Prevents button from appearing until user confirms visiting all required links
+        
+        // ✅ Initialize socialClickedState from localStorage on page load (PERSISTENT STATE)
+        // This prevents bypass via page refresh - state is restored from localStorage
+        function initializeStage2State() {
+            const requiredPlatformsForStage2 = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
+            let restoredCount = 0;
+            
+            requiredPlatformsForStage2.forEach(platform => {
+                const isConfirmed = 
+                    localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                    localStorage.getItem(`social_verified_${platform}`) === 'true';
+                if (isConfirmed) {
+                    socialClickedState[platform] = true;
+                    restoredCount++;
+                    
+                    // ✅ Restore visual state (check mark) if Stage 2 is visible
+                    const iconCard = document.querySelector(`.social-verify-btn[data-platform="${platform}"]`);
+                    if (iconCard) {
+                        iconCard.classList.add('clicked');
+                        iconCard.style.borderColor = 'var(--success)';
+                        iconCard.style.background = 'rgba(0, 255, 136, 0.1)';
+                        iconCard.style.boxShadow = '0 0 20px rgba(0, 255, 163, 0.5)';
+                        
+                        // Show check mark
+                        const checkMark = iconCard.querySelector('.check-mark');
+                        if (checkMark) {
+                            checkMark.style.display = 'block';
+                        }
+                    }
+                }
+            });
+            
+            console.log(`✅ Stage 2 state restored: ${restoredCount}/6 platforms confirmed`);
+            
+            // ✅ Restore button state on page load (MANDATORY: Button disabled by default)
+            const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
+            if (confirmSocialAdvanceBtn) {
+                // ✅ STRICT: Button is disabled by default - only enable if ALL 6 platforms confirmed
+                confirmSocialAdvanceBtn.disabled = true;
+                confirmSocialAdvanceBtn.style.display = 'none';
+                confirmSocialAdvanceBtn.style.visibility = 'hidden';
+                confirmSocialAdvanceBtn.style.opacity = '0';
+                confirmSocialAdvanceBtn.style.pointerEvents = 'none';
+                confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
+                confirmSocialAdvanceBtn.classList.remove('enabled');
+            }
+            
+            // Check completion status
+            if (typeof checkAllSocialClicked === 'function') {
+                checkAllSocialClicked();
+            }
+        }
+        
         function checkAllSocialClicked() {
             // ✅ Require all 6 platforms (Kick, Twitter/X, Telegram, Instagram, TikTok, Discord)
             // ✅ حساب فقط المنصات الستة المطلوبة (بدون YouTube) - Count only the 6 required platforms (without YouTube)
@@ -8551,6 +8627,10 @@
             }).length;
             const minimumRequired = 6; // ✅ All 6 platforms required (no YouTube in Stage 2)
             const enoughClicked = clickedCount >= minimumRequired;
+            
+            // ✅ PERSISTENT STATE: Save verification state to localStorage
+            localStorage.setItem('stage2_verification_count', clickedCount.toString());
+            localStorage.setItem('stage2_all_verified', enoughClicked ? 'true' : 'false');
             
             // ✅ تحديث AppManager.socials أيضاً - Update AppManager.socials as well
             if (typeof AppManager !== 'undefined' && AppManager.socials) {
@@ -8612,8 +8692,9 @@
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
             const syncStatusText = document.getElementById('syncStatusText');
             
-            // Save to localStorage for verification
+            // ✅ PERSISTENT STATE: Save to localStorage for verification (prevents bypass via refresh)
             localStorage.setItem('social_platforms_confirmed', JSON.stringify(socialClickedState));
+            localStorage.setItem('stage2_verification_timestamp', new Date().toISOString());
             
             if (confirmSyncBtn) {
                 if (enoughClicked) {
@@ -17061,6 +17142,11 @@
             // Initialize SPA manager after DOM is ready
             if (typeof AppManager !== 'undefined') {
                 AppManager.init();
+            }
+            
+            // ✅ Initialize Stage 2 verification state (PERSISTENT - prevents bypass via refresh)
+            if (typeof initializeStage2State === 'function') {
+                initializeStage2State();
             }
             
             // ✅ تهيئة نظام الإحالة عند تحميل الصفحة - Initialize referral system on page load

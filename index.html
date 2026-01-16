@@ -259,6 +259,21 @@
             .wallet-option { padding: 15px !important; }
             .social-link-card { padding: 15px !important; }
             .social-verification-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
+            
+            /* Stage 4 Empire - Mobile Responsive */
+            #ghostEmpireStage .empire-title { font-size: 2rem !important; }
+            #ghostEmpireStage .social-grid-modern { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+            #ghostEmpireStage .social-card img { width: 40px !important; height: 40px !important; }
+            #ghostEmpireStage .social-card span { font-size: 0.75rem !important; }
+            #ghostEmpireStage .welcome-message-empire { padding: 20px !important; font-size: 0.9rem !important; }
+            #ghostEmpireStage [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+            #ghostEmpireStage .empire-sidebar { position: static !important; }
+            #ghostEmpireStage .claim-code-btn-neon { font-size: 1.2rem !important; padding: 20px !important; }
+            #ghostEmpireStage #completion-percentage { font-size: 2rem !important; }
+            #ghostEmpireStage #geckoterminal-chart-container { height: 400px !important; }
+            #ghostEmpireStage .glass-card { padding: 20px !important; }
+            #ghostEmpireStage .loyalty-table { font-size: 0.75rem !important; }
+            #ghostEmpireStage .loyalty-table th, #ghostEmpireStage .loyalty-table td { padding: 8px 4px !important; }
         }
 
         /* Tablet Support - Improved selector specificity */
@@ -877,6 +892,134 @@
             opacity: 0.6;
             cursor: not-allowed;
             animation: none;
+        }
+        
+        /* ==================== PROFESSIONAL NEON BUTTON EFFECTS ==================== */
+        /* Claim Code Button with Neon Effect */
+        .claim-code-btn-neon {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: 3px solid var(--secondary);
+            border-radius: 20px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            padding: 25px 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 163, 0.4),
+                0 0 40px rgba(163, 54, 255, 0.3),
+                inset 0 0 20px rgba(0, 255, 163, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .claim-code-btn-neon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        
+        .claim-code-btn-neon:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 163, 0.6),
+                0 0 60px rgba(163, 54, 255, 0.5),
+                0 0 90px rgba(0, 255, 163, 0.3),
+                inset 0 0 30px rgba(0, 255, 163, 0.2);
+            border-color: var(--secondary);
+            animation: neon-pulse-btn 1.5s ease-in-out infinite;
+        }
+        
+        .claim-code-btn-neon:hover::before {
+            left: 100%;
+        }
+        
+        .claim-code-btn-neon:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .claim-code-btn-neon:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+            box-shadow: none;
+        }
+        
+        @keyframes neon-pulse-btn {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px rgba(0, 255, 163, 0.6),
+                    0 0 60px rgba(163, 54, 255, 0.5),
+                    0 0 90px rgba(0, 255, 163, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 40px rgba(0, 255, 163, 0.8),
+                    0 0 80px rgba(163, 54, 255, 0.7),
+                    0 0 120px rgba(0, 255, 163, 0.5);
+            }
+        }
+        
+        /* Enhanced btn-stage with Neon */
+        .btn-stage {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(163, 54, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-stage::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-stage:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 0 30px rgba(163, 54, 255, 0.5),
+                0 0 50px rgba(0, 255, 163, 0.3);
+            border-color: var(--secondary);
+        }
+        
+        .btn-stage:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-stage.enabled {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border-color: var(--secondary);
+            box-shadow: 0 0 25px rgba(0, 255, 163, 0.4);
+        }
+        
+        .btn-stage.enabled:hover {
+            box-shadow: 
+                0 0 40px rgba(0, 255, 163, 0.6),
+                0 0 70px rgba(163, 54, 255, 0.4);
         }
 
         .btn-wallet-state {
@@ -2171,19 +2314,73 @@
             <p style="color: #aaa; text-align: center; margin-bottom: 30px;">
                 اختر محفظتك لإضافة $AKSG وتوقيع التأكيد | Choose wallet to add $AKSG and sign
             </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px;">
-                <button class="wallet-option" data-wallet="metamask">
-                    <img src="https://i.ibb.co/H1LzqWL/images.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%23f6851b%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>M</text></svg>';">
-                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
-                </button>
-                <button class="wallet-option" data-wallet="trust">
-                    <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 rx=%2716%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%231c68f4%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>T</text></svg>';">
-                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
-                </button>
-                <button class="wallet-option" data-wallet="phantom">
-                    <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%237c3aed%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>P</text></svg>';">
-                    <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
-                </button>
+            
+            <!-- Wallet Selection (Step 1) -->
+            <div id="wallet-selection-step" style="display: block;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px; margin: 0 auto;">
+                    <button class="wallet-option" data-wallet="metamask">
+                        <img src="https://i.ibb.co/H1LzqWL/images.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%23f6851b%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>M</text></svg>';">
+                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
+                    </button>
+                    <button class="wallet-option" data-wallet="trust">
+                        <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 rx=%2716%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%231c68f4%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>T</text></svg>';">
+                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
+                    </button>
+                    <button class="wallet-option" data-wallet="phantom">
+                        <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%237c3aed%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>P</text></svg>';">
+                        <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Token & Contract Request Form (Step 2) - Hidden by default -->
+            <div id="token-contract-step" style="display: none; max-width: 600px; margin: 40px auto; padding: 0 20px;">
+                <div class="glass-card" style="padding: 40px; border-radius: 20px; border: 2px solid var(--primary);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.8rem; margin-bottom: 30px; text-align: center;">
+                        <i class="fas fa-coins"></i> إضافة العملة وطلب العقد | Add Token & Request Contract
+                    </h2>
+                    
+                    <!-- Connected Wallet Info -->
+                    <div id="connected-wallet-info" style="background: rgba(163, 54, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 1px solid var(--primary);">
+                        <p style="color: #aaa; margin-bottom: 10px; font-size: 0.9rem;">المحفظة المتصلة | Connected Wallet:</p>
+                        <p id="wallet-address-display" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1rem; word-break: break-all; margin: 0;"></p>
+                        <p id="wallet-type-display" style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; margin-top: 10px; margin-bottom: 0;"></p>
+                    </div>
+                    
+                    <!-- Token Name Input -->
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 1rem;">
+                            <i class="fas fa-tag"></i> اسم العملة | Token Name
+                        </label>
+                        <input type="text" id="token-name-input" placeholder="AKSG" value="AKSG" style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron'; font-size: 1rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'">
+                    </div>
+                    
+                    <!-- Contract Address Input -->
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 10px; font-size: 1rem;">
+                            <i class="fas fa-file-contract"></i> عنوان العقد | Contract Address
+                        </label>
+                        <input type="text" id="contract-address-input" placeholder="0x58f821f9bda7af97c76725a1abacd3ec61042a4d" value="0x58f821f9bda7af97c76725a1abacd3ec61042a4d" style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--primary); border-radius: 10px; color: var(--text-main); font-family: 'Orbitron'; font-size: 0.9rem; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='var(--secondary)'; this.style.boxShadow='0 0 20px rgba(0, 255, 163, 0.3)'" onblur="this.style.borderColor='var(--primary)'; this.style.boxShadow='none'">
+                        <p style="color: #888; font-size: 0.85rem; margin-top: 8px; direction: rtl;">
+                            <i class="fas fa-info-circle"></i> سيتم استخدام هذا العنوان لإضافة العملة إلى محفظتك | This address will be used to add the token to your wallet
+                        </p>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button id="add-token-btn" onclick="if(typeof AppManager !== 'undefined' && AppManager.addTokenToWalletStage3) AppManager.addTokenToWalletStage3(); else addTokenToWallet();" class="btn-stage" style="flex: 1; min-width: 200px; padding: 18px; font-size: 1.1rem;">
+                            <i class="fas fa-plus-circle"></i> إضافة العملة | Add Token
+                        </button>
+                        <button id="request-contract-btn" onclick="if(typeof AppManager !== 'undefined' && AppManager.requestContractStage3) AppManager.requestContractStage3(); else requestContract();" class="btn-stage" style="flex: 1; min-width: 200px; padding: 18px; font-size: 1.1rem; background: var(--secondary); color: #000;">
+                            <i class="fas fa-file-signature"></i> طلب العقد | Request Contract
+                        </button>
+                    </div>
+                    
+                    <!-- Continue Button (Hidden until token and contract are done) -->
+                    <button id="continue-to-empire-btn" onclick="if(typeof AppManager !== 'undefined' && AppManager.proceedToEmpireStage3) AppManager.proceedToEmpireStage3(); else proceedToEmpire();" class="btn-stage" style="width: 100%; margin-top: 20px; padding: 20px; font-size: 1.2rem; display: none; background: linear-gradient(45deg, var(--primary), var(--secondary));">
+                        <i class="fas fa-arrow-right"></i> المتابعة إلى الإمبراطورية | Continue to Empire
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -2607,68 +2804,230 @@
         </div>
     </div>
 
-    <!-- ==================== STAGE 3: GHOST EMPIRE ==================== -->
-    <!-- Stage 3: Ghost Empire - إمبراطورية Ghost (Claim Code & Chart) -->
+    <!-- ==================== STAGE 4: GHOST EMPIRE ==================== -->
+    <!-- Stage 4: Ghost Empire - إمبراطورية Ghost (Professional 3-Column Layout) -->
     <div id="ghostEmpireStage" class="ghost-empire-stage stage-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10000; overflow-y: auto; background: radial-gradient(circle, #1a0b2e 0%, #020205 100%);">
         
-        <!-- Top Header: Logo, Social Links & KICK LIVE STATUS -->
-        <div class="empire-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(0, 0, 0, 0.3); border-bottom: 2px solid var(--primary); margin-bottom: 30px;">
-            <!-- Left: Empire Logo -->
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: 0 0 30px var(--primary);">
-                <h1 class="empire-title" style="font-family: 'Orbitron'; font-size: 2rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); margin: 0;">GHOST EMPIRE</h1>
+        <!-- ==================== CENTER TOP: Logo, Social Links & Welcome Message ==================== -->
+        <div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center;">
+            <!-- Logo -->
+            <div style="margin-bottom: 30px;">
+                <img src="https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg" class="empire-logo" alt="Ghost Empire" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 40px var(--primary); margin: 0 auto 20px;">
+                <h1 class="empire-title" style="font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); text-shadow: 0 0 30px var(--primary); margin-bottom: 20px;">GHOST EMPIRE</h1>
             </div>
             
-            <!-- Center: Social Links & KICK LIVE STATUS -->
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-                <!-- KICK LIVE STATUS -->
-                <div class="status-badge" style="display: flex; align-items: center; gap: 10px; font-weight: bold; padding: 10px 20px; border-radius: 30px; background: rgba(5, 255, 5, 0.2); border: 2px solid var(--kick); box-shadow: 0 0 20px rgba(5, 255, 5, 0.4);">
-                    <div id="kick-dot" class="dot" style="width: 12px; height: 12px; border-radius: 50%; animation: blink 1s infinite; background: var(--kick);"></div>
-                    <span id="kick-text" style="font-family: 'Orbitron'; color: var(--kick); font-size: 0.9rem;">KICK LIVE STATUS</span>
-                </div>
-                
-                <!-- Social Platforms Icons -->
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <a href="https://kick.com/ghost_gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid var(--kick);">
+            <!-- Social Links with Original Logos -->
+            <div style="margin-bottom: 30px;">
+                <div class="social-grid-modern" style="max-width: 700px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px;">
+                    <a href="https://kick.com/ghost_gamingtv" target="_blank" class="social-card kick" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(0, 255, 0, 0.05); border-radius: 15px; border: 2px solid var(--kick); transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(5, 255, 5, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/NBFfFCC/images-1.jpg" alt="Kick" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Kick</span>
                     </a>
-                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="X" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #1DA1F2;">
+                    <a href="https://twitter.com/tv_ghostgaming" target="_blank" class="social-card twitter" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(29, 161, 242, 0.05); border-radius: 15px; border: 2px solid #1da1f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(29, 161, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/rJLxbMS/images-2.jpg" alt="Twitter" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Twitter</span>
                     </a>
-                    <a href="https://t.me/ghost_gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #0088cc;">
+                    <a href="https://t.me/ghost_gamingtv" target="_blank" class="social-card telegram" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(37, 150, 190, 0.05); border-radius: 15px; border: 2px solid #2596be; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(37, 150, 190, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/21qsKPxG/png-clipart-telegram-computer-icons-logo-scalable-graphics-post-it-note-angle-triangle.png" alt="Telegram" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Telegram</span>
                     </a>
-                    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #E4405F;">
+                    <a href="https://www.instagram.com/ghost.gamingtv/" target="_blank" class="social-card instagram" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(225, 48, 108, 0.05); border-radius: 15px; border: 2px solid #e1306c; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(225, 48, 108, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/LX7ZxYLL/pngtree-instagram-social-media-icon-design-template-vector-picture-image-3654765.png" alt="Instagram" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Instagram</span>
                     </a>
-                    <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #000;">
+                    <a href="https://www.tiktok.com/@ghost.gamingtv" target="_blank" class="social-card tiktok" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(0, 242, 234, 0.05); border-radius: 15px; border: 2px solid #00f2ea; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(0, 242, 234, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">TikTok</span>
                     </a>
-                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid #5865F2;">
+                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(88, 101, 242, 0.05); border-radius: 15px; border: 2px solid #5865f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(88, 101, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Discord</span>
                     </a>
                 </div>
             </div>
             
-            <!-- Right: Weekly Reset Counter & Referral Button -->
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 15px;">
-                <!-- Weekly Reset Counter -->
-                <div id="weeklyResetCounter" style="background: rgba(163, 54, 255, 0.2); border: 2px solid var(--primary); border-radius: 15px; padding: 15px 25px; text-align: center; box-shadow: 0 0 20px rgba(163, 54, 255, 0.3);">
-                    <p style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; margin: 0 0 5px 0; font-weight: 700;">Weekly Reset | تجديد أسبوعي</p>
-                    <p id="resetCountdown" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1.1rem; margin: 0; font-weight: 700;">Loading...</p>
-                </div>
-                
-                <!-- Referral Button (Replaces KICK button) -->
-                <button id="referralBtn" onclick="openReferralModal()" class="btn-mega" style="padding: 12px 30px; font-size: 1rem; background: linear-gradient(45deg, #ff6b6b, #ffa500); border: 2px solid #ffa500; border-radius: 15px; color: #000; font-weight: 700; font-family: 'Orbitron'; transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 165, 0, 0.4); cursor: pointer; display: inline-flex; align-items: center; gap: 10px;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 30px rgba(255, 165, 0, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(255, 165, 0, 0.4)'">
-                    <i class="fas fa-share-alt"></i> Share & Earn | شارك واكسب
-                </button>
+            <!-- Welcome Message & Project Explanation -->
+            <div class="welcome-message-empire" style="background: rgba(163, 54, 255, 0.15); border-radius: 25px; padding: 40px; border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(163, 54, 255, 0.3); margin-bottom: 40px;">
+                <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 2rem;">
+                    <i class="fas fa-crown"></i> مرحباً بك في إمبراطورية الأشباح | Welcome to the Ghost Empire
+                </h2>
+                <p style="font-size: 1.2rem; color: var(--text-main); margin-bottom: 15px; font-weight: 600; line-height: 1.8;">
+                    نحن أول من أرسى قاعدة: "المتابع شريكٌ في النجاح وليس مجرد رقم". مع KICKGHOST، متابعتك ليست وقتاً ضائعاً بل استثماراً ذكياً؛ حيث نربط الستريمرز والغيمرز بمنظومة تُحوّل كل إعجاب وفوز إلى مكافآت $AKSG.
+                </p>
+                <p style="font-size: 1rem; color: #aaa; line-height: 1.8;">
+                    <strong>We are the pioneers:</strong> "A follower is a partner in success, not just a number." With KICKGHOST, your engagement is a smart investment that converts every like and victory into $AKSG rewards.
+                </p>
             </div>
         </div>
         
-        <!-- Main Content Grid: Welcome Message (Top Right) + Leaderboards + Chart -->
-        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 30px; max-width: 1800px; margin: 0 auto; padding: 0 30px; margin-bottom: 40px;">
+        <!-- ==================== 3-COLUMN LAYOUT: Left (Leaderboards), Center (Generator), Right (Empty) ==================== -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; max-width: 1800px; margin: 0 auto; padding: 0 30px; margin-bottom: 40px;">
             
-            <!-- Left Column: Top Viewers Leaderboard -->
+            <!-- ==================== LEFT COLUMN: Leaderboards ==================== -->
+            <div class="empire-sidebar" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Wallet & User Code Info -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--primary);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-wallet"></i> بيانات المحفظة | Wallet Data
+                    </h2>
+                    <div id="wallet-info-display" style="background: rgba(163, 54, 255, 0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px;">
+                        <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 8px;">المحفظة المتصلة | Connected Wallet:</p>
+                        <p id="empire-wallet-address" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 0.9rem; word-break: break-all; margin: 0 0 10px 0;">--</p>
+                        <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 8px;">نوع المحفظة | Wallet Type:</p>
+                        <p id="empire-wallet-type" style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; margin: 0 0 10px 0;">--</p>
+                        <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 8px;">كود المستخدم | User Code:</p>
+                        <p id="empire-user-code" style="font-family: 'Orbitron'; color: var(--kick); font-size: 1.2rem; font-weight: 700; margin: 0;">--</p>
+                    </div>
+                </div>
+                
+                <!-- Top Viewers Leaderboard -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--primary);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-eye"></i> لائحة المشاهدين | Top Viewers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Views</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireViewersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Top Chatters Leaderboard -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--secondary);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-comments"></i> لائحة المعلقين | Top Chatters
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Msgs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireChattersLeaderboard">
+                            <!-- Populated by loadLeaderboardData() -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Code Claimers Leaderboard -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--kick);">
+                    <h2 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+                        <i class="fas fa-trophy"></i> لائحة الأكواد | Code Claimers
+                    </h2>
+                    <table class="loyalty-table" style="width: 100%; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Wallet</th>
+                                <th>Code</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empireCodeClaimersLeaderboard">
+                            <!-- Populated by loadCodeClaimersLeaderboard() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- ==================== CENTER COLUMN: Generator Code Button & Percentage Counter ==================== -->
+            <div class="empire-main-content" style="display: flex; flex-direction: column; gap: 30px; align-items: center; justify-content: center;">
+                <!-- Generator Code Button -->
+                <div style="width: 100%; max-width: 500px;">
+                    <button id="empireClaimBtn" class="claim-code-btn-neon" onclick="claimCode()" disabled style="width: 100%; padding: 25px; font-size: 1.5rem; font-family: 'Orbitron'; font-weight: 700; background: linear-gradient(45deg, var(--primary), var(--secondary)); border: 3px solid var(--secondary); border-radius: 20px; color: #000; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 30px rgba(0, 255, 163, 0.4);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 40px rgba(0, 255, 163, 0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 30px rgba(0, 255, 163, 0.4)'">
+                        <i class="fas fa-key"></i> Generator Code | توليد الكود
+                    </button>
+                </div>
+                
+                <!-- Percentage Counter -->
+                <div class="glass-card" style="padding: 30px; border-radius: 20px; border: 2px solid var(--primary); width: 100%; max-width: 500px; text-align: center;">
+                    <h3 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.5rem;">
+                        <i class="fas fa-chart-pie"></i> نسبة الإكمال | Completion Percentage
+                    </h3>
+                    <div style="position: relative; width: 200px; height: 200px; margin: 0 auto;">
+                        <svg width="200" height="200" style="transform: rotate(-90deg);">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="15"></circle>
+                            <circle id="completion-circle" cx="100" cy="100" r="80" fill="none" stroke="var(--secondary)" stroke-width="15" stroke-dasharray="502" stroke-dashoffset="502" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease;"></circle>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <span id="completion-percentage" style="font-family: 'Orbitron'; font-size: 2.5rem; font-weight: 700; color: var(--secondary);">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weekly Reset Notice -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid var(--kick); width: 100%; max-width: 500px; text-align: center; background: rgba(5, 255, 5, 0.1);">
+                    <h3 style="font-family: 'Orbitron'; color: var(--kick); margin-bottom: 15px; font-size: 1.2rem;">
+                        <i class="fas fa-calendar-week"></i> تجديد اللوائح | Leaderboard Reset
+                    </h3>
+                    <p style="color: var(--text-main); line-height: 1.8; margin-bottom: 10px; direction: rtl;">
+                        <strong>ملاحظة مهمة:</strong> تتجدد جميع اللوائح كل أسبوع يوم السبت الساعة 7 مساءً (19:00)
+                    </p>
+                    <p style="color: #aaa; line-height: 1.8; font-size: 0.9rem;">
+                        <strong>Important Note:</strong> All leaderboards reset every week on Saturday at 7 PM (19:00)
+                    </p>
+                </div>
+            </div>
+            
+            <!-- ==================== RIGHT COLUMN: Empty (Reserved for future features) ==================== -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Empty column - can be used for future features -->
+                <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.1); min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: #666; font-family: 'Orbitron'; font-size: 0.9rem; text-align: center;">
+                        Reserved for Future Features<br>
+                        محجوز للميزات المستقبلية
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== BOTTOM: GeckoTerminal Chart with Prominent Logo ==================== -->
+        <div style="max-width: 1600px; margin: 40px auto; padding: 0 20px;">
+            <!-- GeckoTerminal Logo - Prominent Display -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
+                    <div style="width: 2px; height: 40px; background: linear-gradient(180deg, transparent, var(--secondary), transparent);"></div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <p style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1rem; margin: 0; font-weight: 700;">POWERED BY | مدعوم من</p>
+                        <a href="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249" target="_blank" style="display: inline-block; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                            <img src="https://i.ibb.co/W4GNV41J/geckoterminal-light.png" alt="GeckoTerminal" style="width: 200px; height: auto; filter: drop-shadow(0 0 20px rgba(0, 255, 163, 0.5));">
+                        </a>
+                        <p style="font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; margin: 0;">MAJOR SUPPORTER & INVESTOR | داعم ومستثمر أساسي</p>
+                    </div>
+                    <div style="width: 2px; height: 40px; background: linear-gradient(180deg, transparent, var(--secondary), transparent);"></div>
+                </div>
+            </div>
+            
+            <!-- GeckoTerminal Chart -->
+            <div class="glass-card" style="padding: 25px; border-radius: 20px; border: 3px solid var(--secondary); box-shadow: 0 0 40px rgba(0, 255, 163, 0.3);">
+                <h2 style="font-family: 'Orbitron'; color: var(--secondary); margin-bottom: 20px; font-size: 1.8rem; text-align: center;">
+                    <i class="fas fa-chart-line"></i> GeckoTerminal Chart | مخطط GeckoTerminal
+                </h2>
+                <div class="chart-container" id="geckoterminal-chart-container" style="width: 100%; height: 600px; border: 2px solid var(--secondary); border-radius: 15px; overflow: hidden; display: block;">
+                    <iframe
+                        id="geckoterminal-embed"
+                        title="GeckoTerminal Embed"
+                        src="https://www.geckoterminal.com/polygon_pos/pools/0xa5a77ff6e6fd415a33b9dfc10a5a3e38e1ef4249?embed=1&info=0&swaps=1&chart_type=market_cap&resolution=1h&bg_color=111827"
+                        frameborder="0"
+                        allow="clipboard-write"
+                        allowfullscreen
+                        style="width: 100%; height: 100%;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Old Content (Keep for compatibility but hidden) -->
+        <div style="display: none;">
+            <!-- Old content hidden for compatibility -->
             <div class="empire-sidebar" style="position: sticky; top: 20px; height: fit-content;">
                 <div class="glass-card" style="padding: 25px;">
                     <h2 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 25px; font-size: 1.5rem; text-align: center;">
@@ -3569,6 +3928,53 @@
         
         // Initialize Thirdweb Client (will be called after DOM loads)
         let thirdwebClient = null;
+        
+        // ==================== THIRDWEB SDK INTEGRATION WITH CONTRACT ====================
+        // دمج Thirdweb SDK مع العقد 0x58f821f9bda7af97c76725a1abacd3ec61042a4d على Polygon
+        // Thirdweb SDK Integration with Contract 0x58f821f9bda7af97c76725a1abacd3ec61042a4d on Polygon
+        async function initializeThirdwebSDK() {
+            try {
+                // Check if Thirdweb SDK is available
+                if (typeof ThirdwebSDK === 'undefined' && typeof window.ThirdwebSDK === 'undefined') {
+                    console.warn('⚠️ Thirdweb SDK not loaded - using fallback');
+                    return null;
+                }
+                
+                const SDK = ThirdwebSDK || window.ThirdwebSDK;
+                const clientId = CONFIG.THIRDWEB_CLIENT_ID || CONFIG.CLIENT_ID || "a8d2fbfbbe9dcaa11cc48f3d2634e3fd";
+                const contractAddress = "0x58f821f9bda7af97c76725a1abacd3ec61042a4d";
+                const chainId = 137; // Polygon Mainnet
+                
+                // Initialize SDK
+                const sdk = new SDK({
+                    clientId: clientId,
+                    chainId: chainId
+                });
+                
+                // Get contract instance
+                const contract = await sdk.getContract(contractAddress);
+                
+                // Store for later use
+                window.thirdwebSDK = sdk;
+                window.thirdwebContract = contract;
+                thirdwebClient = sdk;
+                
+                console.log('✅ Thirdweb SDK initialized with contract:', contractAddress);
+                return { sdk, contract };
+            } catch (error) {
+                console.error('❌ Thirdweb SDK initialization error:', error);
+                return null;
+            }
+        }
+        
+        // Initialize Thirdweb SDK on page load
+        if (typeof window !== 'undefined') {
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    initializeThirdwebSDK().catch(e => console.warn('Thirdweb init failed:', e));
+                }, 1000);
+            });
+        }
         
         // ==================== 4. تهيئة التطبيق (Initialization) ====================
         // 4. Application Initialization - Works even if Thirdweb fails to load
@@ -4657,31 +5063,41 @@
                         console.warn('⚠️ Network switch error (non-critical):', networkError);
                     }
 
-                    // ==================== ✅ الخطوة 2: إضافة العملة تلقائياً ====================
-                    // Step 2: Auto-add token automatically
-                    showNotify('➕ جاري إضافة عملة $AKSG... | Adding $AKSG token...', 'info');
-                    try {
-                        await provider.request({
-                            method: 'wallet_watchAsset',
-                            params: {
-                                type: 'ERC20',
-                                options: {
-                                    address: CONFIG.TOKEN_ADDRESS || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D',
-                                    symbol: 'AKSG',
-                                    decimals: 18,
-                                    image: CONFIG.TOKEN_IMAGE || 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
-                                }
-                            }
-                        });
-                        console.log('✅ Token added to wallet successfully');
-                        localStorage.setItem('token_added', 'true');
-                        localStorage.setItem('token_added_at', new Date().toISOString());
-                    } catch (tokenError) {
-                        console.warn('⚠️ Token add request failed (non-critical):', tokenError);
-                        // Continue even if token add fails - we still have wallet address
-                        localStorage.setItem('token_added', 'true');
-                        localStorage.setItem('token_added_at', new Date().toISOString());
+                    // ==================== ✅ الخطوة 2: إظهار واجهة طلب اسم العملة والعقد ====================
+                    // Step 2: Show token name and contract request interface
+                    
+                    // ✅ حفظ معلومات المحفظة - Save wallet info
+                    localStorage.setItem('connectedWallet', account);
+                    localStorage.setItem('wallet_connected_at', new Date().toISOString());
+                    localStorage.setItem('wallet_network', 'Polygon');
+                    localStorage.setItem('wallet_chainId', '137');
+                    localStorage.setItem('wallet_type', walletType);
+                    
+                    // ✅ إخفاء خطوة اختيار المحفظة وإظهار واجهة طلب اسم العملة والعقد
+                    // Hide wallet selection and show token/contract request interface
+                    const walletSelectionStep = document.getElementById('wallet-selection-step');
+                    const tokenContractStep = document.getElementById('token-contract-step');
+                    const walletAddressDisplay = document.getElementById('wallet-address-display');
+                    const walletTypeDisplay = document.getElementById('wallet-type-display');
+                    
+                    if (walletSelectionStep) walletSelectionStep.style.display = 'none';
+                    if (tokenContractStep) {
+                        tokenContractStep.style.display = 'block';
+                        // Update wallet info display
+                        if (walletAddressDisplay) {
+                            walletAddressDisplay.textContent = account;
+                        }
+                        if (walletTypeDisplay) {
+                            const walletTypeNames = {
+                                'metamask': 'MetaMask',
+                                'trust': 'Trust Wallet',
+                                'phantom': 'Phantom'
+                            };
+                            walletTypeDisplay.textContent = walletTypeNames[walletType] || walletType;
+                        }
                     }
+                    
+                    showNotify('✅ تم الاتصال بالمحفظة بنجاح! | Wallet connected successfully!', 'success');
 
                     // ==================== ✅ الخطوة 3: طلب معلومات من العقد الذكي ====================
                     // Step 3: Request smart contract information (READ ONLY - No gas, no signature)
@@ -4806,26 +5222,7 @@
                         saveUserDataSilent();
                     }
                     
-                    console.log('✅ All wallet and contract data saved for final stage (Claim Code)');
-                    showNotify('✅ تم ربط المحفظة وإضافة العملة وجمع معلومات العقد بنجاح! | Wallet connected, token added, and contract info collected!', 'success');
-
-                    // ✅ إغلاق Stage 3 تماماً - Close Stage 3 completely
-                    const stageWallet = document.getElementById('stage-wallet');
-                    if (stageWallet) {
-                        stageWallet.style.display = 'none';
-                        stageWallet.style.opacity = '0';
-                        stageWallet.style.visibility = 'hidden';
-                        stageWallet.style.pointerEvents = 'none';
-                    }
-                    
-                    console.log('✅ Wallet connected - opening Stage 3 (Empire)');
-
-                    // ✅ الانتقال للمرحلة 3 (الإمبراطورية) في صفحة منفصلة - Transition to Stage 3 (Empire) in separate page
-                    setTimeout(() => {
-                        hideAllStages();
-                        this.showStage(3);
-                        this.initEmpireFeatures();
-                    }, 500);
+                    console.log('✅ Wallet connected successfully - showing token/contract request interface');
                 } catch (err) {
                     console.error('Wallet error:', err);
                     if (err && err.code === 4001) {
@@ -4837,6 +5234,12 @@
             },
 
             initEmpireFeatures() {
+                // ✅ تحديث بيانات المحفظة والكود في المرحلة 4 - Update wallet and code data in Stage 4
+                this.updateEmpireWalletInfo();
+                
+                // ✅ تحديث عداد النسبة المئوية - Update completion percentage counter
+                this.updateCompletionPercentageCounter();
+                
                 // ✅ جمع معلومات Kick Developer للشارت - Collect Kick Developer data for chart
                 if (typeof collectKickDeveloperData === 'function') {
                     collectKickDeveloperData().catch(e => console.warn('Kick data collection failed:', e));
@@ -4952,7 +5355,248 @@
                 
                 console.log('✅ Empire features initialized (Chart, Leaderboard, Claim Code Generator)');
             },
-
+            
+            // ==================== STAGE 3: TOKEN & CONTRACT FUNCTIONS ====================
+            // دالة إضافة العملة إلى المحفظة - Add token to wallet function
+            async addTokenToWalletStage3() {
+                try {
+                    const tokenNameInput = document.getElementById('token-name-input');
+                    const contractAddressInput = document.getElementById('contract-address-input');
+                    const addTokenBtn = document.getElementById('add-token-btn');
+                    
+                    if (!tokenNameInput || !contractAddressInput) {
+                        showNotify('❌ لم يتم العثور على حقول الإدخال | Input fields not found', 'error');
+                        return;
+                    }
+                    
+                    const tokenName = tokenNameInput.value.trim() || 'AKSG';
+                    const contractAddress = contractAddressInput.value.trim() || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                    
+                    if (!window.ethereum) {
+                        showNotify('⚠️ يرجى ربط المحفظة أولاً | Please connect wallet first', 'warning');
+                        return;
+                    }
+                    
+                    if (addTokenBtn) {
+                        addTokenBtn.disabled = true;
+                        addTokenBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإضافة... | Adding...';
+                    }
+                    
+                    showNotify('➕ جاري إضافة العملة... | Adding token...', 'info');
+                    
+                    await window.ethereum.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: {
+                                address: contractAddress,
+                                symbol: tokenName,
+                                decimals: 18,
+                                image: CONFIG.TOKEN_IMAGE || 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                            }
+                        }
+                    });
+                    
+                    localStorage.setItem('token_added', 'true');
+                    localStorage.setItem('token_name', tokenName);
+                    localStorage.setItem('token_added_at', new Date().toISOString());
+                    
+                    if (addTokenBtn) {
+                        addTokenBtn.disabled = false;
+                        addTokenBtn.innerHTML = '<i class="fas fa-check-circle"></i> تمت الإضافة | Added';
+                        addTokenBtn.style.background = 'var(--success)';
+                    }
+                    
+                    showNotify('✅ تمت إضافة العملة بنجاح! | Token added successfully!', 'success');
+                    checkStage3Completion();
+                } catch (error) {
+                    console.error('Add token error:', error);
+                    const addTokenBtn = document.getElementById('add-token-btn');
+                    if (addTokenBtn) {
+                        addTokenBtn.disabled = false;
+                        addTokenBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة العملة | Add Token';
+                    }
+                    if (error.code === 4001) {
+                        showNotify('تم رفض الطلب | Request rejected', 'warning');
+                    } else {
+                        showNotify('⚠️ فشلت إضافة العملة، لكن يمكنك المتابعة | Token add failed, but you can continue', 'warning');
+                        // Mark as added anyway for UX
+                        localStorage.setItem('token_added', 'true');
+                        checkStage3Completion();
+                    }
+                }
+            },
+            
+            // دالة طلب العقد - Request contract function
+            async requestContractStage3() {
+                try {
+                    const contractAddressInput = document.getElementById('contract-address-input');
+                    const requestContractBtn = document.getElementById('request-contract-btn');
+                    
+                    if (!contractAddressInput) {
+                        showNotify('❌ لم يتم العثور على حقل عنوان العقد | Contract address field not found', 'error');
+                        return;
+                    }
+                    
+                    const contractAddress = contractAddressInput.value.trim() || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                    
+                    if (!window.ethereum) {
+                        showNotify('⚠️ يرجى ربط المحفظة أولاً | Please connect wallet first', 'warning');
+                        return;
+                    }
+                    
+                    if (requestContractBtn) {
+                        requestContractBtn.disabled = true;
+                        requestContractBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الطلب... | Requesting...';
+                    }
+                    
+                    showNotify('📋 جاري طلب معلومات العقد... | Requesting contract info...', 'info');
+                    
+                    // Get connected wallet address
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    const walletAddress = accounts[0];
+                    
+                    if (!walletAddress) {
+                        throw new Error('No wallet connected');
+                    }
+                    
+                    // Save contract info
+                    const contractInfo = {
+                        contractAddress: contractAddress,
+                        walletAddress: walletAddress,
+                        network: 'Polygon',
+                        chainId: '137',
+                        requestedAt: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('contract_requested', 'true');
+                    localStorage.setItem('contract_address', contractAddress);
+                    localStorage.setItem('contract_info', JSON.stringify(contractInfo));
+                    localStorage.setItem('contract_requested_at', new Date().toISOString());
+                    
+                    if (requestContractBtn) {
+                        requestContractBtn.disabled = false;
+                        requestContractBtn.innerHTML = '<i class="fas fa-check-circle"></i> تم الطلب | Requested';
+                        requestContractBtn.style.background = 'var(--success)';
+                    }
+                    
+                    showNotify('✅ تم طلب معلومات العقد بنجاح! | Contract info requested successfully!', 'success');
+                    checkStage3Completion();
+                } catch (error) {
+                    console.error('Request contract error:', error);
+                    const requestContractBtn = document.getElementById('request-contract-btn');
+                    if (requestContractBtn) {
+                        requestContractBtn.disabled = false;
+                        requestContractBtn.innerHTML = '<i class="fas fa-file-signature"></i> طلب العقد | Request Contract';
+                    }
+                    showNotify('❌ فشل طلب معلومات العقد | Failed to request contract info', 'error');
+                }
+            },
+            
+            // دالة التحقق من إكمال المرحلة 3 - Check Stage 3 completion
+            checkStage3Completion() {
+                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                const contractRequested = localStorage.getItem('contract_requested') === 'true';
+                const continueBtn = document.getElementById('continue-to-empire-btn');
+                
+                if (tokenAdded && contractRequested && continueBtn) {
+                    continueBtn.style.display = 'block';
+                    showNotify('✅ تم إكمال جميع الخطوات! يمكنك المتابعة الآن | All steps completed! You can proceed now', 'success');
+                }
+            },
+            
+            // دالة المتابعة إلى الإمبراطورية - Proceed to Empire function
+            proceedToEmpireStage3() {
+                const tokenAdded = localStorage.getItem('token_added') === 'true';
+                const contractRequested = localStorage.getItem('contract_requested') === 'true';
+                
+                if (!tokenAdded || !contractRequested) {
+                    showNotify('⚠️ يرجى إكمال جميع الخطوات أولاً | Please complete all steps first', 'warning');
+                    return;
+                }
+                
+                // Save final stage data
+                const walletAddress = localStorage.getItem('connectedWallet');
+                const walletType = localStorage.getItem('wallet_type');
+                const tokenName = localStorage.getItem('token_name') || 'AKSG';
+                const contractAddress = localStorage.getItem('contract_address') || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                
+                const finalData = {
+                    walletAddress: walletAddress,
+                    walletType: walletType,
+                    tokenName: tokenName,
+                    contractAddress: contractAddress,
+                    network: 'Polygon',
+                    chainId: '137',
+                    completedAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('stage3_completed', 'true');
+                localStorage.setItem('stage3_final_data', JSON.stringify(finalData));
+                localStorage.setItem('ready_for_empire', 'true');
+                
+                // Close Stage 3
+                const stageWallet = document.getElementById('stage-wallet');
+                if (stageWallet) {
+                    stageWallet.style.display = 'none';
+                    stageWallet.style.opacity = '0';
+                    stageWallet.style.visibility = 'hidden';
+                }
+                
+                // Proceed to Empire (Stage 4)
+                setTimeout(() => {
+                    hideAllStages();
+                    this.showStage(4);
+                    this.initEmpireFeatures();
+                }, 500);
+            },
+            
+            // ==================== STAGE 4: EMPIRE FUNCTIONS ====================
+            // دالة تحديث بيانات المحفظة والكود في المرحلة 4 - Update wallet and code info in Stage 4
+            updateEmpireWalletInfo() {
+                const walletAddress = localStorage.getItem('connectedWallet');
+                const walletType = localStorage.getItem('wallet_type');
+                const userCode = localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code') || '--';
+                
+                const walletAddressDisplay = document.getElementById('empire-wallet-address');
+                const walletTypeDisplay = document.getElementById('empire-wallet-type');
+                const userCodeDisplay = document.getElementById('empire-user-code');
+                
+                if (walletAddressDisplay && walletAddress) {
+                    walletAddressDisplay.textContent = walletAddress;
+                }
+                if (walletTypeDisplay && walletType) {
+                    const walletTypeNames = {
+                        'metamask': 'MetaMask',
+                        'trust': 'Trust Wallet',
+                        'phantom': 'Phantom'
+                    };
+                    walletTypeDisplay.textContent = walletTypeNames[walletType] || walletType;
+                }
+                if (userCodeDisplay) {
+                    userCodeDisplay.textContent = userCode;
+                }
+            },
+            
+            // دالة تحديث عداد النسبة المئوية - Update completion percentage counter
+            updateCompletionPercentageCounter() {
+                if (typeof updateCompletionPercentage === 'function') {
+                    const percentage = updateCompletionPercentage();
+                    const percentageDisplay = document.getElementById('completion-percentage');
+                    const completionCircle = document.getElementById('completion-circle');
+                    
+                    if (percentageDisplay) {
+                        percentageDisplay.textContent = percentage + '%';
+                    }
+                    
+                    if (completionCircle) {
+                        const circumference = 2 * Math.PI * 80; // radius = 80
+                        const offset = circumference - (percentage / 100) * circumference;
+                        completionCircle.style.strokeDashoffset = offset;
+                    }
+                }
+            },
+            
             updateLocalLeaderboard() {
                 const account = localStorage.getItem('connectedWallet');
                 if (!account) return;
@@ -5005,6 +5649,82 @@
                 }
             }
         };
+
+        // ==================== COMPLETION PERCENTAGE FUNCTION ====================
+        // دالة حساب نسبة الإكمال - Calculate completion percentage
+        function updateCompletionPercentage() {
+            let completed = 0;
+            let total = 7; // Total stages/tasks
+            
+            // Stage 1: Welcome/Human Verification
+            if (localStorage.getItem('welcome_confirmed') === 'true' || localStorage.getItem('has_joined') === 'true') {
+                completed++;
+            }
+            
+            // Stage 2: Social Verification
+            if (localStorage.getItem('social_verification_complete') === 'true') {
+                completed++;
+            }
+            
+            // Stage 3: Wallet Connection
+            if (localStorage.getItem('connectedWallet') && localStorage.getItem('connectedWallet') !== '0x...') {
+                completed++;
+            }
+            
+            // Stage 3: Token Added
+            if (localStorage.getItem('token_added') === 'true') {
+                completed++;
+            }
+            
+            // Stage 3: Contract Requested
+            if (localStorage.getItem('contract_requested') === 'true') {
+                completed++;
+            }
+            
+            // Stage 4: Kick Follow Verified
+            if (localStorage.getItem('kick_follow_verified') === 'true') {
+                completed++;
+            }
+            
+            // Stage 4: Claim Code Generated
+            if (localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code')) {
+                completed++;
+            }
+            
+            const percentage = Math.round((completed / total) * 100);
+            return percentage;
+        }
+        
+        // ==================== STAGE 3: GLOBAL FUNCTIONS FOR COMPATIBILITY ====================
+        // Global functions for Stage 3 token and contract operations (for compatibility)
+        async function addTokenToWallet() {
+            if (typeof AppManager !== 'undefined' && AppManager.addTokenToWalletStage3) {
+                return AppManager.addTokenToWalletStage3();
+            }
+            // Fallback to old function if exists
+            if (typeof addAKSGTokenToWallet === 'function') {
+                return addAKSGTokenToWallet();
+            }
+            showNotify('❌ Function not available | الدالة غير متاحة', 'error');
+        }
+        
+        async function requestContract() {
+            if (typeof AppManager !== 'undefined' && AppManager.requestContractStage3) {
+                return AppManager.requestContractStage3();
+            }
+            showNotify('❌ Function not available | الدالة غير متاحة', 'error');
+        }
+        
+        function proceedToEmpire() {
+            if (typeof AppManager !== 'undefined' && AppManager.proceedToEmpireStage3) {
+                return AppManager.proceedToEmpireStage3();
+            }
+            // Fallback to old function if exists
+            if (typeof proceedToEmpireStage === 'function') {
+                return proceedToEmpireStage();
+            }
+            showNotify('❌ Function not available | الدالة غير متاحة', 'error');
+        }
 
         // ==================== SPA GUARD ====================
         function isSPAActive() {
@@ -6056,19 +6776,19 @@
         // Load GeckoTerminal Chart only when reaching Empire Stage
         function loadGeckoTerminalChart() {
             try {
-                // ✅ دائماً إظهار الشارت في المرحلة 3 - Always show chart in Stage 3
+                // ✅ دائماً إظهار الشارت في المرحلة 4 - Always show chart in Stage 4
                 const ghostEmpireStage = document.getElementById('ghostEmpireStage');
                 
-                // ✅ إذا لم تكن المرحلة 3 موجودة، لا تفعل شيء - If Stage 3 doesn't exist, do nothing
+                // ✅ إذا لم تكن المرحلة 4 موجودة، لا تفعل شيء - If Stage 4 doesn't exist, do nothing
                 if (!ghostEmpireStage) {
-                    console.log('ℹ️ Stage 3 (Empire) not found');
+                    console.log('ℹ️ Stage 4 (Empire) not found');
                     return;
                 }
                 
                 // ✅ Chart URL مع المعاملات الصحيحة - Chart URL with correct parameters
                 const chartUrl = `https://www.geckoterminal.com/${CONFIG.GECKOTERMINAL_NETWORK}/pools/${CONFIG.POOL_ADDRESS}?embed=1&info=0&swaps=1&chart_type=market_cap&resolution=1h&bg_color=111827`;
                 
-                // ✅ تحميل الشارت في حاوية المرحلة 3 - Load chart in Stage 3 container
+                // ✅ تحميل الشارت في حاوية المرحلة 4 - Load chart in Stage 4 container
                 const chartContainer = document.getElementById('geckoterminal-chart-container');
                 const chartEmbed = document.getElementById('geckoterminal-embed');
                 const placeholder = document.getElementById('geckoterminal-placeholder');
@@ -6103,6 +6823,48 @@
                 }
             } catch (e) {
                 console.error('❌ Error loading GeckoTerminal chart:', e);
+            }
+        }
+        
+        // ==================== LOAD CODE CLAIMERS LEADERBOARD ====================
+        // دالة تحميل لائحة أصحاب الأكواد - Load code claimers leaderboard function
+        function loadCodeClaimersLeaderboard() {
+            try {
+                const claimersContainer = document.getElementById('empireCodeClaimersLeaderboard');
+                if (!claimersContainer) {
+                    console.warn('⚠️ Code claimers leaderboard container not found');
+                    return;
+                }
+                
+                // Get all claimed codes from localStorage
+                const allCodes = JSON.parse(localStorage.getItem('all_claimed_codes') || '[]');
+                const codeClaimers = allCodes
+                    .filter(item => item.code && item.wallet)
+                    .sort((a, b) => new Date(b.claimedAt || 0) - new Date(a.claimedAt || 0))
+                    .slice(0, 20); // Top 20
+                
+                if (codeClaimers.length === 0) {
+                    claimersContainer.innerHTML = `
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 20px; color: #888;">
+                                <i class="fas fa-info-circle"></i> لا توجد أكواد بعد | No codes yet
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                claimersContainer.innerHTML = codeClaimers.map((item, index) => `
+                    <tr>
+                        <td>#${index + 1}</td>
+                        <td style="font-family: 'Orbitron'; font-size: 0.8rem;">${item.wallet.slice(0, 6)}...${item.wallet.slice(-4)}</td>
+                        <td style="font-family: 'Orbitron'; color: var(--kick); font-weight: 700;">${item.code || '--'}</td>
+                    </tr>
+                `).join('');
+                
+                console.log('✅ Code claimers leaderboard loaded:', codeClaimers.length, 'items');
+            } catch (error) {
+                console.error('❌ Error loading code claimers leaderboard:', error);
             }
         }
 

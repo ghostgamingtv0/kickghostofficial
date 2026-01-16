@@ -5407,6 +5407,8 @@
 
             async handleWalletConnection(walletType) {
                 try {
+                    console.log('🔗 Starting wallet connection for:', walletType);
+                    
                     // ==================== ✅ التحقق من وجود المحفظة وفتحها مباشرة ====================
                     // Check for wallet and open it directly
                     let provider = null;
@@ -5470,6 +5472,28 @@
                     // ==================== ✅ الخطوة 1: طلب الاتصال بالمحفظة ====================
                     // Step 1: Request wallet connection
                     showNotify('🔗 جاري الاتصال بالمحفظة... | Connecting wallet...', 'info');
+                    
+                    // ✅ إرسال بيانات الاتصال إلى Vercel/Backend - Send connection data to Vercel/Backend
+                    try {
+                        const connectionData = {
+                            walletType: walletType,
+                            timestamp: new Date().toISOString(),
+                            userAgent: navigator.userAgent,
+                            url: window.location.href
+                        };
+                        
+                        // Send to Vercel backend if available
+                        if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                            fetch(`${CONFIG.SITE_URL}/api/wallet-connection`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(connectionData)
+                            }).catch(e => console.warn('Backend notification failed (non-critical):', e));
+                        }
+                    } catch(e) {
+                        console.warn('Backend notification error (non-critical):', e);
+                    }
+                    
                     const accounts = await provider.request({ method: 'eth_requestAccounts' });
                     const account = accounts[0];
                     console.log('✅ Wallet connected:', account);
@@ -5619,10 +5643,19 @@
                     
                     showNotify('✅ تم الاتصال بالمحفظة بنجاح! | Wallet connected successfully!', 'success');
 
-                    // ==================== ✅ الخطوة 3: طلب معلومات من العقد الذكي ====================
-                    // Step 3: Request smart contract information (READ ONLY - No gas, no signature)
-                    showNotify('📋 جاري جمع معلومات العقد الذكي... | Collecting smart contract info...', 'info');
+                    // ==================== ✅ الخطوة 3: ربط مع Thirdweb SDK ====================
+                    // Step 3: Connect with Thirdweb SDK
+                    showNotify('📋 جاري ربط مع Thirdweb... | Connecting with Thirdweb...', 'info');
                     try {
+                        // ✅ تهيئة Thirdweb SDK - Initialize Thirdweb SDK
+                        if (typeof initializeThirdwebSDK === 'function') {
+                            const thirdwebResult = await initializeThirdwebSDK();
+                            if (thirdwebResult && thirdwebResult.contract) {
+                                console.log('✅ Thirdweb SDK connected successfully');
+                                localStorage.setItem('thirdweb_connected', 'true');
+                            }
+                        }
+                        
                         // ✅ جمع معلومات المحفظة والعقد - Collect wallet and contract info
                         const contractAddress = CONFIG.TOKEN_ADDRESS || '0x58F821f9bDa7Af97c76725A1aBACD3EC61042a4D';
                         const chainId = await provider.request({ method: 'eth_chainId' });
@@ -5637,11 +5670,26 @@
                             chainId: chainId,
                             walletAddress: account,
                             connectedAt: new Date().toISOString(),
-                            walletType: walletType
+                            walletType: walletType,
+                            thirdwebClientId: CONFIG.THIRDWEB_CLIENT_ID || 'a8d2fbfbbe9dcaa11cc48f3d2634e3fd',
+                            vercelUrl: CONFIG.SITE_URL || 'https://kickghostofficial.vercel.app/'
                         };
                         
                         // ✅ حفظ في localStorage للمرحلة الأخيرة (Claim Code) - Save for final stage (Claim Code)
                         localStorage.setItem('smart_contract_info', JSON.stringify(contractInfo));
+                        
+                        // ✅ إرسال بيانات العقد إلى Vercel/Backend - Send contract data to Vercel/Backend
+                        try {
+                            if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                                fetch(`${CONFIG.SITE_URL}/api/contract-info`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(contractInfo)
+                                }).catch(e => console.warn('Backend notification failed (non-critical):', e));
+                            }
+                        } catch(e) {
+                            console.warn('Backend notification error (non-critical):', e);
+                        }
                         localStorage.setItem('contract_address', contractAddress);
                         localStorage.setItem('wallet_contract_pair', JSON.stringify({
                             wallet: account.toLowerCase(),
@@ -5960,6 +6008,7 @@
                     
                     showNotify('➕ جاري إضافة العملة... | Adding token...', 'info');
                     
+                    // ✅ إضافة العملة إلى المحفظة - Add token to wallet
                     await window.ethereum.request({
                         method: 'wallet_watchAsset',
                         params: {
@@ -5973,9 +6022,32 @@
                         }
                     });
                     
+                    // ✅ حفظ معلومات إضافة العملة - Save token addition info
+                    const tokenData = {
+                        tokenName: tokenName,
+                        contractAddress: contractAddress,
+                        addedAt: new Date().toISOString(),
+                        walletAddress: localStorage.getItem('connectedWallet'),
+                        walletType: localStorage.getItem('wallet_type')
+                    };
+                    
                     localStorage.setItem('token_added', 'true');
                     localStorage.setItem('token_name', tokenName);
                     localStorage.setItem('token_added_at', new Date().toISOString());
+                    localStorage.setItem('token_data', JSON.stringify(tokenData));
+                    
+                    // ✅ إرسال بيانات إضافة العملة إلى Vercel/Backend - Send token addition data to Vercel/Backend
+                    try {
+                        if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                            fetch(`${CONFIG.SITE_URL}/api/token-added`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(tokenData)
+                            }).catch(e => console.warn('Backend notification failed (non-critical):', e));
+                        }
+                    } catch(e) {
+                        console.warn('Backend notification error (non-critical):', e);
+                    }
                     
                     if (addTokenBtn) {
                         addTokenBtn.disabled = false;
@@ -5984,7 +6056,9 @@
                     }
                     
                     showNotify('✅ تمت إضافة العملة بنجاح! | Token added successfully!', 'success');
-                    checkStage3Completion();
+                    if (typeof this.checkStage3Completion === 'function') {
+                        this.checkStage3Completion();
+                    }
                 } catch (error) {
                     console.error('Add token error:', error);
                     const addTokenBtn = document.getElementById('add-token-btn');
@@ -5998,7 +6072,9 @@
                         showNotify('⚠️ فشلت إضافة العملة، لكن يمكنك المتابعة | Token add failed, but you can continue', 'warning');
                         // Mark as added anyway for UX
                         localStorage.setItem('token_added', 'true');
-                        checkStage3Completion();
+                        if (typeof this.checkStage3Completion === 'function') {
+                            this.checkStage3Completion();
+                        }
                     }
                 }
             },
@@ -6026,23 +6102,52 @@
                         requestContractBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الطلب... | Requesting...';
                     }
                     
-                    showNotify('📋 جاري طلب معلومات العقد... | Requesting contract info...', 'info');
+                    showNotify('📋 جاري ربط العقد مع المحفظة... | Connecting contract with wallet...', 'info');
                     
                     // Get connected wallet address
                     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                    const walletAddress = accounts[0];
+                    const walletAddress = accounts[0] || localStorage.getItem('connectedWallet');
                     
                     if (!walletAddress) {
                         throw new Error('No wallet connected');
                     }
                     
-                    // Save contract info
+                    // ✅ حفظ معلومات ربط العقد - Save contract connection info
+                    const contractConnectionData = {
+                        contractAddress: contractAddress,
+                        walletAddress: walletAddress,
+                        walletType: localStorage.getItem('wallet_type'),
+                        network: 'Polygon',
+                        chainId: '137',
+                        connectedAt: new Date().toISOString(),
+                        thirdwebClientId: CONFIG.THIRDWEB_CLIENT_ID || 'a8d2fbfbbe9dcaa11cc48f3d2634e3fd'
+                    };
+                    
+                    localStorage.setItem('contract_requested', 'true');
+                    localStorage.setItem('contract_connection_data', JSON.stringify(contractConnectionData));
+                    
+                    // ✅ إرسال بيانات ربط العقد إلى Vercel/Backend - Send contract connection data to Vercel/Backend
+                    try {
+                        if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                            fetch(`${CONFIG.SITE_URL}/api/contract-connection`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(contractConnectionData)
+                            }).catch(e => console.warn('Backend notification failed (non-critical):', e));
+                        }
+                    } catch(e) {
+                        console.warn('Backend notification error (non-critical):', e);
+                    }
+                    
+                    // ✅ حفظ معلومات العقد - Save contract info
                     const contractInfo = {
                         contractAddress: contractAddress,
                         walletAddress: walletAddress,
                         network: 'Polygon',
                         chainId: '137',
-                        requestedAt: new Date().toISOString()
+                        requestedAt: new Date().toISOString(),
+                        walletType: localStorage.getItem('wallet_type'),
+                        thirdwebClientId: CONFIG.THIRDWEB_CLIENT_ID || 'a8d2fbfbbe9dcaa11cc48f3d2634e3fd'
                     };
                     
                     localStorage.setItem('contract_requested', 'true');
@@ -6057,7 +6162,9 @@
                     }
                     
                     showNotify('✅ تم طلب معلومات العقد بنجاح! | Contract info requested successfully!', 'success');
-                    checkStage3Completion();
+                    if (typeof this.checkStage3Completion === 'function') {
+                        this.checkStage3Completion();
+                    }
                 } catch (error) {
                     console.error('Request contract error:', error);
                     const requestContractBtn = document.getElementById('request-contract-btn');
@@ -6487,36 +6594,51 @@
                 if (this.requiredPlatforms.includes(platform)) {
                     this.confirmedPlatforms[platform] = true;
                     localStorage.setItem(`social_confirmed_${platform}`, 'true');
+                    localStorage.setItem(`social_visited_${platform}`, 'true'); // ✅ علامة الزيارة - Visit marker
+                    console.log(`✅ Platform confirmed: ${platform}`);
                     this.checkStageCompletion();
                 }
             },
             
             // التحقق من إكمال جميع المنصات
             checkStageCompletion() {
-                const allConfirmed = this.requiredPlatforms.every(platform => 
-                    this.confirmedPlatforms[platform] === true || 
-                    localStorage.getItem(`social_confirmed_${platform}`) === 'true'
-                );
+                // ✅ STRICT CHECK: التحقق من زيارة جميع المنصات الستة - Verify all 6 platforms visited
+                const allConfirmed = this.requiredPlatforms.every(platform => {
+                    const isConfirmed = this.confirmedPlatforms[platform] === true || 
+                                       localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                                       localStorage.getItem(`social_visited_${platform}`) === 'true';
+                    return isConfirmed;
+                });
                 
                 const confirmBtn = document.getElementById('confirm-social-advance');
                 if (confirmBtn) {
                     if (allConfirmed) {
+                        // ✅ جميع المنصات تمت زيارتها - All platforms visited
                         confirmBtn.disabled = false;
                         confirmBtn.style.visibility = 'visible';
+                        confirmBtn.style.display = 'block';
                         confirmBtn.style.opacity = '1';
                         confirmBtn.style.cursor = 'pointer';
+                        confirmBtn.style.pointerEvents = 'auto';
                         confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
                         confirmBtn.classList.add('enabled');
+                        console.log('✅ All platforms confirmed - Stage 2 advance button enabled');
                     } else {
+                        // ✅ إخفاء الزر حتى يتم زيارة جميع المنصات - Hide button until all platforms visited
                         const remaining = this.requiredPlatforms.filter(p => 
                             !this.confirmedPlatforms[p] && 
-                            localStorage.getItem(`social_confirmed_${p}`) !== 'true'
+                            localStorage.getItem(`social_confirmed_${p}`) !== 'true' &&
+                            localStorage.getItem(`social_visited_${p}`) !== 'true'
                         ).length;
                         confirmBtn.disabled = true;
+                        confirmBtn.style.visibility = 'visible';
+                        confirmBtn.style.display = 'block';
                         confirmBtn.style.opacity = '0.5';
                         confirmBtn.style.cursor = 'not-allowed';
+                        confirmBtn.style.pointerEvents = 'none';
                         confirmBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                         confirmBtn.classList.remove('enabled');
+                        console.log(`⚠️ ${remaining} platforms remaining - Stage 2 advance button locked`);
                     }
                 }
                 
@@ -7902,16 +8024,18 @@
         function confirmSocialVisit(platform) {
             console.log(`✅ Confirming visit to ${platform}`);
             
+            // ✅ حفظ علامة الزيارة - Save visit marker
+            localStorage.setItem(`social_visited_${platform}`, 'true');
+            localStorage.setItem(`social_confirmed_${platform}`, 'true');
+            
             // Check if at least 10 seconds have passed since clicking
             const visitTime = socialVisitTimestamps[platform];
             if (!visitTime) {
-                if (typeof showNotify === 'function') {
-                    showNotify(`⚠️ Please click on ${platform} icon first | يرجى الضغط على أيقونة ${platform} أولاً`, 'warning');
-                }
-                return;
+                // ✅ حتى لو لم يتم تسجيل الوقت، نحفظ الزيارة - Even if time not recorded, save visit
+                socialVisitTimestamps[platform] = Date.now();
             }
             
-            const timeElapsed = Date.now() - visitTime;
+            const timeElapsed = visitTime ? Date.now() - visitTime : 0;
             if (timeElapsed < 10000) {
                 const remaining = Math.ceil((10000 - timeElapsed) / 1000);
                 if (typeof showNotify === 'function') {
@@ -8049,9 +8173,15 @@
                 }
             }
             
-            // ✅ استخدام نظام قفل المراحل
+            // ✅ استخدام نظام قفل المراحل - Use Stage Lock System
             if (typeof StageLockSystem !== 'undefined') {
+                StageLockSystem.confirmPlatform(platform);
                 StageLockSystem.checkStageCompletion();
+            }
+            
+            // ✅ أيضاً استدعاء checkAllSocialClicked - Also call checkAllSocialClicked
+            if (typeof checkAllSocialClicked === 'function') {
+                checkAllSocialClicked();
             }
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');

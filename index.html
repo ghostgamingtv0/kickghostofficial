@@ -2577,7 +2577,9 @@
             </div>
             <!-- ✅ زر تأكيد المرحلة - يظهر فقط بعد تأكيد جميع المواقع -->
             <!-- Stage Confirmation Button - Only appears after confirming all platforms -->
-            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; display: none; visibility: hidden; opacity: 0; cursor: not-allowed; pointer-events: none;" disabled>
+            <!-- ✅ زر الانتقال إلى المرحلة التالية - معطل افتراضياً ويتم تفعيله فقط بعد تأكيد جميع الروابط المطلوبة -->
+            <!-- Next Stage Button - Disabled by default, enabled only after ALL required links are confirmed -->
+            <button id="confirm-social-advance" class="btn-stage" style="margin-top: 30px; display: none !important; visibility: hidden !important; opacity: 0 !important; cursor: not-allowed !important; pointer-events: none !important;" disabled aria-disabled="true">
                 <i class="fas fa-lock"></i> أكمل جميع المنصات أولاً | Complete All Platforms First
             </button>
         </div>
@@ -4989,12 +4991,14 @@
         // نظام إدارة التطبيق داخل صفحة واحدة (Stages)
         const AppManager = {
             // ✅ منع التضارب: إخفاء جميع أزرار المحفظة - Prevent conflicts: Hide all wallet buttons
+            // ✅ STRICT: منع تداخل المراحل والأزرار - STRICT: Prevent stage and button conflicts
             hideAllWalletButtons() {
                 const buttonsToHide = [
                     'add-token-btn',
                     'request-contract-btn',
                     'continue-to-empire-btn',
-                    'confirm-wallet-btn'
+                    'confirm-wallet-btn',
+                    'confirm-social-advance'
                 ];
                 
                 buttonsToHide.forEach(buttonId => {
@@ -5006,6 +5010,7 @@
                         button.disabled = true;
                         button.style.pointerEvents = 'none';
                         button.style.cursor = 'not-allowed';
+                        button.classList.remove('enabled');
                     }
                 });
                 
@@ -5016,17 +5021,49 @@
                 
                 if (walletSelectionStep) {
                     walletSelectionStep.style.display = 'none';
+                    walletSelectionStep.style.visibility = 'hidden';
+                    walletSelectionStep.style.opacity = '0';
                 }
                 
                 if (tokenContractStep) {
                     tokenContractStep.style.display = 'none';
+                    tokenContractStep.style.visibility = 'hidden';
+                    tokenContractStep.style.opacity = '0';
                 }
                 
                 if (connectedWalletInfo) {
                     connectedWalletInfo.style.display = 'none';
+                    connectedWalletInfo.style.visibility = 'hidden';
+                    connectedWalletInfo.style.opacity = '0';
                 }
                 
+                // ✅ حفظ حالة الإخفاء - Save hidden state
+                localStorage.setItem('wallet_buttons_hidden', 'true');
+                localStorage.setItem('wallet_buttons_hidden_at', new Date().toISOString());
+                
                 console.log('✅ All wallet buttons hidden to prevent conflicts');
+            },
+            
+            // ✅ منع التضارب: إعادة إظهار الأزرار عند الحاجة - Prevent conflicts: Show buttons when needed
+            showWalletButtons(buttonIds) {
+                if (!Array.isArray(buttonIds)) {
+                    buttonIds = [buttonIds];
+                }
+                
+                buttonIds.forEach(buttonId => {
+                    const button = document.getElementById(buttonId);
+                    if (button) {
+                        button.style.display = 'block';
+                        button.style.visibility = 'visible';
+                        button.style.opacity = '1';
+                        button.style.pointerEvents = 'auto';
+                        button.style.cursor = 'pointer';
+                        // Don't enable automatically - let the calling function decide
+                    }
+                });
+                
+                localStorage.setItem('wallet_buttons_shown', JSON.stringify(buttonIds));
+                console.log(`✅ Wallet buttons shown: ${buttonIds.join(', ')}`);
             },
             
             // ✅ Stage Mapping: 1=Welcome, 2=Social, 3=Empire (with Wallet integrated)
@@ -5047,32 +5084,11 @@
             
             // ✅ منع الضغط المتعدد - Prevent multiple clicks
             isProcessing: false,
-            
-            // ✅ منع التضارب: إخفاء جميع أزرار المحفظة - Prevent conflicts: Hide all wallet buttons
-            hideAllWalletButtons() {
-                const buttonsToHide = [
-                    'add-token-btn',
-                    'request-contract-btn',
-                    'continue-to-empire-btn',
-                    'confirm-wallet-btn'
-                ];
-                
-                buttonsToHide.forEach(buttonId => {
-                    const button = document.getElementById(buttonId);
-                    if (button) {
-                        button.style.display = 'none';
-                        button.style.visibility = 'hidden';
-                        button.style.opacity = '0';
-                        button.disabled = true;
-                        button.style.pointerEvents = 'none';
-                        button.style.cursor = 'not-allowed';
-                    }
-                });
-                
-                console.log('✅ All wallet buttons hidden to prevent conflicts');
-            },
 
             showStage(stageNum) {
+                // ✅ منع التضارب: إخفاء جميع الأزرار أولاً - Prevent conflicts: Hide all buttons first
+                this.hideAllWalletButtons();
+                
                 // ✅ STRICT LOCK: قفل المرحلة 3 حتى يتم إكمال المرحلة 2 - Lock Stage 3 until Stage 2 is completed
                 if (stageNum === 3) {
                     const stage2Unlocked = localStorage.getItem('stage2_unlocked') === 'true';
@@ -6207,37 +6223,6 @@
                     
                     // ✅ حفظ معلومات إكمال المرحلة 3 - Save Stage 3 completion
                     localStorage.setItem('stage3_wallet_completed', 'true');
-                    
-                    // ✅ إعادة تفعيل الأزرار - Re-enable buttons
-                    this.isProcessing = false;
-                    
-                    console.log('✅ Wallet connection process completed successfully');
-                    
-                } catch (error) {
-                    console.error('❌ Wallet connection error:', error);
-                    
-                    // ✅ إعادة تفعيل الأزرار عند الخطأ - Re-enable buttons on error
-                    this.isProcessing = false;
-                    
-                    // ✅ إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
-                    const walletSelectionStep = document.getElementById('wallet-selection-step');
-                    if (walletSelectionStep) {
-                        walletSelectionStep.style.display = 'block';
-                        walletSelectionStep.style.visibility = 'visible';
-                        walletSelectionStep.style.opacity = '1';
-                    }
-                    
-                    // ✅ إعادة تفعيل أزرار المحفظة - Re-enable wallet buttons
-                    const walletButtons = document.querySelectorAll('.wallet-option');
-                    walletButtons.forEach(btn => {
-                        btn.disabled = false;
-                        btn.style.pointerEvents = 'auto';
-                        btn.style.opacity = '1';
-                    });
-                    
-                    showNotify(`❌ خطأ في ربط المحفظة: ${error.message || error} | Wallet connection error: ${error.message || error}`, 'error');
-                }
-            },
                     localStorage.setItem('stage3_completed_at', new Date().toISOString());
                     localStorage.setItem('stage3_wallet_address', account);
                     
@@ -6276,13 +6261,15 @@
                     
                     console.log('✅ Wallet connected successfully - showing token/contract request interface');
                     
-                    // ✅ إعادة تفعيل isProcessing - Re-enable isProcessing
+                    // ✅ إعادة تفعيل الأزرار - Re-enable buttons
                     this.isProcessing = false;
                     
-                } catch (err) {
-                    console.error('❌ Wallet connection error:', err);
+                    console.log('✅ Wallet connection process completed successfully');
                     
-                    // ✅ إعادة تفعيل isProcessing عند الخطأ - Re-enable isProcessing on error
+                } catch (error) {
+                    console.error('❌ Wallet connection error:', error);
+                    
+                    // ✅ إعادة تفعيل الأزرار عند الخطأ - Re-enable buttons on error
                     this.isProcessing = false;
                     
                     // ✅ إعادة إظهار خطوة اختيار المحفظة - Show wallet selection step again
@@ -6301,10 +6288,10 @@
                         btn.style.opacity = '1';
                     });
                     
-                    if (err && err.code === 4001) {
+                    if (error && error.code === 4001) {
                         showNotify('تم رفض الطلب من المستخدم | Request rejected by user', 'warning');
                     } else {
-                        showNotify('❌ فشل ربط المحفظة | Failed to connect wallet', 'error');
+                        showNotify(`❌ خطأ في ربط المحفظة: ${error.message || error} | Wallet connection error: ${error.message || error}`, 'error');
                     }
                 }
             },
@@ -8885,17 +8872,26 @@
             if (confirmSocialAdvanceBtn) {
                 // ✅ STRICT: Button is disabled by default - only enable if ALL 6 platforms confirmed
                 confirmSocialAdvanceBtn.disabled = true;
-                confirmSocialAdvanceBtn.style.display = 'none';
-                confirmSocialAdvanceBtn.style.visibility = 'hidden';
-                confirmSocialAdvanceBtn.style.opacity = '0';
-                confirmSocialAdvanceBtn.style.pointerEvents = 'none';
+                confirmSocialAdvanceBtn.style.display = 'none !important';
+                confirmSocialAdvanceBtn.style.visibility = 'hidden !important';
+                confirmSocialAdvanceBtn.style.opacity = '0 !important';
+                confirmSocialAdvanceBtn.style.pointerEvents = 'none !important';
                 confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
                 confirmSocialAdvanceBtn.classList.remove('enabled');
+                
+                // ✅ Force disable with setAttribute for extra security
+                confirmSocialAdvanceBtn.setAttribute('disabled', 'disabled');
+                confirmSocialAdvanceBtn.setAttribute('aria-disabled', 'true');
+                
+                console.log('✅ Stage 2 button initialized as DISABLED by default');
             }
             
-            // Check completion status
+            // ✅ Check completion status (will enable button if all confirmed)
             if (typeof checkAllSocialClicked === 'function') {
-                checkAllSocialClicked();
+                // ✅ Delay slightly to ensure DOM is ready
+                setTimeout(() => {
+                    checkAllSocialClicked();
+                }, 100);
             }
         }
         
@@ -8940,16 +8936,44 @@
             const confirmSocialAdvanceBtn = document.getElementById('confirm-social-advance');
             if (confirmSocialAdvanceBtn) {
                 if (enoughClicked && clickedCount === minimumRequired) {
-                    // ✅ إظهار الزر فقط بعد تأكيد جميع المنصات الستة بالضبط - Show button only after exactly all 6 platforms confirmed
-                    confirmSocialAdvanceBtn.style.display = 'block';
-                    confirmSocialAdvanceBtn.style.visibility = 'visible';
-                    confirmSocialAdvanceBtn.style.opacity = '1';
-                    confirmSocialAdvanceBtn.disabled = false;
-                    confirmSocialAdvanceBtn.classList.add('enabled');
-                    confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
-                    confirmSocialAdvanceBtn.style.cursor = 'pointer';
-                    confirmSocialAdvanceBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
-                    console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked (all 6 platforms confirmed)');
+                    // ✅ STRICT: التأكد من أن جميع المنصات الستة تم تأكيدها بالضبط - STRICT: Verify exactly all 6 platforms confirmed
+                    const allPlatformsConfirmed = requiredPlatformsForStage2.every(platform => {
+                        return localStorage.getItem(`social_confirmed_${platform}`) === 'true' ||
+                               localStorage.getItem(`social_verified_${platform}`) === 'true' ||
+                               socialClickedState[platform] === true;
+                    });
+                    
+                    if (allPlatformsConfirmed) {
+                        // ✅ إظهار الزر فقط بعد تأكيد جميع المنصات الستة بالضبط - Show button only after exactly all 6 platforms confirmed
+                        confirmSocialAdvanceBtn.style.display = 'block';
+                        confirmSocialAdvanceBtn.style.visibility = 'visible';
+                        confirmSocialAdvanceBtn.style.opacity = '1';
+                        confirmSocialAdvanceBtn.disabled = false;
+                        confirmSocialAdvanceBtn.removeAttribute('disabled');
+                        confirmSocialAdvanceBtn.setAttribute('aria-disabled', 'false');
+                        confirmSocialAdvanceBtn.classList.add('enabled');
+                        confirmSocialAdvanceBtn.style.pointerEvents = 'auto';
+                        confirmSocialAdvanceBtn.style.cursor = 'pointer';
+                        confirmSocialAdvanceBtn.innerHTML = '<i class="fas fa-check-circle"></i> متابعة المرحلة التالية | Continue to Next Stage';
+                        
+                        // ✅ حفظ حالة التفعيل - Save enabled state
+                        localStorage.setItem('stage2_button_enabled', 'true');
+                        localStorage.setItem('stage2_button_enabled_at', new Date().toISOString());
+                        
+                        console.log('✅ confirm-social-advance button enabled via checkAllSocialClicked (all 6 platforms confirmed)');
+                    } else {
+                        // ✅ إخفاء الزر إذا لم يتم تأكيد جميع المنصات - Hide button if not all platforms confirmed
+                        confirmSocialAdvanceBtn.style.display = 'none !important';
+                        confirmSocialAdvanceBtn.style.visibility = 'hidden !important';
+                        confirmSocialAdvanceBtn.style.opacity = '0 !important';
+                        confirmSocialAdvanceBtn.disabled = true;
+                        confirmSocialAdvanceBtn.setAttribute('disabled', 'disabled');
+                        confirmSocialAdvanceBtn.setAttribute('aria-disabled', 'true');
+                        confirmSocialAdvanceBtn.style.pointerEvents = 'none !important';
+                        confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
+                        confirmSocialAdvanceBtn.classList.remove('enabled');
+                        localStorage.setItem('stage2_button_enabled', 'false');
+                    }
                 } else {
                     // ✅ إخفاء الزر تماماً حتى يتم تأكيد جميع المنصات - Hide button completely until all platforms confirmed
                     // ✅ منع ظهور الزر منعاً باتاً - Absolutely prevent button from appearing
@@ -8958,10 +8982,13 @@
                     confirmSocialAdvanceBtn.style.visibility = 'hidden !important';
                     confirmSocialAdvanceBtn.style.opacity = '0 !important';
                     confirmSocialAdvanceBtn.disabled = true;
+                    confirmSocialAdvanceBtn.setAttribute('disabled', 'disabled');
+                    confirmSocialAdvanceBtn.setAttribute('aria-disabled', 'true');
                     confirmSocialAdvanceBtn.style.pointerEvents = 'none !important';
                     confirmSocialAdvanceBtn.style.cursor = 'not-allowed';
                     confirmSocialAdvanceBtn.innerHTML = `<i class="fas fa-lock"></i> أكمل ${remaining} منصة متبقية | Complete ${remaining} Remaining Platform(s)`;
                     confirmSocialAdvanceBtn.classList.remove('enabled');
+                    localStorage.setItem('stage2_button_enabled', 'false');
                     console.log(`⚠️ ${remaining} platforms remaining - confirm-social-advance button HIDDEN (mandatory verification active)`);
                 }
             }

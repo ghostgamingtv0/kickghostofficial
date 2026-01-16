@@ -2468,10 +2468,10 @@
                             <strong style="color: var(--secondary);">المرحلة الأولى:</strong> تابع واشترك في منصات التواصل الاجتماعي
                         </p>
                         <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 5px;">
-                            (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord, YouTube)
+                            (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord)
                         </p>
                         <p style="color: #888; font-size: 0.85rem;">
-                            <strong>Stage 1:</strong> Follow and subscribe on social media platforms (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord, YouTube)
+                            <strong>Stage 1:</strong> Follow and subscribe on social media platforms (Kick, X/Twitter, Telegram, Instagram, TikTok, Discord)
                         </p>
                     </div>
                     
@@ -2577,15 +2577,15 @@
             <!-- Wallet Selection (Step 1) -->
             <div id="wallet-selection-step" style="display: block;">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 800px; width: 100%; padding: 0 20px; margin: 0 auto;">
-                    <button class="wallet-option" data-wallet="metamask">
+                    <button class="wallet-option" data-wallet="metamask" onclick="if(typeof AppManager !== 'undefined' && AppManager.handleWalletConnection) AppManager.handleWalletConnection('metamask'); else if(typeof handleWalletConnection === 'function') handleWalletConnection('metamask');">
                         <img src="https://i.ibb.co/H1LzqWL/images.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%23f6851b%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>M</text></svg>';">
                         <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">MetaMask</h3>
                     </button>
-                    <button class="wallet-option" data-wallet="trust">
+                    <button class="wallet-option" data-wallet="trust" onclick="if(typeof AppManager !== 'undefined' && AppManager.handleWalletConnection) AppManager.handleWalletConnection('trust'); else if(typeof handleWalletConnection === 'function') handleWalletConnection('trust');">
                         <img src="https://i.ibb.co/Lh5DGfSF/trust-wallet-rounded-logo-design-free-png.png" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 rx=%2716%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%231c68f4%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>T</text></svg>';">
                         <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Trust Wallet</h3>
                     </button>
-                    <button class="wallet-option" data-wallet="phantom">
+                    <button class="wallet-option" data-wallet="phantom" onclick="if(typeof AppManager !== 'undefined' && AppManager.handleWalletConnection) AppManager.handleWalletConnection('phantom'); else if(typeof handleWalletConnection === 'function') handleWalletConnection('phantom');">
                         <img src="https://i.ibb.co/tTTPtk4w/st-small-507x507-pad-600x600-f8f8f8.jpg" width="80" style="margin-bottom: 20px; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27><rect width=%27100%25%27 height=%27100%25%27 rx=%2716%27 fill=%27%237c3aed%27/><text x=%2750%25%27 y=%2755%25%27 font-family=%27Arial%27 font-size=%2732%27 fill=%27white%27 text-anchor=%27middle%27>P</text></svg>';">
                         <h3 style="font-family: 'Orbitron'; color: var(--primary); margin: 0;">Phantom</h3>
                     </button>
@@ -2817,7 +2817,7 @@
                         <small style="font-size: 0.7rem; color: #aaa; direction: rtl; text-align: right;">تابعنا على تيك توك | Follow us on TikTok</small>
                     </div>
                 </a>
-                <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-link-header neon-glow" title="Discord - انضم إلى ديسكورد" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(88, 101, 242, 0.1); border: 2px solid #5865f2; box-shadow: 0 0 20px rgba(88, 101, 242, 0.3); transition: all 0.3s;">
+                <a href="https://discord.gg/ERdnX5m743" target="_blank" class="social-link-header neon-glow" title="Discord - انضم إلى ديسكورد" style="position: relative; padding: 15px 25px; border-radius: 15px; background: rgba(88, 101, 242, 0.1); border: 2px solid #5865f2; box-shadow: 0 0 20px rgba(88, 101, 242, 0.3); transition: all 0.3s;">
                     <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord Logo" style="width: 32px; height: 32px; object-fit: contain; margin-right: 10px; border-radius: 8px;">
                     <div style="display: flex; flex-direction: column; align-items: flex-start;">
                         <span style="font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 700;">Discord</span>
@@ -3119,13 +3119,9 @@
                         <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">TikTok</span>
                     </a>
-                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(88, 101, 242, 0.05); border-radius: 15px; border: 2px solid #5865f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(88, 101, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <a href="https://discord.gg/ERdnX5m743" target="_blank" class="social-card discord" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(88, 101, 242, 0.05); border-radius: 15px; border: 2px solid #5865f2; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(88, 101, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                         <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord" style="width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">Discord</span>
-                    </a>
-                    <a href="https://www.youtube.com/@ghostgamingtv" target="_blank" class="social-card youtube" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(255, 0, 0, 0.05); border-radius: 15px; border: 2px solid #ff0000; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 20px rgba(255, 0, 0, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                        <i class="fab fa-youtube" style="font-size: 2.5rem; margin-bottom: 10px; color: #ff0000;"></i>
-                        <span style="font-family: 'Orbitron'; color: var(--text-main); font-size: 0.9rem;">YouTube</span>
                     </a>
                 </div>
             </div>
@@ -3635,13 +3631,9 @@
                         <img src="https://i.ibb.co/tp82vYHy/icone-tik-tok-glitch-medias-sociaux-icone-tik-tok-vinnitsa-ukraine-fevrier-22-02-2023-250246-536.avif" alt="TikTok Logo" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 10px;">
                         <span>TikTok</span>
                     </a>
-                    <a href="https://discord.gg/NMrnjQ7E" target="_blank" class="social-card discord">
+                    <a href="https://discord.gg/ERdnX5m743" target="_blank" class="social-card discord">
                         <img src="https://i.ibb.co/FLnn5252/images-3.jpg" alt="Discord Logo" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 10px;">
                         <span>Discord</span>
-                    </a>
-                    <a href="https://www.youtube.com/@ghostgamingtv" target="_blank" class="social-card youtube">
-                        <i class="fab fa-youtube" style="font-size: 2.5rem; margin-bottom: 8px; color: #ff0000;"></i>
-                        <span>YouTube</span>
                     </a>
                 </div>
             </div>
@@ -4230,8 +4222,7 @@
             TELEGRAM: "https://t.me/ghost_gamingtv",
             INSTAGRAM: "https://www.instagram.com/ghost.gamingtv/",
             TIKTOK: "https://www.tiktok.com/@ghost.gamingtv",
-            DISCORD: "https://discord.gg/NMrnjQ7E",
-            YOUTUBE: "https://www.youtube.com/@ghostgamingtv" // Sixth platform for professional appearance
+            DISCORD: "https://discord.gg/ERdnX5m743"
         };
         
         // Social Media Icons (Font Awesome classes)
@@ -4709,8 +4700,7 @@
             { url: "https://t.me/ghost_gamingtv", name: "Telegram", icon: "fab fa-telegram", logo: "https://telegram.org/favicon.ico" },
             { url: "https://www.instagram.com/ghost.gamingtv/", name: "Instagram", icon: "fab fa-instagram", logo: "https://www.instagram.com/favicon.ico" },
             { url: "https://www.tiktok.com/@ghost.gamingtv", name: "TikTok", icon: "fab fa-tiktok", logo: "https://www.tiktok.com/favicon.ico" },
-            { url: "https://discord.gg/NMrnjQ7E", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" },
-            { url: "https://www.youtube.com/@ghostgamingtv", name: "YouTube", icon: "fab fa-youtube", logo: "https://www.youtube.com/favicon.ico" }
+            { url: "https://discord.gg/ERdnX5m743", name: "Discord", icon: "fab fa-discord", logo: "https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" }
         ];
 
         // Wallet Information with Links
@@ -4989,8 +4979,7 @@
                 telegram: false,
                 instagram: false,
                 tiktok: false,
-                discord: false,
-                youtube: false // ✅ Added YouTube
+                discord: false
             },
 
             showStage(stageNum) {
@@ -5108,6 +5097,35 @@
                 
                 // Scroll to top
                 window.scrollTo(0, 0);
+                
+                // ✅ إعادة ربط event listeners للمحافظ عند فتح المرحلة 3 - Re-bind wallet event listeners when opening Stage 3
+                if (stageNum === 3) {
+                    setTimeout(() => {
+                        // Remove old listeners first
+                        document.querySelectorAll('#stage-wallet .wallet-option').forEach(btn => {
+                            // Clone button to remove all event listeners
+                            const newBtn = btn.cloneNode(true);
+                            btn.parentNode.replaceChild(newBtn, btn);
+                        });
+                        
+                        // Add new event listeners
+                        document.querySelectorAll('#stage-wallet .wallet-option').forEach(btn => {
+                            const walletType = btn.dataset.wallet;
+                            if (walletType) {
+                                btn.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (typeof AppManager !== 'undefined' && AppManager.handleWalletConnection) {
+                                        AppManager.handleWalletConnection(walletType);
+                                    } else if (typeof handleWalletConnection === 'function') {
+                                        handleWalletConnection(walletType);
+                                    }
+                                });
+                            }
+                        });
+                        console.log('✅ Wallet buttons event listeners re-bound for Stage 3');
+                    }, 100);
+                }
                 
                 console.log(`✅ Stage ${stageNum} (${stageId}) is now active and isolated - Full page mode`);
             },
@@ -5359,8 +5377,13 @@
             },
 
             checkSocials() {
-                // ✅ Phase 2 from index 25: Check all 6 platforms are clicked
-                const allDone = Object.values(this.socials).every(v => v === true);
+                // ✅ Phase 2 from index 25: Check all 6 platforms are clicked (without YouTube)
+                // ✅ التحقق فقط من المنصات الستة المطلوبة - Check only the 6 required platforms
+                const requiredPlatformsForStage2 = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
+                const allDone = requiredPlatformsForStage2.every(platform => 
+                    this.socials[platform] === true || 
+                    localStorage.getItem(`social_confirmed_${platform}`) === 'true'
+                );
                 const btn = document.getElementById('confirm-social-advance');
                 if (btn && allDone) {
                     btn.style.visibility = 'visible';
@@ -6456,7 +6479,7 @@
         // ==================== ✅ STAGE LOCK SYSTEM (نظام قفل المراحل) ====================
         // نظام قفل المراحل: يمنع الانتقال للمرحلة التالية إلا بعد إكمال جميع المهام في المرحلة الحالية
         const StageLockSystem = {
-            requiredPlatforms: ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord', 'youtube'], // 7 platforms including YouTube
+            requiredPlatforms: ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'], // ✅ 6 platforms only (no YouTube in Stage 2)
             confirmedPlatforms: {},
             
             // تأكيد منصة معينة
@@ -6647,8 +6670,7 @@
             telegram: false,
             instagram: false,
             tiktok: false,
-            discord: false,
-            youtube: false // ✅ Added YouTube
+            discord: false
         };
 
         // ==================== STAGE 1: SOCIAL VERIFICATION ====================
@@ -6741,13 +6763,6 @@
                                 <i class="fab fa-discord" style="font-size: 3rem; margin-bottom: 15px; color: var(--primary);"></i>
                                 <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">Discord</p>
                                 <button id="confirm-discord" onclick="event.stopPropagation(); confirmSocialVisit('discord');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
-                                    <i class="fas fa-check-circle"></i> تأكيد | Confirm
-                                </button>
-                            </div>
-                            <div class="social-icon-card" id="social-youtube" onclick="clickSocialIcon('youtube')" style="background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                <i class="fab fa-youtube" style="font-size: 3rem; margin-bottom: 15px; color: #ff0000;"></i>
-                                <p style="margin-top: 15px; font-family: 'Orbitron'; color: var(--text-main); font-weight: 600;">YouTube</p>
-                                <button id="confirm-youtube" onclick="event.stopPropagation(); confirmSocialVisit('youtube');" style="display: none; margin-top: 15px; padding: 10px 20px; background: linear-gradient(45deg, #00ff88, #00ffa3); border: none; border-radius: 20px; color: #000; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
                                     <i class="fas fa-check-circle"></i> تأكيد | Confirm
                                 </button>
                             </div>
@@ -7767,8 +7782,7 @@
                 telegram: CONFIG.SOCIAL.TELEGRAM || 'https://t.me/ghost_gamingtv',
                 instagram: CONFIG.SOCIAL.INSTAGRAM || 'https://www.instagram.com/ghost.gamingtv/',
                 tiktok: CONFIG.SOCIAL.TIKTOK || 'https://www.tiktok.com/@ghost.gamingtv',
-                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/NMrnjQ7E',
-                youtube: CONFIG.SOCIAL.YOUTUBE || 'https://www.youtube.com/@ghostgamingtv' // ✅ Added YouTube
+                discord: CONFIG.SOCIAL.DISCORD || 'https://discord.gg/ERdnX5m743'
             };
             
             if (!links[platform]) {
@@ -7988,9 +8002,14 @@
         // المرحلة الثانية: منصات التواصل الاجتماعي (الزر لا يظهر إلا بعد التأكيد)
         // Stage 2: Social Media Platforms (Button hidden until all confirmed)
         function checkAllSocialClicked() {
-            // ✅ Require all 7 platforms (Kick, Twitter/X, Telegram, Instagram, TikTok, Discord, YouTube)
-            const clickedCount = Object.values(socialClickedState).filter(v => v).length;
-            const minimumRequired = 7; // ✅ All 7 platforms required (including YouTube)
+            // ✅ Require all 6 platforms (Kick, Twitter/X, Telegram, Instagram, TikTok, Discord)
+            // ✅ حساب فقط المنصات الستة المطلوبة (بدون YouTube) - Count only the 6 required platforms (without YouTube)
+            const requiredPlatformsForStage2 = ['kick', 'twitter', 'telegram', 'instagram', 'tiktok', 'discord'];
+            const clickedCount = requiredPlatformsForStage2.filter(platform => 
+                socialClickedState[platform] === true || 
+                localStorage.getItem(`social_confirmed_${platform}`) === 'true'
+            ).length;
+            const minimumRequired = 6; // ✅ All 6 platforms required (no YouTube in Stage 2)
             const enoughClicked = clickedCount >= minimumRequired;
             
             // ✅ تحديث AppManager.socials أيضاً - Update AppManager.socials as well
@@ -10494,7 +10513,7 @@
                         'discord.gg': CONFIG.SOCIAL.DISCORD
                     };
                     
-                    document.querySelectorAll('a[href*="kick.com"], a[href*="twitter.com"], a[href*="x.com"], a[href*="t.me"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="discord.gg"], a[href*="youtube.com"]').forEach(link => {
+                    document.querySelectorAll('a[href*="kick.com"], a[href*="twitter.com"], a[href*="x.com"], a[href*="t.me"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="discord.gg"]').forEach(link => {
                         const href = link.href;
                         Object.keys(socialLinkSelectors).forEach(domain => {
                             if (href.includes(domain) && socialLinkSelectors[domain]) {

